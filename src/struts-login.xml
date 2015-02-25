@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="login" extends="json-default" namespace="/login">
+		<global-results>
+			<result name="sqlException">/jsp/exception.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.sql.SQLException" result="sqlException" />		
+		</global-exception-mappings>
+	<!-- 
+		登录验证			method="login"
+		成功结果			method="jump"
+		获取管理员信息		method="queryAdminInfo"
+		退出登录			method="logout"
+	 -->
+		<action name="loginpwd" class="com.pms.controller.LoginAction" method="Loginpwd" >
+			<result name="success" type="redirectAction">../jump.action</result>
+<!--			<result name="success">/jsp/operatorquery.html</result>-->
+			<result name="error">/login.jsp</result>
+		</action>
+		<action name="jump" class="com.pms.controller.LoginAction" method="Jump" >
+ 			<result>/page/mainpage.html</result>
+		</action>
+		<action name="queryAdminInfo" class="com.pms.controller.LoginAction" method="QueryAdminInfo" >
+			<result name="success" type="json" />
+		</action>
+		<action name="logout" class="com.pms.controller.LoginAction" method="Logout" >
+			<result type="redirect">/login.jsp</result>
+		</action>
+	</package>	
+</struts>

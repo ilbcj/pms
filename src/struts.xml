@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<!-- 指定全局国际化资源文件base名 -->
+	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+	<!-- 指定国际化编码所使用的字符集 -->	
+	<constant name="struts.i18n.encoding" value="UTF-8"/>
+	
+	<package name="jump" extends="json-default" namespace="/">
+		
+		<action name="jump" class="com.pms.controller.LoginAction" method="Jump" >
+ 			<result type="redirect">/page/index.jsp</result>
+		</action>
+	</package>	
+	
+	<!--  	
+	<include file="struts-login.xml" />
+	<include file="struts-query.xml"/>
+	<include file="struts-sysmanage.xml"/>
+	<include file="struts-ukeyunlock.xml" />
+	<include file="struts-troublemanage.xml" />
+	-->
+	
+	<include file="struts-login.xml" />
+<!-- 	<include file="struts-sysmanage.xml"/> -->
+<!-- 	<include file="struts-organization.xml"/> -->
+<!-- 	<include file="struts-user.xml"/> -->
+</struts>    
