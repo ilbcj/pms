@@ -33,12 +33,57 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 
 <body class="easyui-layout">
-<div data-options="region:'north',title:'North Title',split:true" style="height:100px;"></div>
-    <div data-options="region:'south',title:'South Title',split:true" style="height:100px;"></div>
-    <div data-options="region:'east',title:'East',split:true" style="width:100px;"></div>
-    <div data-options="region:'west',title:'West',split:true" style="width:100px;"></div>
+<div data-options="region:'north',split:false,noheader:true,border:false" style="height:73px;background: url(../images/header_01.gif) repeat-x;">
+	<img src="../images/header_02.gif" />
+</div><!-- end of north -->
+<!--     <div data-options="region:'south',title:'South Title',split:true" style="height:100px;"></div> -->
+<!--     <div data-options="region:'east',title:'East',split:true" style="width:100px;"></div> -->
+<div data-options="region:'west',split:true,noheader:true,border:false" style="width:200px;">
+	<div id="mm" class="easyui-accordion"  fit="true">
+	</div>
+</div><!-- end of west -->
     <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;"></div>
+
 <script>
+$(document).ready(function () {
+	$('#mm').accordion('add', {
+		title: '用户管理',
+		href:'menu/user.html',
+		selected: false
+	});
+
+	$('#mm').accordion('add', {
+		title: '机构管理',
+		href:'menu/organization.html',
+		selected: false
+	});
+
+	$('#mm').accordion('add', {
+		title: '账号管理',
+		href:'menu/account.html',
+		selected: false
+	});
+
+	$('#mm').accordion('add', {
+		title: '授权管理',
+		href:'menu/privilege.html',
+		selected: false
+	});
+
+	$('#mm').accordion('add', {
+		title: '应用管理',
+		href:'menu/application.html',
+		selected: false
+	});
+
+	$('#mm').accordion('add', {
+		title: '系统管理',
+		href:'menu/system.html',
+		selected: false
+	});
+	
+	$('#mm').accordion('select', 0);
+});
 
 </script>
 </body>

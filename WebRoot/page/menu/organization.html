@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>usermanager.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+    <ul id="menu_org" class="easyui-tree" lines="true">
+            <li iconCls="icon-leaf" onclick="test();">
+                <span>机构维护</span>
+            </li>
+            <li iconCls="icon-leaf">
+                <span>机构导入</span>
+            </li>
+            <li iconCls="icon-leaf">
+                <span>机构查询</span>
+            </li>
+            <li iconCls="icon-leaf">
+                <span>机构统计</span>
+            </li>
+    </ul>
+        
+    <script>
+$(document).ready(function () {
+// 	alert("test");
+// 	$(".org_maintain").on("click",function(){alert('click');});
+	$('#menu_org').tree({
+		onClick: function(node){
+			alert(node.text);  // alert node text property when clicked
+			alert(node.state);
+			
+			$('body').layout('panel','center').panel('refresh','organization/org_maintain.html');
+			
+		}
+	});
+});
+
+</script>    
+  </body>
+</html>
