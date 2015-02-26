@@ -32,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
 </head>
 
-<body class="easyui-layout">
+<body class="easyui-layout" style="background:#E6EEF8;">
 <div data-options="region:'north',split:false,noheader:true,border:false" style="height:73px;background: url(../images/header_01.gif) repeat-x;">
 	<img src="../images/header_02.gif" />
 </div><!-- end of north -->
@@ -42,7 +42,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div id="mm" class="easyui-accordion"  fit="true">
 	</div>
 </div><!-- end of west -->
-    <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;"></div>
+    <div data-options="region:'center',noheader:true, border:true" style="padding:5px;background:#E6EEF8;"></div>
 
 <script>
 $(document).ready(function () {
