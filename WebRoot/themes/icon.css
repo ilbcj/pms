@@ -70,6 +70,13 @@
 .icon-node{
 	background:url('icons/node.gif') no-repeat center center;
 }
+.icon-simple{
+	background:url('icons/simple.png') no-repeat center center;
+}
+.icon-detail{
+	background:url('icons/detail.png') no-repeat center center;
+}
+
 
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat center center;

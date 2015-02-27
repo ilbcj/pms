@@ -1,0 +1,40 @@
+.query_name_small {
+	width:100px;
+}
+.query_value_small {
+	width:200px;
+}
+.query_name_mid {
+	width:200px;
+}
+.query_value_mid {
+	width:250px;
+}
+.query_name_big {
+	width:300px;
+}
+
+.query_value_big {
+	width:300px;
+}
+
+.text_right {
+	text-align:right;
+}
+
+table {
+	border-collapse:collapse;
+	border:1px solid #aaa;
+}
+table th {
+	padding:0 5px;
+	border:1px solid #aaa;
+}
+table td {
+	padding:0 5px;
+	border:1px solid #aaa;
+}
+
+.noborder {
+	border:0;
+}

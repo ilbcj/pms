@@ -8,34 +8,89 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     
     <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
-
   </head>
   
   <body>
     <div class="easyui-layout" data-options="fit:true,border:false">
     	<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
     		<b>当前位置：<span style="color:blue">机构维护</span></b>
-    	</div>
-    	<div region="west" data-options="split:false,border:true,noheader:true" title="Navigator" style="width:200px;padding:3px">
+    	</div><!-- end of north -->
+    	<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
     		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
 	        <ul id="org_maintain_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
-<!-- 	        	<li id="1"><span>公安部</span></li> -->
 	        </ul><!-- end of org_maintain_tree -->
 	        </div>
-	    </div>
-	    <div id="content" region="center" data-options="border:true,noheader:true"  title="Language" style="padding:5px;">
-	    </div>
+	    </div><!-- end of west -->
+	    <div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+	    	<div id="org_maintain_center_main" class="easyui-panel" data-options="fit:true" >
+	    		<div id="org_maintain_center_query" class="easyui-panel" style="margin-bottom:5px;">
+	    			<table style="width:100%">
+		                <tr>
+		                    <td class="query_name_small text_right">机构名称</td>
+		                    <td class="query_value_small"><input name="name" class="easyui-textbox"></input></td>
+		                    <td class="query_name_small text_right">机构编码</td>
+		                    <td class="query_value_small"><input name="email" class="easyui-textbox"></input></td>
+		                    <td class="query_name_small noborder">
+		                    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-detail'" onclick="submitForm()">高级查询</a>
+		                    </td>
+		                    <td class="text_right noborder">
+		                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">查询</a>
+            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+		                    </td>
+		                </tr>
+		            </table>
+	    		</div><!-- end of org_maintain_center_query -->
+	    		
+	    		<div id="org_maintain_center_list" class="easyui-panel">
+	    			<table class="easyui-datagrid" title="DataGrid with Toolbar"  
+				            data-options="rownumbers:true,singleSelect:true,fit:true,method:'get',toolbar:'#toolbar'">
+				        <thead>
+				            <tr>
+				                <th data-options="field:'itemid',width:80">Item ID</th>
+				                <th data-options="field:'productid',width:100">Product</th>
+				                <th data-options="field:'listprice',width:80,align:'right'">List Price</th>
+				                <th data-options="field:'unitcost',width:80,align:'right'">Unit Cost</th>
+				                <th data-options="field:'attr1',width:240">Attribute</th>
+				                <th data-options="field:'status',width:60,align:'center'">Status</th>
+				            </tr>
+				        </thead>
+				    </table>
+				    <div id="toolbar">
+				    	<a  class="easyui-linkbutton" data-options="iconCls:'icon-add',handler:function(){alert('add')}" >增加</a>
+            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',handler:function(){alert('edit')}" >修改</a>
+            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',handler:function(){alert('del')}" >删除</a>
+				    </div><!-- end of toolbar -->
+	    		</div><!-- end of org_maintain_center_list -->
+	    		
+	    	</div><!-- end of org_maintain_center_main -->
+	    	<div id="org_maintain_center_detail" class="easyui-panel" data-options="fit:true,closed:true" >
+	    		<b>当前位置：<span style="color:blue">机构维护</span></b>
+	    	</div><!-- end of org_maintain_center_detail -->
+	    </div><!-- end of center -->
     
     </div><!-- end of layout -->
     <script>
-$(document).ready(function () {
+   
+	var toolbar111 = [{
+        text:'Add',
+        iconCls:'icon-add',
+        handler:function(){alert('add')}
+    },{
+        text:'Cut',
+        iconCls:'icon-cut',
+        handler:function(){alert('cut')}
+    },{
+        text:'Save',
+        iconCls:'icon-save',
+        handler:function(){alert('save')}
+    }];
+        
+$(document).ready(function () { 
 	$('#org_maintain_tree').tree({
 	    loadFilter: function(data){
 	        if (data.treeNodes){
-	        alert(data.treeNodes);
 	            return data.treeNodes;
 	        } else {
-	        alert(data);
 	            return data;
 	        }
 	    }

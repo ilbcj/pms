@@ -69,10 +69,10 @@ public class OrgManageService {
 
 	public TreeNode ConvertOrgToTreeNode(Organization org) throws Exception {
 		TreeNode node = new TreeNode();
-		String status = hasChild(org.getId()) ? "closed" : "open";
-		node.setStatus(status);
+		String state = hasChild(org.getId()) ? "closed" : "open";
+		node.setState(state);
 		node.setId(org.getId());
-		node.setName(org.getName());
+		node.setText(org.getName());
 		
 		return node;
 	}

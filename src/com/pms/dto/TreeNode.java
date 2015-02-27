@@ -2,26 +2,24 @@ package com.pms.dto;
 
 public class TreeNode {
 	private int id;
-	private String name;
-	private String status;
+	private String text;
+	private String state;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getText() {
+		return text;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setText(String text) {
+		this.text = text;
 	}
-	public String getStatus() {
-		return status;
+	public String getState() {
+		return state;
 	}
-	public void setStatus(String status) {
-		this.status = status;
+	public void setState(String state) {
+		this.state = state;
 	}
-
-	
 }

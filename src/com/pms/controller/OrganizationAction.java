@@ -1,5 +1,6 @@
 package com.pms.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -17,6 +18,14 @@ public class OrganizationAction extends ActionSupport {
 	private boolean result;
 	private String message;
 	
+	public List<TreeNode> getTreeNodes() {
+		return treeNodes;
+	}
+
+	public void setTreeNodes(List<TreeNode> treeNodes) {
+		this.treeNodes = treeNodes;
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -99,6 +108,7 @@ public class OrganizationAction extends ActionSupport {
 		OrgManageService oms = new OrgManageService();
 		try {
 			//childrenNodes = oms.QueryChildrenNodes(orgNode.getParent_id());
+			treeNodes = new ArrayList<TreeNode>();
 			childrenNodes = oms.QueryChildrenNodes( id );
 			TreeNode node = null;
 			for(int i=0; i<childrenNodes.size(); i++) {
