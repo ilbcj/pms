@@ -23,6 +23,6 @@
 	
 	<include file="struts-login.xml" />
 <!-- 	<include file="struts-sysmanage.xml"/> -->
-<!-- 	<include file="struts-organization.xml"/> -->
+ 	<include file="struts-organization.xml"/>
 <!-- 	<include file="struts-user.xml"/> -->
 </struts>    

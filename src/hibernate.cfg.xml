@@ -37,6 +37,7 @@
 	<property name="hbm2ddl.auto">update</property>
 	<mapping resource="com/pms/model/Admin.hbm.xml" />
 	<mapping resource="com/pms/model/AdminAccredit.hbm.xml" />
+	<mapping resource="com/pms/model/Organization.hbm.xml" />
 
 </session-factory>
 

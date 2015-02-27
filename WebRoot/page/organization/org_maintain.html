@@ -16,18 +16,31 @@
     	<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
     		<b>当前位置：<span style="color:blue">机构维护</span></b>
     	</div>
-    	<div region="west" data-options="split:true,border:true" title="Navigator" style="width:150px;">
-	        <p style="padding:5px;margin:0;">Select language:</p>
-	        <ul>
-	            <li><a href="javascript:void(0)" onclick="showcontent('java')">Java</a></li>
-	            <li><a href="javascript:void(0)" onclick="showcontent('cshape')">C#</a></li>
-	            <li><a href="javascript:void(0)" onclick="showcontent('vb')">VB</a></li>
-	            <li><a href="javascript:void(0)" onclick="showcontent('erlang')">Erlang</a></li>
-	        </ul>
+    	<div region="west" data-options="split:false,border:true,noheader:true" title="Navigator" style="width:200px;padding:3px">
+    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+	        <ul id="org_maintain_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
+<!-- 	        	<li id="1"><span>公安部</span></li> -->
+	        </ul><!-- end of org_maintain_tree -->
+	        </div>
 	    </div>
-	    <div id="content" region="center" data-options="border:true"  title="Language" style="padding:5px;">
+	    <div id="content" region="center" data-options="border:true,noheader:true"  title="Language" style="padding:5px;">
 	    </div>
     
     </div><!-- end of layout -->
+    <script>
+$(document).ready(function () {
+	$('#org_maintain_tree').tree({
+	    loadFilter: function(data){
+	        if (data.treeNodes){
+	        alert(data.treeNodes);
+	            return data.treeNodes;
+	        } else {
+	        alert(data);
+	            return data;
+	        }
+	    }
+	});
+});
+    </script>
   </body>
 </html>

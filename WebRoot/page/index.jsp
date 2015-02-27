@@ -82,7 +82,7 @@ $(document).ready(function () {
 		selected: false
 	});
 	
-	$('#mm').accordion('select', 0);
+	$('#mm').accordion('select', 1);
 });
 
 </script>
