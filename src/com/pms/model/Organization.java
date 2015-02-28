@@ -8,8 +8,16 @@ public class Organization {
 	private int parent_id;
 	private String description;
 	private String uid;
+	private String org_level;
 	private String tstamp;
 	
+	
+	public String getOrg_level() {
+		return org_level;
+	}
+	public void setOrg_level(String org_level) {
+		this.org_level = org_level;
+	}
 	public String getTstamp() {
 		return tstamp;
 	}

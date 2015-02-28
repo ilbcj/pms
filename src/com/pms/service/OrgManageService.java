@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import com.pms.dao.OrganizationDAO;
 import com.pms.dao.impl.OrganizationDAOImpl;
+import com.pms.dto.OrgListItem;
 import com.pms.dto.TreeNode;
 import com.pms.model.Organization;
 
@@ -81,5 +82,16 @@ public class OrgManageService {
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		return dao.OrgHasChild( pid );
+	}
+
+	public OrgListItem ConvertOrgToListItem(Organization org) {
+		OrgListItem item = new OrgListItem();
+		item.setId(org.getId());
+		item.setName(org.getName());
+		item.setPid(org.getParent_id());
+		item.setUid(org.getUid());
+		item.setOrgLevel(org.getOrg_level());
+		
+		return item;
 	}
 }

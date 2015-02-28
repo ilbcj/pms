@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.pms.dto.OrgListItem;
 import com.pms.dto.TreeNode;
 import com.pms.model.Organization;
 import com.pms.service.OrgManageService;
@@ -14,10 +15,28 @@ public class OrganizationAction extends ActionSupport {
 	private List<Organization> childrenNodes;
 	private List<TreeNode> treeNodes;
 	private Organization orgNode;
+	private int total;
+	private List<OrgListItem> rows;
 	private int id;
 	private boolean result;
 	private String message;
 	
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public List<OrgListItem> getRows() {
+		return rows;
+	}
+
+	public void setRows(List<OrgListItem> rows) {
+		this.rows = rows;
+	}
+
 	public List<TreeNode> getTreeNodes() {
 		return treeNodes;
 	}
@@ -115,6 +134,27 @@ public class OrganizationAction extends ActionSupport {
 				node = oms.ConvertOrgToTreeNode(childrenNodes.get(i));
 				this.treeNodes.add(node);
 			}
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryChildrenItems()
+	{
+		OrgManageService oms = new OrgManageService();
+		try {
+			rows = new ArrayList<OrgListItem>();
+			childrenNodes = oms.QueryChildrenNodes( id );
+			OrgListItem node = null;
+			for(int i=0; i<childrenNodes.size(); i++) {
+				node = oms.ConvertOrgToListItem(childrenNodes.get(i));
+				this.rows.add(node);
+			}
+			total = rows.size();
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

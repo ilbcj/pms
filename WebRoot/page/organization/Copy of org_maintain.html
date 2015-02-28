@@ -22,9 +22,8 @@
 	        </div>
 	    </div><!-- end of west -->
 	    <div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
-	    	<div id="org_maintain_center_main" class="easyui-layout" data-options="fit:true" >
-	    	
-	    		<div id="org_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+	    	<div id="org_maintain_center_main" class="easyui-panel" data-options="fit:true" >
+	    		<div id="org_maintain_center_query" class="easyui-panel" style="margin-bottom:5px;">
 	    			<table style="width:100%">
 		                <tr>
 		                    <td class="query_name_small text_right">机构名称</td>
@@ -32,31 +31,27 @@
 		                    <td class="query_name_small text_right">机构编码</td>
 		                    <td class="query_value_small"><input name="email" class="easyui-textbox"></input></td>
 		                    <td class="query_name_small noborder">
-		                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
+		                    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-detail'" onclick="submitForm()">高级查询</a>
 		                    </td>
 		                    <td class="text_right noborder">
-		                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryOrg()">查询</a>
+		                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">查询</a>
             					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
 		                    </td>
 		                </tr>
 		            </table>
-		            <table class="detail_query noborder" style="width:100%;display:none;">
-		                <tr>
-		                    <td class="detail_query_name text_right">公安组织机构级别</td>
-		                    <td class="detail_query_value"><input id="orglevel" class="easyui-textbox query_value_mid"></input></td>
-		                    <td>
-		                </tr>
-		            </table>
 	    		</div><!-- end of org_maintain_center_query -->
 	    		
-	    		<div id="org_maintain_center_list" region="center" data-options="border:false,noheader:true" >
-	    			<table id="org_maintain_center_list_dg"  
-				            data-options="singleSelect:true,method:'get',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+	    		<div id="org_maintain_center_list" class="easyui-panel" fit="true">
+	    			<table class="easyui-datagrid" 
+				            data-options="rownumbers:true,singleSelect:true,method:'get',toolbar:'#toolbar',pagination:true,noheader:true">
 				        <thead>
 				            <tr>
-				                <th data-options="field:'itemid'" style="width:33%;">机构名称</th>
-				                <th data-options="field:'productid'" style="width:33%;">机构编码</th>
-				                <th data-options="field:'listprice'" style="width:34%;">上级机构</th>
+				                <th data-options="field:'itemid'" style="width:12%;">Item ID</th>
+				                <th data-options="field:'productid'" style="width:16%;">Product</th>
+				                <th data-options="field:'listprice',align:'right'" style="width:12%;">List Price</th>
+				                <th data-options="field:'unitcost',align:'right'" style="width:12%;">Unit Cost</th>
+				                <th data-options="field:'attr1'" style="width:39%;">Attribute</th>
+				                <th data-options="field:'status',align:'center'" style="width:9%;">Status</th>
 				            </tr>
 				        </thead>
 				    </table>
@@ -75,28 +70,6 @@
     
     </div><!-- end of layout -->
     <script>
-    var isDetailQuery = false;
-    function toggleDetailQuery(obj){
-    	var currentHeight = $("#org_maintain_center_main").layout('panel','north').height();
-    	if( currentHeight > 29 ) {
-    		$(".detail_query").hide();
-    		$('.detail_query_button').linkbutton({iconCls: 'icon-detail', text:'高级查询'});
-    		isDetailQuery = false;
-    		$("#org_maintain_center_main").layout('panel','north').panel('resize', {height:29}) ;
-    	}
-    	else {
-    		$(".detail_query").show();
-    		$('.detail_query_button').linkbutton({iconCls: 'icon-simple', text:'简单查询'});
-    		isDetailQuery = true;
-    		$("#org_maintain_center_main").layout('panel','north').panel('resize', {height:58}) ;
-    	}
-    	
-    	$("#org_maintain_center_main").layout('resize',{width:'100%',height:'100%'});
-    }
-    
-    function queryOrg(){
-    	alert(isDetailQuery);
-    }
 $(document).ready(function () { 
 	$('#org_maintain_tree').tree({
 	    loadFilter: function(data){
@@ -105,19 +78,7 @@ $(document).ready(function () {
 	        } else {
 	            return data;
 	        }
-	    },
-	    onClick: function(node){
-	    	alert(node.id);
 	    }
-	});
-	
-	$("#org_maintain_center_list_dg").datagrid({
-		url:'../organization/queryChildrenNodes.action'
-	});
-	$("#org_maintain_center_list_dg").datagrid('getPager').pagination({	// change options and refresh pager bar information
-			beforePageText: '第',    	
-			afterPageText:'页，共 {pages}页',
-			displayMsg:'显示 {from}到 {to} 条记录，共 {total}记录'
 	});
 });
     </script>

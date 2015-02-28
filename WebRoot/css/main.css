@@ -17,6 +17,14 @@
 .query_value_big {
 	width:300px;
 }
+.detail_query_name {
+	width:15%;
+}
+
+.detail_query_value {
+	width:35%;
+}
+
 
 .text_right {
 	text-align:right;
@@ -29,10 +37,12 @@ table {
 table th {
 	padding:0 5px;
 	border:1px solid #aaa;
+	height:27px;
 }
 table td {
 	padding:0 5px;
 	border:1px solid #aaa;
+	height:27px;
 }
 
 .noborder {

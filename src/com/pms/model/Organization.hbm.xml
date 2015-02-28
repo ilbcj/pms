@@ -14,6 +14,7 @@
 		<property name="name" type="java.lang.String" length="64" not-null="true"/>
 		<property name="uid" type="java.lang.String" length="64" unique="true"/>
 		<property name="parent_id" type="java.lang.Integer"/>
+		<property name="org_level" type="java.lang.String" length="64"/>
 		<property name="description" type="java.lang.String" length="128"/>
 		<property name="tstamp" type="java.lang.String" length="64"/>
 	</class>
