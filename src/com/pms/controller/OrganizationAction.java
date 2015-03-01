@@ -15,12 +15,66 @@ public class OrganizationAction extends ActionSupport {
 	private List<Organization> childrenNodes;
 	private List<TreeNode> treeNodes;
 	private Organization orgNode;
+	private int page;
+	private int rows;
 	private int total;
-	private List<OrgListItem> rows;
+	private List<OrgListItem> items;
 	private int id;
+	private boolean queryAll;
+	private String orgName;
+	private String orgUid;
+	private String orgLevel;
 	private boolean result;
 	private String message;
 	
+	public boolean isQueryAll() {
+		return queryAll;
+	}
+
+	public void setQueryAll(boolean queryAll) {
+		this.queryAll = queryAll;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getOrgUid() {
+		return orgUid;
+	}
+
+	public void setOrgUid(String orgUid) {
+		this.orgUid = orgUid;
+	}
+
+	public String getOrgLevel() {
+		return orgLevel;
+	}
+
+	public void setOrgLevel(String orgLevel) {
+		this.orgLevel = orgLevel;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getRows() {
+		return rows;
+	}
+
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+
 	public int getTotal() {
 		return total;
 	}
@@ -29,12 +83,12 @@ public class OrganizationAction extends ActionSupport {
 		this.total = total;
 	}
 
-	public List<OrgListItem> getRows() {
-		return rows;
+	public List<OrgListItem> getItems() {
+		return items;
 	}
 
-	public void setRows(List<OrgListItem> rows) {
-		this.rows = rows;
+	public void setItems(List<OrgListItem> items) {
+		this.items = items;
 	}
 
 	public List<TreeNode> getTreeNodes() {
@@ -146,15 +200,23 @@ public class OrganizationAction extends ActionSupport {
 	public String QueryChildrenItems()
 	{
 		OrgManageService oms = new OrgManageService();
+		items = new ArrayList<OrgListItem>();
 		try {
-			rows = new ArrayList<OrgListItem>();
-			childrenNodes = oms.QueryChildrenNodes( id );
-			OrgListItem node = null;
-			for(int i=0; i<childrenNodes.size(); i++) {
-				node = oms.ConvertOrgToListItem(childrenNodes.get(i));
-				this.rows.add(node);
+			if( queryAll ) {
+				System.out.println(orgName);
+				//orgName = new String(orgName.getBytes("ISO8859-1"), "UTF-8");
+//				orgName = java.net.URLDecoder.decode(orgName,"UTF-8");
+				System.out.println(orgUid);
+				System.out.println(orgLevel);
+				Organization condition = new Organization();
+				condition.setName(orgName);
+				condition.setUid(orgUid);
+				condition.setOrg_level(orgLevel);
+				total = oms.QueryAllChildrenNodes( id, condition, page, rows, items );
+			} else {
+				
+				total = oms.QueryChildrenNodes( id, page, rows, items );
 			}
-			total = rows.size();
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

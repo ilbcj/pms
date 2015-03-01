@@ -13,8 +13,28 @@
 .query_name_big {
 	width:300px;
 }
-
 .query_value_big {
+	width:300px;
+}
+.form_name_small {
+	width:150px;
+	padding-right:15px;
+}
+.form_value_small {
+	width:200px;
+}
+.form_name_mid {
+	width:200px;
+	padding-right:15px;
+}
+.form_value_mid {
+	width:250px;
+}
+.form_name_big {
+	width:300px;
+	padding-right:15px;
+}
+.form_value_big {
 	width:300px;
 }
 .detail_query_name {

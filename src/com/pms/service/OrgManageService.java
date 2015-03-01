@@ -15,7 +15,7 @@ import com.pms.model.Organization;
 public class OrgManageService {
 	public List<Organization> QueryAllBureauNode() throws Exception
 	{
-		return QueryChildrenNodes( Organization.ROOTNODEID);
+		return QueryChildrenNodes( Organization.ROOTNODEID );
 	}
 	
 	public Organization SaveOrgNode( Organization org ) throws Exception
@@ -29,11 +29,17 @@ public class OrgManageService {
 		return org;
 	}
 	
-	public List<Organization> QueryChildrenNodes(int pid) throws Exception
+	public int QueryChildrenNodes(int pid, int page, int rows, List<OrgListItem> items) throws Exception
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
-		List<Organization> res = dao.GetOrgNodeByParentId( pid );
-		return res;
+		List<Organization> res = dao.GetOrgNodeByParentId( pid, page, rows );
+		OrgListItem node = null;
+		for(int i=0; i<res.size(); i++) {
+			node = ConvertOrgToListItem(res.get(i));
+			items.add(node);
+		}
+		int total = QueryChildrenNodesCount( pid );
+		return total;
 	}
 	
 	public void DeleteOrgNode(Organization target) throws Exception
@@ -93,5 +99,51 @@ public class OrgManageService {
 		item.setOrgLevel(org.getOrg_level());
 		
 		return item;
+	}
+
+	public List<Organization> QueryChildrenNodes(int id) throws Exception {
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		List<Organization> res = dao.GetOrgNodeByParentId( id );
+		return res;
+	}
+
+	public int QueryChildrenNodesCount(int id) throws Exception {
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		int count = dao.GetOrgNodeCountByParentId( id );
+		return count;
+	}
+
+	public int QueryAllChildrenNodes(int id, Organization condition, int page, int rows,
+			List<OrgListItem> items) throws Exception {
+		//get all items;
+		List<Organization> nodes = new ArrayList<Organization>();
+		queryAllChildrenNodesById(id, condition, nodes);
+		//get all items' count;
+		int total = nodes.size();
+		//convert to datagrid's item
+		OrgListItem node = null;
+		for(int i=(page-1)*rows; i<page*rows && i<total; i++) {
+			node = ConvertOrgToListItem(nodes.get(i));
+			items.add(node);
+		}
+		return total;
+	}
+	
+	private void queryAllChildrenNodesById(int pid, Organization condition, List<Organization> children) throws Exception
+	{
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		List<Organization> res = dao.GetOrgNodeByParentId( pid, condition );
+		if(res == null || res.size() == 0) {
+			return;
+		}
+		else {
+			children.addAll(res);
+		}
+			
+		for(int i=0; i<res.size(); i++)
+		{
+			queryAllChildrenNodesById(res.get(i).getId(), condition, children);
+		}
+		return;
 	}
 }

@@ -23,6 +23,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="pms, a user privilege authentication admin console.">
 	<meta name="author" content="ilbcj">
+	<meta http-equiv="content-language" content="zh_CN" />
+	<meta http-equiv="cache-control" content="no-cache" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <!-- The styles -->
     <link rel="stylesheet" type="text/css" href="<%=path %>/themes/default/easyui.css">
