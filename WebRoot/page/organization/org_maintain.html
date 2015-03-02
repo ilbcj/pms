@@ -69,7 +69,7 @@
 							    <div id="toolbar" style="background-color:#E7F0FF">
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrg();">增加</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" >修改</a>
-			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" >删除</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delOrg()">删除</a>
 							    </div><!-- end of toolbar -->
 				    		</div><!-- end of org_maintain_center_list -->
 				    		
@@ -81,6 +81,7 @@
 	    	<div id="org_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
 				<div id="org_maintain_center_detail" class="easyui-panel" 
 								data-options="fit:true,border:false,title:'基本信息',footer:'#org_maintain_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 				    <form id="org_maintain_center_detail_form" method="post">
 				    	<input id="org_id" name="orgNode.id" type="hidden"/> 
 				        <table style="width:100%">
@@ -238,6 +239,25 @@
 		$('#org_maintain_center_detail_form').submit();
     }
 	
+	function delOrg(){
+		var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			successTip("提示", '没有选取记录，不能进行删除操作', 1500);
+			return;
+		}
+		else {
+			$.messager.confirm({ok:'删除'});
+// 			$.messager.messager({
+// 				ok:"删除",
+// 				cancel:"取消"
+// 			})
+// 			$.messager.confirm.('确认', '您选取了' + rows.length + '条记录，是否删除?', function(r){
+//                 if (r){
+//                     alert('confirmed: '+r);
+//                 }
+//             });
+		}
+	}
 $(document).ready(function () { 
 	$('#org_maintain_tree').tree({
 	    loadFilter: function(data){
@@ -327,11 +347,12 @@ $(document).ready(function () {
 	$('#org_maintain_center_detail_form').form({
 	    url:'../organization/saveOrgNode.action',
 	    success:function(data){
-	    var recive = $.parseJSON(data); 
+		    var recive = $.parseJSON(data);
+			
 	        if(recive.result == false) {
-	        	alert("出错了"+recive.message);
+	        	errorTip("保存机构信息失败："+recive.message);
 	        } else {
-	        	alert("添加成功");
+	        	successTip('保存机构信息','保存成功',1000);
 	        	$("org_id").val("");
 	        	$("#org_name").textbox('setValue',"");
 	        	$("#org_uid").textbox('setValue',"");
