@@ -20,6 +20,7 @@ public class OrganizationAction extends ActionSupport {
 	private int total;
 	private List<OrgListItem> items;
 	private int id;
+	private List<Integer> delNodeIds;
 	private boolean queryAll;
 	private String orgName;
 	private String orgUid;
@@ -27,6 +28,14 @@ public class OrganizationAction extends ActionSupport {
 	private boolean result;
 	private String message;
 	
+	public List<Integer> getDelNodeIds() {
+		return delNodeIds;
+	}
+
+	public void setDelNodeIds(List<Integer> delNodeIds) {
+		this.delNodeIds = delNodeIds;
+	}
+
 	public boolean isQueryAll() {
 		return queryAll;
 	}
@@ -230,7 +239,7 @@ public class OrganizationAction extends ActionSupport {
 	{
 		OrgManageService oms = new OrgManageService();
 		try {
-			oms.DeleteOrgNode(orgNode);
+			oms.DeleteOrgNodes(delNodeIds);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

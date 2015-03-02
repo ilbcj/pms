@@ -5,7 +5,15 @@ public class OrgListItem {
 	private String name;
 	private String uid;
 	private int pid;
+	private String pname;
 	private String orgLevel;
+	
+	public String getPname() {
+		return pname;
+	}
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
 	public int getId() {
 		return id;
 	}

@@ -62,20 +62,44 @@
 							            	<th field="ck" checkbox="true"></th>
 							                <th data-options="field:'name'" style="width:33%;">机构名称</th>
 							                <th data-options="field:'uid'" style="width:33%;">机构编码</th>
-							                <th data-options="field:'orgLevel'" style="width:33%;">上级机构</th>
+							                <th data-options="field:'pname'" style="width:33%;">上级机构</th>
 							            </tr>
 							        </thead>
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrg();">增加</a>
-			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" >修改</a>
+			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm2',iconCls:'icon-edit'" >修改</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delOrg()">删除</a>
+								    <div id="mm2" style="width:100px;">
+								        <div onclick="orgModName();" >修改名码</div>
+								        <div onclick="orgModDetail();" >修改详细</div>
+								    </div>
+
 							    </div><!-- end of toolbar -->
 				    		</div><!-- end of org_maintain_center_list -->
 				    		
 				    	</div><!-- end of org_maintain_center_main -->
 				    </div><!-- end of center -->
 		    	</div>
+		    	<div id="org_mod_name_win" class="easyui-window" title="修改名码" style="width:30%;height:150px;"
+						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
+					<div class="easyui-panel" data-options="fit:true,footer:'#org_mod_name_win_ft'">
+						<table style="width:100%;height:100%">
+			                <tr>
+			                    <td class="query_name_small text_right"><span style="color:red;">*</span> 机构名称</td>
+			                    <td class="query_value_small"><input id="org_query_win_name" class="easyui-textbox"></input></td>
+			                </tr>
+			                <tr>
+			                    <td class="query_name_small text_right"><span style="color:red;">*</span> 机构编码</td>
+			                    <td class="query_value_small"><input id="org_query_win_uid" class="easyui-textbox"></input></td>
+			                </tr>
+			            </table>
+					</div>
+					<div id="org_mod_name_win_ft" style="padding:5px;text-align:center">
+				        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="">确定</a>
+                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="$('#org_mod_name_win').window('close');">返回</a>
+				    </div>
+				</div><!-- end of org_mod_name_win -->
 	    	</div><!-- end of org_maintain_center_main_wapper -->
 	    	
 	    	<div id="org_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
@@ -124,7 +148,7 @@
 								            <tr>
 								                <th data-options="field:'name'" style="width:33%;">机构名称</th>
 								                <th data-options="field:'uid'" style="width:33%;">机构编码</th>
-								                <th data-options="field:'orgLevel'" style="width:33%;">上级机构</th>
+								                <th data-options="field:'pname'" style="width:33%;">上级机构</th>
 								            </tr>
 								        </thead>
 								    </table>
@@ -145,7 +169,7 @@
 				                </div>
 				            </div><!-- end of center -->
 				        </div>
-				    </div>
+				    </div><!-- end of org_query_win -->
 				</div><!-- org_maintain_center_detail -->
 				<div id="org_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addOrgSave();">保存</a>
@@ -242,21 +266,62 @@
 	function delOrg(){
 		var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
 		if(rows.length == 0) {
-			successTip("提示", '没有选取记录，不能进行删除操作', 1500);
+			warningTip("提示", '请选择要删除的机构');
 			return;
 		}
 		else {
-			$.messager.confirm({ok:'删除'});
-// 			$.messager.messager({
-// 				ok:"删除",
-// 				cancel:"取消"
-// 			})
-// 			$.messager.confirm.('确认', '您选取了' + rows.length + '条记录，是否删除?', function(r){
-//                 if (r){
-//                     alert('confirmed: '+r);
-//                 }
-//             });
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录，是否删除?', function(r){
+                if (r){
+                	var poststr = "delNodeIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delNodeIds=" + rows[i].id;
+					}
+
+                    $.getJSON("../organization/deleteOrgNode.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#org_maintain_tree').tree('reload');
+							$('#org_maintain_center_list_dg').datagrid('reload');
+							successTip("删除机构","操作成功");
+						}
+						else
+						{
+							warningTip("提示", '删除机构操作失败：' + retObj.message);
+						}
+					});
+                }
+            });
 		}
+	}
+	
+	function orgPreMod() {
+		var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的机构');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个机构');
+			return false;
+		}
+		return true;
+	}
+	function orgModName(){
+		if( orgPreMod() ) {
+			$('#org_mod_name_win').window('open').window('center');
+			
+		}
+		return;
+	}
+	function orgModDetail(){
+		if( orgPreMod() ) {
+		}
+		return;
 	}
 $(document).ready(function () { 
 	$('#org_maintain_tree').tree({

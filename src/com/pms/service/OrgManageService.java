@@ -56,6 +56,21 @@ public class OrgManageService {
 		return;
 	}
 	
+	public void DeleteOrgNodes(List<Integer> nodeIds) throws Exception
+	{
+		if(nodeIds == null)
+			return;
+		Organization target;
+		for(int i = 0; i< nodeIds.size(); i++) {
+			target = new Organization();
+			target.setId(nodeIds.get(i));
+			
+			DeleteOrgNode(target);
+		}
+		
+		return ;
+	}
+	
 	private void getAllChildrenNodesById(int pid, List<Organization> children) throws Exception
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
@@ -90,14 +105,16 @@ public class OrgManageService {
 		return dao.OrgHasChild( pid );
 	}
 
-	public OrgListItem ConvertOrgToListItem(Organization org) {
+	public OrgListItem ConvertOrgToListItem(Organization org) throws Exception {
 		OrgListItem item = new OrgListItem();
 		item.setId(org.getId());
 		item.setName(org.getName());
 		item.setPid(org.getParent_id());
 		item.setUid(org.getUid());
 		item.setOrgLevel(org.getOrg_level());
-		
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		Organization parent = dao.GetOrgNodeById(org.getParent_id());
+		item.setPname(parent == null ? "" : parent.getName());
 		return item;
 	}
 

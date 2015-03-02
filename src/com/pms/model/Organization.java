@@ -4,7 +4,7 @@ public class Organization {
 	public final static int ROOTNODEID = 1;
 	
 	private int id;
-	private String name;
+	private String name="";
 	private int parent_id;
 	private String description;
 	private String uid;

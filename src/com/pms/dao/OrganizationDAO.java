@@ -13,4 +13,5 @@ public interface OrganizationDAO {
 	public List<Organization> GetOrgNodeByParentId(int pid, int page, int rows) throws Exception;
 	public int GetOrgNodeCountByParentId(int pid)throws Exception;
 	List<Organization> GetOrgNodeByParentId(int pid, Organization condition) throws Exception;
+	public Organization GetOrgNodeById(int id) throws Exception;;
 }

@@ -218,4 +218,27 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		return rs;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Organization GetOrgNodeById(int id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		Organization rs = null;
+		String sqlString = "select * from organization where id = :id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			q.setInteger("id", id);
+			rs = (Organization) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
 }
