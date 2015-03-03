@@ -313,8 +313,10 @@
 	}
 	function orgModName(){
 		if( orgPreMod() ) {
+			var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+			$("#org_query_win_name").textbox('setValue',rows[0].name);
+			$("#org_query_win_uid").textbox('setValue',rows[0].uid);
 			$('#org_mod_name_win').window('open').window('center');
-			
 		}
 		return;
 	}
