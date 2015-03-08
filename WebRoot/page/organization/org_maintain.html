@@ -286,7 +286,7 @@
 						if(retObj.result == true)
 						{
 							$('#org_maintain_tree').tree('reload');
-							$('#org_maintain_center_list_dg').datagrid('reload');
+							$('#org_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
 							successTip("删除机构","操作成功");
 						}
 						else
@@ -427,6 +427,7 @@ $(document).ready(function () {
 	        	$("#org_level").textbox('setValue',"");
 	        	//reload org_main_tree
 	        	$('#org_maintain_tree').tree('reload');
+				$('#org_maintain_center_list_dg').datagrid('reload');
 	        	addOrgReturn();
 	        }
 	    }
