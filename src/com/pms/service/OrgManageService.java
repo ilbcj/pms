@@ -163,4 +163,21 @@ public class OrgManageService {
 		}
 		return;
 	}
+
+	public void ModifyOrgNodeName(int id, String orgName, String orgUid) throws Exception {
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		Organization node = dao.GetOrgNodeById(id);
+		if(node == null) {
+			throw new Exception("ID为" + id + "的机构结点不存在。");
+		}
+		
+		node.setName(orgName);
+		node.setUid(orgUid);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		node.setTstamp(timenow);
+		node = dao.OrgNodeAdd(node);
+		return;
+	}
 }

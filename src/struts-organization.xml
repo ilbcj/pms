@@ -12,7 +12,8 @@
 		</global-exception-mappings>
 	
 	<!-- 
-		查询结点			method="queryAllBureauNode"、"saveOrgNode"、"queryChildrenNodes"、"queryChildrenItems"、"deleteOrgNode"
+		查询结点			method="queryAllBureauNode"、"saveOrgNode"、"queryChildrenNodes"、
+									"queryChildrenItems"、"deleteOrgNode"、"modifyOrgNodeName"
 		
 		//配置管理			method="sysConfigQuery"、"sysConfigSave"、"allRegionListQuery"
 		
@@ -33,6 +34,9 @@
  			<result name="success" type="json" />
  		</action>
  		<action name="deleteOrgNode" class="com.pms.controller.OrganizationAction" method="DeleteOrgNode" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="modifyOrgNodeName" class="com.pms.controller.OrganizationAction" method="ModifyOrgNodeName" >
  			<result name="success" type="json" />
  		</action>
  		

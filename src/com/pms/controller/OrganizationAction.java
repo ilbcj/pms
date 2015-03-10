@@ -185,6 +185,20 @@ public class OrganizationAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String ModifyOrgNodeName()
+	{
+		OrgManageService oms = new OrgManageService();
+		try {
+			oms.ModifyOrgNodeName(id, orgName, orgUid);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String QueryChildrenNodes()
 	{
 		OrgManageService oms = new OrgManageService();
