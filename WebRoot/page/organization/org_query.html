@@ -16,18 +16,397 @@
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
 			<b>当前位置：<span style="color:blue">机构查询</span></b>
 		</div>
-		<div region="west" data-options="split:true,border:true" title="Navigator" style="width:150px;">
-		    <p style="padding:5px;margin:0;">Select language:</p>
-		    <ul>
-		        <li><a href="javascript:void(0)" onclick="showcontent('java')">Java</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('cshape')">C#</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('vb')">VB</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('erlang')">Erlang</a></li>
-		    </ul>
-		</div>
-		<div id="content" region="center" data-options="border:true"  title="Language" style="padding:5px;">
-		</div>
+	    <div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+	    	<div id="org_query_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+		    	<div class="easyui-layout" data-options="fit:true,border:false">
+		    		<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
+			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+				        <ul id="org_query_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
+				        </ul><!-- end of org_query_tree -->
+				        </div>
+				    </div><!-- end of west -->
+				    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
+				    	<div id="org_query_center_main" class="easyui-layout" data-options="fit:true" >
+					    	<div id="org_query_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+				    			<table style="width:100%">
+					                <tr>
+					                    <td class="query_name_small text_right">机构名称</td>
+					                    <td class="query_value_small"><input id="org_query_name" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small text_right">机构编码</td>
+					                    <td class="query_value_small"><input id="org_query_uid" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small noborder">
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
+					                    </td>
+					                    <td class="text_right noborder">
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryOrg()">查询</a>
+			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+					                    </td>
+					                </tr>
+					            </table>
+					            <table class="detail_query noborder" style="width:100%;display:none;">
+					                <tr>
+					                    <td class="detail_query_name text_right">公安组织机构级别</td>
+					                    <td class="detail_query_value"><input id="org_query_level" class="easyui-textbox query_value_mid"></input></td>
+					                    <td>
+					                </tr>
+					            </table>
+				    		</div><!-- end of org_query_center_query -->
+				    		
+				    		<div id="org_query_center_list" region="center" data-options="border:false,noheader:true" >
+				    			<table id="org_query_center_list_dg"  
+							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+							        <thead>
+							            <tr>
+							            	<th field="ck" checkbox="true"></th>
+							                <th data-options="field:'name'" style="width:33%;">机构名称</th>
+							                <th data-options="field:'uid'" style="width:33%;">机构编码</th>
+							                <th data-options="field:'pname'" style="width:33%;">上级机构</th>
+							            </tr>
+							        </thead>
+							    </table>
+							    <div id="toolbar" style="background-color:#E7F0FF">
+							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrg();">查看</a>
+			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm3',iconCls:'icon-edit'" >导出</a>
+								    <div id="mm3" style="width:100px;">
+								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
+								        <div class="menu-sep"></div>
+								        <div onclick="orgModDetail();" >导出所选记录</div>
+								        <div onclick="orgModName();" >导出本页记录</div>
+								        <div onclick="orgModDetail();" >导出全部记录</div>
+								    </div>
+
+							    </div><!-- end of toolbar -->
+				    		</div><!-- end of org_query_center_list -->
+				    		
+				    	</div><!-- end of org_query_center_main -->
+				    </div><!-- end of center -->
+		    	</div>
+	    	</div><!-- end of org_query_center_main_wapper -->
+	    	
+	    	<div id="org_query_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="org_query_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'基本信息',footer:'#org_maintain_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+				    <form id="org_query_center_detail_form" method="post">
+				    	<input id="org_id" name="orgNode.id" type="hidden"/> 
+				        <table style="width:100%">
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 机构名称</td>
+				                <td><input id="org_name" name="orgNode.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入机构名称'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 机构编码</td>
+				                <td><input id="org_uid" name="orgNode.uid" class="form_value_mid easyui-textbox" data-options="prompt:'请输入机构编码'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 上级机构</td>
+				                <td>
+				                	<input id="org_pid" name="orgNode.parent_id" class="form_value_mid easyui-textbox" data-options="prompt:'请选择上级机构',editable:false"></input>
+				                	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="openOrgSelectWin()">选择</a>
+				                </td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 公安组织机构级别</td>
+				                <td><input id="org_level" name="orgNode.org_level" class="form_value_mid easyui-textbox" data-options="prompt:'请输入公安组织机构级别'"></input></td>
+				            </tr>
+				        </table>
+				    </form>
+
+				</div><!-- org_query_center_detail -->
+				<div id="org_query_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addOrgReturn();">返回</a>
+				</div><!-- org_query_center_detail_ft -->
+	    	</div><!-- end of org_query_center_detail_wapper -->
+	    
+	    </div><!-- end of center -->
+    </div><!-- end of layout -->
+    <script>
+    var isDetailQuery = false;
+    function toggleDetailQuery(obj){
+    	var currentHeight = $("#org_query_center_main").layout('panel','north').height();
+    	if( currentHeight > 29 ) {
+    		$(".detail_query").hide();
+    		$('.detail_query_button').linkbutton({iconCls: 'icon-detail', text:'高级查询'});
+    		isDetailQuery = false;
+    		$("#org_query_center_main").layout('panel','north').panel('resize', {height:29}) ;
+    	}
+    	else {
+    		$(".detail_query").show();
+    		$('.detail_query_button').linkbutton({iconCls: 'icon-simple', text:'简单查询'});
+    		isDetailQuery = true;
+    		$("#org_query_center_main").layout('panel','north').panel('resize', {height:58}) ;
+    	}
+    	
+    	$("#org_query_center_main").layout('resize',{width:'100%',height:'100%'});
+    }
+    
+    function queryOrg(){
+    	var treeNode = $('#org_maintain_tree').tree('getSelected');
+    	var treeNodeId = "";
+    	if( treeNode != null ) {
+    		treeNodeId = treeNode.id;
+    	}
+    	var name = $("#org_query_name").val();
+    	var uid = $("#org_query_uid").val();
+    	var level = "";
+    	if( isDetailQuery ) {
+    		level = $("#org_query_level").val();
+    	}
+    	$("#org_query_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			id: treeNodeId,
+			orgName: name,
+			orgUid: uid,
+			orgLevel: level
+		});
+    }
+    
+    function clearQueryOrgCondition(){
+    	$("#org_query_name").textbox({value:""});
+    	$("#org_query_uid").textbox({value:""});
+    	$("#org_query_level").textbox({value:""});
+    }
+    
+    function addOrg(){
+    	$("#org_query_center_main_wapper").panel('close');
+    	$("#org_query_center_detail_wapper").panel('open');
+    }
+    
+    function addOrgReturn(){
+    	$("#org_query_center_main_wapper").panel('open');
+    	$("#org_query_center_main_wapper").panel('resize');
+    	$("#org_query_center_detail_wapper").panel('close');
+    }
+    
+//     function openOrgSelectWin(){
+//     	$('#org_query_win').window('open').window('center');
+//     }
+    
+//     function orgQueryWinQueryOrg(){
+//     	var name = $("#org_query_win_name").val();
+//     	var uid = $("#org_query_win_uid").val();
+    	
+//     	$("#org_query_list_dg").datagrid('load',{
+//     		queryAll: true,
+// 			id: 0,
+// 			orgName: name,
+// 			orgUid: uid
+// 		});
+//     }
+    
+//     function orgQueryWinClearQueryOrgCondition(){
+//     	$("#org_query_win_name").textbox({value:""});
+//     	$("#org_query_win_uid").textbox({value:""});
+//     }
+    
+    function addOrgSave(){
+		// submit the form
+		$('#org_query_center_detail_form').submit();
+    }
 	
-	</div><!-- end of layout -->
+// 	function delOrg(){
+// 		var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+// 		if(rows.length == 0) {
+// 			warningTip("提示", '请选择要删除的机构');
+// 			return;
+// 		}
+// 		else {
+// 			$.extend($.messager.defaults,{  
+// 				ok:"删除",  
+// 				cancel:"取消"  
+// 			});
+// 			$.messager.confirm('确认', '您选取了' + rows.length + '条记录，是否删除?', function(r){
+//                 if (r){
+//                 	var poststr = "delNodeIds=" + rows[0].id;
+//                 	for(var i=1; i<rows.length; i++){
+// 					    poststr += "&delNodeIds=" + rows[i].id;
+// 					}
+
+//                     $.getJSON("../organization/deleteOrgNode.action", poststr, function(retObj) {
+		
+// 						if(retObj.result == true)
+// 						{
+// 							$('#org_maintain_tree').tree('reload');
+// 							$('#org_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+// 							successTip("删除机构","操作成功");
+// 						}
+// 						else
+// 						{
+// 							warningTip("提示", '删除机构操作失败：' + retObj.message);
+// 						}
+// 					});
+//                 }
+//             });
+// 		}
+// 	}
+	
+// 	function orgPreMod() {
+// 		var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+// 		if(rows.length == 0) {
+// 			warningTip("提示", '请选择要修改的机构');
+// 			return false;
+// 		} else if (rows.length>1)
+// 		{
+// 			warningTip("提示", '一次只能修改一个机构');
+// 			return false;
+// 		}
+// 		return true;
+// 	}
+// 	function orgModName(){
+// 		if( orgPreMod() ) {
+// 			var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+// 			$("#org_mod_win_name").textbox('setValue',rows[0].name);
+// 			$("#org_mod_win_uid").textbox('setValue',rows[0].uid);
+// 			$('#org_mod_name_win').window('open').window('center');
+// 		}
+// 		return;
+// 	}
+// 	function orgModNameConfirm(){
+// 		var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+// 		var name = $("#org_mod_win_name").textbox('getValue');
+// 		var uid = $("#org_mod_win_uid").textbox('getValue');
+			
+// 		var poststr = "id=" + rows[0].id + "&orgName=" + name + "&orgUid=" + uid;
+      	
+//         $.getJSON("../organization/modifyOrgNodeName.action", poststr, function(retObj) {
+
+// 			if(retObj.result == true)
+// 			{
+				$('#org_maintain_tree').tree('reload');
+// 				$('#org_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+// 				successTip("保存机构信息","操作成功");
+// 			}
+// 			else
+// 			{
+// 				warningTip("提示", '保存机构信息失败：' + retObj.message);
+// 			}
+// 			$('#org_mod_name_win').window('close');
+// 		});
+// 	}
+	function orgModDetail(){
+		if( orgPreMod() ) {
+			var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
+			$("#org_id").val(rows[0].id);
+			$("#org_name").textbox('setValue',rows[0].name);
+			$("#org_uid").textbox('setValue',rows[0].uid);
+			$("#org_pid").textbox('setValue',rows[0].pid);
+			$("#org_pid").textbox('setText',rows[0].pname);
+			$("#org_level").textbox('setValue',rows[0].orgLevel);
+			
+			$("#org_maintain_center_main_wapper").panel('close');
+    		$("#org_maintain_center_detail_wapper").panel('open');
+		}
+		return;
+	}
+$(document).ready(function () { 
+	$('#org_query_tree').tree({
+	    loadFilter: function(data){
+	        if (data.treeNodes){
+	            return data.treeNodes;
+	        } else {
+	            return data;
+	        }
+	    },
+	    onClick: function(node){
+	    	//alert(node.id);
+	    	$("#org_query_center_list_dg").datagrid('load',{
+				id: node.id
+			});
+	    }
+	});
+	
+	$("#org_query_center_list_dg").datagrid({
+		url:'../organization/queryChildrenItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.items;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#org_query_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+	$("#org_query_center_list_dg").datagrid('getPager').pagination({	// change options and refresh pager bar information
+			beforePageText: '第',    	
+			afterPageText:'页，共 {pages}页',
+			displayMsg:'显示 {from}到 {to} 条记录，共 {total}记录'
+	});
+	
+// 	$('#org_query_tree').tree({
+// 	    loadFilter: function(data){
+// 	        if (data.treeNodes){
+// 	            return data.treeNodes;
+// 	        } else {
+// 	            return data;
+// 	        }
+// 	    },
+// 	    onClick: function(node){
+	    	alert(node.id);
+// 			$("#org_pid").textbox('setValue',node.id);
+// 			$("#org_pid").textbox('setText',node.text);
+// 			$('#org_query_win').window('close');
+// 	    }
+// 	});
+	
+	$("#org_query_list_dg").datagrid({
+		url:'../organization/queryChildrenItems.action',
+		queryParams:{queryAll: true},
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.items;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+		onSelect: function(index,row) {
+// 			alert(index);
+//  			alert(row.id);
+//  			alert(row.name);
+			$("#org_pid").textbox('setValue',row.id);
+			$("#org_pid").textbox('setText',row.name);
+			$('#org_query_win').window('close');
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#org_query_list_dg").layout('resize',{width:'100%',height:'100%'}); }
+	});
+	$("#org_query_list_dg").datagrid('getPager').pagination({	// change options and refresh pager bar information
+			beforePageText: '第',    	
+			afterPageText:'页，共 {pages}页',
+			displayMsg:'显示 {from}到 {to} 条记录，共 {total}记录'
+	});
+	
+	$('#org_query_center_detail_form').form({
+	    url:'../organization/saveOrgNode.action',
+	    success:function(data){
+		    var recive = $.parseJSON(data);
+			
+	        if(recive.result == false) {
+	        	errorTip("保存机构信息失败："+recive.message);
+	        } else {
+	        	successTip('保存机构信息','保存成功',1000);
+	        	$("org_id").val("");
+	        	$("#org_name").textbox('setValue',"");
+	        	$("#org_uid").textbox('setValue',"");
+	        	$("#org_pid").textbox('setValue',"");
+	        	$("#org_level").textbox('setValue',"");
+	        	//reload org_main_tree
+	        	$('#org_query_tree').tree('reload');
+				$('#org_query_center_list_dg').datagrid('reload').datagrid('clearSelections');
+	        	addOrgReturn();
+	        }
+	    }
+	});
+	
+});
+    </script>
   </body>
 </html>

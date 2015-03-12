@@ -1,3 +1,7 @@
+input[type=checkbox] {
+	vertical-align: middle;
+}
+
 .query_name_small {
 	width:100px;
 }

@@ -5,10 +5,12 @@
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-language" content="zh_CN" />
+	<meta http-equiv="cache-control" content="no-cache" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     
     <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
-
+	
   </head>
   
   <body>
@@ -16,16 +18,21 @@
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
 			<b>当前位置：<span style="color:blue">机构导入</span></b>
 		</div>
-		<div region="west" data-options="split:true,border:true" title="Navigator" style="width:150px;">
-		    <p style="padding:5px;margin:0;">Select language:</p>
-		    <ul>
-		        <li><a href="javascript:void(0)" onclick="showcontent('java')">Java</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('cshape')">C#</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('vb')">VB</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('erlang')">Erlang</a></li>
-		    </ul>
-		</div>
-		<div id="content" region="center" data-options="border:true"  title="Language" style="padding:5px;">
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div class="easyui-panel" data-options="fit:true,border:false" >
+				<form id="ff" action="form1_proc.php" method="post" enctype="multipart/form-data">
+					<table style="width:100%">
+			            <tr>
+			                <td class="form_name_small text_right">导入策略</td>
+			                <td><input type="checkbox" checked="checked"><span> 覆盖已存在项</span></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
+			                <td><input id="org_file" name="org_file" class="form_value_mid easyui-filebox" data-options="buttonAlign:'left',buttonText:'选择文件',prompt:'请选择组织机构文件(1.5M以内)'"></input></td>
+			            </tr>
+			        </table>
+			    </form>
+			</div>
 		</div>
 	
 	</div><!-- end of layout -->
