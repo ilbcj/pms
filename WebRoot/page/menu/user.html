@@ -13,30 +13,67 @@
   
   <body>
     <ul id="menu_user" class="easyui-tree" lines="true">
-            <li iconCls="icon-leaf">
-                <span>用户维护</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>用户导入</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>用户查询</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>用户调出</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>用户调入</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>挂起恢复</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>已删除用户</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>用户统计</span>
-            </li>
-        </ul>
+        <li iconCls="icon-leaf" id="menu_user_maintain">
+            <span>用户维护</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_user_import">
+            <span>用户导入</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_user_query">
+            <span>用户查询</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_user_out">
+            <span>用户调出</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_user_in">
+            <span>用户调入</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_user_suspend">
+            <span>挂起恢复</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_user_del_query">
+            <span>已删除用户</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_user_audit">
+            <span>用户统计</span>
+        </li>
+    </ul>
+<script>
+$(document).ready(function () {
+	$('#menu_user').tree({
+		onClick: function(node){
+// 			alert(node.text);  // alert node text property when clicked
+// 			alert(node.state);
+// 			alert(node.id);
+			if( node.id == 'menu_user_maintain') {
+				$('body').layout('panel','center').panel('refresh','user/user_maintain.html');
+			}
+			else if (node.id == 'menu_user_import') {
+				$('body').layout('panel','center').panel('refresh','user/user_import.html');
+			}
+			else if (node.id == 'menu_user_query') {
+				$('body').layout('panel','center').panel('refresh','user/user_query.html');
+			}
+			else if (node.id == 'menu_user_out') {
+				$('body').layout('panel','center').panel('refresh','user/user_out.html');
+			}
+			else if (node.id == 'menu_user_in') {
+				$('body').layout('panel','center').panel('refresh','user/user_in.html');
+			}
+			else if (node.id == 'menu_user_suspend') {
+				$('body').layout('panel','center').panel('refresh','user/user_suspend.html');
+			}
+			else if (node.id == 'menu_user_del_query') {
+				$('body').layout('panel','center').panel('refresh','user/user_del_query.html');
+			}
+			else if (node.id == 'menu_user_audit') {
+				$('body').layout('panel','center').panel('refresh','user/user_audit.html');
+			}
+			
+		}
+	});
+});
+
+</script>  
   </body>
 </html>

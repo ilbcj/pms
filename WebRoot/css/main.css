@@ -54,16 +54,28 @@ input[type=checkbox] {
 	text-align:right;
 }
 
-table {
+.displaynone {
+	display:none;
+}
+
+.hidden {
+	visibility:hidden;
+}
+
+.visible {
+	visibility:visible;
+}
+
+table[class~=nodt] {
 	border-collapse:collapse;
 	border:1px solid #aaa;
 }
-table th {
+table[class~=nodt] th {
 	padding:0 5px;
 	border:1px solid #aaa;
 	height:27px;
 }
-table td {
+table[class~=nodt] td {
 	padding:0 5px;
 	border:1px solid #aaa;
 	height:27px;

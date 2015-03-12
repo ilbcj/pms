@@ -16,18 +16,142 @@
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
 			<b>当前位置：<span style="color:blue">机构统计</span></b>
 		</div>
-		<div region="west" data-options="split:true,border:true" title="Navigator" style="width:150px;">
-		    <p style="padding:5px;margin:0;">Select language:</p>
-		    <ul>
-		        <li><a href="javascript:void(0)" onclick="showcontent('java')">Java</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('cshape')">C#</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('vb')">VB</a></li>
-		        <li><a href="javascript:void(0)" onclick="showcontent('erlang')">Erlang</a></li>
-		    </ul>
-		</div>
-		<div id="content" region="center" data-options="border:true"  title="Language" style="padding:5px;">
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="org_audit_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+		    	<div class="easyui-layout" data-options="fit:true,border:false">
+		    		<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
+			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+				        <ul id="org_audit_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
+				        </ul><!-- end of org_maintain_tree -->
+				        </div>
+				    </div><!-- end of west -->
+				    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
+				    	<div id="org_audit_center_main" class="easyui-layout" data-options="fit:true" >
+					    	<div id="org_audit_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+				    			<table class="nodt" style="width:100%">
+					                <tr>
+					                    <td class="query_name_small text_right">统计内容</td>
+					                    <td class="query_value_small">
+					                    	<input id="org_audit_criteria" value="org" style="width:150px;" />											
+										</td>
+					                    <td class="query_name_small text_right hidden"><span style="color:red;">*</span>开始时间</td>
+					                    <td class="query_value_small hidden">
+					                    	<input id="org_audit_criteria_start" class="easyui-datetimebox" >
+					                    </td>
+					                    <td class="query_name_small text_right hidden"><span style="color:red;">*</span>结束时间</td>
+					                    <td class="query_value_small hidden">
+					                    	<input id="org_audit_criteria_end" type="text" style="width:200px" />
+					                    </td>
+					                </tr>
+					            </table>
+				    		</div><!-- end of org_audit_center_query -->
+				    		
+				    		<div id="org_audit_center_tab" region="center" data-options="border:false,noheader:true" >
+				    			<div class="easyui-tabs" data-options="fit:true">
+								    <div title="图表展示" style="padding:3px;">
+								        
+								    </div>
+								    <div title="列表展示" style="overflow:auto;padding:3px;">
+								        <table class="nodt" id="org_audit_center_list_dg"  
+									            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',noheader:true,fit:true">
+									        <thead>
+									            <tr>
+									            	<th field="ck" checkbox="true"></th>
+									                <th data-options="field:'name'" style="width:33%;">统计内容</th>
+									                <th data-options="field:'uid'" style="width:33%;">数量</th>
+									                <th data-options="field:'pname'" style="width:33%;">比例</th>
+									            </tr>
+									        </thead>
+									    </table>
+									    <div id="toolbar" style="background-color:#E7F0FF">
+					            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm4',iconCls:'icon-edit'" >导出</a>
+										    <div id="mm4" style="width:100px;">
+										        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
+										        <div class="menu-sep"></div>
+										        <div onclick="orgModDetail();" >导出所选记录</div>
+										        <div onclick="orgModName();" >导出本页记录</div>
+										        <div onclick="orgModDetail();" >导出全部记录</div>
+										    </div>
+									    </div><!-- end of toolbar -->
+								    </div>
+								</div><!-- end of easyui-tabs -->
+				    		</div><!-- end of org_audit_center_tab -->
+				    	</div><!-- end of org_audit_center_main -->
+				    </div><!-- end of center -->
+				</div>
+			</div><!-- end of org_audit_center_main_wapper -->
 		</div>
 	
 	</div><!-- end of layout -->
+
+<script>
+$(document).ready(function () { 
+	
+	$('#org_audit_tree').tree({
+	    loadFilter: function(data){
+	        if (data.treeNodes){
+	            return data.treeNodes;
+	        } else {
+	            return data;
+	        }
+	    },
+	    onClick: function(node){
+	    	//alert(node.id);
+// 	    	$("#org_maintain_center_list_dg").datagrid('load',{
+// 				id: node.id
+// 			});
+	    }
+	});
+	
+	$("#org_audit_criteria").combobox({
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '组织机构',
+			value: 'org',
+		},{
+			label: '机构变动',
+			value: 'change'
+		},{
+			label: '机构模板',
+			value: 'template'
+		}],
+		onSelect: function(record){
+			var cv = $("#org_audit_criteria").combobox('getValue');
+			if( cv == "change" ) {
+				$("td.hidden").addClass("visible").removeClass("hidden");
+			}
+			else {
+				$("td.visible").addClass("hidden").removeClass("visible");
+			}
+		}
+	});
+	
+// 	$.fn.datebox.defaults.formatter = function(date){
+// 		var y = date.getFullYear();
+// 		var m = date.getMonth()+1;
+// 		var d = date.getDate();
+// 		alert(y+'/'+m+'/'+d);
+// 		return y+'/'+m+'/'+d;
+// 	}
+	
+	$.fn.calendar.defaults.weeks = ['日','一','二','三','四','五','六'];
+	$.fn.calendar.defaults.months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一', '十二'];
+	$.extend($.fn.datetimebox.defaults,{
+		currentText:'今天',
+		closeText:'关闭',
+		okText:'确定'
+	});
+	
+	$("#org_audit_criteria_start").datetimebox({
+	});
+	
+	$("#org_audit_criteria_end").datetimebox({
+
+	});
+	
+	$("#org_audit_center_list_dg").datagrid();
+});
+</script>	
   </body>
 </html>
