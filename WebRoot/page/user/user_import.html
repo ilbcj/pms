@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>org_import.html</title>
+    <title>user_import.html</title>
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
-    <meta http-equiv="content-language" content="zh_CN" />
-	<meta http-equiv="cache-control" content="no-cache" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     
     <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
-	
+
   </head>
   
   <body>
 	<div class="easyui-layout" data-options="fit:true,border:false">
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
-			<b>当前位置：<span style="color:blue">机构导入</span></b>
+			<b>当前位置：<span style="color:blue">用户导入</span></b>
 		</div>
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
 			<div class="easyui-panel" data-options="fit:true,border:false" >
@@ -28,7 +26,7 @@
 			            </tr>
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
-			                <td><input id="org_file" name="org_file" class="form_value_mid easyui-filebox" data-options="buttonAlign:'left',buttonText:'选择文件',prompt:'请选择组织机构文件(1.5M以内)'"></input></td>
+			                <td><input id="org_file" name="org_file" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择组织机构文件(1.5M以内)'"></input></td>
 			            </tr>
 			        </table>
 			    </form>
@@ -37,6 +35,7 @@
 				</div>
 			</div>
 		</div><!-- end of content -->
+	
 	</div><!-- end of layout -->
   </body>
 </html>

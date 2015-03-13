@@ -22,7 +22,7 @@
 		    		<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
 			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
 				        <ul id="org_audit_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
-				        </ul><!-- end of org_maintain_tree -->
+				        </ul><!-- end of org_audit_tree -->
 				        </div>
 				    </div><!-- end of west -->
 				    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
@@ -64,14 +64,7 @@
 									        </thead>
 									    </table>
 									    <div id="toolbar" style="background-color:#E7F0FF">
-					            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm4',iconCls:'icon-edit'" >导出</a>
-										    <div id="mm4" style="width:100px;">
-										        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
-										        <div class="menu-sep"></div>
-										        <div onclick="orgModDetail();" >导出所选记录</div>
-										        <div onclick="orgModName();" >导出本页记录</div>
-										        <div onclick="orgModDetail();" >导出全部记录</div>
-										    </div>
+					            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">导出</a>
 									    </div><!-- end of toolbar -->
 								    </div>
 								</div><!-- end of easyui-tabs -->

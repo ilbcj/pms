@@ -54,6 +54,10 @@ input[type=checkbox] {
 	text-align:right;
 }
 
+.text_center {
+	text-align:center;
+}
+
 .displaynone {
 	display:none;
 }

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>user_suspend.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">挂起恢复</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="user_suspend_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+				<div class="easyui-layout" data-options="fit:true,border:false">
+					<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
+			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+				        <ul id="user_suspend_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
+				        </ul><!-- end of user_suspend_tree -->
+				        </div>
+				    </div><!-- end of west -->
+				    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
+				    	<div id="user_suspend_center_main" class="easyui-layout" data-options="fit:true" >
+				    		<div id="user_suspend_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+				    			<table class="nodt" style="width:100%">
+					                <tr>
+					                    <td class="query_name_small text_right">姓名</td>
+					                    <td class="query_value_small"><input id="user_query_name" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small text_right">状态</td>
+					                    <td class="query_value_small"><input id="user_query_status" value="0" style="width:150px;" />	</input></td>
+					                    <td class="query_name_small noborder">
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
+					                    </td>
+					                    <td class="text_right noborder">
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
+			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+					                    </td>
+					                </tr>
+					            </table>
+					            <table class="detail_query noborder nodt" style="width:100%;display:none;">
+					                <tr>
+					                    <td class="detail_query_name text_right">二级部门</td>
+					                    <td class="detail_query_value"><input id="user_query_unit" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">警种</td>
+					                    <td class="detail_query_value"><input id="user_query_police_type" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">性别</td>
+					                    <td class="detail_query_value"><input id="user_query_sex" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">身份证</td>
+					                    <td class="detail_query_value"><input id="user_query_idnum" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">最高敏感级别</td>
+					                    <td class="detail_query_value"><input id="user_query_max_sensitive_level" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">岗位</td>
+					                    <td class="detail_query_value"><input id="user_query_ position" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					            </table>
+				    		</div><!-- end of user_suspend_center_query -->
+				    		
+				    		<div id="user_suspend_center_list" region="center" data-options="border:false,noheader:true" >
+				    			<table class="nodt" id="user_suspend_center_list_dg"  
+							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+							        <thead>
+							            <tr>
+							            	<th field="ck" checkbox="true"></th>
+							                <th data-options="field:'name'" style="width:25%;">姓名</th>
+							                <th data-options="field:'uid'" style="width:25%;">组织机构</th>
+							                <th data-options="field:'pname'" style="width:25%;">上级机构</th>
+							                <th data-options="field:'pname'" style="width:25%;">状态</th>
+							            </tr>
+							        </thead>
+							    </table>
+							    <div id="toolbar" style="background-color:#E7F0FF">
+							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addUser();">查看</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modUser();">恢复</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delOrg()">挂起</a>
+			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm6',iconCls:'icon-edit'" >导出</a>
+								    <div id="mm6" style="width:100px;">
+								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
+								        <div class="menu-sep"></div>
+								        <div onclick="orgModDetail();" >导出所选记录</div>
+								        <div onclick="orgModName();" >导出本页记录</div>
+								        <div onclick="orgModDetail();" >导出全部记录</div>
+								    </div>
+
+							    </div><!-- end of toolbar -->
+				    		</div><!-- end of user_suspend_center_list -->
+				    		
+				    	</div><!-- end of user_suspend_center_main -->
+				    </div><!-- end of center -->
+				</div>
+			</div><!-- user_suspend_center_main_wapper -->
+		</div>
+	
+	</div><!-- end of layout -->
+<script>
+    var isDetailQuery = false;
+    function toggleDetailQuery(obj){
+    	var currentHeight = $("#user_suspend_center_main").layout('panel','north').height();
+    	if( currentHeight > 29 ) {
+    		$(".detail_query").hide();
+    		$('.detail_query_button').linkbutton({iconCls: 'icon-detail', text:'高级查询'});
+    		isDetailQuery = false;
+    		$("#user_suspend_center_main").layout('panel','north').panel('resize', {height:29}) ;
+    	}
+    	else {
+    		$(".detail_query").show();
+    		$('.detail_query_button').linkbutton({iconCls: 'icon-simple', text:'简单查询'});
+    		isDetailQuery = true;
+    		$("#user_suspend_center_main").layout('panel','north').panel('resize', {height:116}) ;
+    	}
+    	
+    	$("#user_suspend_center_main").layout('resize',{width:'100%',height:'100%'});
+    }
+    
+$(document).ready(function () { 
+	
+	$('#user_suspend_tree').tree({
+	    loadFilter: function(data){
+	        if (data.treeNodes){
+	            return data.treeNodes;
+	        } else {
+	            return data;
+	        }
+	    },
+	    onClick: function(node){
+	    	//alert(node.id);
+// 	    	$("#org_maintain_center_list_dg").datagrid('load',{
+// 				id: node.id
+// 			});
+	    }
+	});
+	
+	$("#user_query_status").combobox({
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '请选择',
+			value: '0',
+		},{
+			label: '使用中',
+			value: '1'
+		},{
+			label: '挂起',
+			value: '2'
+		}]
+	});
+	
+	$("#user_suspend_center_list_dg").datagrid({
+//		url:'../organization/queryChildrenItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.items;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#user_suspend_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+});
+</script>	
+  </body>
+</html>
