@@ -36,16 +36,16 @@
 					                    <td class="query_value_small"><input id="org_query_name" class="easyui-textbox"></input></td>
 					                    <td class="query_name_small text_right">机构编码</td>
 					                    <td class="query_value_small"><input id="org_query_uid" class="easyui-textbox"></input></td>
-					                    <td class="query_name_small noborder">
+					                    <td class="query_name_small noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
 					                    </td>
-					                    <td class="text_right noborder">
+					                    <td class="text_right noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryOrg()">查询</a>
 			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
 					                    </td>
 					                </tr>
 					            </table>
-					            <table class="detail_query noborder nodt" style="width:100%;display:none;">
+					            <table class="detail_query noborder nodt" style="width:100%;display:none;border:0;">
 					                <tr>
 					                    <td class="detail_query_name text_right">公安组织机构级别</td>
 					                    <td class="detail_query_value"><input id="org_query_level" class="easyui-textbox query_value_mid"></input></td>
@@ -155,11 +155,11 @@
 								    <div id="org_query_list_dg_tb" style="background-color:#E7F0FF">
 								    	<table class="nodt" style="width:100%">
 							                <tr>
-							                    <td class="query_name_small text_right noborder">机构名称</td>
-							                    <td class="query_value_small noborder"><input id="org_query_win_name" class="easyui-textbox"></input></td>
-							                    <td class="query_name_small text_right noborder">机构编码</td>
-							                    <td class="query_value_small noborder"><input id="org_query_win_uid" class="easyui-textbox"></input></td>
-							                    <td class="text_right noborder">
+							                    <td class="query_name_small text_right noborder" style="border:0;">机构名称</td>
+							                    <td class="query_value_small noborder" style="border:0;"><input id="org_query_win_name" class="easyui-textbox"></input></td>
+							                    <td class="query_name_small text_right noborder" style="border:0;">机构编码</td>
+							                    <td class="query_value_small noborder" style="border:0;"><input id="org_query_win_uid" class="easyui-textbox"></input></td>
+							                    <td class="text_right noborder" style="border:0;">
 							                    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="orgQueryWinQueryOrg()">查询</a>
 							                    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="orgQueryWinClearQueryOrgCondition()">重置</a>
 							                    </td>

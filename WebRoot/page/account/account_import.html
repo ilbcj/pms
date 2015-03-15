@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>account_import.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">账号导入</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div class="easyui-panel" data-options="fit:true,border:false" >
+				<form id="ff" action="form1_proc.php" method="post" enctype="multipart/form-data">
+					<table class="nodt" style="width:100%">
+			            <tr>
+			                <td class="form_name_small text_right">导入策略</td>
+			                <td><input type="checkbox" checked="checked"><span> 覆盖已存在项</span></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 文件格式</td>
+			                <td><input id="account_import_file_type" value="default" style="width:150px;" /></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
+			                <td><input id="org_file" name="org_file" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择组织机构文件(1.5M以内)'"></input></td>
+			            </tr>
+			        </table>
+			    </form>
+			    <div class="text_center" style="margin-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="">预览</a>
+				</div>
+			</div>
+		</div><!-- end of content -->
+	
+	</div><!-- end of layout -->
+<script>
+$(document).ready(function () {
+	$("#account_import_file_type").combobox({
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '默认格式',
+			value: 'default',
+		},{
+			label: 'UMS5.0格式',
+			value: 'ums5'
+		}]
+	}); 
+});
+</script>	
+  </body>
+</html>

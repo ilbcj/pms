@@ -1,7 +1,12 @@
 input[type=checkbox] {
 	vertical-align: middle;
 }
-
+.query_name_mini {
+	width:80px;
+}
+.query_value_mini {
+	width:180px;
+}
 .query_name_small {
 	width:100px;
 }

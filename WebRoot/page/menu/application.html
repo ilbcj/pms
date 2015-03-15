@@ -13,15 +13,35 @@
   
   <body>
     <ul id="menu_app" class="easyui-tree" lines="true">
-            <li iconCls="icon-leaf">
-                <span>应用维护</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>应用角色维护</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>资源管理</span>
-            </li>
-        </ul>
+        <li iconCls="icon-leaf" id="menu_app_maintain">
+            <span>应用维护</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_app_role_maintain">
+            <span>应用角色维护</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_app_resource_manage">
+            <span>资源管理</span>
+        </li>
+    </ul>
+<script>
+$(document).ready(function () {
+	$('#menu_app').tree({
+		onClick: function(node){
+// 			alert(node.text);  // alert node text property when clicked
+// 			alert(node.state);
+// 			alert(node.id);
+			if( node.id == 'menu_app_maintain') {
+				$('body').layout('panel','center').panel('refresh','app/app_maintain.html');
+			}
+			else if (node.id == 'menu_app_role_maintain') {
+				$('body').layout('panel','center').panel('refresh','app/app_role_maintain.html');
+			}
+			else if (node.id == 'menu_app_resource_manage') {
+				$('body').layout('panel','center').panel('refresh','app/app_resource_manage.html');
+			}			
+		}
+	});
+});
+</script>     
   </body>
 </html>

@@ -13,30 +13,67 @@
   
   <body>
     <ul id="menu_privilege" class="easyui-tree" lines="true">
-            <li iconCls="icon-leaf">
-                <span>机构授权</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>用户授权</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>属性授权</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>用户组授权</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>高级授权</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>应用角色授权</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>黑名单管理</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>查看个人授权</span>
-            </li>
-        </ul>
+        <li iconCls="icon-leaf" id="menu_privilege_authorize_org">
+            <span>机构授权</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_privilege_authorize_user">
+            <span>用户授权</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_privilege_authorize_attribute">
+            <span>属性授权</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_privilege_authorize_usergroup">
+            <span>用户组授权</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_privilege_senior_authorize">
+            <span>高级授权</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_privilege_authorize_approle">
+            <span>应用角色授权</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_privilege_blacklist">
+            <span>黑名单管理</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_privilege_query_authorize_user">
+            <span>查看个人授权</span>
+        </li>
+    </ul>
+<script>
+$(document).ready(function () {
+	$('#menu_privilege').tree({
+		onClick: function(node){
+// 			alert(node.text);  // alert node text property when clicked
+// 			alert(node.state);
+// 			alert(node.id);
+			if( node.id == 'menu_privilege_authorize_org') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_authorize_org.html');
+			}
+			else if (node.id == 'menu_privilege_authorize_user') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_authorize_user.html');
+			}
+			else if (node.id == 'menu_privilege_authorize_attribute') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_authorize_attribute.html');
+			}
+			else if (node.id == 'menu_privilege_authorize_usergroup') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_authorize_usergroup.html');
+			}
+			else if (node.id == 'menu_privilege_senior_authorize') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_senior_authorize.html');
+			}
+			else if (node.id == 'menu_privilege_authorize_approle') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_authorize_approle.html');
+			}
+			else if (node.id == 'menu_privilege_blacklist') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_blacklist.html');
+			}
+			else if (node.id == 'menu_privilege_query_authorize_user') {
+				$('body').layout('panel','center').panel('refresh','privilege/privilege_query_authorize_user.html');
+			}
+			
+		}
+	});
+});
+
+</script>      
   </body>
 </html>

@@ -13,34 +13,64 @@
   
   <body>
     <ul id="menu_account" class="easyui-tree" lines="true">
-            <li>
-                <span>账号维护</span>
-                <ul>
-                    <li iconCls="icon-leaf">
-		                <span>按用户维护</span>
-		            </li>
-		            <li iconCls="icon-leaf">
-		                <span>按应用维护</span>
-		            </li>
-                </ul>
-            </li>
-            <li>
-                <span>账号查询</span>
-                <ul>
-                    <li iconCls="icon-leaf">
-		                <span>按用户查询</span>
-		            </li>
-		            <li iconCls="icon-leaf">
-		                <span>按应用查询</span>
-		            </li>
-                </ul>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>密码清洗</span>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>账号导入</span>
-            </li>
-        </ul>
+        <li>
+            <span>账号维护</span>
+            <ul>
+                <li iconCls="icon-leaf" id="menu_account_user_maintain">
+              <span>按用户维护</span>
+          </li>
+          <li iconCls="icon-leaf" id="menu_account_app_maintain">
+              <span>按应用维护</span>
+          </li>
+            </ul>
+        </li>
+        <li>
+            <span>账号查询</span>
+            <ul>
+                <li iconCls="icon-leaf" id="menu_account_user_query">
+              <span>按用户查询</span>
+          </li>
+          <li iconCls="icon-leaf" id="menu_account_app_query">
+              <span>按应用查询</span>
+          </li>
+            </ul>
+        </li>
+        <li iconCls="icon-leaf" id="menu_account_pwd_reset">
+            <span>密码清洗</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_account_import">
+            <span>账号导入</span>
+        </li>
+    </ul>
+<script>
+$(document).ready(function () {
+	$('#menu_account').tree({
+		onClick: function(node){
+// 			alert(node.text);  // alert node text property when clicked
+// 			alert(node.state);
+// 			alert(node.id);
+			if( node.id == 'menu_account_user_maintain') {
+				$('body').layout('panel','center').panel('refresh','account/account_user_maintain.html');
+			}
+			else if (node.id == 'menu_account_app_maintain') {
+				$('body').layout('panel','center').panel('refresh','account/account_app_maintain.html');
+			}
+			else if (node.id == 'menu_account_user_query') {
+				$('body').layout('panel','center').panel('refresh','account/account_user_query.html');
+			}
+			else if (node.id == 'menu_account_app_query') {
+				$('body').layout('panel','center').panel('refresh','account/account_app_query.html');
+			}
+			else if (node.id == 'menu_account_pwd_reset') {
+				$('body').layout('panel','center').panel('refresh','account/account_pwd_reset.html');
+			}
+			else if (node.id == 'menu_account_import') {
+				$('body').layout('panel','center').panel('refresh','account/account_import.html');
+			}
+		}
+	});
+});
+
+</script>            
   </body>
 </html>

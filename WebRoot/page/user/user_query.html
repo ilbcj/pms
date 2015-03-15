@@ -22,7 +22,7 @@
 					<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
 			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
 				        <ul id="user_query_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
-				        </ul><!-- end of org_maintain_tree -->
+				        </ul><!-- end of user_query_tree -->
 				        </div>
 				    </div><!-- end of west -->
 				    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
@@ -33,17 +33,17 @@
 					                    <td class="query_name_small text_right">姓名</td>
 					                    <td class="query_value_small"><input id="user_query_name" class="easyui-textbox"></input></td>
 					                    <td class="query_name_small text_right">状态</td>
-					                    <td class="query_value_small"><input id="user_query_status" value="0" style="width:150px;" />	</input></td>
-					                    <td class="query_name_small noborder">
+					                    <td class="query_value_small"><input id="user_query_status" value="0" style="width:150px;"></input></td>
+					                    <td class="query_name_small noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
 					                    </td>
-					                    <td class="text_right noborder">
+					                    <td class="text_right noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
 			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
 					                    </td>
 					                </tr>
 					            </table>
-					            <table class="detail_query noborder nodt" style="width:100%;display:none;">
+					            <table class="detail_query noborder nodt" style="width:100%;display:none;border:0;">
 					                <tr>
 					                    <td class="detail_query_name text_right">二级部门</td>
 					                    <td class="detail_query_value"><input id="user_query_unit" class="easyui-textbox query_value_mid"></input></td>
@@ -61,6 +61,16 @@
 					                    <td class="detail_query_value"><input id="user_query_max_sensitive_level" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">岗位</td>
 					                    <td class="detail_query_value"><input id="user_query_ position" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">部门</td>
+					                    <td class="detail_query_value"><input id="user_query_dept" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">职务/职称</td>
+					                    <td class="detail_query_value"><input id="user_query_title" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">警号</td>
+					                    <td class="detail_query_value"><input id="user_query_police_num" class="easyui-textbox query_value_mid"></input></td>
 					                </tr>
 					            </table>
 				    		</div><!-- end of user_query_center_query -->
@@ -90,7 +100,7 @@
 								    </div>
 
 							    </div><!-- end of toolbar -->
-				    		</div><!-- end of org_maintain_center_list -->
+				    		</div><!-- end of user_query_center_list -->
 				    		
 				    	</div><!-- end of user_query_center_main -->
 				    </div><!-- end of center -->

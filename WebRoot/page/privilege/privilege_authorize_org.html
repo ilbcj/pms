@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>org_query.html</title>
+    <title>privilege_authorize_org.html</title>
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
@@ -14,20 +14,20 @@
   <body>
 	<div class="easyui-layout" data-options="fit:true,border:false">
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
-			<b>当前位置：<span style="color:blue">机构查询</span></b>
+			<b>当前位置：<span style="color:blue">机构授权</span></b>
 		</div>
 	    <div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
-	    	<div id="org_query_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+	    	<div id="privilege_authorize_org_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
 		    	<div class="easyui-layout" data-options="fit:true,border:false">
 		    		<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
 			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
-				        <ul id="org_query_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
-				        </ul><!-- end of org_query_tree -->
+				        <ul id="privilege_authorize_org_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
+				        </ul><!-- end of privilege_authorize_org_tree -->
 				        </div>
 				    </div><!-- end of west -->
 				    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
-				    	<div id="org_query_center_main" class="easyui-layout" data-options="fit:true" >
-					    	<div id="org_query_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+				    	<div id="privilege_authorize_org_center_main" class="easyui-layout" data-options="fit:true" >
+					    	<div id="privilege_authorize_org_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 				    			<table class="nodt" style="width:100%">
 					                <tr>
 					                    <td class="query_name_small text_right">机构名称</td>
@@ -50,10 +50,10 @@
 					                    <td></td>
 					                </tr>
 					            </table>
-				    		</div><!-- end of org_query_center_query -->
+				    		</div><!-- end of privilege_authorize_org_center_query -->
 				    		
-				    		<div id="org_query_center_list" region="center" data-options="border:false,noheader:true" >
-				    			<table class="nodt" id="org_query_center_list_dg"  
+				    		<div id="privilege_authorize_org_center_list" region="center" data-options="border:false,noheader:true" >
+				    			<table class="nodt" id="privilege_authorize_org_center_list_dg"  
 							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
 							        <thead>
 							            <tr>
@@ -65,9 +65,10 @@
 							        </thead>
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
-							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="orgDetail();">查看</a>
-			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm3',iconCls:'icon-edit'" >导出</a>
-								    <div id="mm3" style="width:100px;">
+							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrg();">新增授权</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">维护授权</a>
+			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm7',iconCls:'icon-edit'" >导出授权</a>
+								    <div id="mm7" style="width:100px;">
 								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
 								        <div class="menu-sep"></div>
 								        <div onclick="orgModDetail();" >导出所选记录</div>
@@ -76,71 +77,74 @@
 								    </div>
 
 							    </div><!-- end of toolbar -->
-				    		</div><!-- end of org_query_center_list -->
+				    		</div><!-- end of privilege_authorize_org_center_list -->
 				    		
-				    	</div><!-- end of org_query_center_main -->
+				    	</div><!-- end of privilege_authorize_org_center_main -->
 				    </div><!-- end of center -->
 		    	</div>
-	    	</div><!-- end of org_query_center_main_wapper -->
+
+	    	</div><!-- end of privilege_authorize_org_center_main_wapper -->
 	    	
-	    	<div id="org_query_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
-				<div id="org_query_center_detail" class="easyui-panel" 
-								data-options="fit:true,border:false,title:'基本信息',footer:'#org_query_center_detail_ft'" >
+	    	<div id="privilege_authorize_org_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="privilege_authorize_org_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'基本信息',footer:'#privilege_authorize_org_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
-				    <form id="org_query_center_detail_form" method="post">
+				    <form id="privilege_authorize_org_center_detail_form" method="post">
 				    	<input id="org_id" name="orgNode.id" type="hidden"/> 
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 机构名称</td>
-				                <td><input id="org_name" name="orgNode.name" class="form_value_mid easyui-textbox" data-options="prompt:'机构名称',editable:false"></input></td>
+				                <td><input id="org_name" name="orgNode.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入机构名称'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 机构编码</td>
-				                <td><input id="org_uid" name="orgNode.uid" class="form_value_mid easyui-textbox" data-options="prompt:'机构编码',editable:false"></input></td>
+				                <td><input id="org_uid" name="orgNode.uid" class="form_value_mid easyui-textbox" data-options="prompt:'请输入机构编码'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 上级机构</td>
 				                <td>
-				                	<input id="org_pid" name="orgNode.parent_id" class="form_value_mid easyui-textbox" data-options="prompt:'上级机构',editable:false"></input>
+				                	<input id="org_pid" name="orgNode.parent_id" class="form_value_mid easyui-textbox" data-options="prompt:'请选择上级机构',editable:false"></input>
+				                	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="openOrgSelectWin()">选择</a>
 				                </td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 公安组织机构级别</td>
-				                <td><input id="org_level" name="orgNode.org_level" class="form_value_mid easyui-textbox" data-options="prompt:'公安组织机构级别',editable:false"></input></td>
+				                <td><input id="org_level" name="orgNode.org_level" class="form_value_mid easyui-textbox" data-options="prompt:'请输入公安组织机构级别'"></input></td>
 				            </tr>
 				        </table>
 				    </form>
-
-				</div><!-- org_query_center_detail -->
-				<div id="org_query_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="orgDetailReturn();">返回</a>
-				</div><!-- org_query_center_detail_ft -->
-	    	</div><!-- end of org_query_center_detail_wapper -->
+				    
+				</div><!-- privilege_authorize_org_center_detail -->
+				<div id="privilege_authorize_org_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addOrgSave();">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addOrgReturn();">返回</a>
+				</div><!-- privilege_authorize_org_center_detail_ft -->
+	    	</div><!-- end of privilege_authorize_org_center_detail_wapper -->
 	    
 	    </div><!-- end of center -->
     </div><!-- end of layout -->
     <script>
     var isDetailQuery = false;
     function toggleDetailQuery(obj){
-    	var currentHeight = $("#org_query_center_main").layout('panel','north').height();
+    	var currentHeight = $("#privilege_authorize_org_center_main").layout('panel','north').height();
     	if( currentHeight > 29 ) {
     		$(".detail_query").hide();
     		$('.detail_query_button').linkbutton({iconCls: 'icon-detail', text:'高级查询'});
     		isDetailQuery = false;
-    		$("#org_query_center_main").layout('panel','north').panel('resize', {height:29}) ;
+    		$("#privilege_authorize_org_center_main").layout('panel','north').panel('resize', {height:29}) ;
     	}
     	else {
     		$(".detail_query").show();
     		$('.detail_query_button').linkbutton({iconCls: 'icon-simple', text:'简单查询'});
     		isDetailQuery = true;
-    		$("#org_query_center_main").layout('panel','north').panel('resize', {height:58}) ;
+    		$("#privilege_authorize_org_center_main").layout('panel','north').panel('resize', {height:58}) ;
     	}
     	
-    	$("#org_query_center_main").layout('resize',{width:'100%',height:'100%'});
+    	$("#privilege_authorize_org_center_main").layout('resize',{width:'100%',height:'100%'});
     }
     
     function queryOrg(){
-    	var treeNode = $('#org_maintain_tree').tree('getSelected');
+    	var treeNode = $('#privilege_authorize_org_tree').tree('getSelected');
     	var treeNodeId = "";
     	if( treeNode != null ) {
     		treeNodeId = treeNode.id;
@@ -151,7 +155,7 @@
     	if( isDetailQuery ) {
     		level = $("#org_query_level").val();
     	}
-    	$("#org_query_center_list_dg").datagrid('load',{
+    	$("#privilege_authorize_org_center_list_dg").datagrid('load',{
     		queryAll: true,
 			id: treeNodeId,
 			orgName: name,
@@ -166,36 +170,8 @@
     	$("#org_query_level").textbox({value:""});
     }
     
-    function orgDetail(){
-    	var rows = $('#org_query_center_list_dg').datagrid('getSelections');
-		if(rows.length == 0) {
-			warningTip("提示", '请选择要查看的机构');
-			return;
-		} else if (rows.length>1)
-		{
-			warningTip("提示", '一次只能查看一个机构');
-			return;
-		}
-		
-		$("#org_id").val(rows[0].id);
-		$("#org_name").textbox('setValue',rows[0].name);
-		$("#org_uid").textbox('setValue',rows[0].uid);
-		$("#org_pid").textbox('setValue',rows[0].pid);
-		$("#org_pid").textbox('setText',rows[0].pname);
-		$("#org_level").textbox('setValue',rows[0].orgLevel);
-    	$("#org_query_center_main_wapper").panel('close');
-    	$("#org_query_center_detail_wapper").panel('open');
-    }
-    
-    function orgDetailReturn(){
-    	$("#org_query_center_main_wapper").panel('open');
-    	$("#org_query_center_main_wapper").panel('resize');
-    	$("#org_query_center_detail_wapper").panel('close');
-    	$('#org_query_center_list_dg').datagrid('clearSelections');
-    }
-    
 $(document).ready(function () { 
-	$('#org_query_tree').tree({
+	$('#privilege_authorize_org_tree').tree({
 	    loadFilter: function(data){
 	        if (data.treeNodes){
 	            return data.treeNodes;
@@ -205,13 +181,13 @@ $(document).ready(function () {
 	    },
 	    onClick: function(node){
 	    	//alert(node.id);
-	    	$("#org_query_center_list_dg").datagrid('load',{
+	    	$("#privilege_authorize_org_center_list_dg").datagrid('load',{
 				id: node.id
 			});
 	    }
 	});
 	
-	$("#org_query_center_list_dg").datagrid({
+	$("#privilege_authorize_org_center_list_dg").datagrid({
 		url:'../organization/queryChildrenItems.action',
 		loadFilter: function(data){
 			var res = new Object();
@@ -225,15 +201,15 @@ $(document).ready(function () {
 			return res;
 		},
 //		onLoadSuccess: function() {alert("success");},
-		onLoadError: function() { $("#org_query_center_main").layout('resize',{width:'100%',height:'100%'}); }
+		onLoadError: function() { $("#privilege_authorize_org_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
-	$("#org_query_center_list_dg").datagrid('getPager').pagination({	// change options and refresh pager bar information
+	$("#privilege_authorize_org_center_list_dg").datagrid('getPager').pagination({	// change options and refresh pager bar information
 			beforePageText: '第',    	
 			afterPageText:'页，共 {pages}页',
 			displayMsg:'显示 {from}到 {to} 条记录，共 {total}记录'
 	});
-	
-});	
+
+});
     </script>
   </body>
 </html>

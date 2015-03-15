@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>app_resource_manage.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">资源管理</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="app_resource_manage_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+				<div class="easyui-layout" data-options="fit:true,border:false">
+					<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
+			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+				        <ul id="app_resource_manage_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
+				        </ul><!-- end of app_resource_manage_tree -->
+				        </div>
+				    </div><!-- end of west -->
+				    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
+				    	<div id="app_resource_manage_center_main" class="easyui-layout" data-options="fit:true" >
+				    		<div id="app_resource_manage_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+				    			<table class="nodt" style="width:100%">
+					                <tr>
+					                    <td class="query_name_small text_right">名称</td>
+					                    <td class="query_value_small"><input id="app_query_name" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small text_right">编码</td>
+					                    <td class="query_value_small"><input id="app_query_code" class="easyui-textbox"></input></td>
+					                    <td>
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
+			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+					                    </td>
+					                </tr>
+					            </table>
+				    		</div><!-- end of app_resource_manage_center_query -->
+				    		
+				    		<div id="app_resource_manage_center_list" region="center" data-options="border:false,noheader:true" >
+				    			<table class="nodt" id="app_resource_manage_center_list_dg"  
+							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+							        <thead>
+							            <tr>
+							            	<th field="ck" checkbox="true"></th>
+							                <th data-options="field:'name'" style="width:33%;">名称</th>
+							                <th data-options="field:'uid'" style="width:33%;">编码</th>
+							                <th data-options="field:'uid'" style="width:33%;">描述</th>
+							            </tr>
+							        </thead>
+							    </table>
+							    <div id="toolbar" style="background-color:#E7F0FF">
+							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="">添加</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">修改</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">删除</a>
+			            			
+							    </div><!-- end of toolbar -->
+				    		</div><!-- end of app_resource_manage_center_list -->
+				    		
+				    	</div><!-- end of app_resource_manage_center_main -->
+				    </div><!-- end of center -->
+				</div>
+			</div><!-- app_resource_manage_center_main_wapper -->
+		</div>
+	
+	</div><!-- end of layout -->
+<script>
+    
+$(document).ready(function () { 
+	
+	$('#app_resource_manage_tree').tree({
+	    loadFilter: function(data){
+	        if (data.treeNodes){
+	            return data.treeNodes;
+	        } else {
+	            return data;
+	        }
+	    },
+	    onClick: function(node){
+	    	//alert(node.id);
+// 	    	$("#org_maintain_center_list_dg").datagrid('load',{
+// 				id: node.id
+// 			});
+	    }
+	});
+	
+	
+	$("#app_resource_manage_center_list_dg").datagrid({
+//		url:'../organization/queryChildrenItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.items;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#app_resource_manage_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+});
+</script>	
+  </body>
+</html>
