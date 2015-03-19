@@ -38,6 +38,7 @@
 	<mapping resource="com/pms/model/Admin.hbm.xml" />
 	<mapping resource="com/pms/model/AdminAccredit.hbm.xml" />
 	<mapping resource="com/pms/model/Organization.hbm.xml" />
+	<mapping resource="com/pms/model/User.hbm.xml" />
 
 </session-factory>
 

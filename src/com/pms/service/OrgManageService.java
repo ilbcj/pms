@@ -180,4 +180,24 @@ public class OrgManageService {
 		node = dao.OrgNodeAdd(node);
 		return;
 	}
+	
+	public String QueryNodePath(int nodeid) throws Exception
+	{
+		String name = "";
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		Organization res = null;
+		do 
+		{
+			res = dao.GetOrgNodeById( nodeid );
+			if(res != null ) {
+				name = res.getName() + "/" + name;
+				nodeid = res.getParent_id();
+			}
+		}while( res != null);
+		
+		if(name.length() > 0) {
+			name = name.substring(0, name.length()-1);
+		}
+		return name;
+	}
 }
