@@ -12,7 +12,7 @@
 		</id>
 		<!-- property元素定义常规属性 -->
 		<property name="name" type="java.lang.String" length="64" not-null="true"/>
-		<property name="status" type="java.lang.String" length="10"/>
+		<property name="status" type="java.lang.Integer"/>
 		<property name="parent_id" type="java.lang.Integer"/>
 		<property name="unit" type="java.lang.String" length="128"/>
 		<property name="police_type" type="java.lang.String" length="128"/>

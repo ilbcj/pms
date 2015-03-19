@@ -46,7 +46,7 @@
 					        </thead>
 					    </table>
 					    <div id="toolbar" style="background-color:#E7F0FF">
-					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrg();">添加</a>
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addApp();">添加</a>
 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">修改</a>
 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">删除</a>
 
@@ -56,12 +56,146 @@
 		    	</div><!-- end of app_maintain_center_main -->
 
 			</div><!-- app_maintain_center_main_wapper -->
-		</div>
-	
+		
+			<div id="app_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="app_maintain_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'应用信息',footer:'#app_maintain_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+				    <form id="app_maintain_center_detail_form" method="post">
+				    	<input id="app_id" name="app.id" type="hidden"/> 
+				        <table class="nodt" style="width:100%">
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 应用名称</td>
+				                <td><input id="app_name" name="app.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入应用名称'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 应用标识</td>
+				                <td><input id="app_flag" name="app.flag" class="form_value_mid easyui-textbox" data-options="prompt:'请输入应用标识'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 部署地</td>
+				                <td><input id="app_address" name="app.address" class="form_value_mid easyui-textbox" data-options="prompt:'请输入部署地'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 访问地址</td>
+				                <td><input id="app_url" name="app.url" class="form_value_mid easyui-textbox" data-options="prompt:'请输入访问地址'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 管理单位</td>
+				                <td><input id="app_unit" name="app.unit" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理单位'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 管理负责人</td>
+				                <td><input id="app_charge" name="app.charge" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理负责人'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 责任人联系方式</td>
+				                <td><input id="app_charge_contact" name="app.charge_contact" class="form_value_mid easyui-textbox" data-options="prompt:'请输入责任人联系方式'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 开发单位</td>
+				                <td><input id="app_vender" name="app.vender" class="form_value_mid easyui-textbox" data-options="prompt:'请输入开发单位'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 单位联系方式</td>
+				                <td><input id="app_vender_contact" name="app.vender_contact" class="form_value_mid easyui-textbox" data-options="prompt:'请输入单位联系方式'"></input></td>
+				            </tr>
+				        </table>
+				        <table class="nodt" style="width:100%">
+				        	<tr style="height:37px;background: url(../images/white-top-bottom.gif) repeat-x;">
+				        		<td colspan=2><input id="account_type_checkbox" type="checkbox" onchange="toggleAccountType();" ><span> 账号类型</span></td>
+				        	</tr>
+				        	<tr id="account_type" class="displaynone">
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 账号类型</td>
+				                <td>
+									<table class="nodt">
+										<tr style="height:37px;background:#E6EEF8;">
+							        		<td><a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="test();">删除</a></td>
+							        	</tr>
+							        	<tr class="detail">
+							                <td class="form_name_small text_right"> 管理负责人</td>
+							                <td><input id="app_charge" name="app.charge" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理负责人'"></input></td>
+							            </tr>
+							            <tr class="detail">
+							                <td class="form_name_small text_right"> 管理负责人</td>
+							                <td><input id="app_charge" name="app.charge" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理负责人'"></input></td>
+							            </tr>
+							            <tr class="detail">
+							                <td class="form_name_small text_right"> 管理负责人</td>
+							                <td><input id="app_charge" name="app.charge" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理负责人'"></input></td>
+							            </tr>
+							            <tr style="height:37px;background:#E6EEF8;">
+							        		<td><a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="test();">删除</a></td>
+							        	</tr>
+							        	<tr>
+							                <td class="form_name_small text_right"> 管理负责人</td>
+							                <td><input id="app_charge" name="app.charge" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理负责人'"></input></td>
+							            </tr>
+							            <tr>
+							                <td class="form_name_small text_right"> 管理负责人</td>
+							                <td><input id="app_charge" name="app.charge" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理负责人'"></input></td>
+							            </tr>
+							        	
+									</table>
+								</td>
+				            </tr>
+				        </table>
+				    </form>
+				    
+				</div><!-- end of app_maintain_center_detail -->
+				<div id="app_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addAppSave();">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addAppReturn();">返回</a>
+				</div><!-- org_maintain_center_detail_ft -->
+	    	</div><!-- end of app_maintain_center_detail_wapper -->
+	    	
+		</div><!-- end of content -->
 	</div><!-- end of layout -->
 <script>
+function test() {
+	$(".detail").addClass("displaynone").removeClass("visible");
+	var ch = $("#account_type_cb").attr('checked');
+		if(ch) {
+			alert(ch);
+		}
+}
+
+	function toggleAccountType() {
+		var checked = $("#account_type_checkbox").is(':checked');
+		if( checked ) {
+			$("#account_type").removeClass("displaynone");
+		}
+		else {
+			$("#account_type").addClass("displaynone");
+		}
+		
+	}
+	
+	function addApp(){
+    	$("#app_maintain_center_main_wapper").panel('close');
+    	$("#app_maintain_center_detail_wapper").panel('open');
+    }
+    
+    function addAppReturn(){
+    	$("#app_maintain_center_main_wapper").panel('open');
+    	$("#app_maintain_center_main_wapper").panel('resize');
+    	$("#app_maintain_center_detail_wapper").panel('close');
+    }
+    
+    function addAppSave(){
+		// submit the form
+		$("#app_maintain_center_detail_form").submit();
+    }
     
 $(document).ready(function () { 
+
+// 	$("#account_type_cb").click(function(){
+// 	alert(1);
+// 		var ch = $("#account_type_cb").attr('checked');
+// 		if(ch) {
+// 			alert(ch);
+// 		}
+// 	});
 	
 	$("#app_maintain_center_list_dg").datagrid({
 //		url:'../organization/queryChildrenItems.action',

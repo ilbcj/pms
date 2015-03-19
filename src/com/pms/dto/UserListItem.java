@@ -3,7 +3,7 @@ package com.pms.dto;
 public class UserListItem {
 	private int id;
 	private String name;
-	private String status;
+	private int status;
 	private int parent_id;
 	private String pname;
 	private String gname;
@@ -28,10 +28,11 @@ public class UserListItem {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getStatus() {
+
+	public int getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	public int getParent_id() {

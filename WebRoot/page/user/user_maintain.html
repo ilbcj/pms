@@ -60,7 +60,7 @@
 					                    <td class="detail_query_name text_right">最高敏感级别</td>
 					                    <td class="detail_query_value"><input id="user_query_max_sensitive_level" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">岗位</td>
-					                    <td class="detail_query_value"><input id="user_query_ position" class="easyui-textbox query_value_mid"></input></td>	
+					                    <td class="detail_query_value"><input id="user_query_position" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
 					                <tr>
 					                    <td class="detail_query_name text_right">部门</td>
@@ -82,9 +82,9 @@
 							            <tr>
 							            	<th field="ck" checkbox="true"></th>
 							                <th data-options="field:'name'" style="width:25%;">姓名</th>
-							                <th data-options="field:'uid'" style="width:25%;">组织机构</th>
-							                <th data-options="field:'pname'" style="width:25%;">上级机构</th>
-							                <th data-options="field:'pname'" style="width:25%;">状态</th>
+							                <th data-options="field:'pname'" style="width:25%;">组织机构</th>
+							                <th data-options="field:'gname'" style="width:25%;">上级机构</th>
+							                <th data-options="field:'status',formatter:formatStatus" style="width:25%;">状态</th>
 							            </tr>
 							        </thead>
 							    </table>
@@ -210,11 +210,11 @@
 				            </div><!-- end of center -->
 				        </div>
 				    </div><!-- end of org_query_win -->
-				</div><!-- org_maintain_center_detail -->
+				</div><!-- end of user_maintain_center_detail -->
 				<div id="user_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addUserSave();">保存</a>
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addUserReturn();">返回</a>
-				</div><!-- org_maintain_center_detail_ft -->
+				</div><!-- end of user_maintain_center_detail_ft -->
 	    	</div><!-- end of user_maintain_center_detail_wapper -->
 	    			
 		</div><!-- end of center -->
@@ -237,6 +237,67 @@
     	}
     	
     	$("#user_maintain_center_main").layout('resize',{width:'100%',height:'100%'});
+    }
+    
+    function queryUser(){
+    	var treeNode = $('#user_maintain_tree').tree('getSelected');
+    	var treeNodeId = "";
+    	if( treeNode != null ) {
+    		treeNodeId = treeNode.id;
+    	}
+    	var name = $("#user_query_name").val();
+    	var status = $("#user_query_status").combobox("getValue");
+    	
+    	var unit = "";
+    	var policeType = "";
+    	var sex = "";
+    	var idnum = "";
+    	var maxSensitiveLevel = "";
+    	var position = "";
+    	var dept = "";
+    	var title = "";
+    	var policeNum = "";
+    	if( isDetailQuery ) {
+    		unit = $("#user_query_unit").val();
+    		policeType = $("#user_query_police_type").val();
+    		sex = $("#user_query_sex").val();
+    		idnum = $("#user_query_idnum").val();
+    		maxSensitiveLevel = $("#user_query_max_sensitive_level").val();
+    		position = $("#user_query_position").val();
+    		dept = $("#user_query_dept").val();
+    		title = $("#user_query_title").val();
+    		policeNum = $("#user_query_police_num").val();
+    	}
+    	$("#user_maintain_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			id: treeNodeId,
+			userName: name,
+			userStatus: status,
+			userUnit: unit,
+			userPoliceType: policeType,
+			userSex: sex,
+			userIdnum: idnum,
+			userMaxSensitiveLevel: maxSensitiveLevel,
+			userPosition: position,
+			userDept: dept,
+			userTitle: title,
+			userPoliceNum: policeNum
+		});
+    }
+    
+    function clearQueryOrgCondition(){
+    	$("#user_query_name").textbox({value:""});
+    	$("#user_query_status").combobox("setValue","0");
+    	
+    	$("#user_query_unit").textbox({value:""});
+    	$("#user_query_police_type").textbox({value:""});
+    	$("#user_query_sex").textbox({value:""});
+    	$("#user_query_idnum").textbox({value:""});
+    	$("#user_query_max_sensitive_level").textbox({value:""});
+    	$("#user_query_position").textbox({value:""});
+    	$("#user_query_dept").textbox({value:""});
+    	$("#user_query_title").textbox({value:""});
+    	$("#user_query_police_num").textbox({value:""});
     }
     
     function addUser(){
@@ -275,6 +336,18 @@
 		// submit the form
 		$("#user_maintain_center_detail_form").submit();
     }
+    
+    function formatStatus(val,row){
+		if (val == 1){
+			return "使用中";
+		} else if (val == 2) {
+			return "挂起";
+		}
+		else {
+			return "未知状态";
+		}
+	}
+	
 $(document).ready(function () { 
 	
 	$('#user_maintain_tree').tree({
@@ -310,6 +383,7 @@ $(document).ready(function () {
 	
 	$("#user_maintain_center_list_dg").datagrid({
 		url:'../user/queryUserItems.action',
+		queryParams:{queryAll: true},
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){

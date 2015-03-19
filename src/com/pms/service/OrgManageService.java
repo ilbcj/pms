@@ -146,7 +146,7 @@ public class OrgManageService {
 		return total;
 	}
 	
-	private void queryAllChildrenNodesById(int pid, Organization condition, List<Organization> children) throws Exception
+	public void queryAllChildrenNodesById(int pid, Organization condition, List<Organization> children) throws Exception
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		List<Organization> res = dao.GetOrgNodeByParentId( pid, condition );

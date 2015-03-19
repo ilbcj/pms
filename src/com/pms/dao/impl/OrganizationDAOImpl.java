@@ -161,27 +161,31 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
 		String sqlString = "select * from organization where parent_id = :parent_id ";
-		if(condition.getName() != null && condition.getName().length() > 0) {
-			sqlString += " and name like :name ";
+		if( condition != null ) {
+			if(condition.getName() != null && condition.getName().length() > 0) {
+				sqlString += " and name like :name ";
+			}
+			if(condition.getUid() != null && condition.getUid().length() > 0) {
+				sqlString += " and uid = :uid ";
+			}
+			if(condition.getOrg_level() != null && condition.getOrg_level().length() > 0) {
+				sqlString += " and org_level = :org_level ";
+			}
 		}
-		if(condition.getUid() != null && condition.getUid().length() > 0) {
-			sqlString += " and uid = :uid ";
-		}
-		if(condition.getOrg_level() != null && condition.getOrg_level().length() > 0) {
-			sqlString += " and org_level = :org_level ";
-		}
-			
+		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setInteger("parent_id", pid);
-			if(condition.getName() != null && condition.getName().length() > 0) {
-				q.setString( "name", "%" + condition.getName() + "%" );
-			}
-			if(condition.getUid() != null && condition.getUid().length() > 0) {
-				q.setString( "uid", condition.getUid() );
-			}
-			if(condition.getOrg_level() != null && condition.getOrg_level().length() > 0) {
-				q.setString( "org_level", condition.getOrg_level() );
+			if( condition != null ) {
+				if(condition.getName() != null && condition.getName().length() > 0) {
+					q.setString( "name", "%" + condition.getName() + "%" );
+				}
+				if(condition.getUid() != null && condition.getUid().length() > 0) {
+					q.setString( "uid", condition.getUid() );
+				}
+				if(condition.getOrg_level() != null && condition.getOrg_level().length() > 0) {
+					q.setString( "org_level", condition.getOrg_level() );
+				}
 			}
 			rs = q.list();
 			tx.commit();
@@ -218,7 +222,6 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		return rs;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Organization GetOrgNodeById(int id) throws Exception {
 		Session session = HibernateUtil.currentSession();

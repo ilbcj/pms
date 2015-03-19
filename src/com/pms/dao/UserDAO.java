@@ -10,5 +10,6 @@ public interface UserDAO {
 	public void UserDel(User user) throws Exception;
 
 	public List<User> GetUsersByParentId(int pid, int page, int rows) throws Exception;
-	public int GetUsersCountByParentId(int id) throws Exception;
+	public List<User> GetUsersByParentIdWithNoPage(int pid, User criteria) throws Exception;
+	public int GetUsersCountByParentId(int id, User criteria) throws Exception;
 }
