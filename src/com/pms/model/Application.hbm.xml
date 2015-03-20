@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 指定Hiberante3映射文件的DTD信息 -->
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.pms.model">
+	<!-- 每个class元素对应一个持久化对象 -->
+	<class name="Application" table="application">
+		<!-- id元素定义持久化类的标识属性 -->
+		<id name="id" type="java.lang.Integer">
+			<generator class="identity"/>
+		</id>
+		<!-- property元素定义常规属性 -->
+		<property name="name" type="java.lang.String" length="64" not-null="true"/>
+		<property name="flag" type="java.lang.String" length="128"/>
+		<property name="address" type="java.lang.String" length="128"/>
+		
+		<property name="url" type="java.lang.String" length="128"/>
+		<property name="unit" type="java.lang.String" length="128"/>
+		<property name="charge" type="java.lang.String" length="128"/>
+		<property name="charge_contact" type="java.lang.String" length="128"/>
+		<property name="vender" type="java.lang.String" length="128"/>
+		<property name="vender_contact" type="java.lang.String" length="128"/>
+		<property name="hasAccountType" type="java.lang.String" length="10"/>
+		<property name="hasPwdAccount" type="java.lang.String" length="10"/>
+		
+		<property name="pwd_policy" type="java.lang.String" length="128"/>
+		<property name="default_username" type="java.lang.String" length="128"/>
+		<property name="default_pwd_type" type="java.lang.String" length="32"/>
+		<property name="default_pwd" type="java.lang.String" length="64"/>
+		<property name="pwdlen_min" type="java.lang.Integer"/>
+		<property name="pwdlen_max" type="java.lang.Integer"/>
+		<property name="pwdstrength" type="java.lang.String" length="128"/>
+		<property name="hasCertAccount" type="java.lang.String" length="10"/>
+		<property name="cert_policy_pki" type="java.lang.String" length="10"/>
+		
+		<property name="tstamp" type="java.lang.String" length="64"/>
+	</class>
+</hibernate-mapping>
+
+

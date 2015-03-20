@@ -25,4 +25,5 @@
 <!-- 	<include file="struts-sysmanage.xml"/> -->
  	<include file="struts-organization.xml"/>
  	<include file="struts-user.xml"/>
+ 	<include file="struts-app.xml"/>
 </struts>    

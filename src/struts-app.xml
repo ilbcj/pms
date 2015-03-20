@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="app" extends="json-default" namespace="/app">
+		
+		<global-results>
+ 			<result name="sqlException">/jsp/exception.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.sql.SQLException" result="sqlException" />
+			<exception-mapping exception="java.lang.Exception" result="sqlException" />	
+		</global-exception-mappings>
+	
+	<!-- 
+		查询结点			method="queryAllBureauNode"、"saveOrgNode"、"queryChildrenNodes"、
+									"queryChildrenItems"、"deleteOrgNode"、"modifyOrgNodeName"
+		
+		//配置管理			method="sysConfigQuery"、"sysConfigSave"、"allRegionListQuery"
+		
+		//审计				method="systemAuditLogQuery"
+		
+		//数据同步			method="dataSync"
+	 -->
+ 		<action name="saveApp" class="com.pms.controller.ApplicationAction" method="SaveApp" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryUserItems" class="com.pms.controller.UserAction" method="QueryUserItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryChildrenNodes" class="com.pms.controller.OrganizationAction" method="QueryChildrenNodes" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryChildrenItems" class="com.pms.controller.OrganizationAction" method="QueryChildrenItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteOrgNode" class="com.pms.controller.OrganizationAction" method="DeleteOrgNode" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="modifyOrgNodeName" class="com.pms.controller.OrganizationAction" method="ModifyOrgNodeName" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+<!-- 		<action name="userMod" class="com.tass.dcmcs.controller.SysManageAction" method="UserMod" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="userDel" class="com.tass.dcmcs.controller.SysManageAction" method="UserDel" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="usersQuery" class="com.tass.dcmcs.controller.SysManageAction" method="UsersQuery" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="userQuery" class="com.tass.dcmcs.controller.SysManageAction" method="UserQuery" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="userPwdUpdate" class="com.tass.dcmcs.controller.SysManageAction" method="UserPwdUpdate" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="sysConfigQuery" class="com.tass.dcmcs.controller.SysManageAction" method="SysConfigQuery" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="sysConfigSave" class="com.tass.dcmcs.controller.SysManageAction" method="SysConfigSave" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="systemAuditLogQuery" class="com.tass.dcmcs.controller.SysManageAction" method="SystemAuditLogQuery" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="allRegionListQuery" class="com.tass.dcmcs.controller.SysManageAction" method="AllRegionListQuery" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+<!-- 		<action name="dataSync" class="com.tass.dcmcs.controller.SysManageAction" method="DataSync" > -->
+<!-- 			<result name="success" type="json" /> -->
+<!-- 		</action> -->
+		
+<!--		<action name="sysConfig" class="com.tass.dcmcs.controller.SysManageAction" method="SysConfig" >-->
+<!--			<result type="redirect">jump.action</result>-->
+<!--			<result name="error">/jsp/login/login.jsp?error=-1</result>-->
+<!--		</action>-->
+	</package>	
+</struts>    

@@ -1,10 +1,7 @@
 package com.pms.controller;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import com.opensymphony.xwork2.ActionSupport;
-import com.pms.dto.OrgListItem;
 import com.pms.dto.UserListItem;
 import com.pms.model.User;
 import com.pms.service.UserManageService;
