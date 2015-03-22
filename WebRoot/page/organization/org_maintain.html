@@ -274,7 +274,7 @@
 				ok:"删除",  
 				cancel:"取消"  
 			});
-			$.messager.confirm('确认', '您选取了' + rows.length + '条记录，是否删除?', function(r){
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录，是否删除？', function(r){
                 if (r){
                 	var poststr = "delNodeIds=" + rows[0].id;
                 	for(var i=1; i<rows.length; i++){

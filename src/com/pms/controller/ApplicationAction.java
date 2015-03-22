@@ -1,6 +1,10 @@
 package com.pms.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.opensymphony.xwork2.ActionSupport;
+import com.pms.dto.TreeNode;
 import com.pms.model.Application;
 import com.pms.service.AppManageService;
 
@@ -19,11 +23,54 @@ public class ApplicationAction extends ActionSupport {
 	private int total;
 
 	private Application app;
-
+	private ArrayList<Application> items;
+	private String appName;
+	private String appFlag;
 	private String pwdstrength_lower;
 	private String pwdstrength_upper;
 	private String pwdstrength_number;
 	private String pwdstrength_special;
+	private List<Integer> delAppIds;
+	private List<TreeNode> treeNodes;
+	private int id;
+	
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public List<TreeNode> getTreeNodes() {
+		return treeNodes;
+	}
+	public void setTreeNodes(List<TreeNode> treeNodes) {
+		this.treeNodes = treeNodes;
+	}
+	public List<Integer> getDelAppIds() {
+		return delAppIds;
+	}
+	public void setDelAppIds(List<Integer> delAppIds) {
+		this.delAppIds = delAppIds;
+	}
+	public ArrayList<Application> getItems() {
+		return items;
+	}
+	public void setItems(ArrayList<Application> items) {
+		this.items = items;
+	}
+	public String getAppName() {
+		return appName;
+	}
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+	public String getAppFlag() {
+		return appFlag;
+	}
+	public void setAppFlag(String appFlag) {
+		this.appFlag = appFlag;
+	}
 	
 	public String getPwdstrength_special() {
 		return pwdstrength_special;
@@ -99,24 +146,123 @@ public class ApplicationAction extends ActionSupport {
 	{
 		AppManageService ams = new AppManageService();
 		try {
-			if( Application.CHECKBOXCHECKED.equals(app.getHasPwdAccount()) 
-					&& Application.PWDPOLICYSELF.equals(app.getPwd_policy()) ) {
-				String pwdstrength = "";
-				if( Application.CHECKBOXCHECKED.equals(pwdstrength_lower) ) {
-					pwdstrength += Application.PWDSTRENGTHLOWER;
+			if( Application.CHECKBOXCHECKED.equals(app.getHasAccountType()) ) {
+				if( Application.CHECKBOXCHECKED.equals(app.getHasPwdAccount()) ) {
+					if( Application.PWDPOLICYSELF.equals(app.getPwd_policy()) ) {
+						String pwdstrength = "";
+						if( Application.CHECKBOXCHECKED.equals(pwdstrength_lower) ) {
+							pwdstrength += Application.PWDSTRENGTHLOWER;
+						}
+						if( Application.CHECKBOXCHECKED.equals(pwdstrength_upper) ) {
+							pwdstrength += Application.PWDSTRENGTHUPPER;
+						}
+						if( Application.CHECKBOXCHECKED.equals(pwdstrength_number) ) {
+							pwdstrength += Application.PWDSTRENGTHNUMBER;
+						}
+						if( Application.CHECKBOXCHECKED.equals(pwdstrength_special) ) {
+							pwdstrength += Application.PWDSTRENGTHSPECIAL;
+						}
+						app.setPwdstrength(pwdstrength);
+					}
+					else {
+						app.setDefault_username(null);
+						app.setDefault_pwd_type(null);
+						app.setDefault_pwd(null);
+						app.setPwdlen_min(0);
+						app.setPwdlen_max(0);
+						app.setPwdstrength(null);
+					}
+						
 				}
-				if( Application.CHECKBOXCHECKED.equals(pwdstrength_upper) ) {
-					pwdstrength += Application.PWDSTRENGTHUPPER;
+				else {
+					app.setPwd_policy(null);
+					app.setDefault_username(null);
+					app.setDefault_pwd_type(null);
+					app.setDefault_pwd(null);
+					app.setPwdlen_min(0);
+					app.setPwdlen_max(0);
+					app.setPwdstrength(null);
 				}
-				if( Application.CHECKBOXCHECKED.equals(pwdstrength_number) ) {
-					pwdstrength += Application.PWDSTRENGTHNUMBER;
+				
+				if( !Application.CHECKBOXCHECKED.equals(app.getHasCertAccount()) ) {
+					app.setCert_policy_pki(null);
 				}
-				if( Application.CHECKBOXCHECKED.equals(pwdstrength_special) ) {
-					pwdstrength += Application.PWDSTRENGTHSPECIAL;
-				}
-				app.setPwdstrength(pwdstrength);
+			}else {
+				app.setHasPwdAccount(null);
+				app.setPwd_policy(null);
+				app.setDefault_username(null);
+				app.setDefault_pwd_type(null);
+				app.setDefault_pwd(null);
+				app.setPwdlen_min(0);
+				app.setPwdlen_max(0);
+				app.setPwdstrength(null);
+				app.setHasCertAccount(null);
+				app.setCert_policy_pki(null);
 			}
+				
 			app = ams.SaveApp(app);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAppItems() 
+	{
+		AppManageService ams = new AppManageService();
+		items = new ArrayList<Application>();
+		try {
+//			if( queryAll ) {
+				Application criteria = new Application();
+				criteria.setName(appName);
+				criteria.setFlag(appFlag);
+				total = ams.QueryAllAppItems( criteria, page, rows, items );
+//			} else {
+//				total = ams.QueryUserItems( id, page, rows, items );
+//			}
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String DeleteApp()
+	{
+		AppManageService oms = new AppManageService();
+		try {
+			oms.DeleteApps(delAppIds);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+
+	}
+	
+	public String QueryAppNodes()
+	{
+		AppManageService ams = new AppManageService();
+		try {
+			treeNodes = new ArrayList<TreeNode>();
+			if( id == 0 ) {
+				TreeNode root = new TreeNode();
+				root.setState("closed");
+				root.setId(-1);
+				root.setText("应用列表");
+				treeNodes.add(root);
+			}
+			else {
+				ams.QueryAllApps(treeNodes);
+			}
+			
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

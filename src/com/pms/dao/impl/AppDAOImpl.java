@@ -1,5 +1,9 @@
 package com.pms.dao.impl;
 
+import java.util.List;
+import java.math.BigInteger;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
@@ -92,6 +96,113 @@ public class AppDAOImpl implements AppDAO {
 		}
 		return;
 
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Application> GetApplications(Application criteria, int page,
+			int rows) throws Exception{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Application> rs = null;
+		String sqlString = "select * from application where 1 = 1 ";
+		if( criteria != null ) {
+			if(criteria.getName() != null && criteria.getName().length() > 0) {
+				sqlString += " and name like :name ";
+			}
+			if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+				sqlString += " and flag like :flag ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Application.class);
+			if( criteria != null ) {
+				if(criteria.getName() != null && criteria.getName().length() > 0) {
+					q.setString( "name", "%" + criteria.getName() + "%" );
+				}
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					q.setString( "flag", "%" + criteria.getFlag() + "%" );
+				}
+			}
+			q.setFirstResult((page-1) * rows);   
+			q.setMaxResults(rows);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public int GetApplicationsCount(Application criteria) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) from application where 1 = 1 ";
+		if( criteria != null ) {
+			if( criteria != null ) {
+				if(criteria.getName() != null && criteria.getName().length() > 0) {
+					sqlString += " and name like :name ";
+				}
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					sqlString += " and flag like :flag ";
+				}
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			if( criteria != null ) {
+				if( criteria != null ) {
+					if(criteria.getName() != null && criteria.getName().length() > 0) {
+						q.setString( "name", "%" + criteria.getName() + "%" );
+					}
+					if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+						q.setString( "flag", "%" + criteria.getFlag() + "%" );
+					}
+				}
+			}
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Application> GetApplicationsWithNopage() throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Application> rs = null;
+		String sqlString = "select * from application ";
+				
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Application.class);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 
 //	@SuppressWarnings("unchecked")

@@ -139,7 +139,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setInteger("parent_id", pid);
 			q.setFirstResult((page-1) * rows);   
-			q.setMaxResults(rows);   
+			q.setMaxResults(rows);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

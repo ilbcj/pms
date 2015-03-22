@@ -21,59 +21,25 @@
 		
 		//数据同步			method="dataSync"
 	 -->
+	<!-- app -->
  		<action name="saveApp" class="com.pms.controller.ApplicationAction" method="SaveApp" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="queryUserItems" class="com.pms.controller.UserAction" method="QueryUserItems" >
+ 		<action name="queryAppItems" class="com.pms.controller.ApplicationAction" method="QueryAppItems" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="queryChildrenNodes" class="com.pms.controller.OrganizationAction" method="QueryChildrenNodes" >
+ 		<action name="deleteApp" class="com.pms.controller.ApplicationAction" method="DeleteApp" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="queryChildrenItems" class="com.pms.controller.OrganizationAction" method="QueryChildrenItems" >
+ 		<action name="queryAppNodes" class="com.pms.controller.ApplicationAction" method="QueryAppNodes" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="deleteOrgNode" class="com.pms.controller.OrganizationAction" method="DeleteOrgNode" >
+	<!-- app role -->	
+ 		<action name="saveAppRole" class="com.pms.controller.AppRoleAction" method="SaveAppRole" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="modifyOrgNodeName" class="com.pms.controller.OrganizationAction" method="ModifyOrgNodeName" >
- 			<result name="success" type="json" />
- 		</action>
+ 	<!-- app resource -->
  		
-<!-- 		<action name="userMod" class="com.tass.dcmcs.controller.SysManageAction" method="UserMod" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="userDel" class="com.tass.dcmcs.controller.SysManageAction" method="UserDel" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="usersQuery" class="com.tass.dcmcs.controller.SysManageAction" method="UsersQuery" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="userQuery" class="com.tass.dcmcs.controller.SysManageAction" method="UserQuery" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="userPwdUpdate" class="com.tass.dcmcs.controller.SysManageAction" method="UserPwdUpdate" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="sysConfigQuery" class="com.tass.dcmcs.controller.SysManageAction" method="SysConfigQuery" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="sysConfigSave" class="com.tass.dcmcs.controller.SysManageAction" method="SysConfigSave" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="systemAuditLogQuery" class="com.tass.dcmcs.controller.SysManageAction" method="SystemAuditLogQuery" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="allRegionListQuery" class="com.tass.dcmcs.controller.SysManageAction" method="AllRegionListQuery" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-<!-- 		<action name="dataSync" class="com.tass.dcmcs.controller.SysManageAction" method="DataSync" > -->
-<!-- 			<result name="success" type="json" /> -->
-<!-- 		</action> -->
-		
-<!--		<action name="sysConfig" class="com.tass.dcmcs.controller.SysManageAction" method="SysConfig" >-->
-<!--			<result type="redirect">jump.action</result>-->
-<!--			<result name="error">/jsp/login/login.jsp?error=-1</result>-->
-<!--		</action>-->
+
 	</package>	
 </struts>    
