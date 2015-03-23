@@ -1,5 +1,7 @@
 package com.pms.controller;
 
+import java.util.ArrayList;
+
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.model.AppRole;
 import com.pms.service.AppRoleManageService;
@@ -18,6 +20,43 @@ public class AppRoleAction extends ActionSupport {
 	private int rows;
 	private int total;
 	
+	private ArrayList<AppRole> items;
+	private String appRoleName;
+	private String appRoleCode;
+	private int id;//app_id
+	
+	public ArrayList<AppRole> getItems() {
+		return items;
+	}
+
+	public void setItems(ArrayList<AppRole> items) {
+		this.items = items;
+	}
+
+	public String getAppRoleName() {
+		return appRoleName;
+	}
+
+	public void setAppRoleName(String appRoleName) {
+		this.appRoleName = appRoleName;
+	}
+
+	public String getAppRoleCode() {
+		return appRoleCode;
+	}
+
+	public void setAppRoleCode(String appRoleCode) {
+		this.appRoleCode = appRoleCode;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public boolean isResult() {
 		return result;
 	}
@@ -81,6 +120,28 @@ public class AppRoleAction extends ActionSupport {
 		AppRoleManageService arms = new AppRoleManageService();
 		try {
 			appRole = arms.SaveAppRole(appRole);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAppRoleItems()
+	{
+		AppRoleManageService arms = new AppRoleManageService();
+		items = new ArrayList<AppRole>();
+		try {
+			if( queryAll ) {
+				AppRole criteria = new AppRole();
+				criteria.setName(appRoleName);
+				criteria.setCode(appRoleCode);
+				total = arms.QueryAllAppRoleItems( id, criteria, page, rows, items );
+			} else {
+				total = arms.QueryAllAppRoleItems( id, null, page, rows, items );
+			}
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

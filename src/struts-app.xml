@@ -38,6 +38,9 @@
  		<action name="saveAppRole" class="com.pms.controller.AppRoleAction" method="SaveAppRole" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryAppRoleItems" class="com.pms.controller.AppRoleAction" method="QueryAppRoleItems" >
+ 			<result name="success" type="json" />
+ 		</action>
  	<!-- app resource -->
  		
 

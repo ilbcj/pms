@@ -31,11 +31,11 @@
 				    			<table class="nodt" style="width:100%">
 					                <tr>
 					                    <td class="query_name_small text_right">名称</td>
-					                    <td class="query_value_small"><input id="app_query_name" class="easyui-textbox"></input></td>
+					                    <td class="query_value_small"><input id="app_role_query_name" class="easyui-textbox"></input></td>
 					                    <td class="query_name_small text_right">编码</td>
-					                    <td class="query_value_small"><input id="app_query_code" class="easyui-textbox"></input></td>
+					                    <td class="query_value_small"><input id="app_role_query_code" class="easyui-textbox"></input></td>
 					                    <td>
-					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryRole()">查询</a>
 			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
 					                    </td>
 					                </tr>
@@ -49,14 +49,14 @@
 							            <tr>
 							            	<th field="ck" checkbox="true"></th>
 							                <th data-options="field:'name'" style="width:33%;">名称</th>
-							                <th data-options="field:'uid'" style="width:33%;">编码</th>
-							                <th data-options="field:'uid'" style="width:33%;">描述</th>
+							                <th data-options="field:'code'" style="width:33%;">编码</th>
+							                <th data-options="field:'memo'" style="width:33%;">描述</th>
 							            </tr>
 							        </thead>
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addAppRole();">添加</a>
-			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">修改</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modAppRole();">修改</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">删除</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">导入</a>
 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm9',iconCls:'icon-edit'" >导出</a>
@@ -117,7 +117,7 @@
     function addAppRole(){
     	var treeNode = $('#app_role_maintain_tree').tree('getSelected');
     	if( treeNode == null ) {
-    		warningTip("提示", '请选择要维护的应用');
+    		warningTip("提示", '请在应用列表中选择要维护的应用');
 			return;
     	}
     	
@@ -146,6 +146,93 @@
     function addAppRoleSave(){
     	$("#app_role_maintain_center_detail_form").submit();
     }
+    
+    function queryRole(){
+    	var treeNode = $('#app_role_maintain_tree').tree('getSelected');
+    	var treeNodeId = "";
+    	if( treeNode != null ) {
+    		treeNodeId = treeNode.id;
+    	}
+    	var name = $("#app_role_query_name").val();
+    	var code = $("#app_role_query_code").val();
+    	var level = "";
+    	$("#app_role_maintain_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			id: treeNodeId,
+			appRoleName: name,
+			appRoleCode: code,
+		});
+    }
+    
+    function modAppRole() {
+    	var rows = $("#app_role_maintain_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的角色');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个角色');
+			return false;
+		}
+		
+		var treeNode = $("#app_role_maintain_tree").tree('getSelected');
+		$("#app_id").val(treeNode.id);
+		$("#app_role_id").val(rows[0].id);
+		$("#app_role_name").textbox('setValue',rows[0].name);
+		$("#app_role_code").textbox('setValue',rows[0].code);
+		$("#app_role_memo").textbox('setValue',rows[0].memo);
+
+//buaubaubaubau
+
+
+		if(rows[0].hasAccountType == "on") {
+			$("#account_type_checkbox").prop('checked',true);
+			if(rows[0].hasPwdAccount == "on") {
+				$("#pwd_policy").combobox('setValue', rows[0].pwd_policy);
+				if( "self" == rows[0].pwd_policy ) {
+					$("#default_username").combobox('setValue', rows[0].default_username||"default");
+					$("#default_pwd_type").combobox('setValue', rows[0].default_pwd_type||"fix");
+					if( "fix" == rows[0].default_pwd_type ) {
+						$("#default_pwd").textbox('setValue', rows[0].default_pwd);
+					}
+					$("#pwdlen_min").textbox('setValue', rows[0].pwdlen_min||"0");
+					$("#pwdlen_max").textbox('setValue', rows[0].pwdlen_max||"0");
+					if( rows[0].pwdstrength != null ) {
+						for(var index = 0; index < rows[0].pwdstrength.length; index++) {
+							var c = rows[0].pwdstrength.charAt(index);
+							if( "1" == c ) {
+								$("#self_policy_pwdstrength_lower").prop('checked',true);
+							}
+							else if( "2" == c ) {
+								$("#self_policy_pwdstrength_upper").prop('checked',true);
+							}
+							else if( "3" == c ) {
+								$("#self_policy_pwdstrength_number").prop('checked',true);
+							}
+							else if( "4" == c ) {
+								$("#self_policy_pwdstrength_special").prop('checked',true);
+							}
+						}
+					}
+				}
+			}
+			
+			if(rows[0].hasCertAccount == "on") {
+				$("#cert_checkbox").prop('checked',true);
+				if(rows[0].cert_policy_pki == "on") {
+					$("#self_policy_cert_policy").prop('checked',true);
+				}
+			}
+		}		
+		
+		$("#account_type_checkbox").change();
+		$("#userpwd_checkbox").change();
+		$("#pwd_policy").change();
+		$("#cert_checkbox").change();
+		
+		$("#app_maintain_center_main_wapper").panel('close');
+   		$("#app_maintain_center_detail_wapper").panel('open');
+    }
 $(document).ready(function () { 
 	
 	$('#app_role_maintain_tree').tree({
@@ -166,14 +253,14 @@ $(document).ready(function () {
 	    },
 	    onClick: function(node){
 	    	//alert(node.id);
-// 	    	$("#org_maintain_center_list_dg").datagrid('load',{
-// 				id: node.id
-// 			});
+ 	    	$("#app_role_maintain_center_list_dg").datagrid('load',{
+ 				id: node.id
+ 			});
 	    }
 	});
 	
 	$("#app_role_maintain_center_list_dg").datagrid({
-//		url:'../approle/queryChildrenItems.action',
+		url:'../app/queryAppRoleItems.action',
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){

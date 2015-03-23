@@ -17,7 +17,6 @@ public class ApplicationAction extends ActionSupport {
 
 	private boolean result;
 	private String message;
-	private boolean queryAll;
 	private int page;
 	private int rows;
 	private int total;
@@ -115,12 +114,6 @@ public class ApplicationAction extends ActionSupport {
 	}
 	public void setMessage(String message) {
 		this.message = message;
-	}
-	public boolean isQueryAll() {
-		return queryAll;
-	}
-	public void setQueryAll(boolean queryAll) {
-		this.queryAll = queryAll;
 	}
 	public int getPage() {
 		return page;
