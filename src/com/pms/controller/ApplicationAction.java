@@ -22,7 +22,7 @@ public class ApplicationAction extends ActionSupport {
 	private int total;
 
 	private Application app;
-	private ArrayList<Application> items;
+	private List<Application> items;
 	private String appName;
 	private String appFlag;
 	private String pwdstrength_lower;
@@ -52,10 +52,11 @@ public class ApplicationAction extends ActionSupport {
 	public void setDelAppIds(List<Integer> delAppIds) {
 		this.delAppIds = delAppIds;
 	}
-	public ArrayList<Application> getItems() {
+	
+	public List<Application> getItems() {
 		return items;
 	}
-	public void setItems(ArrayList<Application> items) {
+	public void setItems(List<Application> items) {
 		this.items = items;
 	}
 	public String getAppName() {
@@ -225,11 +226,26 @@ public class ApplicationAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QueryAllAppItems() 
+	{
+		AppManageService ams = new AppManageService();
+		items = new ArrayList<Application>();
+		try {
+			items = ams.QueryAllAppItems();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String DeleteApp()
 	{
-		AppManageService oms = new AppManageService();
+		AppManageService ams = new AppManageService();
 		try {
-			oms.DeleteApps(delAppIds);
+			ams.DeleteApps(delAppIds);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

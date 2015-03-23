@@ -1,7 +1,6 @@
 package com.pms.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +26,7 @@ public class AppManageService {
 	}
 
 	public int QueryAllAppItems(Application criteria, int page, int rows,
-			ArrayList<Application> items) throws Exception {
+			List<Application> items) throws Exception {
 		AppDAO dao = new AppDAOImpl();
 		List<Application> res = dao.GetApplications( criteria, page, rows );
 		items.addAll(res);
@@ -77,6 +76,12 @@ public class AppManageService {
 		node.setText(application.getName());
 		
 		return node;
+	}
+
+	public List<Application> QueryAllAppItems() throws Exception {
+		AppDAO dao = new AppDAOImpl();
+		List<Application> res = dao.GetApplicationsWithNopage();
+		return res;
 	}
 
 //	public int QueryUserItems(int pid, int page, int rows,

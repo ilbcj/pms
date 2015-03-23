@@ -33,6 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="<%=path %>/css/main.css">
 	<script type="text/javascript" src="<%=path %>/js/jquery.min.js"></script>
 	<script type="text/javascript" src="<%=path %>/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="<%=path %>/js/datagrid-detailview.js"></script>
 	<script type="text/javascript" src="<%=path %>/js/main.js"></script>
     
 </head>
@@ -87,7 +88,7 @@ $(document).ready(function () {
 		selected: false
 	});
 	
-	$('#mm').accordion('select', 4);
+	$('#mm').accordion('select', 3);
 });
 
 </script>

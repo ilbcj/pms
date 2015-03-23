@@ -1,6 +1,7 @@
 package com.pms.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.model.AppRole;
@@ -24,7 +25,16 @@ public class AppRoleAction extends ActionSupport {
 	private String appRoleName;
 	private String appRoleCode;
 	private int id;//app_id
+	private List<Integer> delAppRoleIds;
 	
+	public List<Integer> getDelAppRoleIds() {
+		return delAppRoleIds;
+	}
+
+	public void setDelAppRoleIds(List<Integer> delAppRoleIds) {
+		this.delAppRoleIds = delAppRoleIds;
+	}
+
 	public ArrayList<AppRole> getItems() {
 		return items;
 	}
@@ -150,4 +160,19 @@ public class AppRoleAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
+	
+	public String DeleteAppRole()
+	{
+		AppRoleManageService arms = new AppRoleManageService();
+		try {
+			arms.DeleteAppRoles(delAppRoleIds);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+			
 }

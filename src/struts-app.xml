@@ -34,11 +34,17 @@
  		<action name="queryAppNodes" class="com.pms.controller.ApplicationAction" method="QueryAppNodes" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryAllAppItems" class="com.pms.controller.ApplicationAction" method="QueryAllAppItems" >
+ 			<result name="success" type="json" />
+ 		</action>
 	<!-- app role -->	
  		<action name="saveAppRole" class="com.pms.controller.AppRoleAction" method="SaveAppRole" >
  			<result name="success" type="json" />
  		</action>
  		<action name="queryAppRoleItems" class="com.pms.controller.AppRoleAction" method="QueryAppRoleItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteAppRole" class="com.pms.controller.AppRoleAction" method="DeleteAppRole" >
  			<result name="success" type="json" />
  		</action>
  	<!-- app resource -->

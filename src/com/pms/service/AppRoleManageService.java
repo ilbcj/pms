@@ -40,21 +40,22 @@ public class AppRoleManageService {
 		return count;
 	}
 
-//	public int QueryAllAppItems(Application criteria, int page, int rows,
-//			ArrayList<Application> items) throws Exception {
-//		AppDAO dao = new AppDAOImpl();
-//		List<Application> res = dao.GetApplications( criteria, page, rows );
-//		items.addAll(res);
-//		int total = QueryApplicationsCount( criteria );
-//		return total;
-//	}
-//	
-//	public int QueryApplicationsCount(Application criteria) throws Exception {
-//		AppDAO dao = new AppDAOImpl();
-//		int count = dao.GetApplicationsCount( criteria );
-//		return count;
-//	}
-//
+	public void DeleteAppRoles(List<Integer> appRoleIds) throws Exception {
+		if(appRoleIds == null)
+			return;
+	
+		AppRole target;
+		AppRoleDAO dao = new AppRoleDAOImpl();
+		for(int i = 0; i< appRoleIds.size(); i++) {
+			target = new AppRole();
+			target.setId(appRoleIds.get(i));
+			dao.AppRoleDel(target);
+		}
+	
+		return ;
+	}
+
+
 //	public void DeleteApps(List<Integer> appIds) throws Exception {
 //		if(appIds == null)
 //			return;

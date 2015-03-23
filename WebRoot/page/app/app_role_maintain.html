@@ -57,7 +57,7 @@
 							    <div id="toolbar" style="background-color:#E7F0FF">
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addAppRole();">添加</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modAppRole();">修改</a>
-			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">删除</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delAppRole();">删除</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">导入</a>
 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm9',iconCls:'icon-edit'" >导出</a>
 								    <div id="mm9" style="width:100px;">
@@ -178,61 +178,50 @@
 		var treeNode = $("#app_role_maintain_tree").tree('getSelected');
 		$("#app_id").val(treeNode.id);
 		$("#app_role_id").val(rows[0].id);
+		$("#app_name").html(treeNode.text);
 		$("#app_role_name").textbox('setValue',rows[0].name);
 		$("#app_role_code").textbox('setValue',rows[0].code);
 		$("#app_role_memo").textbox('setValue',rows[0].memo);
 
-//buaubaubaubau
-
-
-		if(rows[0].hasAccountType == "on") {
-			$("#account_type_checkbox").prop('checked',true);
-			if(rows[0].hasPwdAccount == "on") {
-				$("#pwd_policy").combobox('setValue', rows[0].pwd_policy);
-				if( "self" == rows[0].pwd_policy ) {
-					$("#default_username").combobox('setValue', rows[0].default_username||"default");
-					$("#default_pwd_type").combobox('setValue', rows[0].default_pwd_type||"fix");
-					if( "fix" == rows[0].default_pwd_type ) {
-						$("#default_pwd").textbox('setValue', rows[0].default_pwd);
-					}
-					$("#pwdlen_min").textbox('setValue', rows[0].pwdlen_min||"0");
-					$("#pwdlen_max").textbox('setValue', rows[0].pwdlen_max||"0");
-					if( rows[0].pwdstrength != null ) {
-						for(var index = 0; index < rows[0].pwdstrength.length; index++) {
-							var c = rows[0].pwdstrength.charAt(index);
-							if( "1" == c ) {
-								$("#self_policy_pwdstrength_lower").prop('checked',true);
-							}
-							else if( "2" == c ) {
-								$("#self_policy_pwdstrength_upper").prop('checked',true);
-							}
-							else if( "3" == c ) {
-								$("#self_policy_pwdstrength_number").prop('checked',true);
-							}
-							else if( "4" == c ) {
-								$("#self_policy_pwdstrength_special").prop('checked',true);
-							}
-						}
-					}
-				}
-			}
-			
-			if(rows[0].hasCertAccount == "on") {
-				$("#cert_checkbox").prop('checked',true);
-				if(rows[0].cert_policy_pki == "on") {
-					$("#self_policy_cert_policy").prop('checked',true);
-				}
-			}
-		}		
-		
-		$("#account_type_checkbox").change();
-		$("#userpwd_checkbox").change();
-		$("#pwd_policy").change();
-		$("#cert_checkbox").change();
-		
-		$("#app_maintain_center_main_wapper").panel('close');
-   		$("#app_maintain_center_detail_wapper").panel('open');
+		$("#app_role_maintain_center_main_wapper").panel('close');
+   		$("#app_role_maintain_center_detail_wapper").panel('open');
     }
+    
+    function delAppRole() {
+    	var rows = $('#app_role_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的应用角色');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选应用角色，删除将级联删除角色授权？', function(r){
+                if (r){
+                	var poststr = "delAppRoleIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delAppRoleIds=" + rows[i].id;
+					}
+
+                    $.getJSON("../app/deleteAppRole.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#app_role_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+							successTip("删除应用角色","操作成功");
+						}
+						else
+						{
+							warningTip("提示", '删除应用操作失败：' + retObj.message);
+						}
+					});
+                }
+            });
+		}
+    }
+    
 $(document).ready(function () { 
 	
 	$('#app_role_maintain_tree').tree({
