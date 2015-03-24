@@ -1,7 +1,6 @@
 package com.pms.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -26,7 +25,7 @@ public class AppRoleManageService {
 	}
 
 	public int QueryAllAppRoleItems(int appid, AppRole criteria, int page,
-			int rows, ArrayList<AppRole> items) throws Exception {
+			int rows, List<AppRole> items) throws Exception {
 		AppRoleDAO dao = new AppRoleDAOImpl();
 		List<AppRole> res = dao.GetAppRolesByAppId(appid, criteria, page, rows );
 		items.addAll(res);

@@ -167,8 +167,10 @@ public class AppRoleDAOImpl implements AppRoleDAO {
 					q.setString( "code", "%" + criteria.getCode() + "%" );
 				}
 			}
-			q.setFirstResult((page-1) * rows);   
-			q.setMaxResults(rows);
+			if(page>=0 && rows>=0) {
+				q.setFirstResult((page-1) * rows);
+				q.setMaxResults(rows);
+			}
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

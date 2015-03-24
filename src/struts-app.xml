@@ -34,9 +34,6 @@
  		<action name="queryAppNodes" class="com.pms.controller.ApplicationAction" method="QueryAppNodes" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="queryAllAppItems" class="com.pms.controller.ApplicationAction" method="QueryAllAppItems" >
- 			<result name="success" type="json" />
- 		</action>
 	<!-- app role -->	
  		<action name="saveAppRole" class="com.pms.controller.AppRoleAction" method="SaveAppRole" >
  			<result name="success" type="json" />

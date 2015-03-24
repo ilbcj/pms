@@ -21,7 +21,7 @@ public class AppRoleAction extends ActionSupport {
 	private int rows;
 	private int total;
 	
-	private ArrayList<AppRole> items;
+	private List<AppRole> items;
 	private String appRoleName;
 	private String appRoleCode;
 	private int id;//app_id
@@ -35,11 +35,11 @@ public class AppRoleAction extends ActionSupport {
 		this.delAppRoleIds = delAppRoleIds;
 	}
 
-	public ArrayList<AppRole> getItems() {
+	public List<AppRole> getItems() {
 		return items;
 	}
 
-	public void setItems(ArrayList<AppRole> items) {
+	public void setItems(List<AppRole> items) {
 		this.items = items;
 	}
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="privilege" extends="json-default" namespace="/priv">
+		
+		<global-results>
+ 			<result name="sqlException">/jsp/exception.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.sql.SQLException" result="sqlException" />
+			<exception-mapping exception="java.lang.Exception" result="sqlException" />	
+		</global-exception-mappings>
+	
+	<!-- 
+		查询结点			method="queryAllBureauNode"、"saveOrgNode"、"queryChildrenNodes"、
+									"queryChildrenItems"、"deleteOrgNode"、"modifyOrgNodeName"
+		
+		//配置管理			method="sysConfigQuery"、"sysConfigSave"、"allRegionListQuery"
+		
+		//审计				method="systemAuditLogQuery"
+		
+		//数据同步			method="dataSync"
+	 -->
+	
+	<!-- app role -->	
+ 		<action name="queryAllAppRoleItems" class="com.pms.controller.PrivilegeAction" method="QueryAllAppRoleItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 	
+	</package>	
+</struts>    

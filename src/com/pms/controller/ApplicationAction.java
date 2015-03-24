@@ -226,21 +226,6 @@ public class ApplicationAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String QueryAllAppItems() 
-	{
-		AppManageService ams = new AppManageService();
-		items = new ArrayList<Application>();
-		try {
-			items = ams.QueryAllAppItems();
-		} catch (Exception e) {
-			message = e.getMessage();
-			setResult(false);
-			return SUCCESS;
-		}
-		setResult(true);
-		return SUCCESS;
-	}
-	
 	public String DeleteApp()
 	{
 		AppManageService ams = new AppManageService();

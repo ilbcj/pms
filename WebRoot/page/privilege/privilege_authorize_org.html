@@ -87,12 +87,12 @@
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div class="easyui-panel" data-options="fit:true,footer:'#privilege_authorize_org_detail_win_ft'">
 						<table id="privilege_authorize_org_detail_win_list_dg"  
-							            data-options="toolbar:'#wintoolbar',singleSelect:false,method:'post',nowrap:true,idField:'id',noheader:true,fit:true">
+							            data-options="toolbar:'#wintoolbar',singleSelect:false,method:'post',nowrap:true,idField:'appId',noheader:true,fit:true">
 							<thead>
 					            <tr>
-					            	<th data-options="field:'name'" style="width:33%;">应用名称</th>
-					                <th data-options="field:'flag'" style="width:33%;">应用标识</th>
-					                <th data-options="field:'pname'" style="width:33%;">失效日期</th>
+					            	<th data-options="field:'appName'" style="width:33%;">应用名称</th>
+					                <th data-options="field:'appFlag'" style="width:33%;">应用标识</th>
+					                <th data-options="field:'appEndTime'" style="width:33%;">失效日期</th>
 					            </tr>
 					        </thead>
 			            </table>
@@ -195,11 +195,33 @@
     }
     
     function refreshPrivAuthOrgDetailAppList(){
+    	var rows = $("#privilege_authorize_org_detail_win_list_dg").datagrid('getRows');
+    	for(var index=1; index < rows.length; index++)
+    	{
+    		$("#privilege_authorize_org_detail_win_list_dg").datagrid('collapseRow',index);
+    	}
     	$("#privilege_authorize_org_detail_win_list_dg").datagrid('expandRow',0);
+    	$(".privDetailWinAppRoleCheckBox").prop('checked',false);
     }
     
     function privAuthOrgDetailWinReturn(){
     	$("#privilege_authorize_org_detail_win").window('close');
+    }
+    
+    function privAuthOrgDetailConfirm(){
+    	var orgids = $("#privilege_authorize_org_detail_win_org_id").val();
+    	var cbs = $(".privDetailWinAppRoleCheckBox:checked");
+
+
+    	
+    	//alert(cbs.length);
+    	var appids="";
+    	alert($(cbs[1]).attr("appid"));
+    	for(var index=0; index < cbs.length; index++) {
+    		appids += "," + $(cbs.get(index)).attr("appid");
+    	}
+    	alert( appids);
+    	
     }
     
 $(document).ready(function () { 
@@ -242,10 +264,16 @@ $(document).ready(function () {
 	});
 	
 	$("#privilege_authorize_org_detail_win_list_dg").datagrid({
-		url:'../app/queryAllAppItems.action',
+		url:'../priv/queryAllAppRoleItems.action',
 		view: detailview,
 		detailFormatter:function(index,row){
-	        return '<div class="ddv" style="padding:5px 0">'+row.unit+ row.charge + '</div>';
+	        var res = '<div class="ddv" style="padding:5px 0">';
+	        for(var index=0; index<row.appRoleId.length; index++ ) {
+	        	res += '<input id="approle_' + row.appRoleId[index] + '" type="checkbox" value="' + row.appRoleId[index] + '" appid="' + row.appId + '" class="privDetailWinAppRoleCheckBox" style="margin-right:5px;" />';
+	        	res += '<label for="approle_' + row.appRoleId[index] + '" style="display: inline;margin-right:15px;">' + row.appRoleName[index] + '</label>';
+	        }
+	        res += '</div>';
+	        return res;
 	    },
 		loadFilter: function(data){
 			var res = new Object();
