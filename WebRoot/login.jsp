@@ -92,7 +92,6 @@ if( message != '' ) {
 // 	url:'<%=path %>/login/loginpwd.action'
 // });
 function login_ok(){
-	
 	// submit the form
 	//$('#login').submit();
 	document.getElementById('login').submit();

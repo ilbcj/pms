@@ -26,6 +26,9 @@
  		<action name="queryAllAppRoleItems" class="com.pms.controller.PrivilegeAction" method="QueryAllAppRoleItems" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="savePrivileges" class="com.pms.controller.PrivilegeAction" method="SavePrivileges" >
+ 			<result name="success" type="json" />
+ 		</action>
  	
 	</package>	
 </struts>    

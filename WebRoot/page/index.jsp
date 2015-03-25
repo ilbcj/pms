@@ -34,6 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="<%=path %>/js/jquery.min.js"></script>
 	<script type="text/javascript" src="<%=path %>/js/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="<%=path %>/js/datagrid-detailview.js"></script>
+	<script type="text/javascript" src="<%=path %>/js/jquery.json.min.js"></script>
 	<script type="text/javascript" src="<%=path %>/js/main.js"></script>
     
 </head>

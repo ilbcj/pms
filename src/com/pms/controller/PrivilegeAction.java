@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.AppRoleItem;
+import com.pms.dto.PrivilegeTemp;
+import com.pms.model.Privilege;
 import com.pms.service.PrivilegeManageService;
 
 public class PrivilegeAction extends ActionSupport {
@@ -21,8 +23,28 @@ public class PrivilegeAction extends ActionSupport {
 	private int total;
 	
 	private List<AppRoleItem> items;
+	private List<PrivilegeTemp> privileges;
 	private String orgids;
 	
+	public List<PrivilegeTemp> getPrivileges() {
+		return privileges;
+	}
+
+
+	public void setPrivileges(List<PrivilegeTemp> privileges) {
+		this.privileges = privileges;
+	}
+
+	public String getOrgids() {
+		return orgids;
+	}
+
+
+	public void setOrgids(String orgids) {
+		this.orgids = orgids;
+	}
+
+
 	public boolean isResult() {
 		return result;
 	}
@@ -89,6 +111,23 @@ public class PrivilegeAction extends ActionSupport {
 		items = new ArrayList<AppRoleItem>();
 		try {
 			items = pms.QueryAllAppRoleItems();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String SavePrivileges()
+	{
+		PrivilegeManageService pms = new PrivilegeManageService();
+		try {
+			pms.QueryAllAppRoleItems();
+//			pms.SavePrivilege(privileges);
+			System.out.println(orgids);
+			System.out.println(privileges);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

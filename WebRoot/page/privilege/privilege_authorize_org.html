@@ -208,19 +208,38 @@
     	$("#privilege_authorize_org_detail_win").window('close');
     }
     
+    function privObj(appid, roleid){
+    	this.appid = appid;
+    	this.roleid = roleid;
+	}
     function privAuthOrgDetailConfirm(){
     	var orgids = $("#privilege_authorize_org_detail_win_org_id").val();
+    	var poststr = "orgids=" + orgids;
+
     	var cbs = $(".privDetailWinAppRoleCheckBox:checked");
-
-
-    	
-    	//alert(cbs.length);
+    	var privileges = new Array();
+    	var convertArray = new Array();
     	var appids="";
-    	alert($(cbs[1]).attr("appid"));
     	for(var index=0; index < cbs.length; index++) {
-    		appids += "," + $(cbs.get(index)).attr("appid");
+    		//appids += ",[" + $(cbs.get(index)).attr("appid") + $(cbs.get(index)).val() +"]";
+    		var priv = new privObj( parseInt($(cbs.get(index)).attr("appid")), parseInt($(cbs.get(index)).val()) );
+ 			convertArray.push(priv);
     	}
-    	alert( appids);
+    	var tmp = $.toJSON(convertArray);
+    	poststr += '&privileges='+ tmp;
+    	alert(poststr);
+    	$.getJSON("../priv/savePrivileges.action", poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				warningTip("提示", '机构授权成功');
+			}
+			else
+			{
+				warningTip("提示", '机构授权失败');	
+			}
+		});
+    	
     	
     }
     

@@ -6,7 +6,21 @@ public class Privilege {
 	private int owner_type;
 	private int app_id;
 	private int role_id;
+	private String endtime; 
+	private String tstamp;
 	
+	public String getEndtime() {
+		return endtime;
+	}
+	public void setEndtime(String endtime) {
+		this.endtime = endtime;
+	}
+	public String getTstamp() {
+		return tstamp;
+	}
+	public void setTstamp(String tstamp) {
+		this.tstamp = tstamp;
+	}
 	public int getId() {
 		return id;
 	}
