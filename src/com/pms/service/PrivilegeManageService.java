@@ -7,8 +7,10 @@ import com.pms.dao.AppRoleDAO;
 import com.pms.dao.impl.AppDAOImpl;
 import com.pms.dao.impl.AppRoleDAOImpl;
 import com.pms.dto.AppRoleItem;
+import com.pms.dto.PrivilegeTemp;
 import com.pms.model.AppRole;
 import com.pms.model.Application;
+import com.pms.model.Privilege;
 
 
 
@@ -51,6 +53,20 @@ public class PrivilegeManageService {
 		}
 		
 		return res;
+	}
+
+	public void SavePrivilege(String orgids, int ownertype,
+			List<PrivilegeTemp> privileges) {
+		String orgs[] = orgids.split(",");
+		PrivilegeDAO dao = new PrivilegeDAOImpl();
+		for(int i = 0; i< orgs.length; i++) {
+			Privilege priv = new Privilege();
+			priv.setOwner_id(Integer.parseInt(orgs[i]));
+			priv.setOwner_type(ownertype);
+			priv.setApp_id(privileges)
+			dao.PrivilegeSave();
+		}
+		
 	}
 
 //	public void DeleteAppRoles(List<Integer> appRoleIds) throws Exception {

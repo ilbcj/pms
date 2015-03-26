@@ -120,12 +120,11 @@ public class PrivilegeAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String SavePrivileges()
+	public String SaveOrgPrivileges()
 	{
 		PrivilegeManageService pms = new PrivilegeManageService();
 		try {
-			pms.QueryAllAppRoleItems();
-//			pms.SavePrivilege(privileges);
+			pms.SavePrivilege(orgids, Privilege.OWNERTYPEORG, privileges);
 			System.out.println(orgids);
 			System.out.println(privileges);
 		} catch (Exception e) {
