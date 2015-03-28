@@ -1,7 +1,11 @@
 package com.pms.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import com.pms.dao.AppDAO;
 import com.pms.dao.AppRoleDAO;
 import com.pms.dao.impl.AppDAOImpl;
@@ -60,11 +64,18 @@ public class PrivilegeManageService {
 		String orgs[] = orgids.split(",");
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		for(int i = 0; i< orgs.length; i++) {
-			Privilege priv = new Privilege();
-			priv.setOwner_id(Integer.parseInt(orgs[i]));
-			priv.setOwner_type(ownertype);
-			priv.setApp_id(privileges)
-			dao.PrivilegeSave();
+			for(int j = 0; j<privileges.size(); j++) {
+				Privilege priv = new Privilege();
+				priv.setOwner_id(Integer.parseInt(orgs[i]));
+				priv.setOwner_type(ownertype);
+				priv.setApp_id(privileges.get(j).getAppid());
+				priv.setRole_id(privileges.get(j).getRoleid());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+						Locale.SIMPLIFIED_CHINESE);
+				String timenow = sdf.format(new Date());
+				priv.setTstamp(timenow);
+				dao.PrivilegeSave(priv);
+			}
 		}
 		
 	}
