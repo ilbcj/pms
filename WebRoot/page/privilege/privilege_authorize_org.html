@@ -66,7 +66,7 @@
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrgAuth();">新增授权</a>
-			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">维护授权</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modOrgAuth();">维护授权</a>
 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm7',iconCls:'icon-edit'" >导出授权</a>
 								    <div id="mm7" style="width:100px;">
 								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
@@ -115,6 +115,7 @@
 			            	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">设置有效期</a>
 			            	</div>	
 							<input id="privilege_authorize_org_detail_win_org_id" name="orgids" type="hidden" />
+							<input id="privilege_authorize_org_detail_win_org_add" type="hidden" />
 						</div>
 					</div>
 					<div id="privilege_authorize_org_detail_win_ft" style="padding:5px;text-align:center">
@@ -188,10 +189,12 @@
 			orgids += "," + rows[i].id;
 		    orgnames += "," + rows[i].name;
 		}
+		
+		refreshPrivAuthOrgDetailAppList();
 		$("#privilege_authorize_org_detail_win_org_id").val(orgids);
     	$("#privilege_authorize_org_detail_win_org_name").html(orgnames);
+    	$("#privilege_authorize_org_detail_win_org_add").val("1");
     	$("#privilege_authorize_org_detail_win").window({title:'新增机构授权'}).window('open').window('center');
-    	refreshPrivAuthOrgDetailAppList();
     }
     
     function refreshPrivAuthOrgDetailAppList(){
@@ -202,9 +205,11 @@
     	}
     	$("#privilege_authorize_org_detail_win_list_dg").datagrid('expandRow',0);
     	$(".privDetailWinAppRoleCheckBox").prop('checked',false);
+    	$("#privilege_authorize_org_detail_win_org_add").val("");
     }
     
     function privAuthOrgDetailWinReturn(){
+    	$("#privilege_authorize_org_center_list_dg").datagrid('clearSelections');
     	$("#privilege_authorize_org_detail_win").window('close');
     }
     
@@ -214,10 +219,12 @@
 	}
     function privAuthOrgDetailConfirm(){
     	var orgids = $("#privilege_authorize_org_detail_win_org_id").val();
-    	var poststr = "orgids=" + orgids;
-
+    	var poststr = "ownerIds=" + orgids;
+    	var saveType = $("#privilege_authorize_org_detail_win_org_add").val();
+		poststr += "&saveType=" + parseInt(saveType);
+		poststr += "&ownerType=1";
+		
     	var cbs = $(".privDetailWinAppRoleCheckBox:checked");
-    	var privileges = new Array();
     	var convertArray = new Array();
     	var appids="";
     	for(var index=0; index < cbs.length; index++) {
@@ -226,21 +233,64 @@
  			convertArray.push(priv);
     	}
     	var tmp = $.toJSON(convertArray);
-    	poststr += '&privileges='+ tmp;
-    	alert(poststr);
-    	$.getJSON("../priv/savePrivileges.action", poststr, function(retObj) {
+    	poststr += '&privilegesToSave='+ tmp;
+    	//alert(poststr);
+    	$.getJSON("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
+				$("#privilege_authorize_org_center_list_dg").datagrid('clearSelections');
 				warningTip("提示", '机构授权成功');
 			}
 			else
 			{
 				warningTip("提示", '机构授权失败');	
 			}
+			privAuthOrgDetailWinReturn();
 		});
     	
     	
+    }
+    
+    function modOrgAuth() {
+    	var rows = $("#privilege_authorize_org_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要维护授权的机构');
+			return false;
+		}
+		else if (rows.length > 1) {
+			warningTip("提示", '一次只能维护一个机构');
+			return false;
+		}
+		
+		var orgnames = rows[0].name;
+		var orgids = rows[0].id;
+		
+		var poststr = "ownerIds=" + orgids;
+    	poststr += "&ownerType=1";
+		$.getJSON("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				refreshPrivAuthOrgDetailAppList();
+				$("#privilege_authorize_org_detail_win_org_id").val(orgids);
+		    	$("#privilege_authorize_org_detail_win_org_name").html(orgnames);
+		    	$("#privilege_authorize_org_detail_win_org_add").val("2");
+		    	
+		    	//alert(retObj.privileges);
+		    	for(var key in retObj.privileges) {
+		    		$(".privDetailWinAppRoleCheckBox[appid="+retObj.privileges[key].app_id+"]#approle_" + retObj.privileges[key].role_id).prop('checked',true);
+		    		//alert(retObj.privileges[key].app_id + '||' + retObj.privileges[key].role_id);
+		    	}
+		    	
+		    	$("#privilege_authorize_org_detail_win").window({title:'维护机构授权'}).window('open').window('center');
+			}
+			else
+			{
+				warningTip("提示", '获取机构已授权信息失败');	
+			}
+		});
+		return;
     }
     
 $(document).ready(function () { 

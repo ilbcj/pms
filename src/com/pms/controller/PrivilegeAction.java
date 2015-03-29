@@ -1,6 +1,5 @@
 package com.pms.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -15,7 +14,9 @@ public class PrivilegeAction extends ActionSupport {
 	 * 
 	 */
 	private static final long serialVersionUID = 5281263737259390032L;
-
+	private static final int SAVETYPEADD = 1;
+	private static final int SAVETYPEMOD = 2;
+	
 	private boolean result;
 	private String message;
 	private int page;
@@ -23,25 +24,57 @@ public class PrivilegeAction extends ActionSupport {
 	private int total;
 	
 	private List<AppRoleItem> items;
-	private List<PrivilegeTemp> privileges;
-	private String orgids;
+	private List<PrivilegeTemp> privilegesToSave;
+	private List<Privilege> privileges;
+	private String ownerIds;
+	private int ownerType;
+	private int saveType;
 	
-	public List<PrivilegeTemp> getPrivileges() {
+	public int getSaveType() {
+		return saveType;
+	}
+
+
+	public void setSaveType(int saveType) {
+		this.saveType = saveType;
+	}
+
+	public List<PrivilegeTemp> getPrivilegesToSave() {
+		return privilegesToSave;
+	}
+
+
+	public void setPrivilegesToSave(List<PrivilegeTemp> privilegesToSave) {
+		this.privilegesToSave = privilegesToSave;
+	}
+
+
+	public List<Privilege> getPrivileges() {
 		return privileges;
 	}
 
 
-	public void setPrivileges(List<PrivilegeTemp> privileges) {
+	public void setPrivileges(List<Privilege> privileges) {
 		this.privileges = privileges;
 	}
 
-	public String getOrgids() {
-		return orgids;
+	public String getOwnerIds() {
+		return ownerIds;
 	}
 
 
-	public void setOrgids(String orgids) {
-		this.orgids = orgids;
+	public void setOwnerIds(String ownerIds) {
+		this.ownerIds = ownerIds;
+	}
+
+
+	public int getOwnerType() {
+		return ownerType;
+	}
+
+
+	public void setOwnerType(int ownerType) {
+		this.ownerType = ownerType;
 	}
 
 
@@ -108,7 +141,6 @@ public class PrivilegeAction extends ActionSupport {
 	public String QueryAllAppRoleItems()
 	{
 		PrivilegeManageService pms = new PrivilegeManageService();
-		items = new ArrayList<AppRoleItem>();
 		try {
 			items = pms.QueryAllAppRoleItems();
 		} catch (Exception e) {
@@ -120,13 +152,39 @@ public class PrivilegeAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String SaveOrgPrivileges()
+	public String SavePrivileges()
 	{
 		PrivilegeManageService pms = new PrivilegeManageService();
 		try {
-			pms.SavePrivilege(orgids, Privilege.OWNERTYPEORG, privileges);
-			System.out.println(orgids);
-			System.out.println(privileges);
+			if( PrivilegeAction.SAVETYPEADD == saveType ) {
+				pms.SavePrivilege(ownerIds, ownerType, privilegesToSave);
+			}
+			else if( PrivilegeAction.SAVETYPEMOD == saveType ) {
+				int orgid = Integer.parseInt(ownerIds);
+				pms.UpdatePrivilege(orgid, ownerType, privilegesToSave);
+			}
+			else {
+				message = "传入服务的待保存数据不完整。";
+				setResult(false);
+				return SUCCESS;
+			}
+//			System.out.println(orgids);
+//			System.out.println(privileges);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryPrivilegesByOwnerId()
+	{
+		PrivilegeManageService pms = new PrivilegeManageService();
+		try {
+			int orgid = Integer.parseInt(ownerIds);
+			privileges = pms.QueryPrivilegesByOwnerId(orgid, ownerType);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

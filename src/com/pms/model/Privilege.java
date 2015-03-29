@@ -4,6 +4,7 @@ public class Privilege {
 	public static final int OWNERTYPEORG = 1;
 	public static final int OWNERTYPEUSER = 2;
 	public static final int OWNERTYPEUSERGROUP = 3;
+	
 	private int id;
 	private int owner_id;
 	private int owner_type;

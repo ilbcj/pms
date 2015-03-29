@@ -16,6 +16,7 @@ public class UserListItem {
 	private String dept;
 	private String title;
 	private String police_num;
+	
 	public int getId() {
 		return id;
 	}
@@ -106,6 +107,5 @@ public class UserListItem {
 	}
 	public void setPolice_num(String police_num) {
 		this.police_num = police_num;
-	}
-	
+	}	
 }

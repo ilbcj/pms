@@ -6,10 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.UserDAO;
+import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
+import com.pms.dto.PrivUserListItem;
 import com.pms.dto.UserListItem;
 import com.pms.model.Organization;
+import com.pms.model.Privilege;
 import com.pms.model.User;
 
 
@@ -28,7 +32,7 @@ public class UserManageService {
 	}
 
 	public int QueryUserItems(int pid, int page, int rows,
-			ArrayList<UserListItem> items) throws Exception {
+			List<UserListItem> items) throws Exception {
 		UserDAO dao = new UserDAOImpl();
 		List<User> res = dao.GetUsersByParentId( pid, page, rows );
 		UserListItem userItem = null;
@@ -84,7 +88,7 @@ public class UserManageService {
 	}
 
 	public int QueryAllUserItems(int pid, User criteria, int page, int rows,
-			ArrayList<UserListItem> items) throws Exception {
+			List<UserListItem> items) throws Exception {
 		//get all orgs;
 		List<Organization> nodes = new ArrayList<Organization>();
 		OrgManageService oms = new OrgManageService();
@@ -135,6 +139,62 @@ public class UserManageService {
 		for(int i=0; i<res.size(); i++) {
 			userItem = ConvertUserToListItem(res.get(i));
 			items.add(userItem);
+		}
+		return total;
+	}
+
+	public int QueryAllPrivUserItems(int id, int privStatus, User criteria, int page, int rows,
+			List<PrivUserListItem> items) throws Exception {
+		List<UserListItem> ulItems = new ArrayList<UserListItem>();
+		int total = QueryAllUserItems(id, criteria, page, rows, ulItems);
+		
+		PrivilegeDAO pdao = new PrivilegeDAOImpl();
+		for(int i = 0; i<ulItems.size(); i++) {
+			PrivUserListItem pulItem = new PrivUserListItem();
+			pulItem.setId(ulItems.get(i).getId());
+			pulItem.setName(ulItems.get(i).getName());
+			pulItem.setParent_id(ulItems.get(i).getParent_id());
+			pulItem.setPname(ulItems.get(i).getPname());
+			pulItem.setGname(ulItems.get(i).getGname());
+			pulItem.setStatus(ulItems.get(i).getStatus());
+			
+			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getId(), Privilege.OWNERTYPEUSER);
+			pulItem.setPriv_status(count>0?PrivUserListItem.PRIVSTATUSYES:PrivUserListItem.PRIVSTATUSNO);
+			if(PrivUserListItem.PRIVSTATUSYES == privStatus) {
+				if( pulItem.getPriv_status() == PrivUserListItem.PRIVSTATUSNO ) {
+					total--;
+					continue;
+				}
+			} else if( PrivUserListItem.PRIVSTATUSNO == privStatus) {
+				if( pulItem.getPriv_status() == PrivUserListItem.PRIVSTATUSYES ) {
+					total--;
+					continue;
+				}
+			}
+			
+			items.add(pulItem);
+		}
+		return total;
+	}
+
+	public int QueryPrivUserItems(int id, int privStatus, int page, int rows,
+			List<PrivUserListItem> items) throws Exception {
+		List<UserListItem> ulItems = new ArrayList<UserListItem>();
+		int total = QueryUserItems(id, page, rows, ulItems);
+
+		PrivilegeDAO pdao = new PrivilegeDAOImpl();
+		for(int i = 0; i<ulItems.size(); i++) {
+			PrivUserListItem pulItem = new PrivUserListItem();
+			pulItem.setId(ulItems.get(i).getId());
+			pulItem.setName(ulItems.get(i).getName());
+			pulItem.setParent_id(ulItems.get(i).getParent_id());
+			pulItem.setPname(ulItems.get(i).getPname());
+			pulItem.setGname(ulItems.get(i).getGname());
+			pulItem.setStatus(ulItems.get(i).getStatus());
+			
+			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getId(), Privilege.OWNERTYPEUSER);
+			pulItem.setPriv_status(count>0?PrivUserListItem.PRIVSTATUSYES:PrivUserListItem.PRIVSTATUSNO);
+			items.add(pulItem);
 		}
 		return total;
 	}

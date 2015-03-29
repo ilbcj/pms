@@ -22,13 +22,20 @@
 		//数据同步			method="dataSync"
 	 -->
 	
-	<!-- app role -->	
+	<!-- privilege -->	
  		<action name="queryAllAppRoleItems" class="com.pms.controller.PrivilegeAction" method="QueryAllAppRoleItems" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="saveOrgPrivileges" class="com.pms.controller.PrivilegeAction" method="SaveOrgPrivileges" >
+ 		<action name="savePrivileges" class="com.pms.controller.PrivilegeAction" method="SavePrivileges" >
  			<result name="success" type="json" />
  		</action>
- 	
+ 		<action name="queryPrivilegesByOwnerId" class="com.pms.controller.PrivilegeAction" method="QueryPrivilegesByOwnerId" >
+ 			<result name="success" type="json" />
+ 		</action>
+	<!-- user privilege -->
+		<action name="queryPrivlegeUserItems" class="com.pms.controller.PrivilegeUserAction" method="QueryPrivlegeUserItems" >
+	 		<result name="success" type="json" />
+	 	</action>
+	
 	</package>	
 </struts>    

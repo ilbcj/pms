@@ -39,7 +39,7 @@
 					                    </td>
 					                    <td class="text_right noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
-			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryUserCondition()">重置</a>
 					                    </td>
 					                </tr>
 					            </table>
@@ -221,7 +221,7 @@
 	</div><!-- end of layout -->
 <script>
     var isDetailQuery = false;
-    function toggleDetailQuery(obj){
+    function toggleDetailQuery(){
     	var currentHeight = $("#user_maintain_center_main").layout('panel','north').height();
     	if( currentHeight > 29 ) {
     		$(".detail_query").hide();
@@ -285,7 +285,7 @@
 		});
     }
     
-    function clearQueryOrgCondition(){
+    function clearQueryUserCondition(){
     	$("#user_query_name").textbox({value:""});
     	$("#user_query_status").combobox("setValue","0");
     	

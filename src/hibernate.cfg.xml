@@ -41,6 +41,7 @@
 	<mapping resource="com/pms/model/User.hbm.xml" />
 	<mapping resource="com/pms/model/Application.hbm.xml" />
 	<mapping resource="com/pms/model/AppRole.hbm.xml" />
+	<mapping resource="com/pms/model/Privilege.hbm.xml" />
 
 </session-factory>
 

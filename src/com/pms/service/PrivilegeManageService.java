@@ -8,8 +8,10 @@ import java.util.Locale;
 
 import com.pms.dao.AppDAO;
 import com.pms.dao.AppRoleDAO;
+import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.impl.AppDAOImpl;
 import com.pms.dao.impl.AppRoleDAOImpl;
+import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dto.AppRoleItem;
 import com.pms.dto.PrivilegeTemp;
 import com.pms.model.AppRole;
@@ -59,9 +61,9 @@ public class PrivilegeManageService {
 		return res;
 	}
 
-	public void SavePrivilege(String orgids, int ownertype,
-			List<PrivilegeTemp> privileges) {
-		String orgs[] = orgids.split(",");
+	public void SavePrivilege(String ownerids, int ownertype,
+			List<PrivilegeTemp> privileges) throws Exception {
+		String orgs[] = ownerids.split(",");
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		for(int i = 0; i< orgs.length; i++) {
 			for(int j = 0; j<privileges.size(); j++) {
@@ -74,25 +76,37 @@ public class PrivilegeManageService {
 						Locale.SIMPLIFIED_CHINESE);
 				String timenow = sdf.format(new Date());
 				priv.setTstamp(timenow);
-				dao.PrivilegeSave(priv);
+				dao.PrivilegeAdd(priv);
 			}
 		}
 		
 	}
 
-//	public void DeleteAppRoles(List<Integer> appRoleIds) throws Exception {
-//		if(appRoleIds == null)
-//			return;
-//	
-//		AppRole target;
-//		AppRoleDAO dao = new AppRoleDAOImpl();
-//		for(int i = 0; i< appRoleIds.size(); i++) {
-//			target = new AppRole();
-//			target.setId(appRoleIds.get(i));
-//			dao.AppRoleDel(target);
-//		}
-//	
-//		return ;
-//	}
+	public void UpdatePrivilege(int ownerid, int ownertype,
+			List<PrivilegeTemp> privileges) throws Exception {
+		PrivilegeDAO dao = new PrivilegeDAOImpl();
+		List<Privilege> privs = new ArrayList<Privilege>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		for(int i = 0; i<privileges.size(); i++) {
+			Privilege priv = new Privilege();
+			priv.setOwner_id(ownerid);
+			priv.setOwner_type(ownertype);
+			priv.setApp_id(privileges.get(i).getAppid());
+			priv.setRole_id(privileges.get(i).getRoleid());
+			priv.setTstamp(timenow);
+			privs.add(priv);
+		}
+		dao.UpdatePrivilegeByOwnerId(ownerid, ownertype, privs);
+	}
+
+	public List<Privilege> QueryPrivilegesByOwnerId(int ownerid, int ownertype) throws Exception {
+		List<Privilege> res = null;
+		PrivilegeDAO dao = new PrivilegeDAOImpl();
+		res = dao.QueryPrivilegesByOwnerId(ownerid, ownertype);
+		return res;
+	}
+
 	
 }

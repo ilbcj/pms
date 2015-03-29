@@ -31,48 +31,48 @@
 				    			<table class="nodt" style="width:100%">
 					                <tr>
 					                    <td class="query_name_mini text_right">姓名</td>
-					                    <td class="query_value_mini"><input id="user_query_name" class="easyui-textbox"></input></td>
+					                    <td class="query_value_mini"><input id="priv_user_query_name" class="easyui-textbox"></input></td>
 					                    <td class="query_name_mini text_right">状态</td>
-					                    <td class="query_value_mini"><input id="user_query_status" value="0" style="width:150px;"></input></td>
+					                    <td class="query_value_mini"><input id="priv_user_query_status" value="0" style="width:150px;"></input></td>
 					                    <td class="query_name_mini text_right">授权状态</td>
-					                    <td class="query_value_mini"><input id="user_query_privilege_status" value="0" style="width:150px;"></input></td>
+					                    <td class="query_value_mini"><input id="priv_user_query_privilege_status" value="0" style="width:150px;"></input></td>
 					                    <td class="query_name_small noborder" style="border:0;" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
 					                    </td>
 					                    <td class="text_right noborder" style="border:0;" style="border:0;">
-					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
-			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryPrivUser()">查询</a>
+			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryPrivUserCondition()">重置</a>
 					                    </td>
 					                </tr>
 					            </table>
 					            <table class="detail_query noborder nodt" style="width:100%;display:none;border:0;">
 					                <tr>
 					                    <td class="detail_query_name text_right">二级部门</td>
-					                    <td class="detail_query_value"><input id="user_query_unit" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_value"><input id="priv_user_query_unit" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">警种</td>
-					                    <td class="detail_query_value"><input id="user_query_police_type" class="easyui-textbox query_value_mid"></input></td>	
+					                    <td class="detail_query_value"><input id="priv_user_query_police_type" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
 					                <tr>
 					                    <td class="detail_query_name text_right">性别</td>
-					                    <td class="detail_query_value"><input id="user_query_sex" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_value"><input id="priv_user_query_sex" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">身份证</td>
-					                    <td class="detail_query_value"><input id="user_query_idnum" class="easyui-textbox query_value_mid"></input></td>	
+					                    <td class="detail_query_value"><input id="priv_user_query_idnum" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
 					                <tr>
 					                    <td class="detail_query_name text_right">最高敏感级别</td>
-					                    <td class="detail_query_value"><input id="user_query_max_sensitive_level" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_value"><input id="priv_user_query_max_sensitive_level" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">岗位</td>
-					                    <td class="detail_query_value"><input id="user_query_position" class="easyui-textbox query_value_mid"></input></td>	
+					                    <td class="detail_query_value"><input id="priv_user_query_position" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
 					                <tr>
 					                    <td class="detail_query_name text_right">部门</td>
-					                    <td class="detail_query_value"><input id="user_query_dept" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_value"><input id="priv_user_query_dept" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">职务/职称</td>
-					                    <td class="detail_query_value"><input id="user_query_title" class="easyui-textbox query_value_mid"></input></td>	
+					                    <td class="detail_query_value"><input id="priv_user_query_title" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
 					                <tr>
 					                    <td class="detail_query_name text_right">警号</td>
-					                    <td class="detail_query_value"><input id="user_query_police_num" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_value"><input id="priv_user_query_police_num" class="easyui-textbox query_value_mid"></input></td>
 					                </tr>
 					            </table>
 				    		</div><!-- end of privilege_authorize_user_center_query -->
@@ -84,15 +84,15 @@
 							            <tr>
 							            	<th field="ck" checkbox="true"></th>
 							                <th data-options="field:'name'" style="width:25%;">姓名</th>
-							                <th data-options="field:'uid'" style="width:25%;">组织机构</th>
-							                <th data-options="field:'pname'" style="width:25%;">状态</th>
-							                <th data-options="field:'pname'" style="width:25%;">授权状态</th>
+							                <th data-options="field:'pname'" style="width:25%;">组织机构</th>
+							                <th data-options="field:'status'" style="width:25%;">状态</th>
+							                <th data-options="field:'priv_status'" style="width:25%;">授权状态</th>
 							            </tr>
 							        </thead>
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
-							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrg();">新增授权</a>
-			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">维护授权</a>
+							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addUserAuth();">新增授权</a>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modUserAuth()">维护授权</a>
 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm8',iconCls:'icon-edit'" >导出授权</a>
 								    <div id="mm8" style="width:100px;">
 								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
@@ -108,13 +108,54 @@
 				    	</div><!-- end of privilege_authorize_user_center_main -->
 				    </div><!-- end of center -->
 				</div>
+				
+				<div id="privilege_authorize_user_detail_win" class="easyui-window" title="用户授权" style="width:80%;height:600px;"
+						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
+					<div class="easyui-panel" data-options="fit:true,footer:'#privilege_authorize_user_detail_win_ft'">
+						<table id="privilege_authorize_user_detail_win_list_dg"  
+							            data-options="toolbar:'#wintoolbar',singleSelect:false,method:'post',nowrap:true,idField:'appId',noheader:true,fit:true">
+							<thead>
+					            <tr>
+					            	<th data-options="field:'appName'" style="width:33%;">应用名称</th>
+					                <th data-options="field:'appFlag'" style="width:33%;">应用标识</th>
+					                <th data-options="field:'appEndTime'" style="width:33%;">失效日期</th>
+					            </tr>
+					        </thead>
+			            </table>
+			            <div id="wintoolbar" >
+							<table style="background-color:#E7F0FF;width:100%" cellspacing="0" cellpadding="0" border="0">
+								<tr style="height:40px;">
+					            	<td colspan=2 style="padding-left:15px;" >基本信息</td>
+					            </tr>
+								<tr style="background-color:#FFF;height:40px;">
+					            	<td class="text_right" style="padding-right:15px;width:150px;border:1px solid #aaa">授权机构</td>
+					                <td style="padding-left:15px;border:1px solid #aaa" ><span id="privilege_authorize_user_detail_win_user_name" ></span></td>
+					            </tr>
+					            <tr style="height:40px;">
+					            	<td colspan=2 style="padding-left:15px;">授权信息</td>
+					            </tr>
+							</table>
+							<div style="display:none">
+							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="">复制授权</a>
+			            	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">粘贴授权</a>
+			            	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">设置有效期</a>
+			            	</div>	
+							<input id="privilege_authorize_user_detail_win_user_id" type="hidden" />
+							<input id="privilege_authorize_user_detail_win_user_add" type="hidden" />
+						</div>
+					</div>
+					<div id="privilege_authorize_user_detail_win_ft" style="padding:5px;text-align:center">
+				        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="privAuthUserDetailConfirm();">确定</a>
+                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="privAuthUserDetailWinReturn();">返回</a>
+				    </div>
+				</div><!-- end of privilege_authorize_user_detail_win -->
 			</div><!-- privilege_authorize_user_center_main_wapper -->
 		</div>
 	
 	</div><!-- end of layout -->
 <script>
     var isDetailQuery = false;
-    function toggleDetailQuery(obj){
+    function toggleDetailQuery(){
     	var currentHeight = $("#privilege_authorize_user_center_main").layout('panel','north').height();
     	if( currentHeight > 29 ) {
     		$(".detail_query").hide();
@@ -132,9 +173,189 @@
     	$("#privilege_authorize_user_center_main").layout('resize',{width:'100%',height:'100%'});
     }
     
+    function queryPrivUser(){
+    	var treeNode = $("#privilege_authorize_user_tree").tree('getSelected');
+    	var treeNodeId = "";
+    	if( treeNode != null ) {
+    		treeNodeId = treeNode.id;
+    	}
+    	var name = $("#priv_user_query_name").val();
+    	var status = $("#priv_user_query_status").combobox("getValue");
+    	var priv_status = $("#priv_user_query_privilege_status").combobox("getValue");
+    	
+    	var unit = "";
+    	var policeType = "";
+    	var sex = "";
+    	var idnum = "";
+    	var maxSensitiveLevel = "";
+    	var position = "";
+    	var dept = "";
+    	var title = "";
+    	var policeNum = "";
+    	if( isDetailQuery ) {
+    		unit = $("#priv_user_query_unit").val();
+    		policeType = $("#priv_user_query_police_type").val();
+    		sex = $("#priv_user_query_sex").val();
+    		idnum = $("#priv_user_query_idnum").val();
+    		maxSensitiveLevel = $("#priv_user_query_max_sensitive_level").val();
+    		position = $("#priv_user_query_position").val();
+    		dept = $("#priv_user_query_dept").val();
+    		title = $("#priv_user_query_title").val();
+    		policeNum = $("#priv_user_query_police_num").val();
+    	}
+    	$("#privilege_authorize_user_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			id: treeNodeId,
+			userName: name,
+			userStatus: status,
+			userUnit: unit,
+			userPoliceType: policeType,
+			userSex: sex,
+			userIdnum: idnum,
+			userMaxSensitiveLevel: maxSensitiveLevel,
+			userPosition: position,
+			userDept: dept,
+			userTitle: title,
+			userPoliceNum: policeNum,
+			userPrivStatus: priv_status
+		});
+    }
+    
+    function clearQueryPrivUserCondition(){
+    	$("#priv_user_query_name").textbox({value:""});
+    	$("#priv_user_query_status").combobox("setValue","0");
+    	$("#priv_user_query_privilege_status").combobox("setValue","0");
+    	
+    	$("#priv_user_query_unit").textbox({value:""});
+    	$("#priv_user_query_police_type").textbox({value:""});
+    	$("#priv_user_query_sex").textbox({value:""});
+    	$("#priv_user_query_idnum").textbox({value:""});
+    	$("#priv_user_query_max_sensitive_level").textbox({value:""});
+    	$("#priv_user_query_position").textbox({value:""});
+    	$("#priv_user_query_dept").textbox({value:""});
+    	$("#priv_user_query_title").textbox({value:""});
+    	$("#priv_user_query_police_num").textbox({value:""});
+    }
+    
+    function addUserAuth() {
+    	var rows = $("#privilege_authorize_user_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要授权的用户');
+			return false;
+		}
+		var usernames = rows[0].name;
+		var userids = rows[0].id;
+		for(var i=1; i<rows.length; i++){
+			userids += "," + rows[i].id;
+		    usernames += "," + rows[i].name;
+		}
+		
+		refreshPrivAuthUserDetailAppList();
+		$("#privilege_authorize_user_detail_win_user_id").val(userids);
+    	$("#privilege_authorize_user_detail_win_user_name").html(usernames);
+    	$("#privilege_authorize_user_detail_win_user_add").val("1");
+    	$("#privilege_authorize_user_detail_win").window({title:'新增用户授权'}).window('open').window('center');
+    }
+    
+    function refreshPrivAuthUserDetailAppList(){
+    	var rows = $("#privilege_authorize_user_detail_win_list_dg").datagrid('getRows');
+    	for(var index=1; index < rows.length; index++)
+    	{
+    		$("#privilege_authorize_user_detail_win_list_dg").datagrid('collapseRow',index);
+    	}
+    	$("#privilege_authorize_user_detail_win_list_dg").datagrid('expandRow',0);
+    	$(".privDetailWinAppRoleCheckBox").prop('checked',false);
+    	$("#privilege_authorize_user_detail_win_user_add").val("");
+    }
+    
+    function privAuthUserDetailWinReturn(){
+    	$("#privilege_authorize_user_center_list_dg").datagrid('clearSelections');
+    	$("#privilege_authorize_user_detail_win").window('close');
+    }
+    
+    function privObj(appid, roleid){
+    	this.appid = appid;
+    	this.roleid = roleid;
+	}
+    function privAuthUserDetailConfirm(){
+    	var orgids = $("#privilege_authorize_user_detail_win_user_id").val();
+    	var poststr = "ownerIds=" + orgids;
+    	var saveType = $("#privilege_authorize_user_detail_win_user_add").val();
+		poststr += "&saveType=" + parseInt(saveType);
+		poststr += "&ownerType=2";
+		
+    	var cbs = $(".privDetailWinAppRoleCheckBox:checked");
+    	var convertArray = new Array();
+    	var appids="";
+    	for(var index=0; index < cbs.length; index++) {
+    		//appids += ",[" + $(cbs.get(index)).attr("appid") + $(cbs.get(index)).val() +"]";
+    		var priv = new privObj( parseInt($(cbs.get(index)).attr("appid")), parseInt($(cbs.get(index)).val()) );
+ 			convertArray.push(priv);
+    	}
+    	var tmp = $.toJSON(convertArray);
+    	poststr += '&privilegesToSave='+ tmp;
+    	//alert(poststr);
+    	$.getJSON("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				$("#privilege_authorize_user_center_list_dg").datagrid('reload').datagrid('clearSelections');
+				warningTip("提示", '用户授权成功');
+			}
+			else
+			{
+				warningTip("提示", '用户授权失败');	
+			}
+			privAuthUserDetailWinReturn();
+		});
+    	
+    	
+    }
+    
+    function modUserAuth() {
+    	var rows = $("#privilege_authorize_user_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要维护授权的用户');
+			return false;
+		}
+		else if (rows.length > 1) {
+			warningTip("提示", '一次只能维护一个用户');
+			return false;
+		}
+		
+		var usernames = rows[0].name;
+		var userids = rows[0].id;
+		
+		var poststr = "ownerIds=" + userids;
+    	poststr += "&ownerType=2";
+		$.getJSON("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				refreshPrivAuthUserDetailAppList();
+				$("#privilege_authorize_user_detail_win_user_id").val(userids);
+		    	$("#privilege_authorize_user_detail_win_user_name").html(usernames);
+		    	$("#privilege_authorize_user_detail_win_user_add").val("2");
+		    	
+		    	//alert(retObj.privileges);
+		    	for(var key in retObj.privileges) {
+		    		$(".privDetailWinAppRoleCheckBox[appid="+retObj.privileges[key].app_id+"]#approle_" + retObj.privileges[key].role_id).prop('checked',true);
+		    		//alert(retObj.privileges[key].app_id + '||' + retObj.privileges[key].role_id);
+		    	}
+		    	
+		    	$("#privilege_authorize_user_detail_win").window({title:'维护用户授权'}).window('open').window('center');
+			}
+			else
+			{
+				warningTip("提示", '获取用户已授权信息失败');	
+			}
+		});
+		return;
+    }
+    
 $(document).ready(function () { 
 	
-	$('#privilege_authorize_user_tree').tree({
+	$("#privilege_authorize_user_tree").tree({
 	    loadFilter: function(data){
 	        if (data.treeNodes){
 	            return data.treeNodes;
@@ -144,13 +365,13 @@ $(document).ready(function () {
 	    },
 	    onClick: function(node){
 	    	//alert(node.id);
-// 	    	$("#org_maintain_center_list_dg").datagrid('load',{
-// 				id: node.id
-// 			});
+			$("#privilege_authorize_user_center_list_dg").datagrid('load',{
+				id: node.id
+			});
 	    }
 	});
 	
-	$("#user_query_status").combobox({
+	$("#priv_user_query_status").combobox({
 		valueField: 'value',
 		textField: 'label',
 		data:[{
@@ -165,7 +386,7 @@ $(document).ready(function () {
 		}]
 	});
 	
-	$("#user_query_privilege_status").combobox({
+	$("#priv_user_query_privilege_status").combobox({
 		valueField: 'value',
 		textField: 'label',
 		data:[{
@@ -181,7 +402,62 @@ $(document).ready(function () {
 	});
 	
 	$("#privilege_authorize_user_center_list_dg").datagrid({
-//		url:'../organization/queryChildrenItems.action',
+		url:'../priv/queryPrivlegeUserItems.action',
+		queryParams:{queryAll: true},
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.items;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+		columns:[[
+			{field:'ck',checkbox:true},
+			{field:'name',title:'姓名', width:'25%'},
+			{field:'pname',title:'组织机构', width:'25%'},
+			{field:'status',title:'状态', width:'25%',
+				formatter: function(value,row,index){
+					if (value == 1){
+						return "使用中";
+					} else if (value == 2){
+						return "挂起";
+					} else {
+						return "未知用户状态";
+					}
+				}
+			},
+			{field:'priv_status',title:'授权状态', width:'25%',
+				formatter: function(value,row,index){
+					if (value == 1){
+						return "未授权";
+					} else if (value == 2){
+						return "已授权";
+					} else {
+						return "未知授权状态";
+					}
+				}
+			}
+		]],
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#privilege_authorize_user_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+	
+	$("#privilege_authorize_user_detail_win_list_dg").datagrid({
+		url:'../priv/queryAllAppRoleItems.action',
+		view: detailview,
+		detailFormatter:function(index,row){
+	        var res = '<div class="ddv" style="padding:5px 0">';
+	        for(var index=0; index<row.appRoleId.length; index++ ) {
+	        	res += '<input id="approle_' + row.appRoleId[index] + '" type="checkbox" value="' + row.appRoleId[index] + '" appid="' + row.appId + '" class="privDetailWinAppRoleCheckBox" style="margin-right:5px;" />';
+	        	res += '<label for="approle_' + row.appRoleId[index] + '" style="display: inline;margin-right:15px;">' + row.appRoleName[index] + '</label>';
+	        }
+	        res += '</div>';
+	        return res;
+	    },
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
@@ -194,7 +470,7 @@ $(document).ready(function () {
 			return res;
 		},
 //		onLoadSuccess: function() {alert("success");},
-		onLoadError: function() { $("#privilege_authorize_user_center_main").layout('resize',{width:'100%',height:'100%'}); }
+		onLoadError: function() { $("#privilege_authorize_user_detail_win_list_dg").layout('resize',{width:'100%',height:'100%'}); }
 	});
 });
 </script>	

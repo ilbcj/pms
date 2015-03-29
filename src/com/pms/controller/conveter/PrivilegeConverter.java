@@ -13,8 +13,8 @@ import com.pms.dto.PrivilegeTemp;
 
 public class PrivilegeConverter extends DefaultTypeConverter {
 	
-	@Override      
-	  
+	@SuppressWarnings("rawtypes")
+	@Override
 	public Object convertValue(Map context, Object value, Class toType) {
 		if(value == null) {
 			return null;
