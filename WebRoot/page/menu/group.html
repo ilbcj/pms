@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>groupmanager.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+    <ul id="menu_user" class="easyui-tree" lines="true">
+        <li iconCls="icon-leaf" id="menu_group_rule_maintain">
+            <span>规则群体维护</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_group_user_maintain">
+            <span>离散群体维护</span>
+        </li>
+    </ul>
+<script>
+$(document).ready(function () {
+	$('#menu_user').tree({
+		onClick: function(node){
+// 			alert(node.text);  // alert node text property when clicked
+// 			alert(node.state);
+// 			alert(node.id);
+			if( node.id == 'menu_group_rule_maintain') {
+				$('body').layout('panel','center').panel('refresh','group/group_rule_maintain.html');
+			}
+			else if (node.id == 'menu_group_user_maintain') {
+				$('body').layout('panel','center').panel('refresh','group/group_user_maintain.html');
+			}
+			
+		}
+	});
+});
+
+</script>  
+  </body>
+</html>

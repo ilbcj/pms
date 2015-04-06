@@ -16,53 +16,74 @@
             <li>
                 <span>用户策略</span>
                 <ul>
-                    <li iconCls="icon-leaf">
+                    <li iconCls="icon-leaf" id="menu_system_user_dictionary">
 		                <span>属性字典</span>
 		            </li>
-		            <li iconCls="icon-leaf">
-		                <span>模板管理</span>
-		            </li>
-		            <li iconCls="icon-leaf">
-		                <span>字典关系管理</span>
-		            </li>
+<!-- 		            <li iconCls="icon-leaf"> -->
+<!-- 		                <span>模板管理</span> -->
+<!-- 		            </li> -->
+<!-- 		            <li iconCls="icon-leaf"> -->
+<!-- 		                <span>字典关系管理</span> -->
+<!-- 		            </li> -->
                 </ul>
             </li>
-            <li>
-                <span>机构策略</span>
-                <ul>
-                    <li iconCls="icon-leaf">
-		                <span>属性字典</span>
-		            </li>
-		            <li iconCls="icon-leaf">
-		                <span>模板管理</span>
-		            </li>
-                </ul>
-            </li>
-            <li>
-                <span>账号策略</span>
-                <ul>
-                    <li iconCls="icon-leaf">
-		                <span>密码策略</span>
-		            </li>
-		            <li iconCls="icon-leaf">
-		                <span>PKI配置</span>
-		            </li>
-		            <li iconCls="icon-leaf">
-		                <span>PKI通讯协议</span>
-		            </li>
-                </ul>
-            </li>
-            <li iconCls="icon-leaf">
-                <span>审核策略</span>
-            </li>
-            <li>
-                <span>授权策略</span>
-                <ul>
-                    <li iconCls="icon-leaf">
-		                <span>用户来源配置</span>
-		            </li> 
-                </ul>
-            </li>
+<!--             <li> -->
+<!--                 <span>机构策略</span> -->
+<!--                 <ul> -->
+<!--                     <li iconCls="icon-leaf"> -->
+<!-- 		                <span>属性字典</span> -->
+<!-- 		            </li> -->
+<!-- 		            <li iconCls="icon-leaf"> -->
+<!-- 		                <span>模板管理</span> -->
+<!-- 		            </li> -->
+<!--                 </ul> -->
+<!--             </li> -->
+<!--             <li> -->
+<!--                 <span>账号策略</span> -->
+<!--                 <ul> -->
+<!--                     <li iconCls="icon-leaf"> -->
+<!-- 		                <span>密码策略</span> -->
+<!-- 		            </li> -->
+<!-- 		            <li iconCls="icon-leaf"> -->
+<!-- 		                <span>PKI配置</span> -->
+<!-- 		            </li> -->
+<!-- 		            <li iconCls="icon-leaf"> -->
+<!-- 		                <span>PKI通讯协议</span> -->
+<!-- 		            </li> -->
+<!--                 </ul> -->
+<!--             </li> -->
+<!--             <li iconCls="icon-leaf"> -->
+<!--                 <span>审核策略</span> -->
+<!--             </li> -->
+<!--             <li> -->
+<!--                 <span>授权策略</span> -->
+<!--                 <ul> -->
+<!--                     <li iconCls="icon-leaf"> -->
+<!-- 		                <span>用户来源配置</span> -->
+<!-- 		            </li>  -->
+<!--                 </ul> -->
+<!--             </li> -->
         </ul>
+
+<script>
+$(document).ready(function () {
+	$('#menu_system').tree({
+		onClick: function(node){
+// 			alert(node.text);  // alert node text property when clicked
+// 			alert(node.state);
+// 			alert(node.id);
+			if( node.id == 'menu_system_user_dictionary') {
+				$('body').layout('panel','center').panel('refresh','system/system_user_dictionary.html');
+			}
+// 			else if (node.id == 'menu_privilege_authorize_user') {
+// 				$('body').layout('panel','center').panel('refresh','privilege/privilege_authorize_user.html');
+// 			}
+
+		}
+	});
+});
+
+</script>  
+
   </body>
 </html>

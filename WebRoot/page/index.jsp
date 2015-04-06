@@ -53,33 +53,39 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <script>
 $(document).ready(function () {
+	
+	$('#mm').accordion('add', {
+		title: '机构管理',
+		href:'menu/organization.html',
+		selected: false
+	});
+	
 	$('#mm').accordion('add', {
 		title: '用户管理',
 		href:'menu/user.html',
 		selected: false
 	});
 
+// 	$('#mm').accordion('add', {
+// 		title: '账号管理',
+// 		href:'menu/account.html',
+// 		selected: false
+// 	});
 	$('#mm').accordion('add', {
-		title: '机构管理',
-		href:'menu/organization.html',
-		selected: false
-	});
-
-	$('#mm').accordion('add', {
-		title: '账号管理',
-		href:'menu/account.html',
-		selected: false
-	});
-
-	$('#mm').accordion('add', {
-		title: '授权管理',
-		href:'menu/privilege.html',
+		title: '群体管理',
+		href:'menu/group.html',
 		selected: false
 	});
 
 	$('#mm').accordion('add', {
 		title: '应用管理',
 		href:'menu/application.html',
+		selected: false
+	});
+	
+	$('#mm').accordion('add', {
+		title: '授权管理',
+		href:'menu/privilege.html',
 		selected: false
 	});
 

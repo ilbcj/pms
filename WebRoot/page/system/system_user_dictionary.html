@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>system_user_dictionary.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">用户属性字典维护</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="app_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+		    	<div id="app_maintain_center_main" class="easyui-layout" data-options="fit:true" >
+		    		<div id="app_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+		    			<table class="nodt" style="width:100%">
+			                <tr>
+			                    <td class="query_name_small text_right">应用名称</td>
+			                    <td class="query_value_small"><input id="app_query_name" class="easyui-textbox"></input></td>
+			                    <td class="query_name_small text_right">应用标识</td>
+			                    <td class="query_value_small"><input id="app_query_flag" class="easyui-textbox"></input></td>
+			                    <td>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+			                    </td>
+			                </tr>
+			            </table>
+		    		</div><!-- end of app_maintain_center_query -->
+		    		
+		    		<div id="app_maintain_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="app_maintain_center_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+					        <thead>
+					            <tr>
+					            	<th field="ck" checkbox="true"></th>
+					                <th data-options="field:'name'" style="width:50%;">应用名称</th>
+					                <th data-options="field:'flag'" style="width:50%;">应用标识</th>
+					            </tr>
+					        </thead>
+					    </table>
+					    <div id="toolbar" style="background-color:#E7F0FF">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addApp();">添加</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modApp()">修改</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delApp()">删除</a>
+
+					    </div><!-- end of toolbar -->
+		    		</div><!-- end of app_maintain_center_list -->
+		    		
+		    	</div><!-- end of app_maintain_center_main -->
+
+			</div><!-- app_maintain_center_main_wapper -->
+		
+			<div id="app_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="app_maintain_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'应用信息',footer:'#app_maintain_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+				    <form id="app_maintain_center_detail_form" method="post">
+				    	<input id="app_id" name="app.id" type="hidden"/> 
+				        <table class="nodt" style="width:100%">
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 应用名称</td>
+				                <td><input id="app_name" name="app.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入应用名称'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 应用标识</td>
+				                <td><input id="app_flag" name="app.flag" class="form_value_mid easyui-textbox" data-options="prompt:'请输入应用标识'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 部署地</td>
+				                <td><input id="app_address" name="app.address" class="form_value_mid easyui-textbox" data-options="prompt:'请输入部署地'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 访问地址</td>
+				                <td><input id="app_url" name="app.url" class="form_value_mid easyui-textbox" data-options="prompt:'请输入访问地址'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 管理单位</td>
+				                <td><input id="app_unit" name="app.unit" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理单位'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 管理负责人</td>
+				                <td><input id="app_charge" name="app.charge" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理负责人'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 责任人联系方式</td>
+				                <td><input id="app_charge_contact" name="app.charge_contact" class="form_value_mid easyui-textbox" data-options="prompt:'请输入责任人联系方式'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 开发单位</td>
+				                <td><input id="app_vender" name="app.vender" class="form_value_mid easyui-textbox" data-options="prompt:'请输入开发单位'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 单位联系方式</td>
+				                <td><input id="app_vender_contact" name="app.vender_contact" class="form_value_mid easyui-textbox" data-options="prompt:'请输入单位联系方式'"></input></td>
+				            </tr>
+				        </table>
+				        <table class="nodt" style="width:100%">
+				        	<tr style="height:37px;background: url(../images/white-top-bottom.gif) repeat-x;">
+				        		<td colspan=2><input id="account_type_checkbox" name="app.hasAccountType" type="checkbox" onchange="toggleAccountType();" ><span> 账号类型</span></td>
+				        	</tr>
+				        	<tr id="account_type" class="displaynone">
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 账号类型</td>
+				                <td>
+									<table class="nodt" style="width:100%">
+										<tr style="height:37px;background:#E6EEF8;">
+							        		<td colspan=2><input id="userpwd_checkbox" name="app.hasPwdAccount" type="checkbox" checked onchange="toggleUserPwd();" ><span> 用户名密码</span></td>
+							        	</tr>
+							        	<tr class="pwd_policy_tr">
+							                <td class="form_name_small text_right"> 密码策略</td>
+							                <td><input id="pwd_policy" name="app.pwd_policy" class="form_value_mid easyui-combobox" 
+				                						data-options="panelHeight:'auto', editable:false, valueField:'value', textField:'label', data: [{label: '系统密码策略',value: 'sys',selected:true},{label: '自定义',value: 'self'}]" /></td>
+							            </tr>
+							            <tr class="self_policy_tr displaynone">
+							                <td class="form_name_small text_right"> 默认用户名</td>
+							                <td><input id="default_username" name="app.default_username" class="form_value_mid easyui-combobox" 
+				                						data-options="panelHeight:'auto', editable:false, valueField:'value', textField:'label', data: [{label: '请选择',value: 'default',selected:true}]" /></td>
+							            </tr>
+							            <tr class="self_policy_tr displaynone">
+							                <td class="form_name_small text_right"> 默认密码</td>
+							                <td><input id="default_pwd_type" name="app.default_pwd_type" class="form_value_mid easyui-combobox" 
+				                						data-options="panelHeight:'auto', editable:false, valueField:'value', textField:'label', data: [{label: '使用固定密码',value: 'fix',selected:true}]" />
+				                				<input id="default_pwd" name="app.default_pwd" class="form_value_small easyui-textbox" data-options="prompt:'请输入默认密码',type:'password'" value="12345678"/></td>
+							            </tr>
+							            <tr class="self_policy_tr displaynone">
+							                <td class="form_name_small text_right"><span style="color:red;">*</span> 密码长度</td>
+							                <td>最短<input id="pwdlen_min" type="text" name="app.pwdlen_min" class="form_value_small easyui-textbox" data-options="prompt:'密码最小长度',width:80" value="1"/>位		最长<input id="pwdlen_max" type="text" name="app.pwdlen_max" class="easyui-textbox" data-options="prompt:'密码最大长度',width:80" value="20"/>位</td>
+							            </tr>
+							            <tr class="self_policy_tr displaynone">
+							                <td class="form_name_small text_right"> 密码强度</td>
+							                <td>
+							                	<input id="self_policy_pwdstrength_lower" name="pwdstrength_lower" type="checkbox"  ><span> 小写字母</span>
+							                	<input id="self_policy_pwdstrength_upper" name="pwdstrength_upper" type="checkbox"  ><span> 大写字母</span>
+							                	<input id="self_policy_pwdstrength_number" name="pwdstrength_number" type="checkbox"  ><span> 数字</span>
+							                	<input id="self_policy_pwdstrength_special" name="pwdstrength_special" type="checkbox"  ><span> 特殊符号</span>
+											</td>
+							            </tr>
+							            <tr style="height:37px;background:#E6EEF8;">
+							        		<td colspan=2><input id="cert_checkbox" name="app.hasCertAccount" type="checkbox" onchange="toggleCert();" ><span> 数字证书</span></td>
+							        	</tr>
+							        	<tr class="cert_policy_tr displaynone">
+							                <td class="form_name_small text_right"> 证书策略</td>
+							                <td><input id="self_policy_cert_policy" name="app.cert_policy_pki" type="checkbox"  ><span> PKI</span></td>
+							            </tr>
+							        </table>
+								</td>
+				            </tr>
+				        </table>
+				    </form>
+				    
+				</div><!-- end of app_maintain_center_detail -->
+				<div id="app_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addAppSave();">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addAppReturn();">返回</a>
+				</div><!-- org_maintain_center_detail_ft -->
+	    	</div><!-- end of app_maintain_center_detail_wapper -->
+	    	
+		</div><!-- end of content -->
+	</div><!-- end of layout -->
+<script>
+
+	function toggleAccountType() {
+		var checked = $("#account_type_checkbox").is(':checked');
+		if( checked ) {
+			$("#account_type").removeClass("displaynone");
+		}
+		else {
+			$("#account_type").addClass("displaynone");
+		}
+	}
+	
+	function toggleUserPwd(){
+		var checked = $("#userpwd_checkbox").is(':checked');
+		if( checked ) {
+			$(".pwd_policy_tr").removeClass("displaynone");
+			if( $("#pwd_policy").combobox('getValue') == "self" ) {
+				$(".self_policy_tr").removeClass("displaynone");
+			}
+		}
+		else {
+			$(".pwd_policy_tr").addClass("displaynone");
+			$(".self_policy_tr").addClass("displaynone");
+		}
+	}
+	
+	function toggleCert(){
+		var checked = $("#cert_checkbox").is(':checked');
+		if( checked ) {
+			$(".cert_policy_tr").removeClass("displaynone");
+		}
+		else {
+			$(".cert_policy_tr").addClass("displaynone");
+		}
+	}
+	
+	function addApp(){
+    	$("#app_maintain_center_main_wapper").panel('close');
+    	$("#app_maintain_center_detail_wapper").panel('open');
+    }
+    
+    function addAppReturn(){
+    	$("#app_maintain_center_main_wapper").panel('open');
+    	$("#app_maintain_center_main_wapper").panel('resize');
+    	$("#app_maintain_center_detail_wapper").panel('close');
+    	refreshDetailPage();
+    }
+    
+    function addAppSave(){
+		// submit the form
+		$("#app_maintain_center_detail_form").submit();
+    }
+    
+    function modApp(){
+    	var rows = $('#app_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的应用');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个应用');
+			return false;
+		}
+		
+		$("#app_id").val(rows[0].id);
+		$("#app_name").textbox('setValue',rows[0].name);
+		$("#app_flag").textbox('setValue',rows[0].flag);
+		$("#app_address").textbox('setValue',rows[0].address);
+		$("#app_url").textbox('setValue',rows[0].url);
+		$("#app_unit").textbox('setValue',rows[0].unit);
+		$("#app_charge").textbox('setValue',rows[0].charge);
+		$("#app_charge_contact").textbox('setValue',rows[0].charge_contact);
+		$("#app_vender").textbox('setValue',rows[0].vender);
+		$("#app_vender_contact").textbox('setValue',rows[0].vender_contact);
+		if(rows[0].hasAccountType == "on") {
+			$("#account_type_checkbox").prop('checked',true);
+			if(rows[0].hasPwdAccount == "on") {
+				$("#pwd_policy").combobox('setValue', rows[0].pwd_policy);
+				if( "self" == rows[0].pwd_policy ) {
+					$("#default_username").combobox('setValue', rows[0].default_username||"default");
+					$("#default_pwd_type").combobox('setValue', rows[0].default_pwd_type||"fix");
+					if( "fix" == rows[0].default_pwd_type ) {
+						$("#default_pwd").textbox('setValue', rows[0].default_pwd);
+					}
+					$("#pwdlen_min").textbox('setValue', rows[0].pwdlen_min||"0");
+					$("#pwdlen_max").textbox('setValue', rows[0].pwdlen_max||"0");
+					if( rows[0].pwdstrength != null ) {
+						for(var index = 0; index < rows[0].pwdstrength.length; index++) {
+							var c = rows[0].pwdstrength.charAt(index);
+							if( "1" == c ) {
+								$("#self_policy_pwdstrength_lower").prop('checked',true);
+							}
+							else if( "2" == c ) {
+								$("#self_policy_pwdstrength_upper").prop('checked',true);
+							}
+							else if( "3" == c ) {
+								$("#self_policy_pwdstrength_number").prop('checked',true);
+							}
+							else if( "4" == c ) {
+								$("#self_policy_pwdstrength_special").prop('checked',true);
+							}
+						}
+					}
+				}
+			}
+			
+			if(rows[0].hasCertAccount == "on") {
+				$("#cert_checkbox").prop('checked',true);
+				if(rows[0].cert_policy_pki == "on") {
+					$("#self_policy_cert_policy").prop('checked',true);
+				}
+			}
+		}		
+		
+		$("#account_type_checkbox").change();
+		$("#userpwd_checkbox").change();
+		$("#pwd_policy").change();
+		$("#cert_checkbox").change();
+		
+		$("#app_maintain_center_main_wapper").panel('close');
+   		$("#app_maintain_center_detail_wapper").panel('open');
+    }
+    
+    function delApp(){
+		var rows = $('#app_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的应用');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。删除应用，将删除此应用下所有账号信息、角色信息、资源信息和授权信息,确认要删除所选应用？', function(r){
+                if (r){
+                	var poststr = "delAppIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delAppIds=" + rows[i].id;
+					}
+
+                    $.getJSON("../app/deleteApp.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#app_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+							successTip("删除应用","操作成功");
+						}
+						else
+						{
+							warningTip("提示", '删除应用操作失败：' + retObj.message);
+						}
+					});
+                }
+            });
+		}
+	}
+	
+    function refreshDetailPage() {
+    		    $("#app_id").val("");
+	        	$("#app_name").textbox('setValue',"");
+	        	$("#app_flag").textbox('setValue',"");
+	        	$("#app_address").textbox('setValue',"");
+	        	$("#app_url").textbox('setValue',"");
+	        	$("#app_unit").textbox('setValue',"");
+	        	$("#app_charge").textbox('setValue',"");
+	        	$("#app_charge_contact").textbox('setValue',"");
+	        	$("#app_vender").textbox('setValue',"");
+	        	$("#app_vender_contact").textbox('setValue',"");
+	        	
+	        	$("#account_type_checkbox").prop('checked',false);
+	        	$("#userpwd_checkbox").prop('checked',true);
+	        	$("#pwd_policy").combobox('setValue', 'sys');
+	        	$("#default_username").combobox('setValue', 'default');
+	        	$("#default_pwd_type").combobox('setValue', 'fix');
+	        	$("#default_pwd").textbox('setValue',"12345678");
+	        	$("#pwdlen_min").textbox('setValue',"1");
+	        	$("#pwdlen_max").textbox('setValue',"20");
+	        	$("#self_policy_pwdstrength_lower").prop('checked',false);
+	        	$("#self_policy_pwdstrength_upper").prop('checked',false);
+	        	$("#self_policy_pwdstrength_number").prop('checked',false);
+	        	$("#self_policy_pwdstrength_special").prop('checked',false);
+	        	$("#account_type_checkbox").change();
+	        	
+	        	$("#cert_checkbox").prop('checked',false);
+	        	$("#self_policy_cert_policy").prop('checked',false);
+	        	$("#cert_checkbox").change();
+    }
+$(document).ready(function () { 
+
+// 	$("#account_type_cb").click(function(){
+// 	alert(1);
+// 		var ch = $("#account_type_cb").prop('checked');
+// 		if(ch) {
+// 			alert(ch);
+// 		}
+// 	});
+
+	$("#pwd_policy").combobox({
+		onChange: function(newValue, oldValue){
+			if(oldValue != ""){
+				if(newValue == "self") {
+					$(".self_policy_tr").removeClass("displaynone");
+				} 
+				else {
+					$(".self_policy_tr").addClass("displaynone");
+				}
+			}
+		}
+	});
+	
+	$("#app_maintain_center_list_dg").datagrid({
+		url:'../app/queryAppItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.items;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#app_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+	
+	$("#app_maintain_center_detail_form").form({
+	    url:'../app/saveApp.action',
+	    success:function(data){
+		    var recive = $.parseJSON(data);
+			
+	        if(recive.result == false) {
+	        	errorTip("保存应用信息失败："+recive.message);
+	        } else {
+	        	successTip('保存应用信息','保存成功',1000);
+
+				refreshDetailPage();
+	        	
+				$("#app_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
+	        	addAppReturn();
+	        }
+	    }
+	});
+});
+</script>	
+  </body>
+</html>
