@@ -121,9 +121,17 @@
 				                <td><input id="user_name" name="user.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入姓名'"></input></td>
 				            </tr>
 				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 身份证</td>
+				                <td><input id="user_idnum" name="user.idnum" class="form_value_mid easyui-textbox" data-options="prompt:'请输入身份证'"></input></td>
+				            </tr>
+				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 状态</td>
 				                <td><input id="user_status" name="user.status" class="form_value_mid easyui-combobox" 
 				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '1',selected:true}]" /></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 性别</td>
+				                <td><input id="user_sex" name="user.sex" class="form_value_mid easyui-textbox" data-options="prompt:'请输入性别'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 组织机构</td>
@@ -133,31 +141,19 @@
 				                </td>
 				            </tr>
 				            <tr>
-				                <td class="form_name_small text_right">二级部门</td>
-				                <td><input id="user_unit" name="user.unit" class="form_value_mid easyui-textbox" data-options="prompt:'请输入二级部门'"></input></td>
-				            </tr>
-				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 警种</td>
 				                <td><input id="user_police_type" name="user.police_type" class="form_value_mid easyui-textbox" data-options="prompt:'请输入警种'"></input></td>
 				            </tr>
 				            <tr>
-				                <td class="form_name_small text_right"><span style="color:red;">*</span> 性别</td>
-				                <td><input id="user_sex" name="user.sex" class="form_value_mid easyui-textbox" data-options="prompt:'请输入性别'"></input></td>
-				            </tr>
-				            <tr>
-				                <td class="form_name_small text_right"><span style="color:red;">*</span> 身份证</td>
-				                <td><input id="user_idnum" name="user.idnum" class="form_value_mid easyui-textbox" data-options="prompt:'请输入身份证'"></input></td>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 警号</td>
+				                <td><input id="user_police_num" name="user.police_num" class="form_value_mid easyui-textbox" data-options="prompt:'请输入警号'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 最高敏感级别</td>
 				                <td><input id="user_max_sensitive_level" name="user.max_sensitive_level" class="form_value_mid easyui-textbox" data-options="prompt:'请输入最高敏感级别'"></input></td>
 				            </tr>
 				            <tr>
-				                <td class="form_name_small text_right">岗位</td>
-				                <td><input id="user_position" name="user.position" class="form_value_mid easyui-textbox" data-options="prompt:'请输入岗位'"></input></td>
-				            </tr>
-				            <tr>
-				                <td class="form_name_small text_right">部门</td>
+				                <td class="form_name_small text_right">业务部门类别</td>
 				                <td><input id="user_dept" name="user.dept" class="form_value_mid easyui-textbox" data-options="prompt:'请输入部门'"></input></td>
 				            </tr>
 				            <tr>
@@ -165,8 +161,12 @@
 				                <td><input id="user_title" name="user.title" class="form_value_mid easyui-textbox" data-options="prompt:'请输入职务/职称'"></input></td>
 				            </tr>
 				            <tr>
-				                <td class="form_name_small text_right"><span style="color:red;">*</span> 警号</td>
-				                <td><input id="user_police_num" name="user.police_num" class="form_value_mid easyui-textbox" data-options="prompt:'请输入警号'"></input></td>
+				                <td class="form_name_small text_right">岗位</td>
+				                <td><input id="user_position" name="user.position" class="form_value_mid easyui-textbox" data-options="prompt:'请输入岗位'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right">二级部门</td>
+				                <td><input id="user_unit" name="user.unit" class="form_value_mid easyui-textbox" data-options="prompt:'请输入二级部门'"></input></td>
 				            </tr>
 				        </table>
 				    </form>

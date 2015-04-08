@@ -27,4 +27,5 @@
  	<include file="struts-user.xml"/>
  	<include file="struts-app.xml"/>
  	<include file="struts-privilege.xml"/>
+ 	<include file="struts-system.xml"/>
 </struts>    
