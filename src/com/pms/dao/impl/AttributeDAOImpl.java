@@ -1,7 +1,10 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -47,8 +50,10 @@ public class AttributeDAOImpl implements AttributeDAO {
 					q.setInteger( "type", criteria.getType() );
 				}
 			}
-			q.setFirstResult((page-1) * rows);   
-			q.setMaxResults(rows);   
+			if( page > 0 && rows >0 ) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);   
+			}
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -130,6 +135,40 @@ public class AttributeDAOImpl implements AttributeDAO {
 			HibernateUtil.closeSession();
 		}
 		return rs;
+	}
+	
+	@Override
+	public void UpdateAttrDictionary(int attrId, List<String> dictionary) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		String sqlString = "delete from attrdict where attrid = :attrid ";
+	
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setInteger("attrid", attrId);
+			q.executeUpdate();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			for(int i=0;i<dictionary.size(); i++) {
+				AttrDictionary attrDict = new AttrDictionary();
+				attrDict.setAttrid(attrId);
+				attrDict.setValue(dictionary.get(i));
+				attrDict.setTstamp(timenow);
+				session.merge(attrDict);
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return;
 	}
 
 }

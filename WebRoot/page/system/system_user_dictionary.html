@@ -61,7 +61,7 @@
 				<div id="attr_dict_user_maintain_center_detail" class="easyui-panel" 
 								data-options="fit:true,border:false,title:'应用信息',footer:'#attr_dict_user_maintain_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
-				    <form id="attr_user_disc_maintain_center_detail_form" method="post">
+<!-- 				    <form id="attr_user_disc_maintain_center_detail_form" method="post"> -->
 				    	<input id="attr_id" name="attrItem.id" type="hidden"/> 
 				        <table class="nodt" style="width:100%">
 				            <tr>
@@ -73,22 +73,14 @@
 				                <td><input id="attr_code" name="attrItem.code" class="form_value_mid easyui-textbox" data-options="prompt:'请输入应用标识'"></input></td>
 				            </tr>
 				        </table>
-				        <table class="nodt" id="attr_dict_user_maintain_center_detail_value_dg" 
-					            data-options="title:'编辑属性值',singleSelect:false,method:'post',nowrap:true,toolbar:'#valueToolbar',pagination:false,noheader:false,fit:true">
-					        <thead>
-					            <tr>
-					            	<th field="ck" checkbox="true"></th>
-					                <th data-options="field:'value'" style="width:100%;">属性可选值</th>
-					            </tr>
-					        </thead>
+				        <table class="nodt" id="attr_dict_user_maintain_center_detail_value_dg" >
 					    </table>
 					    <div id="valueToolbar" style="background-color:#E7F0FF">
-					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="">添加</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">修改</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">删除</a>
-
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="insert()">添加</a>
+<!-- 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">修改</a> -->
+<!-- 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">删除</a> -->
 					    </div><!-- end of toolbar -->
-				    </form>
+<!-- 				    </form> -->
 				    
 				</div><!-- end of attr_dict_user_maintain_center_detail -->
 				<div id="attr_dict_user_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
@@ -100,8 +92,13 @@
 		</div><!-- end of content -->
 	</div><!-- end of layout -->
 <script>
+	
+	function rowData(value){
+    	this.value = value;
+	}
+	
 	function modAttrDictUserValue() {
-		var rows = $('#attr_dict_user_maintain_center_list_dg').datagrid('getSelections');
+		var rows = $("#attr_dict_user_maintain_center_list_dg").datagrid('getSelections');
 		if(rows.length == 0) {
 			warningTip("提示", '请选择要修改的属性');
 			return false;
@@ -114,6 +111,15 @@
 		$("#attr_id").val(rows[0].id);
 		$("#attr_name").textbox('setValue',rows[0].name);
 		$("#attr_code").textbox('setValue',rows[0].code);
+
+		var dataArray = new Array();
+		for(var index=0; index < rows[0].dictionary.length; index++) {
+			var rowdata = new rowData( rows[0].dictionary[index] );
+			dataArray.push(rowdata);
+		}
+				alert(dataArray);
+		
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid({data: dataArray });
 			
 		$("#attr_dict_user_maintain_center_main_wapper").panel('close');
 		$("#attr_dict_user_maintain_center_detail_wapper").panel('open');
@@ -127,8 +133,79 @@
 	}
 	
 	function attrDictUserValueSave() {
+		var attrId = $("#attr_id").val();
+    	var poststr = "attrItem.id=" + attrId;
+    	
+    	var rows = $("#attr_dict_user_maintain_center_detail_value_dg").datagrid('getRows');
+    	var convertArray = new Array();
+    	
+    	for(var index=0; index < rows.length; index++) {
+	    	var dictValue = rows[index].value;
+	 		convertArray.push(dictValue);
+    	}
+    	var tmp = $.toJSON(convertArray);
+    	poststr += '&attrItem.dictionary='+ tmp;
+    	
+    	$.getJSON("../system/saveUserAttrs.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				$("#attr_dict_user_maintain_center_list_dg").datagrid('clearSelections');
+				warningTip("提示", '保存属性字典成功');
+			}
+			else
+			{
+				warningTip("提示", '保存属性字典失败');	
+			}
+			attrDictUserReturn();
+		});
+	}
+	
+	//------------------for value edit datagrid-------
+	function updateActions(index){
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('updateRow',{
+			index: index,
+			row:{}
+		});
+	}
+	function getRowIndex(target){
+		var tr = $(target).closest('tr.datagrid-row');
+		return parseInt(tr.attr('datagrid-row-index'));
+	}
+	function editrow(target){
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('beginEdit', getRowIndex(target));
+	}
+	function deleterow(target){
+		$.messager.confirm('Confirm','Are you sure?',function(r){
+			if (r){
+				$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('deleteRow', getRowIndex(target));
+			}
+		});
+	}
+	function saverow(target){
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('endEdit', getRowIndex(target));
+	}
+	function cancelrow(target){
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('cancelEdit', getRowIndex(target));
 	}
 
+	function insert(){
+		var row = $("#attr_dict_user_maintain_center_detail_value_dg").datagrid('getSelected');
+		var index = 0;
+		if (row){
+			index = $("#attr_dict_user_maintain_center_detail_value_dg").datagrid('getRowIndex', row) + 1;
+		} else {
+			var rows = $("#attr_dict_user_maintain_center_detail_value_dg").datagrid('getRows');
+			//alert(rows);
+			index = rows.length;
+		}
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('insertRow', {
+			index: index,
+			row:{}
+		});
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('selectRow',index);
+		$("#attr_dict_user_maintain_center_detail_value_dg").datagrid('beginEdit',index);
+	}
 $(document).ready(function () { 
 
 	$("#attr_dict_user_maintain_center_list_dg").datagrid({
@@ -148,24 +225,49 @@ $(document).ready(function () {
 		onLoadError: function() { $("#app_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
 	
-	$("#attr_dict_user_maintain_center_detail_value_dg").datagrid();
-	
-	$("#attr_dict_user_maintain_center_detail_form").form({
-	    url:'../app/saveApp.action',
-	    success:function(data){
-		    var recive = $.parseJSON(data);
-			
-	        if(recive.result == false) {
-	        	errorTip("保存应用信息失败："+recive.message);
-	        } else {
-	        	successTip('保存应用信息','保存成功',1000);
-
-				refreshDetailPage();
-	        	
-				$("#app_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
-	        	addAppReturn();
-	        }
-	    }
+	       // data-options="title:'编辑属性值',singleSelect:false,method:'post',nowrap:true,toolbar:'#valueToolbar',pagination:false,noheader:false,fit:true">
+					        
+// 					                <th data-options="field:'value', editor:'text'" style="width:80%;">属性可选值</th>
+// 					                <th data-options="field:'value', editor:'text'" style="width:20%;">操作</th>
+					        
+	$("#attr_dict_user_maintain_center_detail_value_dg").datagrid({
+		title:'编辑属性值',
+		iconCls:'icon-edit',
+		nowrap:true,
+		fit:true,
+		toolbar:'#valueToolbar',
+		singleSelect:true,
+		pagination:false,
+		//idField:'id',
+		//url:'data/datagrid_data.json',
+		columns:[[
+			{field:'value',title:'属性可选值',width:'80%',editor:'text'},
+			{field:'action',title:'操作',width:'20%',align:'center',
+				formatter:function(value,row,index){
+					if (row.editing){
+						var s = '<a href="#" onclick="saverow(this)">保存</a> ';
+						var c = '<a href="#" onclick="cancelrow(this)">取消</a>';
+						return s+c;
+					} else {
+						var e = '<a href="#" onclick="editrow(this)">修改</a> ';
+						var d = '<a href="#" onclick="deleterow(this)">删除</a>';
+						return e+d;
+					}
+				}
+			}
+		]],
+		onBeforeEdit:function(index,row){
+			row.editing = true;
+			updateActions(index);
+		},
+		onAfterEdit:function(index,row){
+			row.editing = false;
+			updateActions(index);
+		},
+		onCancelEdit:function(index,row){
+			row.editing = false;
+			updateActions(index);
+		}
 	});
 	
 });

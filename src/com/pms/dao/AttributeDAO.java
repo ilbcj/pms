@@ -10,4 +10,5 @@ public interface AttributeDAO {
 	List<AttrDefinition> GetAttrDefinitions(AttrDefinition criteria, int page, int rows) throws Exception;
 	int GetAttrDefinitionsCount(AttrDefinition criteria) throws Exception;
 	List<AttrDictionary> GetAttrDictionarysByAttrId(int attrId) throws Exception;
+	void UpdateAttrDictionary(int attrId, List<String> dictionary) throws Exception;
 }

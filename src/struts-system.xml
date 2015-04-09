@@ -12,8 +12,7 @@
 		</global-exception-mappings>
 	
 	<!-- 
-		用户属性字典			method="queryAllBureauNode"、"saveOrgNode"、"queryChildrenNodes"、
-									"queryChildrenItems"、"deleteOrgNode"、"modifyOrgNodeName"
+		用户属性字典			method="queryUserAttrs"、"saveUserAttrs"
 		
 		//配置管理			method="sysConfigQuery"、"sysConfigSave"、"allRegionListQuery"
 		
@@ -22,6 +21,9 @@
 		//数据同步			method="dataSync"
 	 -->
  		<action name="queryUserAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryUserAttrs" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="saveUserAttrs" class="com.pms.controller.SystemAttrUserAction" method="SaveUserAttrs" >
  			<result name="success" type="json" />
  		</action>
 <!--  		<action name="queryUserItems" class="com.pms.controller.UserAction" method="QueryUserItems" > -->

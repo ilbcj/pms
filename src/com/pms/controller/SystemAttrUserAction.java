@@ -100,4 +100,18 @@ public class SystemAttrUserAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
+	
+	public String SaveUserAttrs()
+	{
+		AttrDictionaryService ads = new AttrDictionaryService();
+		try {
+			ads.SaveAttrDictionary(attrItem);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
 }

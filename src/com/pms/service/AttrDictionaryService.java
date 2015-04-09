@@ -40,5 +40,10 @@ public class AttrDictionaryService {
 		item.setDictionary(values);
 		return item;
 	}
+
+	public void SaveAttrDictionary(AttrDictItem attrItem) throws Exception {
+		AttributeDAO dao = new AttributeDAOImpl();
+		dao.UpdateAttrDictionary(attrItem.getId(), attrItem.getDictionary());
+	}
 	
 }
