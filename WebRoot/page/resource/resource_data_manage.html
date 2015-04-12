@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>resource_data_manage.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">数据资源管理</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="resource_data_manage_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+		    	<div id="resource_data_manage_center_main" class="easyui-layout" data-options="fit:true" >
+		    		<div id="resource_data_manage_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+		    			<table class="nodt" style="width:100%">
+			                <tr>
+			                    <td class="query_name_small text_right">名称</td>
+			                    <td class="query_value_small"><input id="resource_data_query_name" class="easyui-textbox"></input></td>
+			                    <td class="query_name_small text_right">编码</td>
+			                    <td class="query_value_small"><input id="resource_data_query_code" class="easyui-textbox"></input></td>
+			                    <td>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceData()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+			                    </td>
+			                </tr>
+			            </table>
+		    		</div><!-- end of resource_data_manage_center_query -->
+		    		
+		    		<div id="resource_data_manage_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="resource_data_manage_center_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+					        <thead>
+					            <tr>
+					            	<th field="ck" checkbox="true"></th>
+					                <th data-options="field:'name'" style="width:33%;">名称</th>
+					                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
+					                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
+					            </tr>
+					        </thead>
+					    </table>
+					    <div id="toolbar" style="background-color:#E7F0FF">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addResourceData()">添加</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modResourceData()">修改</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delResourceData()">删除</a>
+	            			
+					    </div><!-- end of toolbar -->
+		    		</div><!-- end of resource_data_manage_center_list -->
+		    		
+		    	</div><!-- end of resource_data_manage_center_main -->
+
+
+			</div><!-- resource_data_manage_center_main_wapper -->
+			
+			<div id="resource_data_manage_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="resource_data_manage_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_data_manage_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+				    <form id="resource_data_manage_center_detail_form" method="post">
+				    	<input id="res_id" name="data.id" type="hidden"/> 
+				        <table class="nodt" style="width:100%">
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 名称</td>
+				                <td><input id="res_name" name="data.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源名称'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 资源唯一标识</td>
+				                <td><input id="res_resid" name="data.resource_id" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源唯一标识'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 资源状态</td>
+				                <td><input id="res_status" name="data.resource_status" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 资源描述</td>
+				                <td><input id="res_desc" name="data.resource_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源描述'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 备注</td>
+				                <td><input id="res_memo" name="data.resource_remark" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 删除状态</td>
+				                <td><input id="res_delstatus" name="data.delete_status" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 资源类型</td>
+				                <td><input id="res_type" name="data.resource_type" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源类型'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 目标地市</td>
+				                <td><input id="res_dest" name="data.clue_dst_sys" class="form_value_mid easyui-textbox" data-options="prompt:'请输入目标地市'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 数据集敏感度编码</td>
+				                <td><input id="res_dsl" name="data.dataset_sensitive_level" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集敏感度编码'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 数据集编码</td>
+				                <td><input id="res_dataset" name="data.data_set" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集编码'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 字段分类编码</td>
+				                <td><input id="res_sectionclass" name="data.section_class" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类编码'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 字段编码</td>
+				                <td><input id="res_element" name="data.element" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段编码'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 字段分类关系编码</td>
+				                <td><input id="res_secrelacls" name="data.section_relation_class" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类关系编码'"></input></td>
+				            </tr>
+				        </table>
+				    </form>
+				    
+				</div><!-- end of resource_data_manage_center_detail -->
+				<div id="resource_data_manage_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addDataSave();">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addDataReturn();">返回</a>
+				</div><!-- end of resource_data_manage_center_detail_ft -->
+	    	</div><!-- end of resource_data_manage_center_detail_wapper -->
+		</div>
+	
+	</div><!-- end of layout -->
+<script>
+    function addResourceData() {
+    	$("#resource_data_manage_center_main_wapper").panel('close');
+    	$("#resource_data_manage_center_detail_wapper").panel('open');
+    }
+    
+    function addDataSave(){
+		// submit the form
+		$("#resource_data_manage_center_detail_form").submit();
+    }
+    
+    function addDataReturn(){
+    	$("#resource_data_manage_center_main_wapper").panel('open');
+    	$("#resource_data_manage_center_main_wapper").panel('resize');
+    	$("#resource_data_manage_center_detail_wapper").panel('close');
+    	refreshDetailPage();
+    }
+    
+    function refreshDetailPage() {
+		$("#res_id").val("");
+     	$("#res_name").textbox('setValue',"");
+     	$("#res_resid").textbox('setValue',"");
+     	$("#res_status").textbox('setValue',"");
+     	$("#res_desc").textbox('setValue',"");
+     	$("#res_memo").textbox('setValue',"");
+     	$("#res_delstatus").textbox('setValue',"");
+     	$("#res_type").textbox('setValue',"");
+     	$("#res_dest").textbox('setValue',"");
+     	$("#res_dsl").textbox('setValue',"");
+     	$("#res_dataset").textbox('setValue',"");
+     	$("#res_sectionclass").textbox('setValue',"");
+     	$("#res_element").textbox('setValue',"");
+     	$("#res_secrelacls").textbox('setValue',"");
+    }
+    
+    function modResourceData(){
+    	var rows = $("#resource_data_manage_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的资源');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个资源');
+			return false;
+		}
+		
+		$("#res_id").val(rows[0].id);
+		$("#res_name").textbox('setValue',rows[0].name);
+		$("#res_resid").textbox('setValue',rows[0].resource_id);
+		$("#res_status").textbox('setValue',rows[0].resource_status);
+		$("#res_desc").textbox('setValue',rows[0].resource_describe);
+		$("#res_memo").textbox('setValue',rows[0].resource_remark);
+		$("#res_delstatus").textbox('setValue',rows[0].delete_status);
+		$("#res_type").textbox('setValue',rows[0].resource_type);
+		$("#res_dest").textbox('setValue',rows[0].clue_dst_sys);
+		$("#res_dsl").textbox('setValue',rows[0].dataset_sensitive_level);
+		$("#res_dataset").textbox('setValue',rows[0].data_set);
+		$("#res_sectionclass").textbox('setValue',rows[0].section_class);
+		$("#res_element").textbox('setValue',rows[0].element);
+		$("#res_secrelacls").textbox('setValue',rows[0].section_relation_class);
+		
+		$("#resource_data_manage_center_main_wapper").panel('close');
+   		$("#resource_data_manage_center_detail_wapper").panel('open');
+    }
+    
+    function delResourceData(){
+		var rows = $("#resource_data_manage_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的资源');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选资源？', function(r){
+                if (r){
+                	var poststr = "delResourceIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delResourceIds=" + rows[i].id;
+					}
+
+                    $.getJSON("../resource/deleteResourceDatas.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#resource_data_manage_center_list_dg').datagrid('reload').datagrid('clearSelections');
+							successTip("删除数据资源","操作成功");
+						}
+						else
+						{
+							warningTip("提示", '删除数据资源操作失败：' + retObj.message);
+						}
+					});
+                }
+            });
+		}
+	}
+    
+$(document).ready(function () { 
+	
+	$("#resource_data_manage_center_list_dg").datagrid({
+		url:'../resource/queryDataItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.datas;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#resource_data_manage_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+	
+	$("#resource_data_manage_center_detail_form").form({
+	    url:'../resource/saveResourceData.action',
+	    success:function(data){
+		    var recive = $.parseJSON(data);
+			
+	        if(recive.result == false) {
+	        	errorTip("保存数据资源信息失败："+recive.message);
+	        } else {
+	        	successTip('保存数据资源信息','保存成功',1000);
+
+				refreshDetailPage();
+	        	
+				$("#resource_data_manage_center_list_dg").datagrid('reload').datagrid('clearSelections');
+	        	addDataReturn();
+	        }
+	    }
+	});
+});
+</script>	
+  </body>
+</html>

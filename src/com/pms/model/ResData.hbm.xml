@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 指定Hiberante3映射文件的DTD信息 -->
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.pms.model">
+	<!-- 每个class元素对应一个持久化对象 -->
+	<class name="ResData" table="res_data">
+		<!-- id元素定义持久化类的标识属性 -->
+		<id name="id" type="java.lang.Integer">
+			<generator class="identity"/>
+		</id>
+		<!-- property元素定义常规属性 -->
+		<property name="name" type="java.lang.String" length="64" not-null="true"/>
+		<property name="resource_id" type="java.lang.String" length="64"/>
+		<property name="resource_status" type="java.lang.Integer"/>	
+		<property name="resource_describe" type="java.lang.String" length="256"/>
+		<property name="resource_remark" type="java.lang.String" length="256"/>
+		<property name="delete_status" type="java.lang.Integer"/>
+		
+		<property name="resource_type" type="java.lang.Integer"/>
+		<property name="clue_dst_sys" type="java.lang.String" length="128"/>
+		<property name="dataset_sensitive_level" type="java.lang.String" length="64"/>
+		<property name="data_set" type="java.lang.String" length="64"/>
+		<property name="section_class" type="java.lang.String" length="64"/>
+		<property name="element" type="java.lang.String" length="64"/>
+		<property name="section_relation_class" type="java.lang.String" length="64"/>
+		<property name="row_constraint" type="java.lang.String" length="64"/>
+		
+		<property name="latest_mod_time" type="java.lang.String" length="64"/>
+	</class>
+</hibernate-mapping>

@@ -67,14 +67,14 @@
 							    <div id="toolbar" style="background-color:#E7F0FF">
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addOrgAuth();">新增授权</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modOrgAuth();">维护授权</a>
-			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm7',iconCls:'icon-edit'" >导出授权</a>
-								    <div id="mm7" style="width:100px;">
-								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
-								        <div class="menu-sep"></div>
-								        <div onclick="orgModDetail();" >导出所选记录</div>
-								        <div onclick="orgModName();" >导出本页记录</div>
-								        <div onclick="orgModDetail();" >导出全部记录</div>
-								    </div>
+<!-- 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm7',iconCls:'icon-edit'" >导出授权</a> -->
+<!-- 								    <div id="mm7" style="width:100px;"> -->
+<!-- 								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div> -->
+<!-- 								        <div class="menu-sep"></div> -->
+<!-- 								        <div onclick="orgModDetail();" >导出所选记录</div> -->
+<!-- 								        <div onclick="orgModName();" >导出本页记录</div> -->
+<!-- 								        <div onclick="orgModDetail();" >导出全部记录</div> -->
+<!-- 								    </div> -->
 
 							    </div><!-- end of toolbar -->
 				    		</div><!-- end of privilege_authorize_org_center_list -->
@@ -90,9 +90,10 @@
 							            data-options="toolbar:'#wintoolbar',singleSelect:false,method:'post',nowrap:true,idField:'appId',noheader:true,fit:true">
 							<thead>
 					            <tr>
-					            	<th data-options="field:'appName'" style="width:33%;">应用名称</th>
-					                <th data-options="field:'appFlag'" style="width:33%;">应用标识</th>
-					                <th data-options="field:'appEndTime'" style="width:33%;">失效日期</th>
+					            	<th field="ck" checkbox="true"></th>
+					            	<th data-options="field:'business_role_name'" style="width:33%;">角色名称</th>
+					                <th data-options="field:'business_role'" style="width:33%;">角色编码</th>
+					                <th data-options="field:'role_describe'" style="width:33%;">角色描述</th>
 					            </tr>
 					        </thead>
 			            </table>

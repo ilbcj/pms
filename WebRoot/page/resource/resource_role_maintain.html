@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>resource_role_maintain.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">角色维护</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="resource_role_manage_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+		    	<div id="resource_role_manage_center_main" class="easyui-layout" data-options="fit:true" >
+		    		<div id="resource_role_manage_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+		    			<table class="nodt" style="width:100%">
+			                <tr>
+			                    <td class="query_name_small text_right">名称</td>
+			                    <td class="query_value_small"><input id="resource_role_query_name" class="easyui-textbox"></input></td>
+			                    <td class="query_name_small text_right">编码</td>
+			                    <td class="query_value_small"><input id="resource_role_query_code" class="easyui-textbox"></input></td>
+			                    <td>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceRole()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+			                    </td>
+			                </tr>
+			            </table>
+		    		</div><!-- end of resource_role_manage_center_query -->
+		    		
+		    		<div id="resource_role_manage_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="resource_role_manage_center_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+					        <thead>
+					            <tr>
+					            	<th field="ck" checkbox="true"></th>
+					                <th data-options="field:'business_role_name'" style="width:33%;">名称</th>
+					                <th data-options="field:'business_role'" style="width:33%;">编码</th>
+					                <th data-options="field:'role_describe'" style="width:33%;">描述</th>
+					            </tr>
+					        </thead>
+					    </table>
+					    <div id="toolbar" style="background-color:#E7F0FF">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addResourceRole()">添加</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modResourceRole()">修改</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delResourceRole()">删除</a>
+	            			
+					    </div><!-- end of toolbar -->
+		    		</div><!-- end of resource_role_manage_center_list -->
+		    		
+		    	</div><!-- end of resource_role_manage_center_main -->
+
+
+			</div><!-- resource_role_manage_center_main_wapper -->
+			
+			<div id="resource_role_manage_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="resource_role_manage_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_role_manage_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+					<input id="role_id" type="hidden"/> 
+			        <table class="nodt" style="width:100%">
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 角色名称</td>
+			                <td><input id="role_name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入角色名称'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 角色编码</td>
+			                <td><input id="role_code" class="form_value_mid easyui-textbox" data-options="prompt:'请输角色编码'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"> 角色类型</td>
+			                <td><input id="role_type" class="form_value_mid easyui-textbox" data-options="prompt:'请输入角色类型'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"> 目标地市</td>
+			                <td><input id="role_destcity" class="form_value_mid easyui-textbox" data-options="prompt:'请输入目标地市'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"> 系统类型</td>
+			                <td><input id="role_systype" class="form_value_mid easyui-textbox" data-options="prompt:'请输入系统类型'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"> 来源地市</td>
+			                <td><input id="role_srccity" class="form_value_mid easyui-textbox" data-options="prompt:'请输入来源地市'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"> 删除状态</td>
+			                <td><input id="role_delstatus" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"> 描述</td>
+			                <td><input id="role_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入描述'"></input></td>
+			            </tr>
+					</table>
+
+					<table class="nodt" id="role_resource_feature_dg" >
+				    </table>
+				    <div id="featureToolbar" style="background-color:#E7F0FF">
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResource('../resource/queryFeatureItems.action', 'feature')">添加</a>
+				    </div><!-- end of featureToolbar -->
+				    
+				    <table class="nodt" id="role_resource_data_dg" >
+				    </table>
+				    <div id="dataToolbar" style="background-color:#E7F0FF">
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResource('../resource/queryDataItems.action', 'data')">添加</a>
+				    </div><!-- end of featureToolbar -->
+				    
+				</div><!-- end of resource_role_manage_center_detail -->
+				<div id="resource_role_manage_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addRoleSave();">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addRoleReturn();">返回</a>
+				</div><!-- end of resource_role_manage_center_detail_ft -->
+				
+				<div id="resource_role_query_resource_win" class="easyui-window" title="机构授权" style="width:80%;height:600px;"
+						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
+					<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_win_ft'">
+						<table class="nodt" id="resource_role_query_resource_win_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
+					        <thead>
+					            <tr>
+					            	<th field="ck" checkbox="true"></th>
+					                <th data-options="field:'name'" style="width:33%;">名称</th>
+					                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
+					                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
+					            </tr>
+					        </thead>
+					    </table>
+					</div>
+					<div id="resource_role_query_resource_win_ft" style="padding:5px;text-align:center">
+				        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceConfirm();">确定</a>
+                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceReturn();">返回</a>
+				    </div>
+				</div><!-- end of resource_role_query_resource_win -->
+	    	</div><!-- end of resource_role_manage_center_detail_wapper -->
+		</div>
+	
+	</div><!-- end of layout -->
+<script>
+    function addResourceRole() {
+    	$("#resource_role_manage_center_main_wapper").panel('close');
+    	$("#resource_role_manage_center_detail_wapper").panel('open');
+    }
+    
+    function addRoleSave(){
+		var roleId = $("#role_id").val();
+    	var poststr = "role.id=" + roleId;
+    	
+    	var roleName = $("#role_name").textbox('getValue');
+    	poststr += "&role.business_role_name=" + roleName;
+    	
+    	var roleCode = $("#role_code").textbox('getValue');
+    	poststr += "&role.business_role=" + roleCode;
+    	
+    	var roleType = $("#role_type").textbox('getValue');
+    	poststr += "&role.business_role_type=" + roleType;
+    	
+    	var roleDestcity = $("#role_destcity").textbox('getValue');
+    	poststr += "&role.clue_dst_sys=" + roleDestcity;
+    	
+    	var roleSystype = $("#role_systype").textbox('getValue');
+    	poststr += "&role.system_type=" + roleSystype;
+    	
+    	var roleSrccity = $("#role_srccity").textbox('getValue');
+    	poststr += "&role.clue_src_sys=" + roleSrccity;
+    	
+    	var roleDelstatus = $("#role_delstatus").textbox('getValue');
+    	poststr += "&role.delete_status=" + roleDelstatus;
+    	
+    	var roleDescrib = $("#role_describe").textbox('getValue');
+    	poststr += "&role.role_describe=" + roleDescrib;
+    	
+     	var rows = $("#role_resource_feature_dg").datagrid('getRows');
+     	var index = 0;
+    	for(index=0; index < rows.length; index++) {
+	 		poststr += '&addFeatureIds=' + rows[index].id;
+    	}
+
+		rows = $("#role_resource_data_dg").datagrid('getRows');
+    	for(index=0; index < rows.length; index++) {
+	 		poststr += '&addDataIds=' + rows[index].id;
+    	}
+		
+    	$.getJSON("../resource/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				$("#resource_role_manage_center_list_dg").datagrid('reload').datagrid('clearSelections');
+				warningTip("提示", '保存角色信息成功');
+			}
+			else
+			{
+				warningTip("提示", '保存角色信息失败');	
+			}
+			addRoleReturn();
+		});
+    }
+    
+    function addRoleReturn(){
+    	$("#resource_role_manage_center_main_wapper").panel('open');
+    	$("#resource_role_manage_center_main_wapper").panel('resize');
+    	$("#resource_role_manage_center_detail_wapper").panel('close');
+    	refreshDetailPage();
+    }
+    
+    function refreshDetailPage() {
+		$("#role_id").val("");
+     	$("#role_name").textbox('setValue',"");
+     	$("#role_code").textbox('setValue',"");
+     	$("#role_type").textbox('setValue',"");
+     	$("#role_destcity").textbox('setValue',"");
+     	$("#role_systype").textbox('setValue',"");
+     	$("#role_srccity").textbox('setValue',"");
+     	$("#role_delstatus").textbox('setValue',"");
+     	$("#role_describe").textbox('setValue',"");
+     	
+     	//clear datagrid's data
+     	$("#role_resource_feature_dg").datagrid({data: []});
+     	$("#role_resource_data_dg").datagrid({data: []});
+    }
+    
+    function modResourceRole(){
+    	var rows = $("#resource_role_manage_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的角色');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个角色');
+			return false;
+		}
+		
+		$("#role_id").val(rows[0].id);
+		$("#role_name").textbox('setValue',rows[0].business_role_name);
+		$("#role_code").textbox('setValue',rows[0].business_role);
+		$("#role_type").textbox('setValue',rows[0].business_role_type);
+		$("#role_destcity").textbox('setValue',rows[0].clue_dst_sys);
+		$("#role_systype").textbox('setValue',rows[0].system_type);
+		$("#role_srccity").textbox('setValue',rows[0].clue_src_sys);
+		$("#role_delstatus").textbox('setValue',rows[0].delete_status);
+		$("#role_describe").textbox('setValue',rows[0].role_describe);
+		
+		//load datagrid's data
+		var poststr = "role.id=" + rows[0].id;
+		$.getJSON("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+ 				var index;
+ 				for( index=0; index < retObj.features.length; index++) {
+ 					insertFeature( retObj.features[index]);
+ 				}
+ 				
+ 				for( index=0; index < retObj.datas.length; index++) {
+ 					insertData( retObj.datas[index]);
+ 				}
+		    	
+//  		    	for( index=0; index < retObj。datas.length; index++ ) {
+//  		    		insertData(retObj。datas[index]);
+//  		    	}
+			}
+			else
+			{
+				warningTip("提示", '获取角色的资源信息失败');	
+				refreshDetailPage();
+				return;
+			}
+		});
+		
+		$("#resource_role_manage_center_main_wapper").panel('close');
+   		$("#resource_role_manage_center_detail_wapper").panel('open');
+    }
+    
+    function delResourceRole(){
+		var rows = $("#resource_role_manage_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的角色');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选角色？', function(r){
+                if (r){
+                	var poststr = "delIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delIds=" + rows[i].id;
+					}
+
+                    $.getJSON("../resource/deleteResourceRole.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#resource_role_manage_center_list_dg').datagrid('reload').datagrid('clearSelections');
+							successTip("删除角色","操作成功");
+						}
+						else
+						{
+							warningTip("提示", "删除角色操作失败：" + retObj.message);
+						}
+					});
+                }
+            });
+		}
+	}
+    
+    function roleQueryResourceReturn(){
+    	$("#resource_role_query_resource_win_list_dg").datagrid('clearSelections');
+    	$("#resource_role_query_resource_win").window('close');
+    }
+    
+    var insertFlag="";
+    function roleQueryResourceConfirm(){
+    	var res = $("#resource_role_query_resource_win_list_dg").datagrid('getSelections');
+    	for( var index=0; index<res.length; index++ ) {
+    		if ( insertFlag == "feature" ) {
+	    		insertFeature(res[index]);
+	    	}
+	    	else if ( insertFlag == "data" ) {
+	    		insertData(res[index]);
+	    	}
+    	}
+    	return roleQueryResourceReturn();
+    }
+    
+    function isExist(data, id) {
+    	for(var index = 0; index<data.length; index++) {
+    		if(data[index].id == id)
+    			return true;
+    	}
+    	return false;
+    }
+    function insertFeature( data ){
+    	var rows = $("#role_resource_feature_dg").datagrid('getRows');
+		var index = rows.length;
+		
+		if( isExist( rows, data.id ) )
+			return;
+		//for(data.)
+    	$("#role_resource_feature_dg").datagrid('insertRow', {
+			index: index,
+			row:{
+				id:data.id, 
+				name:data.name, 
+				resource_id:data.resource_id, 
+				resource_describe:data.resource_describe
+			}
+		});
+		
+    }
+    
+    function insertData(data){
+    	var rows = $("#role_resource_data_dg").datagrid('getRows');
+		var index = rows.length;
+		
+		if( isExist( rows, data.id ) )
+			return;
+			
+    	$("#role_resource_data_dg").datagrid('insertRow', {
+			index: index,
+			row:{
+				id:data.id, 
+				name:data.name, 
+				resource_id:data.resource_id, 
+				resource_describe:data.resource_describe
+			}
+		});
+    }
+    //------------------for value edit datagrid-------
+    function roleQueryResource(url, flag){
+    	$("#resource_role_query_resource_win_list_dg").datagrid({
+			url:url,
+			loadFilter: function(data){
+				var res = new Object();
+				if (data.result == true){
+					res.total = data.total;
+					if(data.features != null) {
+						res.rows = data.features;
+					}
+					else if(data.datas != null) {
+						res.rows = data.datas;
+					}
+					else {
+						res.rows = [];
+					}
+				} else {
+					res.total=0;
+					res.rows = [];
+				}
+				return res;
+			}
+		});
+	   	$("#resource_role_query_resource_win").window({title:'可用值'}).window('open').window('center');
+	   	insertFlag = flag;
+    }
+    
+    function getRowIndex(target){
+		var tr = $(target).closest('tr.datagrid-row');
+		return parseInt(tr.attr('datagrid-row-index'));
+	}
+	
+	function featureDeleterow(target){
+		$.messager.confirm('Confirm','Are you sure?',function(r){
+			if (r){
+				$("#role_resource_feature_dg").datagrid('deleteRow', getRowIndex(target));
+			}
+		});
+	}
+	
+	function dataDeleterow(target){
+		$.messager.confirm('Confirm','Are you sure?',function(r){
+			if (r){
+				$("#role_resource_data_dg").datagrid('deleteRow', getRowIndex(target));
+			}
+		});
+	}
+$(document).ready(function () { 
+	
+	$("#resource_role_manage_center_list_dg").datagrid({
+		url:'../resource/queryRoleItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.roles;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#resource_role_manage_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+	
+	$("#role_resource_feature_dg").datagrid({
+		title:'功能资源',
+		iconCls:'icon-edit',
+		nowrap:true,
+		height:'30%',
+		toolbar:'#featureToolbar',
+		singleSelect:true,
+		pagination:false,
+		idField:'id',
+		//url:'data/datagrid_data.json',
+		columns:[[
+			{field:'name',title:'名称',width:'30%',editor:'text'},
+			{field:'resource_id',title:'编码',width:'30%',editor:'text'},
+			{field:'resource_describe',title:'描述',width:'30%',editor:'text'},
+			{field:'action',title:'操作',width:'10%',align:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" onclick="featureDeleterow(this)">删除</a>';
+				}
+			}
+		]]
+	});
+
+	$("#role_resource_data_dg").datagrid({
+		title:'数据资源',
+		iconCls:'icon-edit',
+		nowrap:true,
+		height:'30%',
+		toolbar:'#dataToolbar',
+		singleSelect:true,
+		pagination:false,
+		//idField:'id',
+		//url:'data/datagrid_data.json',
+		columns:[[
+			{field:'name',title:'名称',width:'30%',editor:'text'},
+			{field:'resource_id',title:'编码',width:'30%',editor:'text'},
+			{field:'resource_describe',title:'描述',width:'30%',editor:'text'},
+			{field:'action',title:'操作',width:'10%',align:'center',
+				formatter:function(value,row,index){
+					return '<a href="#" onclick="dataDeleterow(this)">删除</a>';
+				}
+			}
+		]]
+	});
+});
+</script>	
+  </body>
+</html>

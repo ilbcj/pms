@@ -44,6 +44,10 @@
 	<mapping resource="com/pms/model/Privilege.hbm.xml" />
 	<mapping resource="com/pms/model/AttrDefinition.hbm.xml" />
 	<mapping resource="com/pms/model/AttrDictionary.hbm.xml" />
+	<mapping resource="com/pms/model/ResFeature.hbm.xml" />
+	<mapping resource="com/pms/model/ResData.hbm.xml" />
+	<mapping resource="com/pms/model/ResRole.hbm.xml" />
+	<mapping resource="com/pms/model/ResRoleResource.hbm.xml" />
 
 </session-factory>
 

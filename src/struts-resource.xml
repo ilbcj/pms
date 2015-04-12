@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="resource" extends="json-default" namespace="/resource">
+		
+		<global-results>
+ 			<result name="sqlException">/jsp/exception.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.sql.SQLException" result="sqlException" />
+			<exception-mapping exception="java.lang.Exception" result="sqlException" />	
+		</global-exception-mappings>
+	
+	<!-- 
+		功能资源			method="queryFeatureItems"、"saveResourceFeature"、"deleteResourceFeatures"
+		
+		数据资源			method="queryDataItems"、"saveResourceData"、"deleteResourceDatas"
+		
+		角色				method="queryRoleItems"、"saveResourceRole"、"deleteResourceRole"、"queryRoleResource"
+		
+	 -->
+ 		<action name="queryFeatureItems" class="com.pms.controller.ResourceAction" method="QueryFeatureItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="saveResourceFeature" class="com.pms.controller.ResourceAction" method="SaveResourceFeature" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteResourceFeatures" class="com.pms.controller.ResourceAction" method="DeleteResourceFeatures" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+ 		<action name="queryDataItems" class="com.pms.controller.ResourceAction" method="QueryDataItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="saveResourceData" class="com.pms.controller.ResourceAction" method="SaveResourceData" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteResourceDatas" class="com.pms.controller.ResourceAction" method="DeleteResourceDatas" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+ 		<action name="queryRoleItems" class="com.pms.controller.ResourceAction" method="QueryRoleItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="saveResourceRole" class="com.pms.controller.ResourceAction" method="SaveResourceRole" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteResourceRole" class="com.pms.controller.ResourceAction" method="DeleteResourceRole" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+ 		<action name="queryRoleItems" class="com.pms.controller.ResourceAction" method="QueryRoleItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="saveResourceRole" class="com.pms.controller.ResourceAction" method="SaveResourceRole" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryRoleResource" class="com.pms.controller.ResourceAction" method="QueryRoleResource" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+	</package>	
+</struts>    

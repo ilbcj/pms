@@ -131,7 +131,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		String sqlString = "delete from privilege where owner_id = :owner_id and owner_type = :owner_type ";
 		
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(Privilege.class);
+			Query q = session.createSQLQuery(sqlString);
 			q.setInteger("owner_id", ownerid);
 			q.setInteger("owner_type", ownertype);
 			q.executeUpdate();

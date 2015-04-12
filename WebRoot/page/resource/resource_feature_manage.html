@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>resource_feature_manage.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">功能资源管理</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="resource_feature_manage_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+		    	<div id="resource_feature_manage_center_main" class="easyui-layout" data-options="fit:true" >
+		    		<div id="resource_feature_manage_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+		    			<table class="nodt" style="width:100%">
+			                <tr>
+			                    <td class="query_name_small text_right">名称</td>
+			                    <td class="query_value_small"><input id="resource_feature_query_name" class="easyui-textbox"></input></td>
+			                    <td class="query_name_small text_right">编码</td>
+			                    <td class="query_value_small"><input id="resource_feature_query_code" class="easyui-textbox"></input></td>
+			                    <td>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceFeature()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+			                    </td>
+			                </tr>
+			            </table>
+		    		</div><!-- end of resource_feature_manage_center_query -->
+		    		
+		    		<div id="resource_feature_manage_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="resource_feature_manage_center_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+					        <thead>
+					            <tr>
+					            	<th field="ck" checkbox="true"></th>
+					                <th data-options="field:'name'" style="width:33%;">名称</th>
+					                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
+					                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
+					            </tr>
+					        </thead>
+					    </table>
+					    <div id="toolbar" style="background-color:#E7F0FF">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addResourceFeature()">添加</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modResourceFeature()">修改</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delResourceFeature()">删除</a>
+	            			
+					    </div><!-- end of toolbar -->
+		    		</div><!-- end of resource_feature_manage_center_list -->
+		    		
+		    	</div><!-- end of resource_feature_manage_center_main -->
+
+
+			</div><!-- resource_feature_manage_center_main_wapper -->
+			
+			<div id="resource_feature_manage_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="resource_feature_manage_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_feature_manage_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+				    <form id="resource_feature_manage_center_detail_form" method="post">
+				    	<input id="res_id" name="feature.id" type="hidden"/> 
+				        <table class="nodt" style="width:100%">
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 名称</td>
+				                <td><input id="res_name" name="feature.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源名称'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 资源唯一标识</td>
+				                <td><input id="res_resid" name="feature.resource_id" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源唯一标识'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 资源状态</td>
+				                <td><input id="res_status" name="feature.resource_status" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 资源描述</td>
+				                <td><input id="res_desc" name="feature.resource_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源描述'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 备注</td>
+				                <td><input id="res_memo" name="feature.resource_remark" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 删除状态</td>
+				                <td><input id="res_delstatus" name="feature.delete_status" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 所属业务系统</td>
+				                <td><input id="res_appid" name="feature.app_id" class="form_value_mid easyui-textbox" data-options="prompt:'请输入所属业务系统'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 父资源唯一标识</td>
+				                <td><input id="res_pid" name="feature.parent_resource" class="form_value_mid easyui-textbox" data-options="prompt:'请输入父资源唯一标识'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 顺序</td>
+				                <td><input id="res_order" name="feature.resource_order" class="form_value_mid easyui-textbox" data-options="prompt:'请输入顺序'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 系统类型</td>
+				                <td><input id="res_type" name="feature.system_type" class="form_value_mid easyui-textbox" data-options="prompt:'请输入系统类型'"></input></td>
+				            </tr>
+				        </table>
+				    </form>
+				    
+				</div><!-- end of resource_feature_manage_center_detail -->
+				<div id="resource_feature_manage_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addFeatureSave();">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addFeatureReturn();">返回</a>
+				</div><!-- end of resource_feature_manage_center_detail_ft -->
+	    	</div><!-- end of resource_feature_manage_center_detail_wapper -->
+		</div>
+	
+	</div><!-- end of layout -->
+<script>
+    function addResourceFeature() {
+    	$("#resource_feature_manage_center_main_wapper").panel('close');
+    	$("#resource_feature_manage_center_detail_wapper").panel('open');
+    }
+    
+    function addFeatureSave(){
+		// submit the form
+		$("#resource_feature_manage_center_detail_form").submit();
+    }
+    
+    function addFeatureReturn(){
+    	$("#resource_feature_manage_center_main_wapper").panel('open');
+    	$("#resource_feature_manage_center_main_wapper").panel('resize');
+    	$("#resource_feature_manage_center_detail_wapper").panel('close');
+    	refreshDetailPage();
+    }
+    
+    function refreshDetailPage() {
+		$("#res_id").val("");
+     	$("#res_name").textbox('setValue',"");
+     	$("#res_resid").textbox('setValue',"");
+     	$("#res_status").textbox('setValue',"");
+     	$("#res_desc").textbox('setValue',"");
+     	$("#res_memo").textbox('setValue',"");
+     	$("#res_delstatus").textbox('setValue',"");
+     	$("#res_appid").textbox('setValue',"");
+     	$("#res_pid").textbox('setValue',"");
+     	$("#res_order").textbox('setValue',"");
+     	$("#res_type").textbox('setValue',"");
+    }
+    
+    function modResourceFeature(){
+    	var rows = $("#resource_feature_manage_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的资源');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个资源');
+			return false;
+		}
+		
+		$("#res_id").val(rows[0].id);
+		$("#res_name").textbox('setValue',rows[0].name);
+		$("#res_resid").textbox('setValue',rows[0].resource_id);
+		$("#res_status").textbox('setValue',rows[0].resource_status);
+		$("#res_desc").textbox('setValue',rows[0].resource_describe);
+		$("#res_memo").textbox('setValue',rows[0].resource_remark);
+		$("#res_delstatus").textbox('setValue',rows[0].delete_status);
+		$("#res_appid").textbox('setValue',rows[0].app_id);
+		$("#res_pid").textbox('setValue',rows[0].parent_resource);
+		$("#res_order").textbox('setValue',rows[0].resource_order);
+		$("#res_type").textbox('setValue',rows[0].system_type);
+		
+		$("#resource_feature_manage_center_main_wapper").panel('close');
+   		$("#resource_feature_manage_center_detail_wapper").panel('open');
+    }
+    
+    function delResourceFeature(){
+		var rows = $("#resource_feature_manage_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的资源');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选资源？', function(r){
+                if (r){
+                	var poststr = "delResourceIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delResourceIds=" + rows[i].id;
+					}
+
+                    $.getJSON("../resource/deleteResourceFeatures.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#resource_feature_manage_center_list_dg').datagrid('reload').datagrid('clearSelections');
+							successTip("删除功能资源","操作成功");
+						}
+						else
+						{
+							warningTip("提示", '删除功能资源操作失败：' + retObj.message);
+						}
+					});
+                }
+            });
+		}
+	}
+    
+$(document).ready(function () { 
+	
+	$("#resource_feature_manage_center_list_dg").datagrid({
+		url:'../resource/queryFeatureItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.features;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#resource_feature_manage_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+	
+	$("#resource_feature_manage_center_detail_form").form({
+	    url:'../resource/saveResourceFeature.action',
+	    success:function(data){
+		    var recive = $.parseJSON(data);
+			
+	        if(recive.result == false) {
+	        	errorTip("保存功能资源信息失败："+recive.message);
+	        } else {
+	        	successTip('保存功能资源信息','保存成功',1000);
+
+				refreshDetailPage();
+	        	
+				$("#resource_feature_manage_center_list_dg").datagrid('reload').datagrid('clearSelections');
+	        	addFeatureReturn();
+	        }
+	    }
+	});
+});
+</script>	
+  </body>
+</html>

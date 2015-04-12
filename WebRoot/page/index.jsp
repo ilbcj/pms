@@ -78,8 +78,8 @@ $(document).ready(function () {
 	});
 
 	$('#mm').accordion('add', {
-		title: '应用管理',
-		href:'menu/application.html',
+		title: '资源管理',
+		href:'menu/resource.html',
 		selected: false
 	});
 	

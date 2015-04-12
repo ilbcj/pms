@@ -238,7 +238,6 @@ public class ApplicationAction extends ActionSupport {
 		}
 		setResult(true);
 		return SUCCESS;
-
 	}
 	
 	public String QueryAppNodes()
