@@ -475,7 +475,121 @@ $(document).ready(function () {
 	        }
 	    }
 	});
-	
+	$.getJSON("../system/queryUserAttrs.action", function(data) {
+		var sex="";						//性别
+		var police_type="";				//警种
+		var police_num="";				//警号
+		var max_sensitive_level="";		//最高敏感级别
+		var dept="";					//业务部门类别
+		var title="";					//职务/职称
+		
+		for(var i=0;i<data.items[0].dictionary.length;i++){
+			sex+= "{id:'"+data.items[0].dictionary[i]+"',text:'"+data.items[0].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[1].dictionary.length;i++){
+			police_type+= "{id:'"+data.items[1].dictionary[i]+"',text:'"+data.items[1].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[2].dictionary.length;i++){
+			police_num+= "{id:'"+data.items[2].dictionary[i]+"',text:'"+data.items[2].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[3].dictionary.length;i++){
+			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i]+"',text:'"+data.items[3].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[4].dictionary.length;i++){
+			dept+= "{id:'"+data.items[4].dictionary[i]+"',text:'"+data.items[4].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[5].dictionary.length;i++){
+			title+= "{id:'"+data.items[5].dictionary[i]+"',text:'"+data.items[5].dictionary[i]+"'},"; 
+		};
+		
+		var sexData='([' + sex.substring(0,sex.length-1) + '])';
+ 		var sexJSON = (new Function('return '+sexData +';'))();
+ 		var police_typeData='([' + police_type.substring(0,police_type.length-1) + '])';
+ 		var police_typeJSON = (new Function('return '+police_typeData +';'))(); 
+ 		var police_numData='([' + police_num.substring(0,police_num.length-1) + '])';
+ 		var police_numJSON = (new Function('return '+police_numData +';'))(); 
+ 		var max_sensitive_levelData='([' + max_sensitive_level.substring(0,max_sensitive_level.length-1) + '])';
+ 		var max_sensitive_levelJSON = (new Function('return '+max_sensitive_levelData +';'))(); 
+ 		var deptData='([' + dept.substring(0,dept.length-1) + '])';
+ 		var deptJSON = (new Function('return '+deptData +';'))(); 
+ 		var titleData='([' + title.substring(0,title.length-1) + '])';
+ 		var titleJSON = (new Function('return '+titleData +';'))(); 
+ 		//查询部分
+		$('#user_query_sex').combobox({
+			data : sexJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_police_type').combobox({
+			data : police_typeJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_police_num').combobox({
+			data : police_numJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_max_sensitive_level').combobox({
+			data : max_sensitive_levelJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_dept').combobox({
+			data : deptJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_title').combobox({
+			data : titleJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_sex').combobox('setValue','请选择');
+		$('#user_query_police_type').combobox('setValue','请选择');
+		$('#user_query_police_num').combobox('setValue','请选择');
+		$('#user_query_max_sensitive_level').combobox('setValue','请选择');
+		$('#user_query_dept').combobox('setValue','请选择');
+		$('#user_query_title').combobox('setValue','请选择');
+		
+		//添加部分
+		$('#user_sex').combobox({
+			data : sexJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_police_type').combobox({
+			data : police_typeJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_police_num').combobox({
+			data : police_numJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_max_sensitive_level').combobox({
+			data : max_sensitive_levelJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_dept').combobox({
+			data : deptJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_title').combobox({
+			data : titleJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_sex').combobox('setValue','请选择');
+		$('#user_police_type').combobox('setValue','请选择');
+		$('#user_police_num').combobox('setValue','请选择');
+		$('#user_max_sensitive_level').combobox('setValue','请选择');
+		$('#user_dept').combobox('setValue','请选择');
+		$('#user_title').combobox('setValue','请选择');
+	});	
 });
 </script>	
   </body>
