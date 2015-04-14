@@ -13,9 +13,7 @@
 		<!-- property元素定义常规属性 -->
 		<property name="owner_id" type="java.lang.Integer"/>
 		<property name="owner_type" type="java.lang.Integer"/>
-		<property name="app_id" type="java.lang.Integer"/>
 		<property name="role_id" type="java.lang.Integer"/>
-		<property name="endtime" type="java.lang.String" length="64"/>
 		<property name="tstamp" type="java.lang.String" length="64"/>
 	</class>
 </hibernate-mapping>

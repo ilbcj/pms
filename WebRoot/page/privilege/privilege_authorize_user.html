@@ -113,12 +113,13 @@
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div class="easyui-panel" data-options="fit:true,footer:'#privilege_authorize_user_detail_win_ft'">
 						<table id="privilege_authorize_user_detail_win_list_dg"  
-							            data-options="toolbar:'#wintoolbar',singleSelect:false,method:'post',nowrap:true,idField:'appId',noheader:true,fit:true">
+							            data-options="toolbar:'#wintoolbar',singleSelect:false,method:'post',nowrap:true,idField:'id',noheader:true,fit:true">
 							<thead>
 					            <tr>
-					            	<th data-options="field:'appName'" style="width:33%;">应用名称</th>
-					                <th data-options="field:'appFlag'" style="width:33%;">应用标识</th>
-					                <th data-options="field:'appEndTime'" style="width:33%;">失效日期</th>
+					            	<th field="ck" checkbox="true"></th>
+					            	<th data-options="field:'business_role_name'" style="width:33%;">角色名称</th>
+					                <th data-options="field:'business_role'" style="width:33%;">角色编码</th>
+					                <th data-options="field:'role_describe'" style="width:33%;">角色描述</th>
 					            </tr>
 					        </thead>
 			            </table>
@@ -128,7 +129,7 @@
 					            	<td colspan=2 style="padding-left:15px;" >基本信息</td>
 					            </tr>
 								<tr style="background-color:#FFF;height:40px;">
-					            	<td class="text_right" style="padding-right:15px;width:150px;border:1px solid #aaa">授权机构</td>
+					            	<td class="text_right" style="padding-right:15px;width:150px;border:1px solid #aaa">授权用户</td>
 					                <td style="padding-left:15px;border:1px solid #aaa" ><span id="privilege_authorize_user_detail_win_user_name" ></span></td>
 					            </tr>
 					            <tr style="height:40px;">
@@ -258,13 +259,8 @@
     }
     
     function refreshPrivAuthUserDetailAppList(){
-    	var rows = $("#privilege_authorize_user_detail_win_list_dg").datagrid('getRows');
-    	for(var index=1; index < rows.length; index++)
-    	{
-    		$("#privilege_authorize_user_detail_win_list_dg").datagrid('collapseRow',index);
-    	}
-    	$("#privilege_authorize_user_detail_win_list_dg").datagrid('expandRow',0);
-    	$(".privDetailWinAppRoleCheckBox").prop('checked',false);
+
+		$("#privilege_authorize_user_detail_win_list_dg").datagrid('clearSelections');
     	$("#privilege_authorize_user_detail_win_user_add").val("");
     }
     
@@ -273,27 +269,20 @@
     	$("#privilege_authorize_user_detail_win").window('close');
     }
     
-    function privObj(appid, roleid){
-    	this.appid = appid;
-    	this.roleid = roleid;
-	}
+
     function privAuthUserDetailConfirm(){
-    	var orgids = $("#privilege_authorize_user_detail_win_user_id").val();
-    	var poststr = "ownerIds=" + orgids;
+    	var userids = $("#privilege_authorize_user_detail_win_user_id").val();
+    	var poststr = "ownerIds=" + userids;
     	var saveType = $("#privilege_authorize_user_detail_win_user_add").val();
 		poststr += "&saveType=" + parseInt(saveType);
 		poststr += "&ownerType=2";
 		
-    	var cbs = $(".privDetailWinAppRoleCheckBox:checked");
-    	var convertArray = new Array();
-    	var appids="";
-    	for(var index=0; index < cbs.length; index++) {
-    		//appids += ",[" + $(cbs.get(index)).attr("appid") + $(cbs.get(index)).val() +"]";
-    		var priv = new privObj( parseInt($(cbs.get(index)).attr("appid")), parseInt($(cbs.get(index)).val()) );
- 			convertArray.push(priv);
-    	}
-    	var tmp = $.toJSON(convertArray);
-    	poststr += '&privilegesToSave='+ tmp;
+		var rows = $("#privilege_authorize_user_detail_win_list_dg").datagrid('getSelections');
+		if(rows.length > 0){
+			for(var index=0; index < rows.length; index++) {
+				poststr += '&roleIds=' + rows[index].id;
+			}
+		}
     	//alert(poststr);
     	$.getJSON("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
 		
@@ -338,9 +327,13 @@
 		    	$("#privilege_authorize_user_detail_win_user_add").val("2");
 		    	
 		    	//alert(retObj.privileges);
+		    	var priRows = $("#privilege_authorize_user_detail_win_list_dg").datagrid('getRows');
 		    	for(var key in retObj.privileges) {
-		    		$(".privDetailWinAppRoleCheckBox[appid="+retObj.privileges[key].app_id+"]#approle_" + retObj.privileges[key].role_id).prop('checked',true);
-		    		//alert(retObj.privileges[key].app_id + '||' + retObj.privileges[key].role_id);
+		    		for(var index=0; index < priRows.length; index++ ) {
+		    			if( priRows[index].id == retObj.privileges[key].role_id) {
+		    				$("#privilege_authorize_user_detail_win_list_dg").datagrid('selectRow', index);
+		    			}
+		    		}
 		    	}
 		    	
 		    	$("#privilege_authorize_user_detail_win").window({title:'维护用户授权'}).window('open').window('center');
@@ -447,22 +440,12 @@ $(document).ready(function () {
 	});
 	
 	$("#privilege_authorize_user_detail_win_list_dg").datagrid({
-		url:'../priv/queryAllAppRoleItems.action',
-		view: detailview,
-		detailFormatter:function(index,row){
-	        var res = '<div class="ddv" style="padding:5px 0">';
-	        for(var index=0; index<row.appRoleId.length; index++ ) {
-	        	res += '<input id="approle_' + row.appRoleId[index] + '" type="checkbox" value="' + row.appRoleId[index] + '" appid="' + row.appId + '" class="privDetailWinAppRoleCheckBox" style="margin-right:5px;" />';
-	        	res += '<label for="approle_' + row.appRoleId[index] + '" style="display: inline;margin-right:15px;">' + row.appRoleName[index] + '</label>';
-	        }
-	        res += '</div>';
-	        return res;
-	    },
+		url:'../resource/queryRoleItems.action',
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.items;
+				res.rows = data.roles;
 			} else {
 				res.total=0;
 				res.rows = [];

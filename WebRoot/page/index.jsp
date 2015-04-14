@@ -95,7 +95,7 @@ $(document).ready(function () {
 		selected: false
 	});
 	
-	$('#mm').accordion('select', 3);
+	$('#mm').accordion('select', 4);
 });
 
 </script>

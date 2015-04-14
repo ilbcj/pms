@@ -24,35 +24,32 @@ public class PrivilegeAction extends ActionSupport {
 	private int total;
 	
 	private List<AppRoleItem> items;
-	private List<PrivilegeTemp> privilegesToSave;
+//	private List<PrivilegeTemp> privilegesToSave;
+	private List<Integer> roleIds;
 	private List<Privilege> privileges;
 	private String ownerIds;
 	private int ownerType;
 	private int saveType;
 	
+	public List<Integer> getRoleIds() {
+		return roleIds;
+	}
+
+	public void setRoleIds(List<Integer> roleIds) {
+		this.roleIds = roleIds;
+	}
+
 	public int getSaveType() {
 		return saveType;
 	}
-
 
 	public void setSaveType(int saveType) {
 		this.saveType = saveType;
 	}
 
-	public List<PrivilegeTemp> getPrivilegesToSave() {
-		return privilegesToSave;
-	}
-
-
-	public void setPrivilegesToSave(List<PrivilegeTemp> privilegesToSave) {
-		this.privilegesToSave = privilegesToSave;
-	}
-
-
 	public List<Privilege> getPrivileges() {
 		return privileges;
 	}
-
 
 	public void setPrivileges(List<Privilege> privileges) {
 		this.privileges = privileges;
@@ -157,11 +154,11 @@ public class PrivilegeAction extends ActionSupport {
 		PrivilegeManageService pms = new PrivilegeManageService();
 		try {
 			if( PrivilegeAction.SAVETYPEADD == saveType ) {
-				pms.SavePrivilege(ownerIds, ownerType, privilegesToSave);
+				pms.SavePrivilege(ownerIds, ownerType, roleIds);
 			}
 			else if( PrivilegeAction.SAVETYPEMOD == saveType ) {
 				int orgid = Integer.parseInt(ownerIds);
-				pms.UpdatePrivilege(orgid, ownerType, privilegesToSave);
+				pms.UpdatePrivilege(orgid, ownerType, roleIds);
 			}
 			else {
 				message = "传入服务的待保存数据不完整。";

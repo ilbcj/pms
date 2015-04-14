@@ -8,17 +8,17 @@ public class Privilege {
 	private int id;
 	private int owner_id;
 	private int owner_type;
-	private int app_id;
+//	private int app_id;
 	private int role_id;
-	private String endtime; 
+//	private String endtime; 
 	private String tstamp;
 	
-	public String getEndtime() {
-		return endtime;
-	}
-	public void setEndtime(String endtime) {
-		this.endtime = endtime;
-	}
+//	public String getEndtime() {
+//		return endtime;
+//	}
+//	public void setEndtime(String endtime) {
+//		this.endtime = endtime;
+//	}
 	public String getTstamp() {
 		return tstamp;
 	}
@@ -43,12 +43,12 @@ public class Privilege {
 	public void setOwner_type(int owner_type) {
 		this.owner_type = owner_type;
 	}
-	public int getApp_id() {
-		return app_id;
-	}
-	public void setApp_id(int app_id) {
-		this.app_id = app_id;
-	}
+//	public int getApp_id() {
+//		return app_id;
+//	}
+//	public void setApp_id(int app_id) {
+//		this.app_id = app_id;
+//	}
 	public int getRole_id() {
 		return role_id;
 	}

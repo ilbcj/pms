@@ -62,16 +62,16 @@ public class PrivilegeManageService {
 	}
 
 	public void SavePrivilege(String ownerids, int ownertype,
-			List<PrivilegeTemp> privileges) throws Exception {
+			List<Integer> roleIds) throws Exception {
 		String orgs[] = ownerids.split(",");
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		for(int i = 0; i< orgs.length; i++) {
-			for(int j = 0; j<privileges.size(); j++) {
+			for(int j = 0; j<roleIds.size(); j++) {
 				Privilege priv = new Privilege();
 				priv.setOwner_id(Integer.parseInt(orgs[i]));
 				priv.setOwner_type(ownertype);
-				priv.setApp_id(privileges.get(j).getAppid());
-				priv.setRole_id(privileges.get(j).getRoleid());
+				//priv.setApp_id(roleIds.get(j).getAppid());
+				priv.setRole_id(roleIds.get(j));
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 						Locale.SIMPLIFIED_CHINESE);
 				String timenow = sdf.format(new Date());
@@ -83,18 +83,17 @@ public class PrivilegeManageService {
 	}
 
 	public void UpdatePrivilege(int ownerid, int ownertype,
-			List<PrivilegeTemp> privileges) throws Exception {
+			List<Integer> roleIds) throws Exception {
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		List<Privilege> privs = new ArrayList<Privilege>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
-		for(int i = 0; i<privileges.size(); i++) {
+		for(int i = 0; i<roleIds.size(); i++) {
 			Privilege priv = new Privilege();
 			priv.setOwner_id(ownerid);
 			priv.setOwner_type(ownertype);
-			priv.setApp_id(privileges.get(i).getAppid());
-			priv.setRole_id(privileges.get(i).getRoleid());
+			priv.setRole_id(roleIds.get(i));
 			priv.setTstamp(timenow);
 			privs.add(priv);
 		}
