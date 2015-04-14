@@ -39,7 +39,7 @@
 					                    </td>
 					                    <td class="text_right noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
-			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
+			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryUserCondition()">重置</a>
 					                    </td>
 					                </tr>
 					            </table>
@@ -82,9 +82,9 @@
 							            <tr>
 							            	<th field="ck" checkbox="true"></th>
 							                <th data-options="field:'name'" style="width:25%;">姓名</th>
-							                <th data-options="field:'uid'" style="width:25%;">组织机构</th>
-							                <th data-options="field:'pname'" style="width:25%;">上级机构</th>
-							                <th data-options="field:'pname'" style="width:25%;">状态</th>
+							                <th data-options="field:'pname'" style="width:25%;">组织机构</th>
+							                <th data-options="field:'gname'" style="width:25%;">上级机构</th>
+							                <th data-options="field:'status',formatter:formatStatus" style="width:25%;">状态</th>
 							            </tr>
 							        </thead>
 							    </table>
@@ -128,6 +128,66 @@
     	
     	$("#user_query_center_main").layout('resize',{width:'100%',height:'100%'});
     }
+    function queryUser(){
+    	var treeNode = $('#user_query_tree').tree('getSelected');
+    	var treeNodeId = "";
+    	if( treeNode != null ) {
+    		treeNodeId = treeNode.id;
+    	}
+    	var name = $("#user_query_name").val();
+    	var status = $("#user_query_status").combobox("getValue");
+    	
+    	var unit = "";
+    	var policeType = "";
+    	var sex = "";
+    	var idnum = "";
+    	var maxSensitiveLevel = "";
+    	var position = "";
+    	var dept = "";
+    	var title = "";
+    	var policeNum = "";
+    	if( isDetailQuery ) {
+    		unit = $("#user_query_unit").val();
+    		policeType = $("#user_query_police_type").combobox("getValue");
+    		sex = $("#user_query_sex").combobox("getValue");
+    		idnum = $("#user_query_idnum").val();
+    		maxSensitiveLevel = $("#user_query_max_sensitive_level").combobox("getValue");
+    		position = $("#user_query_position").val();
+    		dept = $("#user_query_dept").combobox("getValue");
+    		title = $("#user_query_title").combobox("getValue");
+    		policeNum = $("#user_query_police_num").combobox("getValue");
+    	}
+    	$("#user_query_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			id: treeNodeId,
+			userName: name,
+			userStatus: status,
+			userUnit: unit,
+			userPoliceType: policeType,
+			userSex: sex,
+			userIdnum: idnum,
+			userMaxSensitiveLevel: maxSensitiveLevel,
+			userPosition: position,
+			userDept: dept,
+			userTitle: title,
+			userPoliceNum: policeNum
+		});
+    }
+    
+    function clearQueryUserCondition(){
+    	$("#user_query_name").textbox({value:""});
+    	$("#user_query_status").combobox("setValue","0");
+    	
+    	$("#user_query_unit").textbox({value:""});
+    	$("#user_query_police_type").textbox({value:""});
+    	$("#user_query_sex").textbox({value:""});
+    	$("#user_query_idnum").textbox({value:""});
+    	$("#user_query_max_sensitive_level").textbox({value:""});
+    	$("#user_query_position").textbox({value:""});
+    	$("#user_query_dept").textbox({value:""});
+    	$("#user_query_title").textbox({value:""});
+    	$("#user_query_police_num").textbox({value:""});
+    }
     
 $(document).ready(function () { 
 	
@@ -141,9 +201,9 @@ $(document).ready(function () {
 	    },
 	    onClick: function(node){
 	    	//alert(node.id);
-// 	    	$("#org_maintain_center_list_dg").datagrid('load',{
-// 				id: node.id
-// 			});
+ 	    	$("#user_query_center_list_dg").datagrid('load',{
+ 				id: node.id
+ 			});
 	    }
 	});
 	
@@ -163,7 +223,8 @@ $(document).ready(function () {
 	});
 	
 	$("#user_query_center_list_dg").datagrid({
-//		url:'../organization/queryChildrenItems.action',
+		url:'../user/queryUserItems.action',
+		queryParams:{queryAll: true},
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
@@ -175,9 +236,85 @@ $(document).ready(function () {
 			}
 			return res;
 		},
-//		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#user_query_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
+	$.getJSON("../system/queryUserAttrs.action", function(data) {
+		var sex="";						//性别
+		var police_type="";				//警种
+		var police_num="";				//警号
+		var max_sensitive_level="";		//最高敏感级别
+		var dept="";					//业务部门类别
+		var title="";					//职务/职称
+		
+		for(var i=0;i<data.items[0].dictionary.length;i++){
+			sex+= "{id:'"+data.items[0].dictionary[i]+"',text:'"+data.items[0].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[1].dictionary.length;i++){
+			police_type+= "{id:'"+data.items[1].dictionary[i]+"',text:'"+data.items[1].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[2].dictionary.length;i++){
+			police_num+= "{id:'"+data.items[2].dictionary[i]+"',text:'"+data.items[2].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[3].dictionary.length;i++){
+			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i]+"',text:'"+data.items[3].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[4].dictionary.length;i++){
+			dept+= "{id:'"+data.items[4].dictionary[i]+"',text:'"+data.items[4].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[5].dictionary.length;i++){
+			title+= "{id:'"+data.items[5].dictionary[i]+"',text:'"+data.items[5].dictionary[i]+"'},"; 
+		};
+		
+		var sexData='([' + sex.substring(0,sex.length-1) + '])';
+ 		var sexJSON = (new Function('return '+sexData +';'))();
+ 		var police_typeData='([' + police_type.substring(0,police_type.length-1) + '])';
+ 		var police_typeJSON = (new Function('return '+police_typeData +';'))(); 
+ 		var police_numData='([' + police_num.substring(0,police_num.length-1) + '])';
+ 		var police_numJSON = (new Function('return '+police_numData +';'))(); 
+ 		var max_sensitive_levelData='([' + max_sensitive_level.substring(0,max_sensitive_level.length-1) + '])';
+ 		var max_sensitive_levelJSON = (new Function('return '+max_sensitive_levelData +';'))(); 
+ 		var deptData='([' + dept.substring(0,dept.length-1) + '])';
+ 		var deptJSON = (new Function('return '+deptData +';'))(); 
+ 		var titleData='([' + title.substring(0,title.length-1) + '])';
+ 		var titleJSON = (new Function('return '+titleData +';'))(); 
+ 		//查询部分
+		$('#user_query_sex').combobox({
+			data : sexJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_police_type').combobox({
+			data : police_typeJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_police_num').combobox({
+			data : police_numJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_max_sensitive_level').combobox({
+			data : max_sensitive_levelJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_dept').combobox({
+			data : deptJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_title').combobox({
+			data : titleJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#user_query_sex').combobox('setValue','请选择');
+		$('#user_query_police_type').combobox('setValue','请选择');
+		$('#user_query_police_num').combobox('setValue','请选择');
+		$('#user_query_max_sensitive_level').combobox('setValue','请选择');
+		$('#user_query_dept').combobox('setValue','请选择');
+		$('#user_query_title').combobox('setValue','请选择');
+	});	
 });
 </script>	
   </body>

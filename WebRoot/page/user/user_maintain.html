@@ -259,14 +259,14 @@
     	var policeNum = "";
     	if( isDetailQuery ) {
     		unit = $("#user_query_unit").val();
-    		policeType = $("#user_query_police_type").val();
-    		sex = $("#user_query_sex").val();
+    		policeType = $("#user_query_police_type").combobox("getValue");
+    		sex = $("#user_query_sex").combobox("getValue");
     		idnum = $("#user_query_idnum").val();
-    		maxSensitiveLevel = $("#user_query_max_sensitive_level").val();
+    		maxSensitiveLevel = $("#user_query_max_sensitive_level").combobox("getValue");
     		position = $("#user_query_position").val();
-    		dept = $("#user_query_dept").val();
-    		title = $("#user_query_title").val();
-    		policeNum = $("#user_query_police_num").val();
+    		dept = $("#user_query_dept").combobox("getValue");
+    		title = $("#user_query_title").combobox("getValue");
+    		policeNum = $("#user_query_police_num").combobox("getValue");
     	}
     	$("#user_maintain_center_list_dg").datagrid('load',{
     		queryAll: true,
@@ -346,6 +346,40 @@
 		else {
 			return "未知状态";
 		}
+	}
+	
+	function userPreMod() {
+		var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的用户');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个用户');
+			return false;
+		}
+		return true;
+	}
+	function modUser(){
+		if( userPreMod() ) {
+			var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
+			$("#user_id").val(rows[0].id);
+			$("#user_name").textbox('setValue',rows[0].name);
+			$("#user_pid").textbox('setValue',rows[0].pid);
+			$("#user_unit").textbox('setValue',rows[0].unit);
+			$("#user_police_type").textbox('setText',rows[0].police_type);
+			var sex=$("#user_sex").textbox('setValue',rows[0].sex);
+			$("#user_idnum").val(rows[0].idnum);
+			$("#user_max_sensitive_level").textbox('setValue',rows[0].max_sensitive_level);
+			$("#user_position").textbox('setValue',rows[0].position);
+			$("#user_dept").textbox('setValue',rows[0].dept);
+			$("#user_title").textbox('setText',rows[0].title);
+			$("#user_police_num").textbox('setValue',rows[0].police_num);
+			
+			$("#user_maintain_center_main_wapper").panel('close');
+    		$("#user_maintain_center_detail_wapper").panel('open');
+		}
+		return;
 	}
 	
 $(document).ready(function () { 
