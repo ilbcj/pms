@@ -92,70 +92,66 @@
 				<div id="group_user_query_user_win" class="easyui-window" title="机构授权" style="width:80%;height:600px;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div class="easyui-panel" data-options="fit:true,footer:'#group_user_query_user_win_ft'">
-					
-						
-						
-						
 						
 						<div class="easyui-layout" data-options="fit:true,border:false">	
 							<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
 					    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
-						        <ul id="user_maintain_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
-						        </ul><!-- end of user_maintain_tree -->
+						        <ul id="group_user_query_user_win_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
+						        </ul><!-- end of group_user_query_user_win_tree -->
 						        </div>
-						    </div><!-- end of west -->
+						    </div><!-- end of group_user_query_user_win_west -->
 						    <div region="center" data-options="border:true,noheader:true" style="padding:3px;">
-						    	<div id="user_maintain_center_main" class="easyui-layout" data-options="fit:true" >
-						    		<div id="user_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+						    	<div id="group_user_query_user_win_center_main" class="easyui-layout" data-options="fit:true" >
+						    		<div id="group_user_query_user_win_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 						    			<table class="nodt" style="width:100%">
 							                <tr>
 							                    <td class="query_name_small text_right">姓名</td>
-							                    <td class="query_value_small"><input id="user_query_name" class="easyui-textbox"></input></td>
+							                    <td class="query_value_small"><input id="group_user_query_user_win_query_name" class="easyui-textbox"></input></td>
 							                    <td class="query_name_small text_right">状态</td>
-							                    <td class="query_value_small"><input id="user_query_status" value="0" style="width:150px;"></input></td>
+							                    <td class="query_value_small"><input id="group_user_query_user_win_query_status" value="0" style="width:150px;"></input></td>
 							                    <td class="query_name_small noborder" style="border:0;">
 							                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
 							                    </td>
 							                    <td class="text_right noborder" style="border:0;">
-							                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUser()">查询</a>
-					            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryUserCondition()">重置</a>
+							                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="groupUserQueryUserWinQueryUser()">查询</a>
+					            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="cleargroupUserQueryUserWinQueryUserCondition()">重置</a>
 							                    </td>
 							                </tr>
 							            </table>
 							            <table class="detail_query noborder nodt" style="width:100%;display:none;border:0;">
 							                <tr>
 							                    <td class="detail_query_name text_right">二级部门</td>
-							                    <td class="detail_query_value"><input id="user_query_unit" class="easyui-textbox query_value_mid"></input></td>
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_unit" class="easyui-textbox query_value_mid"></input></td>
 							                    <td class="detail_query_name text_right">警种</td>
-							                    <td class="detail_query_value"><input id="user_query_police_type" class="easyui-textbox query_value_mid"></input></td>	
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_police_type" class="easyui-textbox query_value_mid"></input></td>	
 							                </tr>
 							                <tr>
 							                    <td class="detail_query_name text_right">性别</td>
-							                    <td class="detail_query_value"><input id="user_query_sex" class="easyui-textbox query_value_mid"></input></td>
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_sex" class="easyui-textbox query_value_mid"></input></td>
 							                    <td class="detail_query_name text_right">身份证</td>
-							                    <td class="detail_query_value"><input id="user_query_idnum" class="easyui-textbox query_value_mid"></input></td>	
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_idnum" class="easyui-textbox query_value_mid"></input></td>	
 							                </tr>
 							                <tr>
 							                    <td class="detail_query_name text_right">最高敏感级别</td>
-							                    <td class="detail_query_value"><input id="user_query_max_sensitive_level" class="easyui-textbox query_value_mid"></input></td>
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_max_sensitive_level" class="easyui-textbox query_value_mid"></input></td>
 							                    <td class="detail_query_name text_right">岗位</td>
-							                    <td class="detail_query_value"><input id="user_query_position" class="easyui-textbox query_value_mid"></input></td>	
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_position" class="easyui-textbox query_value_mid"></input></td>	
 							                </tr>
 							                <tr>
 							                    <td class="detail_query_name text_right">部门</td>
-							                    <td class="detail_query_value"><input id="user_query_dept" class="easyui-textbox query_value_mid"></input></td>
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_dept" class="easyui-textbox query_value_mid"></input></td>
 							                    <td class="detail_query_name text_right">职务/职称</td>
-							                    <td class="detail_query_value"><input id="user_query_title" class="easyui-textbox query_value_mid"></input></td>	
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_title" class="easyui-textbox query_value_mid"></input></td>	
 							                </tr>
 							                <tr>
 							                    <td class="detail_query_name text_right">警号</td>
-							                    <td class="detail_query_value"><input id="user_query_police_num" class="easyui-textbox query_value_mid"></input></td>
+							                    <td class="detail_query_value"><input id="group_user_query_user_win_query_police_num" class="easyui-textbox query_value_mid"></input></td>
 							                </tr>
 							            </table>
-						    		</div><!-- end of user_maintain_center_query -->
+						    		</div><!-- end of group_user_query_user_win_center_query -->
 						    		
-						    		<div id="user_maintain_center_list" region="center" data-options="border:false,noheader:true" >
-						    			<table class="nodt" id="user_maintain_center_list_dg"  
+						    		<div id="group_user_query_user_win_center_list" region="center" data-options="border:false,noheader:true" >
+						    			<table class="nodt" id="group_user_query_user_win_center_list_dg"  
 									            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
 									        <thead>
 									            <tr>
@@ -168,15 +164,11 @@
 									        </thead>
 									    </table>
 									    
-						    		</div><!-- end of user_maintain_center_list -->
+						    		</div><!-- end of group_user_query_user_win_center_list -->
 						    		
-						    	</div><!-- end of user_maintain_center_main -->
-						    </div><!-- end of center -->
+						    	</div><!-- end of group_user_query_user_win_center_main -->
+						    </div><!-- end of group_user_query_user_win_center -->
 						</div>
-						
-						
-						
-						
 						
 					</div>
 					<div id="group_user_query_user_win_ft" style="padding:5px;text-align:center">
@@ -191,31 +183,31 @@
 <script>
     var isDetailQuery = false;
     function toggleDetailQuery(){
-    	var currentHeight = $("#user_maintain_center_main").layout('panel','north').height();
+    	var currentHeight = $("#group_user_query_user_win_center_main").layout('panel','north').height();
     	if( currentHeight > 29 ) {
     		$(".detail_query").hide();
     		$('.detail_query_button').linkbutton({iconCls: 'icon-detail', text:'高级查询'});
     		isDetailQuery = false;
-    		$("#user_maintain_center_main").layout('panel','north').panel('resize', {height:29}) ;
+    		$("#group_user_query_user_win_center_main").layout('panel','north').panel('resize', {height:29}) ;
     	}
     	else {
     		$(".detail_query").show();
     		$('.detail_query_button').linkbutton({iconCls: 'icon-simple', text:'简单查询'});
     		isDetailQuery = true;
-    		$("#user_maintain_center_main").layout('panel','north').panel('resize', {height:116}) ;
+    		$("#group_user_query_user_win_center_main").layout('panel','north').panel('resize', {height:116}) ;
     	}
     	
-    	$("#user_maintain_center_main").layout('resize',{width:'100%',height:'100%'});
+    	$("#group_user_query_user_win_center_main").layout('resize',{width:'100%',height:'100%'});
     }
     
-    function queryUser(){
-    	var treeNode = $('#user_maintain_tree').tree('getSelected');
+    function groupUserQueryUserWinQueryUser(){
+    	var treeNode = $("#group_user_query_user_win_tree").tree('getSelected');
     	var treeNodeId = "";
     	if( treeNode != null ) {
     		treeNodeId = treeNode.id;
     	}
-    	var name = $("#user_query_name").val();
-    	var status = $("#user_query_status").combobox("getValue");
+    	var name = $("#group_user_query_user_win_query_name").val();
+    	var status = $("#group_user_query_user_win_query_status").combobox("getValue");
     	
     	var unit = "";
     	var policeType = "";
@@ -227,17 +219,17 @@
     	var title = "";
     	var policeNum = "";
     	if( isDetailQuery ) {
-    		unit = $("#user_query_unit").val();
-    		policeType = $("#user_query_police_type").val();
-    		sex = $("#user_query_sex").val();
-    		idnum = $("#user_query_idnum").val();
-    		maxSensitiveLevel = $("#user_query_max_sensitive_level").val();
-    		position = $("#user_query_position").val();
-    		dept = $("#user_query_dept").val();
-    		title = $("#user_query_title").val();
-    		policeNum = $("#user_query_police_num").val();
+    		unit = $("#group_user_query_user_win_query_unit").val();
+    		policeType = $("#group_user_query_user_win_query_police_type").val();
+    		sex = $("#group_user_query_user_win_query_sex").val();
+    		idnum = $("#group_user_query_user_win_query_idnum").val();
+    		maxSensitiveLevel = $("#group_user_query_user_win_query_max_sensitive_level").val();
+    		position = $("#group_user_query_user_win_query_position").val();
+    		dept = $("#group_user_query_user_win_query_dept").val();
+    		title = $("#group_user_query_user_win_query_title").val();
+    		policeNum = $("#group_user_query_user_win_query_police_num").val();
     	}
-    	$("#user_maintain_center_list_dg").datagrid('load',{
+    	$("#group_user_query_user_win_center_list_dg").datagrid('load',{
     		queryAll: true,
 			id: treeNodeId,
 			userName: name,
@@ -254,19 +246,19 @@
 		});
     }
     
-    function clearQueryUserCondition(){
-    	$("#user_query_name").textbox({value:""});
-    	$("#user_query_status").combobox("setValue","0");
+    function cleargroupUserQueryUserWinQueryUserCondition(){
+    	$("#group_user_query_user_win_query_name").textbox({value:""});
+    	$("#group_user_query_user_win_query_status").combobox("setValue","0");
     	
-    	$("#user_query_unit").textbox({value:""});
-    	$("#user_query_police_type").textbox({value:""});
-    	$("#user_query_sex").textbox({value:""});
-    	$("#user_query_idnum").textbox({value:""});
-    	$("#user_query_max_sensitive_level").textbox({value:""});
-    	$("#user_query_position").textbox({value:""});
-    	$("#user_query_dept").textbox({value:""});
-    	$("#user_query_title").textbox({value:""});
-    	$("#user_query_police_num").textbox({value:""});
+    	$("#group_user_query_user_win_query_unit").textbox({value:""});
+    	$("#group_user_query_user_win_query_police_type").textbox({value:""});
+    	$("#group_user_query_user_win_query_sex").textbox({value:""});
+    	$("#group_user_query_user_win_query_idnum").textbox({value:""});
+    	$("#group_user_query_user_win_query_max_sensitive_level").textbox({value:""});
+    	$("#group_user_query_user_win_query_position").textbox({value:""});
+    	$("#group_user_query_user_win_query_dept").textbox({value:""});
+    	$("#group_user_query_user_win_query_title").textbox({value:""});
+    	$("#group_user_query_user_win_query_police_num").textbox({value:""});
     }
     
 //     function addUser(){
@@ -324,6 +316,7 @@
 	}
 	
 	function addGroupUserReturn() {
+		$("#group_user_maintain_center_list_dg").datagrid('clearSelections');
     	$("#group_user_maintain_center_main_wapper").panel('open');
     	$("#group_user_maintain_center_main_wapper").panel('resize');
     	$("#group_user_maintain_center_detail_wapper").panel('close');
@@ -342,8 +335,7 @@
 //      	$("#role_describe").textbox('setValue',"");
      	
      	//clear datagrid's data
-//      	$("#role_resource_feature_dg").datagrid({data: []});
-//      	$("#role_resource_data_dg").datagrid({data: []});
+      	$("#group_user_list_dg").datagrid({data: []});
     }
     
     function addGroupUserSave() {
@@ -354,16 +346,55 @@
     }
     
     function groupUserQueryUserWinReturn() {
-    	//$("#resource_role_query_resource_win_list_dg").datagrid('clearSelections');
+    	$("#group_user_query_user_win_center_list_dg").datagrid('clearSelections');
     	$("#group_user_query_user_win").window('close');
     }
 	
+	function isExist(data, id) {
+    	for(var index = 0; index<data.length; index++) {
+    		if(data[index].id == id)
+    			return true;
+    	}
+    	return false;
+    }
+	function insertUser( data ){
+		var rows = $("#group_user_list_dg").datagrid('getRows');
+		var index = rows.length;
+		
+		if( isExist( rows, data.id ) )
+			return;
+			
+    	$("#group_user_list_dg").datagrid('insertRow', {
+			index: index,
+			row:{
+				id:data.id, 
+				name:data.name, 
+				pname:data.pname, 
+				gname:data.gname
+			}
+		});
+	}
+	
+	function groupUserDeleterow( target ) {
+		$.messager.confirm('Confirm','Are you sure?',function(r){
+			if (r){
+				$("#group_user_list_dg").datagrid('deleteRow', getRowIndex(target));
+			}
+		});
+	}
+	
 	function groupUserQueryUserWinConfirm() {
+		var rows = $("#group_user_query_user_win_center_list_dg").datagrid('getSelections');
+		//alert(rows.length + "|" + rows[0].max_sensitive_level);
+		for( var index=0; index<rows.length; index++ ) {
+	    	insertUser(rows[index]);
+    	}
+    	return groupUserQueryUserWinReturn();
 	}
 	
 $(document).ready(function () { 
 	
-	$('#user_maintain_tree').tree({
+	$("#group_user_query_user_win_tree").tree({
 	    loadFilter: function(data){
 	        if (data.treeNodes){
 	            return data.treeNodes;
@@ -373,13 +404,13 @@ $(document).ready(function () {
 	    },
 	    onClick: function(node){
 	    	//alert(node.id);
-	    	$("#user_maintain_center_list_dg").datagrid('load',{
+	    	$("#group_user_query_user_win_center_list_dg").datagrid('load',{
 				id: node.id
 			});
 	    }
 	});
 	
-	$("#user_query_status").combobox({
+	$("#group_user_query_user_win_query_status").combobox({
 		valueField: 'value',
 		textField: 'label',
 		data:[{
@@ -394,7 +425,7 @@ $(document).ready(function () {
 		}]
 	});
 	
-	$("#user_maintain_center_list_dg").datagrid({
+	$("#group_user_query_user_win_center_list_dg").datagrid({
 		url:'../user/queryUserItems.action',
 		queryParams:{queryAll: true},
 		loadFilter: function(data){
@@ -409,7 +440,7 @@ $(document).ready(function () {
 			return res;
 		},
 //		onLoadSuccess: function() {alert("success");},
-		onLoadError: function() { $("#user_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
+		onLoadError: function() { $("#group_user_query_user_win_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
 	
 //--------------------------------------------------------------------------------------------------------------------	

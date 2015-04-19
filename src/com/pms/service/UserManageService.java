@@ -57,7 +57,7 @@ public class UserManageService {
 		item.setParent_id(user.getParent_id());
 		item.setDept(user.getDept());
 		item.setIdnum(user.getIdnum());
-		item.setMax_sensitive_level(item.getMax_sensitive_level());
+		item.setMax_sensitive_level(user.getMax_sensitive_level());
 		item.setPolice_num(user.getPolice_num());
 		item.setPolice_type(user.getPolice_type());
 		item.setPosition(user.getPosition());
