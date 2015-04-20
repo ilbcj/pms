@@ -26,6 +26,7 @@
  	<include file="struts-organization.xml"/>
  	<include file="struts-user.xml"/>
  	<include file="struts-resource.xml"/>
+ 	<include file="struts-group.xml"/>
  	<include file="struts-privilege.xml"/>
  	<include file="struts-system.xml"/>
 </struts>    

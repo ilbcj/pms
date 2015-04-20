@@ -128,26 +128,22 @@ public class ResourceDAOImpl implements ResourceDAO {
 		int rs;
 		String sqlString = "select count(*) from res_feature where 1 = 1 ";
 		if( criteria != null ) {
-			if( criteria != null ) {
-				if(criteria.getName() != null && criteria.getName().length() > 0) {
-					sqlString += " and name like :name ";
-				}
-				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-					sqlString += " and resource_id like :resource_id ";
-				}
+			if(criteria.getName() != null && criteria.getName().length() > 0) {
+				sqlString += " and name like :name ";
+			}
+			if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
+				sqlString += " and resource_id like :resource_id ";
 			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			if( criteria != null ) {
-				if( criteria != null ) {
-					if(criteria.getName() != null && criteria.getName().length() > 0) {
-						q.setString( "name", "%" + criteria.getName() + "%" );
-					}
-					if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-						q.setString( "resource_id", "%" + criteria.getResource_id() + "%" );
-					}
+				if(criteria.getName() != null && criteria.getName().length() > 0) {
+					q.setString( "name", "%" + criteria.getName() + "%" );
+				}
+				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
+					q.setString( "resource_id", "%" + criteria.getResource_id() + "%" );
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();

@@ -42,7 +42,7 @@
 					            	<th field="ck" checkbox="true"></th>
 					                <th data-options="field:'name'" style="width:33%;">名称</th>
 					                <th data-options="field:'code'" style="width:33%;">编码</th>
-					                <th data-options="field:'describe'" style="width:33%;">描述</th>
+					                <th data-options="field:'describ'" style="width:33%;">描述</th>
 					            </tr>
 					        </thead>
 					    </table>
@@ -64,15 +64,15 @@
 			        <table class="nodt" style="width:100%">
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 离散群体名称</td>
-			                <td><input id="role_name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入离散群体名称'"></input></td>
+			                <td><input id="group_user_name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入离散群体名称'"></input></td>
 			            </tr>
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 离散群体编码</td>
-			                <td><input id="role_code" class="form_value_mid easyui-textbox" data-options="prompt:'请输入离散群体编码'"></input></td>
+			                <td><input id="group_user_code" class="form_value_mid easyui-textbox" data-options="prompt:'请输入离散群体编码'"></input></td>
 			            </tr>
 			            <tr>
 			                <td class="form_name_small text_right"> 描述</td>
-			                <td><input id="role_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入描述'"></input></td>
+			                <td><input id="group_user_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入描述'"></input></td>
 			            </tr>
 					</table>
 
@@ -261,43 +261,6 @@
     	$("#group_user_query_user_win_query_police_num").textbox({value:""});
     }
     
-//     function addUser(){
-//     	$("#user_maintain_center_main_wapper").panel('close');
-//     	$("#user_maintain_center_detail_wapper").panel('open');
-//     }
-    
-//     function openOrgSelectWin(){
-//     	$('#org_query_win').window('open').window('center');
-//     }
-    
-//     function orgQueryWinQueryOrg(){
-//     	var name = $("#org_query_win_name").val();
-//     	var uid = $("#org_query_win_uid").val();
-    	
-//     	$("#org_query_list_dg").datagrid('load',{
-//     		queryAll: true,
-// 			id: 0,
-// 			orgName: name,
-// 			orgUid: uid
-// 		});
-//     }
-    
-//     function orgQueryWinClearQueryOrgCondition(){
-//     	$("#org_query_win_name").textbox({value:""});
-//     	$("#org_query_win_uid").textbox({value:""});
-//     }
-    
-//     function addUserReturn(){
-//     	$("#user_maintain_center_main_wapper").panel('open');
-//     	$("#user_maintain_center_main_wapper").panel('resize');
-//     	$("#user_maintain_center_detail_wapper").panel('close');
-//     }
-    
-//     function addUserSave(){
-//		submit the form
-// 		$("#user_maintain_center_detail_form").submit();
-//     }
-    
     function formatStatus(val,row){
 		if (val == 1){
 			return "使用中";
@@ -324,21 +287,47 @@
     }
     
     function refreshDetailPage() {
-// 		$("#role_id").val("");
-//      	$("#role_name").textbox('setValue',"");
-//      	$("#role_code").textbox('setValue',"");
-//      	$("#role_type").textbox('setValue',"");
-//      	$("#role_destcity").textbox('setValue',"");
-//      	$("#role_systype").textbox('setValue',"");
-//      	$("#role_srccity").textbox('setValue',"");
-//      	$("#role_delstatus").textbox('setValue',"");
-//      	$("#role_describe").textbox('setValue',"");
+		$("#group_user_id").val("");
+     	$("#group_user_name").textbox('setValue',"");
+     	$("#group_user_code").textbox('setValue',"");
+     	$("#group_user_describe").textbox('setValue',"");
      	
      	//clear datagrid's data
       	$("#group_user_list_dg").datagrid({data: []});
     }
     
     function addGroupUserSave() {
+    	var groupId = $("#group_user_id").val();
+    	var poststr = "group.id=" + groupId;
+    	
+    	var groupName = $("#group_user_name").textbox('getValue');
+    	poststr += "&group.name=" + groupName;
+    	
+    	var groupCode = $("#group_user_code").textbox('getValue');
+    	poststr += "&group.code=" + groupCode;
+    	
+    	var groupDescrib = $("#group_user_describe").textbox('getValue');
+    	poststr += "&group.describ=" + groupDescrib;
+    	
+     	var rows = $("#group_user_list_dg").datagrid('getRows');
+     	var index = 0;
+    	for(index=0; index < rows.length; index++) {
+	 		poststr += '&addUserIds=' + rows[index].id;
+    	}
+		
+    	$.getJSON("../group/saveGroupUser.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				$("#group_user_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
+				warningTip("提示", '保存离散群体信息成功');
+			}
+			else
+			{
+				warningTip("提示", '保存离散群体信息失败');	
+			}
+			addGroupUserReturn();
+		});
     }
     
     function openGroupDetailQueryUserWin(){
@@ -390,6 +379,112 @@
 	    	insertUser(rows[index]);
     	}
     	return groupUserQueryUserWinReturn();
+	}
+	
+	function isExist(data, id) {
+    	for(var index = 0; index<data.length; index++) {
+    		if(data[index].id == id)
+    			return true;
+    	}
+    	return false;
+    }
+	function insertUsers( data ){
+		var rows = $("#group_user_list_dg").datagrid('getRows');
+		var index = rows.length;
+		
+		if( isExist( rows, data.id ) )
+			return;
+		//for(data.)
+    	$("#group_user_list_dg").datagrid('insertRow', {
+			index: index,
+			row:{
+				id:data.id, 
+				name:data.name, 
+				pname:data.pname, 
+				gname:data.gname
+			}
+		});
+	}
+	
+	function modGroupOfUser() {
+		var rows = $("#group_user_maintain_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的群体');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个群体');
+			return false;
+		}
+		
+		$("#group_user_id").val(rows[0].id);
+		$("#group_user_name").textbox('setValue',rows[0].name);
+		$("#group_user_code").textbox('setValue',rows[0].code);
+		$("#group_user_describe").textbox('setValue',rows[0].describ);
+		
+		
+		//load datagrid's data
+		var poststr = "group.id=" + rows[0].id;
+		$.getJSON("../group/queryGroupUsers.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+ 				var index;
+ 				for( index=0; index < retObj.users.length; index++) {
+ 					insertUsers( retObj.users[index]);
+ 				}
+			}
+			else
+			{
+				warningTip("提示", '获取离散群体的用户信息失败');	
+				refreshDetailPage();
+				return;
+			}
+		});
+		
+   		$("#group_user_maintain_center_main_wapper").panel('close');
+    	$("#group_user_maintain_center_detail_wapper").panel('open');
+	}
+	
+	function delGroupOfUser() {
+		var rows = $("#group_user_maintain_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的群体');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选群体？', function(r){
+                if (r){
+                	var poststr = "delIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delIds=" + rows[i].id;
+					}
+
+                    $.getJSON("../group/deleteGroups.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$("#group_user_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
+							successTip("删除群体","操作成功");
+						}
+						else
+						{
+							warningTip("提示", "删除群体操作失败：" + retObj.message);
+						}
+					});
+                }
+            });
+		}
+	}
+	
+	//------------------for value edit datagrid-------
+	function getRowIndex(target){
+		var tr = $(target).closest('tr.datagrid-row');
+		return parseInt(tr.attr('datagrid-row-index'));
 	}
 	
 $(document).ready(function () { 
@@ -445,12 +540,12 @@ $(document).ready(function () {
 	
 //--------------------------------------------------------------------------------------------------------------------	
 	$("#group_user_maintain_center_list_dg").datagrid({
-		//url:'../resource/queryRoleItems.action',
+		url:'../group/queryGroupItems.action',
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.roles;
+				res.rows = data.items;
 			} else {
 				res.total=0;
 				res.rows = [];

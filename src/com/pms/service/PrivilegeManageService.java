@@ -13,7 +13,7 @@ import com.pms.dao.impl.AppDAOImpl;
 import com.pms.dao.impl.AppRoleDAOImpl;
 import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dto.AppRoleItem;
-import com.pms.dto.PrivilegeTemp;
+//import com.pms.dto.PrivilegeTemp;
 import com.pms.model.AppRole;
 import com.pms.model.Application;
 import com.pms.model.Privilege;

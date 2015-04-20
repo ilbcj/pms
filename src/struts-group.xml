@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="group" extends="json-default" namespace="/group">
+		
+		<global-results>
+ 			<result name="sqlException">/jsp/exception.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.sql.SQLException" result="sqlException" />
+			<exception-mapping exception="java.lang.Exception" result="sqlException" />	
+		</global-exception-mappings>
+	
+	<!-- 
+		离散群体			method="saveGroupUser"、"queryGroupItems"、"queryGroupUsers"、"deleteGroups"
+	 -->
+ 		<action name="saveGroupUser" class="com.pms.controller.GroupAction" method="SaveGroupUser" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryGroupItems" class="com.pms.controller.GroupAction" method="QueryGroupItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryGroupUsers" class="com.pms.controller.GroupAction" method="QueryGroupUsers" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteGroups" class="com.pms.controller.GroupAction" method="DeleteGroups" >
+ 			<result name="success" type="json" />
+ 		</action>
+	</package>	
+</struts>    

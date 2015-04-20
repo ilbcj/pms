@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.AppRoleItem;
-import com.pms.dto.PrivilegeTemp;
 import com.pms.model.Privilege;
 import com.pms.service.PrivilegeManageService;
 
