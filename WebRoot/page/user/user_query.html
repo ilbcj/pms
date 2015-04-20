@@ -89,7 +89,7 @@
 							        </thead>
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
-							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addUser();">查看</a>
+							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="userDetail();">查看</a>
 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm6',iconCls:'icon-edit'" >导出</a>
 								    <div id="mm6" style="width:100px;">
 								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
@@ -106,8 +106,75 @@
 				    </div><!-- end of center -->
 				</div>
 			</div><!-- user_query_center_main_wapper -->
+			
+			<div id="user_query_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="user_query_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'基本信息',footer:'#user_query_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+				    <form id="user_query_center_detail_form" method="post">
+				    	<input id="user_id" name="user.id" type="hidden"/> 
+				        <table class="nodt" style="width:100%">
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 姓名</td>
+				                <td><input id="user_name" name="user.name" class="form_value_mid easyui-textbox" data-options="prompt:'姓名'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 身份证</td>
+				                <td><input id="user_idnum" name="user.idnum" class="form_value_mid easyui-textbox" data-options="prompt:'身份证'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 状态</td>
+				                <td><input id="user_status" name="user.status" class="form_value_mid easyui-combobox" 
+				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '1',selected:true}]" /></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 性别</td>
+				                <td><input id="user_sex" name="user.sex" class="form_value_mid easyui-textbox" data-options="prompt:'性别'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 组织机构</td>
+				                <td>
+				                	<input id="user_pid" name="user.parent_id" class="form_value_mid easyui-textbox" data-options="prompt:'上级机构',editable:false"></input>
+				                </td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 警种</td>
+				                <td><input id="user_police_type" name="user.police_type" class="form_value_mid easyui-textbox" data-options="prompt:'警种'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 警号</td>
+				                <td><input id="user_police_num" name="user.police_num" class="form_value_mid easyui-textbox" data-options="prompt:'警号'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"><span style="color:red;">*</span> 最高敏感级别</td>
+				                <td><input id="user_max_sensitive_level" name="user.max_sensitive_level" class="form_value_mid easyui-textbox" data-options="prompt:'最高敏感级别'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right">业务部门类别</td>
+				                <td><input id="user_dept" name="user.dept" class="form_value_mid easyui-textbox" data-options="prompt:'部门'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right">职务/职称</td>
+				                <td><input id="user_title" name="user.title" class="form_value_mid easyui-textbox" data-options="prompt:'职务/职称'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right">岗位</td>
+				                <td><input id="user_position" name="user.position" class="form_value_mid easyui-textbox" data-options="prompt:'岗位'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right">二级部门</td>
+				                <td><input id="user_unit" name="user.unit" class="form_value_mid easyui-textbox" data-options="prompt:'二级部门'"></input></td>
+				            </tr>
+				        </table>
+				    </form>
+				    
+				</div><!-- end of user_query_center_detail -->
+				<div id="user_query_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="userDetailReturn();">返回</a>
+				</div><!-- end of user_query_center_detail_ft -->
+	    	</div><!-- end of user_query_center_detail_wapper -->
+
 		</div>
-	
 	</div><!-- end of layout -->
 <script>
     var isDetailQuery = false;
@@ -128,6 +195,18 @@
     	
     	$("#user_query_center_main").layout('resize',{width:'100%',height:'100%'});
     }
+    
+    function formatStatus(val,row){
+		if (val == 1){
+			return "使用中";
+		} else if (val == 2) {
+			return "挂起";
+		}
+		else {
+			return "未知状态";
+		}
+	}
+    
     function queryUser(){
     	var treeNode = $('#user_query_tree').tree('getSelected');
     	var treeNodeId = "";
@@ -189,6 +268,41 @@
     	$("#user_query_police_num").textbox({value:""});
     }
     
+    function userDetail(){
+    	var rows = $('#user_query_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要查看的用户');
+			return;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能查看一个用户');
+			return;
+		}
+		$("#user_id").val(rows[0].id);
+		$("#user_name").textbox('setValue',rows[0].name);
+		$("#user_pid").textbox('setValue',rows[0].pname);
+		$("#user_unit").textbox('setValue',rows[0].unit);
+		$("#user_police_type").textbox('setText',rows[0].police_type);
+		var sex=$("#user_sex").textbox('setValue',rows[0].sex);
+		$("#user_idnum").val(rows[0].idnum);
+		$("#user_max_sensitive_level").textbox('setValue',rows[0].max_sensitive_level);
+		$("#user_position").textbox('setValue',rows[0].position);
+		$("#user_dept").textbox('setValue',rows[0].dept);
+		$("#user_title").textbox('setText',rows[0].title);
+		$("#user_police_num").textbox('setValue',rows[0].police_num);
+		
+    	$("#user_query_center_main_wapper").panel('close');
+    	$("#user_query_center_detail_wapper").panel('open');
+    }
+    
+    function userDetailReturn(){
+    	$("#user_query_center_main_wapper").panel('open');
+    	$("#user_query_center_main_wapper").panel('resize');
+    	$("#user_query_center_detail_wapper").panel('close');
+    	$('#user_query_center_list_dg').datagrid('clearSelections');
+    }
+    
+    
 $(document).ready(function () { 
 	
 	$('#user_query_tree').tree({
@@ -224,7 +338,6 @@ $(document).ready(function () {
 	
 	$("#user_query_center_list_dg").datagrid({
 		url:'../user/queryUserItems.action',
-		queryParams:{queryAll: true},
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
@@ -236,6 +349,7 @@ $(document).ready(function () {
 			}
 			return res;
 		},
+//		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#user_query_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
 	$.getJSON("../system/queryUserAttrs.action", function(data) {
@@ -308,12 +422,19 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-		$('#user_query_sex').combobox('setValue','请选择');
-		$('#user_query_police_type').combobox('setValue','请选择');
-		$('#user_query_police_num').combobox('setValue','请选择');
-		$('#user_query_max_sensitive_level').combobox('setValue','请选择');
-		$('#user_query_dept').combobox('setValue','请选择');
-		$('#user_query_title').combobox('setValue','请选择');
+
+		sexJSON.unshift({ "id": "", "text": "请选择" });
+		police_typeJSON.unshift({ "id": "", "text": "请选择" });
+		police_numJSON.unshift({ "id": "", "text": "请选择" });
+		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
+		deptJSON.unshift({ "id": "", "text": "请选择" });
+		titleJSON.unshift({ "id": "", "text": "请选择" });
+		$("#user_query_sex").combobox('loadData', sexJSON);
+		$("#user_query_police_type").combobox('loadData', police_typeJSON);
+		$("#user_query_police_num").combobox('loadData', police_numJSON);
+		$("#user_query_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
+		$("#user_query_dept").combobox('loadData', deptJSON);
+		$("#user_query_title").combobox('loadData', titleJSON);
 	});	
 });
 </script>	
