@@ -365,7 +365,7 @@
 			var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
 			$("#user_id").val(rows[0].id);
 			$("#user_name").textbox('setValue',rows[0].name);
-			$("#user_pid").textbox('setValue',rows[0].pid);
+			$("#user_pid").textbox('setValue',rows[0].pname);
 			$("#user_unit").textbox('setValue',rows[0].unit);
 			$("#user_police_type").textbox('setText',rows[0].police_type);
 			var sex=$("#user_sex").textbox('setValue',rows[0].sex);
@@ -579,12 +579,19 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-		$('#user_query_sex').combobox('setValue','请选择');
-		$('#user_query_police_type').combobox('setValue','请选择');
-		$('#user_query_police_num').combobox('setValue','请选择');
-		$('#user_query_max_sensitive_level').combobox('setValue','请选择');
-		$('#user_query_dept').combobox('setValue','请选择');
-		$('#user_query_title').combobox('setValue','请选择');
+
+		sexJSON.unshift({ "id": "", "text": "请选择" });
+		police_typeJSON.unshift({ "id": "", "text": "请选择" });
+		police_numJSON.unshift({ "id": "", "text": "请选择" });
+		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
+		deptJSON.unshift({ "id": "", "text": "请选择" });
+		titleJSON.unshift({ "id": "", "text": "请选择" });
+		$("#user_query_sex").combobox('loadData', sexJSON);
+		$("#user_query_police_type").combobox('loadData', police_typeJSON);
+		$("#user_query_police_num").combobox('loadData', police_numJSON);
+		$("#user_query_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
+		$("#user_query_dept").combobox('loadData', deptJSON);
+		$("#user_query_title").combobox('loadData', titleJSON);
 		
 		//添加部分
 		$('#user_sex').combobox({
@@ -617,12 +624,13 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-		$('#user_sex').combobox('setValue','请选择');
-		$('#user_police_type').combobox('setValue','请选择');
-		$('#user_police_num').combobox('setValue','请选择');
-		$('#user_max_sensitive_level').combobox('setValue','请选择');
-		$('#user_dept').combobox('setValue','请选择');
-		$('#user_title').combobox('setValue','请选择');
+
+		$("#user_sex").combobox('loadData', sexJSON);
+		$("#user_police_type").combobox('loadData', police_typeJSON);
+		$("#user_police_num").combobox('loadData', police_numJSON);
+		$("#user_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
+		$("#user_dept").combobox('loadData', deptJSON);
+		$("#user_title").combobox('loadData', titleJSON)
 	});	
 });
 </script>	
