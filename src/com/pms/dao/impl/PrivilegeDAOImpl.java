@@ -11,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.PrivilegeDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.Privilege;
+import com.pms.model.ResRole;
 
 public class PrivilegeDAOImpl implements PrivilegeDAO {
 
@@ -162,6 +163,83 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 			q.setInteger("owner_id", id);
 			q.setInteger("owner_type", ownertype);
 			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRole> QueryPrivInfosByUserid(int userid) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRole> rs = null;
+		String sqlString = "SELECT a.* FROM res_role a, privilege b where b.owner_id=:owner_id and owner_type=:owner_type and a.id = b.role_id";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
+			q.setInteger("owner_id", userid);
+			q.setInteger("owner_type", Privilege.OWNERTYPEUSER);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRole> QueryPrivInfosByUsersOrg(int userid) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResRole> rs = null;
+		String sqlString = "SELECT a.* FROM res_role a, privilege b where b.owner_id=(select parent_id from user where id = :userid) and owner_type=:owner_type and a.id = b.role_id ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
+			q.setInteger("userid", userid);
+			q.setInteger("owner_type", Privilege.OWNERTYPEORG);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRole> QueryPrivInfosByUsersGroup(int groupid)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRole> rs = null;
+		String sqlString = "SELECT a.* FROM res_role a, privilege b where b.owner_id=:owner_id and owner_type=:owner_type and a.id = b.role_id";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
+			q.setInteger("owner_id", groupid);
+			q.setInteger("owner_type", Privilege.OWNERTYPEUSERGROUP);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

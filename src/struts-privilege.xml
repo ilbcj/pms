@@ -36,6 +36,11 @@
 		<action name="queryPrivlegeUserItems" class="com.pms.controller.PrivilegeUserAction" method="QueryPrivlegeUserItems" >
 	 		<result name="success" type="json" />
 	 	</action>
+	<!-- query user privileges -->
+		<action name="queryUserPrivileges" class="com.pms.controller.PrivilegeUserAction" method="QueryUserPrivileges" >
+	 		<result name="success" type="json" />
+	 	</action>
+	 	
 	
 	</package>	
 </struts>    

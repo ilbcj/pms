@@ -140,6 +140,79 @@
     	$("#privilege_authorize_usergroup_detail_win").window('close');
     }
     
+    function privAuthGroupDetailConfirm(){
+    	var userids = $("#privilege_authorize_usergroup_detail_win_group_id").val();
+    	var poststr = "ownerIds=" + userids;
+    	var saveType = $("#privilege_authorize_usergroup_detail_win_group_add").val();
+		poststr += "&saveType=" + parseInt(saveType);
+		poststr += "&ownerType=3";
+		
+		var rows = $("#privilege_authorize_usergroup_detail_win_list_dg").datagrid('getSelections');
+		if(rows.length > 0){
+			for(var index=0; index < rows.length; index++) {
+				poststr += '&roleIds=' + rows[index].id;
+			}
+		}
+    	//alert(poststr);
+    	$.getJSON("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				$("#privilege_authorize_usergroup_center_list_dg").datagrid('reload').datagrid('clearSelections');
+				warningTip("提示", '群体授权成功');
+			}
+			else
+			{
+				warningTip("提示", '群体授权失败');	
+			}
+			privAuthGroupDetailWinReturn();
+		});
+    }
+    
+    function modGroupAuth(){
+    	var rows = $("#privilege_authorize_usergroup_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要维护授权的群体');
+			return false;
+		}
+		else if (rows.length > 1) {
+			warningTip("提示", '一次只能维护一个群体');
+			return false;
+		}
+		
+		var groupnames = rows[0].name;
+		var groupids = rows[0].id;
+		
+		var poststr = "ownerIds=" + groupids;
+    	poststr += "&ownerType=3";//usergroup type
+		$.getJSON("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				refreshPrivAuthUserGroupDetailAppList();
+				$("#privilege_authorize_usergroup_detail_win_group_id").val(groupids);
+		    	$("#privilege_authorize_usergroup_detail_win_group_name").html(groupnames);
+		    	$("#privilege_authorize_usergroup_detail_win_group_add").val("2");
+		    	
+		    	var priRows = $("#privilege_authorize_usergroup_detail_win_list_dg").datagrid('getRows');
+		    	for(var key in retObj.privileges) {
+		    		for(var index=0; index < priRows.length; index++ ) {
+		    			if( priRows[index].id == retObj.privileges[key].role_id) {
+		    				$("#privilege_authorize_usergroup_detail_win_list_dg").datagrid('selectRow', index);
+		    			}
+		    		}
+		    	}
+		    	
+		    	$("#privilege_authorize_usergroup_detail_win").window({title:'维护群体授权'}).window('open').window('center');
+			}
+			else
+			{
+				warningTip("提示", '获取群体已授权信息失败');	
+			}
+		});
+		return;
+    }
+    
 $(document).ready(function () { 
 	
 	$("#privilege_authorize_usergroup_center_list_dg").datagrid({

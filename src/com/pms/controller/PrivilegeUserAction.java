@@ -1,10 +1,13 @@
 package com.pms.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.PrivUserListItem;
+import com.pms.dto.UserPrivListItem;
 import com.pms.model.User;
+import com.pms.service.PrivilegeSearchService;
 import com.pms.service.UserManageService;
 
 public class PrivilegeUserAction extends ActionSupport {
@@ -34,8 +37,16 @@ public class PrivilegeUserAction extends ActionSupport {
 	private String userDept;
 	private String userTitle;
 	private String userPoliceNum;
+	private List<UserPrivListItem> privs;
 	
-	
+	public List<UserPrivListItem> getPrivs() {
+		return privs;
+	}
+
+	public void setPrivs(List<UserPrivListItem> privs) {
+		this.privs = privs;
+	}
+
 	public int getUserPrivStatus() {
 		return userPrivStatus;
 	}
@@ -218,6 +229,20 @@ public class PrivilegeUserAction extends ActionSupport {
 			} else {
 				total = ums.QueryPrivUserItems( id, userPrivStatus, page, rows, items );
 			}
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryUserPrivileges()
+	{
+		PrivilegeSearchService pss = new PrivilegeSearchService();
+		try {
+			privs = pss.QueryUserPrivileges(id);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

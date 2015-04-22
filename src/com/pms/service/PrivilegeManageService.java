@@ -106,6 +106,5 @@ public class PrivilegeManageService {
 		res = dao.QueryPrivilegesByOwnerId(ownerid, ownertype);
 		return res;
 	}
-
 	
 }
