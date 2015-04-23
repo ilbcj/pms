@@ -24,7 +24,7 @@ public class PrivilegeSearchService {
 		//query usergroup priv
 		QueryPrivsByGroup(userid, res);
 		
-		return null;
+		return res;
 	}
 	
 	private void QueryPrivsByUserid(int userid, List<UserPrivListItem> privItems) throws Exception
@@ -34,17 +34,25 @@ public class PrivilegeSearchService {
 		
 		UserPrivListItem item = null;
 		for(int i = 0; i<res.size(); i++) {
-			item = new UserPrivListItem();
-			item.setRoleid(res.get(i).getId());
-			item.setRolename(res.get(i).getBusiness_role_name());
-			item.setRolecode(res.get(i).getBusiness_role());
-			List<String> source = item.getSource();
-			if(source == null) {
-				source = new ArrayList<String>();
+			item = existItem(privItems, res.get(i).getId());
+			if( item != null ) {
+				List<String> source = item.getSource();
+				if(source == null) {
+					source = new ArrayList<String>();
+				}
+				source.add(UserPrivListItem.SOURCETYPEUSER);
+				item.setSource(source);
 			}
-			source.add(UserPrivListItem.SOURCETYPEUSER);
-			item.setSource(source);
-			privItems.add(item);
+			else {
+				item = new UserPrivListItem();
+				item.setRoleid(res.get(i).getId());
+				item.setRolename(res.get(i).getBusiness_role_name());
+				item.setRolecode(res.get(i).getBusiness_role());
+				List<String> source = new ArrayList<String>();
+				source.add(UserPrivListItem.SOURCETYPEUSER);
+				item.setSource(source);
+				privItems.add(item);
+			}
 		}
 		return;
 	}
@@ -70,14 +78,11 @@ public class PrivilegeSearchService {
 				item.setRoleid(res.get(i).getId());
 				item.setRolename(res.get(i).getBusiness_role_name());
 				item.setRolecode(res.get(i).getBusiness_role());
-				List<String> source = item.getSource();
-				if(source == null) {
-					source = new ArrayList<String>();
-				}
+				List<String> source = new ArrayList<String>();
 				source.add(UserPrivListItem.SOURCETYPEORG);
 				item.setSource(source);
+				privItems.add(item);
 			}
-			privItems.add(item);
 		}
 		return;
 	}
@@ -112,10 +117,9 @@ public class PrivilegeSearchService {
 					List<String> source = new ArrayList<String>();
 					source.add(UserPrivListItem.SOURCETYPEGROUP);
 					item.setSource(source);
+					privItems.add(item);
 				}
-				privItems.add(item);
 			}
-			
 		}
 		
 		return;

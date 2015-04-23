@@ -110,37 +110,15 @@
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div class="easyui-panel" data-options="fit:true,footer:'#privilege_query_authorize_user_detail_win_ft'">
 						<table id="privilege_query_authorize_user_detail_win_list_dg"  
-							            data-options="toolbar:'#wintoolbar',singleSelect:false,method:'post',nowrap:true,idField:'id',noheader:true,fit:true">
+							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'roleid',noheader:true,fit:true">
 							<thead>
 					            <tr>
-					            	<th field="ck" checkbox="true"></th>
-					            	<th data-options="field:'business_role_name'" style="width:33%;">角色名称</th>
-					                <th data-options="field:'business_role'" style="width:33%;">角色编码</th>
-					                <th data-options="field:'role_describe'" style="width:33%;">角色描述</th>
+					            	<th data-options="field:'rolename'" style="width:33%;">角色名称</th>
+					                <th data-options="field:'rolecode'" style="width:33%;">角色编码</th>
+					                <th data-options="field:'source'" style="width:33%;">授权来源</th>
 					            </tr>
 					        </thead>
 			            </table>
-			            <div id="wintoolbar" >
-							<table style="background-color:#E7F0FF;width:100%" cellspacing="0" cellpadding="0" border="0">
-								<tr style="height:40px;">
-					            	<td colspan=2 style="padding-left:15px;" >基本信息</td>
-					            </tr>
-								<tr style="background-color:#FFF;height:40px;">
-					            	<td class="text_right" style="padding-right:15px;width:150px;border:1px solid #aaa">授权用户</td>
-					                <td style="padding-left:15px;border:1px solid #aaa" ><span id="privilege_authorize_user_detail_win_user_name" ></span></td>
-					            </tr>
-					            <tr style="height:40px;">
-					            	<td colspan=2 style="padding-left:15px;">授权信息</td>
-					            </tr>
-							</table>
-							<div style="display:none">
-							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="">复制授权</a>
-			            	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">粘贴授权</a>
-			            	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="">设置有效期</a>
-			            	</div>	
-							<input id="privilege_authorize_user_detail_win_user_id" type="hidden" />
-							<input id="privilege_authorize_user_detail_win_user_add" type="hidden" />
-						</div>
 					</div>
 					<div id="privilege_query_authorize_user_detail_win_ft" style="padding:5px;text-align:center">
                     	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="queryPrivilegeAuthUserlWinReturn();">返回</a>
@@ -262,20 +240,11 @@
 		
 			if(retObj.result == true)
 			{
-				refreshPrivAuthUserDetailAppList();
-				$("#privilege_authorize_user_detail_win_user_id").val(userids);
-		    	$("#privilege_authorize_user_detail_win_user_name").html(usernames);
-		    	$("#privilege_authorize_user_detail_win_user_add").val("2");
-		    	
-		    	var priRows = $("#privilege_authorize_user_detail_win_list_dg").datagrid('getRows');
-		    	for(var key in retObj.privileges) {
-		    		for(var index=0; index < priRows.length; index++ ) {
-		    			if( priRows[index].id == retObj.privileges[key].role_id) {
-		    				$("#privilege_authorize_user_detail_win_list_dg").datagrid('selectRow', index);
-		    			}
-		    		}
-		    	}
-		    	
+				$("#privilege_query_authorize_user_detail_win_list_dg").datagrid('clearSelections');
+				$("#privilege_query_authorize_user_detail_win_list_dg").datagrid({
+					data: retObj.privs
+				});
+				
   		    	$("#privilege_query_authorize_user_detail_win").window({title:'维护用户授权'}).window('open').window('center');
 			}
 			else
@@ -293,7 +262,7 @@
     
 $(document).ready(function () { 
 	
-	$('#user_query_tree').tree({
+	$("#user_query_tree").tree({
 	    loadFilter: function(data){
 	        if (data.treeNodes){
 	            return data.treeNodes;
@@ -326,6 +295,7 @@ $(document).ready(function () {
 	
 	$("#privilege_query_authorize_user_center_list_dg").datagrid({
 		url:'../user/queryUserItems.action',
+		queryParams:{queryAll: true},
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
@@ -340,6 +310,9 @@ $(document).ready(function () {
 //		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#privilege_query_authorize_user_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
+	
+	$("#privilege_query_authorize_user_detail_win_list_dg").datagrid();
+	
 	$.getJSON("../system/queryUserAttrs.action", function(data) {
 		var sex="";						//性别
 		var police_type="";				//警种
