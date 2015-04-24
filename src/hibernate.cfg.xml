@@ -50,6 +50,8 @@
 	<mapping resource="com/pms/model/ResRoleResource.hbm.xml" />
 	<mapping resource="com/pms/model/Group.hbm.xml" />
 	<mapping resource="com/pms/model/GroupUser.hbm.xml" />
+	<mapping resource="com/pms/model/GroupRule.hbm.xml" />
+	<mapping resource="com/pms/model/Rule.hbm.xml" />
 
 </session-factory>
 

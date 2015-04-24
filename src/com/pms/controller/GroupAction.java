@@ -6,6 +6,7 @@ import java.util.List;
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.UserListItem;
 import com.pms.model.Group;
+import com.pms.model.Rule;
 import com.pms.service.GroupManageService;
 
 public class GroupAction extends ActionSupport {
@@ -28,8 +29,16 @@ public class GroupAction extends ActionSupport {
 	private List<Integer> addUserIds;
 	private List<UserListItem> users;
 	private List<Integer> delIds;
+	private List<Rule> rules;
 	
-	
+	public List<Rule> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<Rule> rules) {
+		this.rules = rules;
+	}
+
 	public List<Integer> getDelIds() {
 		return delIds;
 	}
@@ -154,7 +163,7 @@ public class GroupAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String QueryGroupItems()
+	public String QueryGroupUserItems()
 	{
 		GroupManageService gms = new GroupManageService();
 		items = new ArrayList<Group>();
@@ -191,6 +200,70 @@ public class GroupAction extends ActionSupport {
 		GroupManageService gms = new GroupManageService();
 		try {
 			gms.DeleteGroups(delIds);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String SaveGroupRule()
+	{
+		GroupManageService gms = new GroupManageService();
+		try {
+			group = gms.SaveGroupRule(group, rules);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryGroupRuleItems()
+	{
+		GroupManageService gms = new GroupManageService();
+		items = new ArrayList<Group>();
+		try {
+			Group criteria = new Group();
+			criteria.setName(groupName);
+			criteria.setCode(groupCode);
+			total = gms.QueryAllGroupRuleItems( criteria, page, rows, items );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryGroupRules()
+	{
+		GroupManageService gms = new GroupManageService();
+		try {
+			users = gms.QueryGroupRulesByGroupId(group.getId());
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryGroupItems()
+	{
+		GroupManageService gms = new GroupManageService();
+		items = new ArrayList<Group>();
+		try {
+			Group criteria = new Group();
+			criteria.setName(groupName);
+			criteria.setCode(groupCode);
+			total = gms.QueryAllGroupUserItems( criteria, page, rows, items );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

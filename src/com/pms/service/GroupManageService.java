@@ -10,6 +10,7 @@ import com.pms.dao.GroupDAO;
 import com.pms.dao.impl.GroupDAOImpl;
 import com.pms.dto.UserListItem;
 import com.pms.model.Group;
+import com.pms.model.Rule;
 import com.pms.model.User;
 
 public class GroupManageService {
@@ -70,6 +71,28 @@ public class GroupManageService {
 		}
 		
 		return ;		
+	}
+	
+	public int QueryAllGroupItems(Group criteria, int page, int rows,
+			List<Group> items) throws Exception {
+		GroupDAO dao = new GroupDAOImpl();
+		List<Group> res = dao.GetAllGroups( criteria, page, rows );
+		items.addAll(res);
+		int total = QueryAllGroupsUsersCount( criteria );
+		return total;
+	}
+
+	public Group SaveGroupRule(Group group, List<Rule> rules) {
+		GroupDAO dao = new GroupDAOImpl();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		group.setTstamp(timenow);
+		group.setType(Group.GROUPTYPEUSER);
+		group = dao.GroupAdd(group);
+		
+		dao.UpdateGroupRules(group.getId(), rules);
+		return group;
 	}
 
 }

@@ -12,18 +12,31 @@
 		</global-exception-mappings>
 	
 	<!-- 
-		离散群体			method="saveGroupUser"、"queryGroupItems"、"queryGroupUsers"、"deleteGroups"
+		离散群体			method="saveGroupUser"、"queryGroupUserItems"、"queryGroupUsers"、"deleteGroups"
 	 -->
  		<action name="saveGroupUser" class="com.pms.controller.GroupAction" method="SaveGroupUser" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="queryGroupItems" class="com.pms.controller.GroupAction" method="QueryGroupItems" >
+ 		<action name="queryGroupUserItems" class="com.pms.controller.GroupAction" method="QueryGroupUserItems" >
  			<result name="success" type="json" />
  		</action>
  		<action name="queryGroupUsers" class="com.pms.controller.GroupAction" method="QueryGroupUsers" >
  			<result name="success" type="json" />
  		</action>
  		<action name="deleteGroups" class="com.pms.controller.GroupAction" method="DeleteGroups" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="saveGroupRule" class="com.pms.controller.GroupAction" method="SaveGroupRule" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryGroupRuleItems" class="com.pms.controller.GroupAction" method="QueryGroupRuleItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryGroupRules" class="com.pms.controller.GroupAction" method="QueryGroupRules" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+ 		<action name="queryGroupItems" class="com.pms.controller.GroupAction" method="QueryGroupItems" >
  			<result name="success" type="json" />
  		</action>
 	</package>	
