@@ -89,7 +89,7 @@
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addGroupUserReturn();">返回</a>
 				</div><!-- end of group_user_maintain_center_detail_ft -->
 				
-				<div id="group_user_query_user_win" class="easyui-window" title="机构授权" style="width:80%;height:600px;"
+				<div id="group_user_query_user_win" class="easyui-window" title="查询用户" style="width:80%;height:600px;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div class="easyui-panel" data-options="fit:true,footer:'#group_user_query_user_win_ft'">
 						
@@ -464,7 +464,7 @@
 					    poststr += "&delIds=" + rows[i].id;
 					}
 
-                    $.getJSON("../group/deleteGroups.action", poststr, function(retObj) {
+                    $.getJSON("../group/deleteGroupUsers.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{

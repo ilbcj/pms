@@ -15,8 +15,12 @@ public interface GroupDAO {
 	int GetGroupUsersCount(Group criteria) throws Exception;
 	List<User> GetGroupUsersByGroupId(int id) throws Exception;
 	List<GroupUser> GetGroupsByUserId(int id) throws Exception;
-	void GroupDel(Group group) throws Exception;
+	void GroupOfUserDel(Group group) throws Exception;
 	List<Group> GetAllGroups(Group criteria, int page, int rows) throws Exception;
 	void UpdateGroupRules(int id, List<Rule> rules) throws Exception;
+	List<Group> GetGroupRules(Group criteria, int page, int rows) throws Exception;
+	int GetGroupRulesCount(Group criteria) throws Exception;
+	List<Rule> GetGroupRulesByGroupId(int id) throws Exception;
+	void GroupOfRuleDel(Group target)  throws Exception;
 
 }

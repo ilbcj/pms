@@ -12,7 +12,7 @@
 		</global-exception-mappings>
 	
 	<!-- 
-		离散群体			method="saveGroupUser"、"queryGroupUserItems"、"queryGroupUsers"、"deleteGroups"
+		离散群体			method="saveGroupUser"、"queryGroupUserItems"、"queryGroupUsers"、"deleteGroupUsers"
 	 -->
  		<action name="saveGroupUser" class="com.pms.controller.GroupAction" method="SaveGroupUser" >
  			<result name="success" type="json" />
@@ -23,7 +23,7 @@
  		<action name="queryGroupUsers" class="com.pms.controller.GroupAction" method="QueryGroupUsers" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="deleteGroups" class="com.pms.controller.GroupAction" method="DeleteGroups" >
+ 		<action name="deleteGroupUsers" class="com.pms.controller.GroupAction" method="DeleteGroupUsers" >
  			<result name="success" type="json" />
  		</action>
  		<action name="saveGroupRule" class="com.pms.controller.GroupAction" method="SaveGroupRule" >
@@ -33,6 +33,9 @@
  			<result name="success" type="json" />
  		</action>
  		<action name="queryGroupRules" class="com.pms.controller.GroupAction" method="QueryGroupRules" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteGroupRules" class="com.pms.controller.GroupAction" method="DeleteGroupRules" >
  			<result name="success" type="json" />
  		</action>
  		

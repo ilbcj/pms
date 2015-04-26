@@ -15,6 +15,7 @@
 		<property name="rulevalue" type="java.lang.String" length="64"/>
 		<property name="ruletype" type="java.lang.Integer"/>
 		<property name="groupid" type="java.lang.Integer"/>
+		<property name="attrid" type="java.lang.Integer"/>
 <!-- 		<property name="tstamp" type="java.lang.String" length="64"/> -->
 	</class>
 </hibernate-mapping>

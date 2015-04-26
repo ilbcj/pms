@@ -195,11 +195,25 @@ public class GroupAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String DeleteGroups()
+	public String DeleteGroupUsers()
 	{
 		GroupManageService gms = new GroupManageService();
 		try {
-			gms.DeleteGroups(delIds);
+			gms.DeleteGroupUsers(delIds);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String DeleteGroupRules()
+	{
+		GroupManageService gms = new GroupManageService();
+		try {
+			gms.DeleteGroupRules(delIds);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -245,7 +259,7 @@ public class GroupAction extends ActionSupport {
 	{
 		GroupManageService gms = new GroupManageService();
 		try {
-			users = gms.QueryGroupRulesByGroupId(group.getId());
+			rules = gms.QueryGroupRulesByGroupId(group.getId());
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -263,7 +277,7 @@ public class GroupAction extends ActionSupport {
 			Group criteria = new Group();
 			criteria.setName(groupName);
 			criteria.setCode(groupCode);
-			total = gms.QueryAllGroupUserItems( criteria, page, rows, items );
+			total = gms.QueryAllGroupItems( criteria, page, rows, items );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

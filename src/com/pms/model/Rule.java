@@ -5,10 +5,17 @@ public class Rule {
 	public static final int RULETYPEINCLUDE = 2;
 	private int id;
 	private int groupid;
-	private String rulename;
+	private int attrid;
+	private String rulename = "";
 	private String rulevalue;
 	private int ruletype;
 	
+	public int getAttrid() {
+		return attrid;
+	}
+	public void setAttrid(int attrid) {
+		this.attrid = attrid;
+	}
 	public int getId() {
 		return id;
 	}
