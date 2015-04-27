@@ -284,7 +284,7 @@
 		$("#user_unit").textbox('setValue',rows[0].unit);
 		$("#user_police_type").textbox('setText',rows[0].police_type);
 		var sex=$("#user_sex").textbox('setValue',rows[0].sex);
-		$("#user_idnum").val(rows[0].idnum);
+		$("#user_idnum").textbox('setValue',rows[0].idnum);
 		$("#user_max_sensitive_level").textbox('setValue',rows[0].max_sensitive_level);
 		$("#user_position").textbox('setValue',rows[0].position);
 		$("#user_dept").textbox('setValue',rows[0].dept);
@@ -338,6 +338,7 @@ $(document).ready(function () {
 	
 	$("#user_query_center_list_dg").datagrid({
 		url:'../user/queryUserItems.action',
+		queryParams:{queryAll: true},
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
