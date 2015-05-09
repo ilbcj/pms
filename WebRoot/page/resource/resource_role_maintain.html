@@ -117,31 +117,99 @@
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addRoleReturn();">返回</a>
 				</div><!-- end of resource_role_manage_center_detail_ft -->
 				
-				<div id="resource_role_query_resource_win" class="easyui-window" title="机构授权" style="width:80%;height:600px;"
+				<div id="resource_role_query_resource_win" class="easyui-window" title="机构授权" style="width:80%;height:500px;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
-					<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_win_ft'">
-						<table class="nodt" id="resource_role_query_resource_win_list_dg"  
-					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
-					        <thead>
-					            <tr>
-					            	<th field="ck" checkbox="true"></th>
-					                <th data-options="field:'name'" style="width:33%;">名称</th>
-					                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
-					                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
-					            </tr>
-					        </thead>
-					    </table>
-					</div>
-					<div id="resource_role_query_resource_win_ft" style="padding:5px;text-align:center">
-				        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceConfirm();">确定</a>
-                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceReturn();">返回</a>
-				    </div>
+					<div id="resource_role_query_resource_win_main" class="easyui-layout" data-options="fit:true" >
+						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_win_ft'">
+					    	<div id="resource_role_query_resource_win_list_dg_tb" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+				    			<table class="nodt" style="width:100%">
+					                <tr>
+					                    <td class="query_name_small text_right">资源唯一标识</td>
+					                    <td class="query_value_small"><input id="resource_query_resource_id" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small text_right">资源状态</td>
+					                    <td class="query_value_small"><input id="resource_query_resource_status"></input></td>					                
+					                </tr>
+									<tr>
+					                    <td class="detail_query_name text_right">资源描述</td>
+					                    <td class="detail_query_value"><input id="resource_query_resource_describe" class="easyui-textbox"></input></td>
+					                    <td class="detail_query_name text_right">备注</td>
+					                    <td class="detail_query_value"><input id="resource_query_resource_remark" class="easyui-textbox"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">删除状态</td>
+					                    <td class="detail_query_value"><input id="resource_delete_status" class="easyui-textbox"></input></td>
+					                    <td class="detail_query_name text_right">资源类型</td>
+					                    <td class="detail_query_value"><input id="resource_resource_type" class="easyui-textbox"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">目标地市</td>
+					                    <td class="detail_query_value"><input id="resource_query_clue_dst_sys" class="easyui-textbox"></input></td>
+					                    <td class="detail_query_name text_right">数据集敏感度编码</td>
+					                    <td class="detail_query_value"><input id="resource_query_dataset_sensitive_level" class="easyui-textbox"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">数据集编码</td>
+					                    <td class="detail_query_value"><input id="resource_query_data_set" class="easyui-textbox"></input></td>
+					                    <td class="detail_query_name text_right">字段分类编码</td>
+					                    <td class="detail_query_value"><input id="resource_query_section_class" class="easyui-textbox"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">字段编码</td>
+					                    <td class="detail_query_value"><input id="resource_query_lement" class="easyui-textbox"></input></td>
+					                    <td class="detail_query_name text_right">字段分类关系编码</td>
+					                    <td class="detail_query_value"><input id="resource_query_section_relation_class" class="easyui-textbox"></input></td>
+					                </tr>
+					                <tr>
+					                	<td class="text_center noborder" style="border:0;" colspan="4">
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResource()">查询</a>
+					                    </td>
+					                </tr>					                
+					            </table>
+				    		</div><!-- end of resource_role_query_resource_win_list_dg_tb -->					
+							<table class="nodt" id="resource_role_query_resource_win_list_dg"  
+						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
+						        <thead>
+						            <tr>
+						            	<th field="ck" checkbox="true"></th>
+						                <th data-options="field:'name'" style="width:33%;">名称</th>
+						                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
+						                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
+						            </tr>
+						        </thead>
+						    </table>
+						</div>
+						<div id="resource_role_query_resource_win_ft" style="padding:5px;text-align:center">
+					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceConfirm();">确定</a>
+	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceReturn();">返回</a>
+					    </div>
+					    
+				    </div><!-- end of resource_role_query_resource_win_main -->
 				</div><!-- end of resource_role_query_resource_win -->
 	    	</div><!-- end of resource_role_manage_center_detail_wapper -->
 		</div>
 	
 	</div><!-- end of layout -->
 <script>
+	function queryResource(){
+//resource_query_resource_id  resource_query_resource_status  resource_query_resource_describe resource_query_resource_remark
+//resource_delete_status	resource_resource_type resource_query_clue_dst_sys  resource_query_dataset_sensitive_level
+//resource_query_data_set	resource_query_section_class	resource_query_lement	resource_query_section_relation_class
+		var resource_id = $("#resource_query_resource_id").textbox('getValue');
+		var resource_status = $('#resource_query_resource_status').combobox('getValues');
+		var resource_describe = $("#resource_query_resource_describe").textbox('getValue');
+		alert(resource_describe);
+		var resource_remark = $("#resource_query_resource_remark").textbox('getValue');
+//		var delete_status = $('#resource_delete_status').combobox('getValues');
+//		var resource_type = $('#resource_resource_type').combobox('getValues');
+//		var clue_dst_sys = $('#resource_query_clue_dst_sys').combobox('getValues');
+//		var dataset_sensitive_level = $('#resource_query_dataset_sensitive_level').combobox('getValues');
+//		var data_set = $('#resource_query_data_set').combobox('getValues');
+//		var section_class = $('#resource_query_section_class').combobox('getValues');
+//		var lement = $('#resource_query_lement').combobox('getValues');
+//		var section_relation_class = $('#resource_query_section_relation_class').combobox('getValues');
+//		alert(resource_status+"=="+resource_remark+"==");
+	}
+	
     function addResourceRole() {
     	$("#resource_role_manage_center_main_wapper").panel('close');
     	$("#resource_role_manage_center_detail_wapper").panel('open');
@@ -440,6 +508,126 @@ $(document).ready(function () {
 		onLoadError: function() { $("#resource_role_manage_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
 	
+	$("#resource_query_resource_status").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
+	$("#resource_delete_status").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
+	$("#resource_resource_type").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
+	$("#resource_query_dataset_sensitive_level").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
+	$("#resource_query_data_set").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
+	$("#resource_query_section_class").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
+	$("#resource_query_lement").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
+	$("#resource_query_section_relation_class").combobox({
+		multiple:true,
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '01',
+			value: '0',
+		},{
+			label: '02',
+			value: '1'
+		},{
+			label: '03',
+			value: '2'
+		}]
+	});
 	$("#role_resource_feature_dg").datagrid({
 		title:'功能资源',
 		iconCls:'icon-edit',
