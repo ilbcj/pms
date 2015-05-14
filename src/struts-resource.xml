@@ -49,15 +49,17 @@
  			<result name="success" type="json" />
  		</action>
  		
- 		<action name="queryRoleItems" class="com.pms.controller.ResourceAction" method="QueryRoleItems" >
- 			<result name="success" type="json" />
- 		</action>
- 		<action name="saveResourceRole" class="com.pms.controller.ResourceAction" method="SaveResourceRole" >
- 			<result name="success" type="json" />
- 		</action>
+<!-- 		<action name="queryRoleItems" class="com.pms.controller.ResourceAction" method="QueryRoleItems" >-->
+<!-- 			<result name="success" type="json" />-->
+<!-- 		</action>-->
+<!-- 		<action name="saveResourceRole" class="com.pms.controller.ResourceAction" method="SaveResourceRole" >-->
+<!-- 			<result name="success" type="json" />-->
+<!-- 		</action>-->
  		<action name="queryRoleResource" class="com.pms.controller.ResourceAction" method="QueryRoleResource" >
  			<result name="success" type="json" />
  		</action>
- 		
+ 		<action name="queryRoleResourceTest" class="com.pms.controller.ResourceAction" method="QueryRoleResourceTest" >
+ 			<result name="success" type="json" />
+ 		</action> 		
 	</package>	
 </struts>    
