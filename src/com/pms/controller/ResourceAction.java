@@ -35,18 +35,18 @@ public class ResourceAction extends ActionSupport {
 	private List<Integer> addDataIds;
 	
 	private String resource_id;
-	private List<Integer> resource_status;
+	private List<String> resource_status;
 	private String resource_describe;
 	private String resource_remark;
-	private List<Integer> delete_status;
-	private List<Integer> resource_type;
+	private List<String> delete_status;
+	private List<String> resource_type;
 	private String clue_dst_sys;
-	private List<Integer> dataset_sensitive_level;
-	private List<Integer> data_set;
-	private List<Integer> section_class;
-	private List<Integer> lement;
-	private List<Integer> section_relation_class;
-
+	private List<String> dataset_sensitive_level;
+	private List<String> data_set;
+	private List<String> section_class;
+	private List<String> lement;
+	private List<String> section_relation_class;
+	
 	public String getResource_id() {
 		return resource_id;
 	}
@@ -55,11 +55,11 @@ public class ResourceAction extends ActionSupport {
 		resource_id = resourceId;
 	}
 
-	public List<Integer> getResource_status() {
+	public List<String> getResource_status() {
 		return resource_status;
 	}
 
-	public void setResource_status(List<Integer> resourceStatus) {
+	public void setResource_status(List<String> resourceStatus) {
 		resource_status = resourceStatus;
 	}
 
@@ -79,19 +79,19 @@ public class ResourceAction extends ActionSupport {
 		resource_remark = resourceRemark;
 	}
 
-	public List<Integer> getDelete_status() {
+	public List<String> getDelete_status() {
 		return delete_status;
 	}
 
-	public void setDelete_status(List<Integer> deleteStatus) {
+	public void setDelete_status(List<String> deleteStatus) {
 		delete_status = deleteStatus;
 	}
 
-	public List<Integer> getResource_type() {
+	public List<String> getResource_type() {
 		return resource_type;
 	}
 
-	public void setResource_type(List<Integer> resourceType) {
+	public void setResource_type(List<String> resourceType) {
 		resource_type = resourceType;
 	}
 
@@ -103,43 +103,43 @@ public class ResourceAction extends ActionSupport {
 		clue_dst_sys = clueDstSys;
 	}
 
-	public List<Integer> getDataset_sensitive_level() {
+	public List<String> getDataset_sensitive_level() {
 		return dataset_sensitive_level;
 	}
 
-	public void setDataset_sensitive_level(List<Integer> datasetSensitiveLevel) {
+	public void setDataset_sensitive_level(List<String> datasetSensitiveLevel) {
 		dataset_sensitive_level = datasetSensitiveLevel;
 	}
 
-	public List<Integer> getData_set() {
+	public List<String> getData_set() {
 		return data_set;
 	}
 
-	public void setData_set(List<Integer> dataSet) {
+	public void setData_set(List<String> dataSet) {
 		data_set = dataSet;
 	}
 
-	public List<Integer> getSection_class() {
+	public List<String> getSection_class() {
 		return section_class;
 	}
 
-	public void setSection_class(List<Integer> sectionClass) {
+	public void setSection_class(List<String> sectionClass) {
 		section_class = sectionClass;
 	}
 
-	public List<Integer> getLement() {
+	public List<String> getLement() {
 		return lement;
 	}
 
-	public void setLement(List<Integer> lement) {
+	public void setLement(List<String> lement) {
 		this.lement = lement;
 	}
 
-	public List<Integer> getSection_relation_class() {
+	public List<String> getSection_relation_class() {
 		return section_relation_class;
 	}
 
-	public void setSection_relation_class(List<Integer> sectionRelationClass) {
+	public void setSection_relation_class(List<String> sectionRelationClass) {
 		section_relation_class = sectionRelationClass;
 	}
 
@@ -433,6 +433,9 @@ public class ResourceAction extends ActionSupport {
 		System.out.println(resource_id);		
 		for (int i = 0; i < resource_status.size(); i++) {
 			System.out.println(resource_status.get(i));
+		}
+		for (int i = 0; i < delete_status.size(); i++) {
+			System.out.println(delete_status.get(i));
 		}
 //		ResourceManageService rms = new ResourceManageService();
 //		features = new ArrayList<ResFeature>();

@@ -215,10 +215,8 @@
 			}
 			
 		var resource_query_clue_dst_sys = $('#resource_query_clue_dst_sys').textbox('getValue');
-	        for(var i=0; i<resource_query_clue_dst_sys.length; i++){
-			    poststr += "&clue_dst_sys=" + resource_query_clue_dst_sys[i].toString();
-			}
-			
+		poststr += "&clue_dst_sys=" + resource_query_clue_dst_sys;
+		
 		var resource_query_dataset_sensitive_level = $('#resource_query_dataset_sensitive_level').combobox('getValues');
 	        for(var i=0; i<resource_query_dataset_sensitive_level.length; i++){
 			    poststr += "&dataset_sensitive_level=" + resource_query_dataset_sensitive_level[i].toString();
