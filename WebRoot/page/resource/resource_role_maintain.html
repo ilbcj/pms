@@ -101,13 +101,13 @@
 					<table class="nodt" id="role_resource_feature_dg" >
 				    </table>
 				    <div id="featureToolbar" style="background-color:#E7F0FF">
-				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResource('../resource/queryFeatureItems.action', 'feature')">添加</a>
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceFeature('../resource/queryFeatureItems.action', 'feature')">添加</a>
 				    </div><!-- end of featureToolbar -->
 				    
 				    <table class="nodt" id="role_resource_data_dg" >
 				    </table>
 				    <div id="dataToolbar" style="background-color:#E7F0FF">
-				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResource('../resource/queryDataItems.action', 'data')">添加</a>
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData('../resource/queryDataItems.action', 'data')">添加</a>
 				    </div><!-- end of featureToolbar -->
 				    
 				</div><!-- end of resource_role_manage_center_detail -->
@@ -116,57 +116,12 @@
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addRoleReturn();">返回</a>
 				</div><!-- end of resource_role_manage_center_detail_ft -->
 				
-				<div id="resource_role_query_resource_win" class="easyui-window" title="机构授权" style="width:80%;height:500px;"
+				<div id="resource_role_query_resource_feature_win" class="easyui-window" title="功能资源" style="width:80%;height:500px;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
-					<div id="resource_role_query_resource_win_main" class="easyui-layout" data-options="fit:true" >
-						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_win_ft'">
-					    	<div id="resource_role_query_resource_win_list_dg_tb" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
-				    			<table class="nodt" style="width:100%">
-					                <tr>
-					                    <td class="query_name_small text_right">资源唯一标识</td>
-					                    <td class="query_value_small"><input id="resource_query_resource_id" class="easyui-textbox"></input></td>
-					                    <td class="query_name_small text_right">资源状态</td>
-					                    <td class="query_value_small"><input id="resource_query_resource_status" class="easyui-textbox query_value_mid"></input></td>					                
-					                </tr>
-									<tr>
-					                    <td class="detail_query_name text_right">资源描述</td>
-					                    <td class="detail_query_value"><input id="resource_query_resource_describe" class="easyui-textbox"></input></td>
-					                    <td class="detail_query_name text_right">备注</td>
-					                    <td class="detail_query_value"><input id="resource_query_resource_remark" class="easyui-textbox"></input></td>	
-					                </tr>
-					                <tr>
-					                    <td class="detail_query_name text_right">删除状态</td>
-					                    <td class="detail_query_value"><input id="resource_query_delete_status" class="easyui-textbox query_value_mid"></input></td>
-					                    <td class="detail_query_name text_right">资源类型</td>
-					                    <td class="detail_query_value"><input id="resource_query_resource_type" class="easyui-textbox query_value_mid"></input></td>	
-					                </tr>
-					                <tr>
-					                    <td class="detail_query_name text_right">目标地市</td>
-					                    <td class="detail_query_value"><input id="resource_query_clue_dst_sys" class="easyui-textbox"></input></td>
-					                    <td class="detail_query_name text_right">数据集敏感度编码</td>
-					                    <td class="detail_query_value"><input id="resource_query_dataset_sensitive_level" class="easyui-textbox query_value_mid"></input></td>	
-					                </tr>
-					                <tr>
-					                    <td class="detail_query_name text_right">数据集编码</td>
-					                    <td class="detail_query_value"><input id="resource_query_data_set" class="easyui-textbox query_value_mid"></input></td>
-					                    <td class="detail_query_name text_right">字段分类编码</td>
-					                    <td class="detail_query_value"><input id="resource_query_section_class" class="easyui-textbox query_value_mid"></input></td>	
-					                </tr>
-					                <tr>
-					                    <td class="detail_query_name text_right">字段编码</td>
-					                    <td class="detail_query_value"><input id="resource_query_lement" class="easyui-textbox query_value_mid"></input></td>
-					                    <td class="detail_query_name text_right">字段分类关系编码</td>
-					                    <td class="detail_query_value"><input id="resource_query_section_relation_class" class="easyui-textbox query_value_mid"></input></td>
-					                </tr>
-					                <tr>
-					                	<td class="text_center noborder" style="border:0;" colspan="4">
-					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResource()">查询</a>
-					                    </td>
-					                </tr>					                
-					            </table>
-				    		</div><!-- end of resource_role_query_resource_win_list_dg_tb -->					
-							<table class="nodt" id="resource_role_query_resource_win_list_dg"  
-						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
+					<div id="resource_role_query_resource_feature_win_main" class="easyui-layout" data-options="fit:true" >
+						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_feature_win_ft'">				
+							<table class="nodt" id="resource_role_query_resource_feature_win_list_dg"  
+						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',noheader:true,fit:true">
 						        <thead>
 						            <tr>
 						            	<th field="ck" checkbox="true"></th>
@@ -177,69 +132,149 @@
 						        </thead>
 						    </table>
 						</div>
-						<div id="resource_role_query_resource_win_ft" style="padding:5px;text-align:center">
+						<div id="resource_role_query_resource_feature_win_ft" style="padding:5px;text-align:center">
 					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceConfirm();">确定</a>
 	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceReturn();">返回</a>
 					    </div>
 					    
-				    </div><!-- end of resource_role_query_resource_win_main -->
-				</div><!-- end of resource_role_query_resource_win -->
+				    </div><!--  end of resource_role_query_resource_feature_win_main -->
+				</div><!--   end of resource_role_query_resource_feature_win --> 	
+					
+				<div id="resource_role_query_resource_data_win" class="easyui-window" title="数据资源" style="width:100%;height:500px;"
+						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
+					<div id="resource_role_query_resource_data_win_main" class="easyui-layout" data-options="fit:true" >
+						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_data_win_ft'">
+					    	<div id="resource_role_query_resource_data_win_list_dg_tb" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+				    			<table class="nodt" style="width:100%">
+					                <tr>
+					                    <td class="query_name_small text_right">资源唯一标识</td>
+					                    <td class="query_value_small"><input id="resource_data_query_resource_id" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small text_right">资源状态</td>
+					                    <td class="query_value_small"><input id="resource_data_query_resource_status" class="easyui-textbox query_value_mid"></input></td>					                
+					                </tr>
+									<tr>
+					                    <td class="detail_query_name text_right">资源描述</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_resource_describe" class="easyui-textbox"></input></td>
+					                    <td class="detail_query_name text_right">备注</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_resource_remark" class="easyui-textbox"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">删除状态</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_delete_status" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">资源类型</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_resource_type" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">目标地市</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_clue_dst_sys" class="easyui-textbox"></input></td>
+					                    <td class="detail_query_name text_right">数据集敏感度编码</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_dataset_sensitive_level" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">数据集编码</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_data_set" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">字段分类编码</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_section_class" class="easyui-textbox query_value_mid"></input></td>	
+					                </tr>
+					                <tr>
+					                    <td class="detail_query_name text_right">字段编码</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_lement" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">字段分类关系编码</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_section_relation_class" class="easyui-textbox query_value_mid"></input></td>
+					                </tr>
+					                <tr>
+					                	<td class="text_center noborder" style="border:0;" colspan="4">
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceData()">查询</a>
+					                    </td>
+					                </tr>					                
+					            </table>
+				    		</div><!-- end of resource_role_query_resource_data_win_list_dg_tb -->					
+							<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  
+						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',noheader:true,fit:true">
+						        <thead>
+						            <tr>
+						            	<th field="ck" checkbox="true"></th>
+						                <th data-options="field:'name'">名称</th>
+						                <th data-options="field:'resource_id'">资源唯一标识</th>
+						                <th data-options="field:'resource_status'">资源状态 </th>
+						                <th data-options="field:'resource_describe'">资源描述</th>
+						                <th data-options="field:'resource_remark'">备注</th>
+						                <th data-options="field:'delete_status'">删除状态 </th>
+						                <th data-options="field:'resource_type'">资源类型</th>
+						                <th data-options="field:'clue_dst_sys'">目标地市</th>
+						                <th data-options="field:'dataset_sensitive_level'">数据集敏感度编码 </th>					                
+						                <th data-options="field:'data_set'">数据集编码</th>
+						                <th data-options="field:'section_class'">字段分类编码</th>
+						                <th data-options="field:'element'">字段编码</th>
+						                <th data-options="field:'section_relation_class'">字段分类关系编码 </th>
+						            </tr>
+						        </thead>
+						    </table>
+						</div>
+						<div id="resource_role_query_resource_data_win_ft" style="padding:5px;text-align:center">
+					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceConfirm();">确定</a>
+	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceReturn();">返回</a>
+					    </div>
+					    
+				    </div><!-- end of resource_role_query_resource_data_win_main -->
+				</div><!-- end of resource_role_query_resource_data_win -->
+		
 	    	</div><!-- end of resource_role_manage_center_detail_wapper -->
 		</div>
 	
 	</div><!-- end of layout -->
 <script>
-	function queryResource(){
-		var resource_query_resource_id = $("#resource_query_resource_id").textbox('getValue');
-    	var poststr = "resource_id=" + resource_query_resource_id;
+	function queryResourceData(){
+		var resource_data_query_resource_id = $("#resource_data_query_resource_id").textbox('getValue');
+    	var poststr = "resource_id=" + resource_data_query_resource_id;
 
-		var resource_query_resource_status = $('#resource_query_resource_status').combobox('getValues');
-	        for(var i=0; i<resource_query_resource_status.length; i++){
-			    poststr += "&resource_status=" + resource_query_resource_status[i].toString();
+		var resource_data_query_resource_status = $('#resource_data_query_resource_status').combobox('getValues');
+	        for(var i=0; i<resource_data_query_resource_status.length; i++){
+			    poststr += "&resource_status=" + resource_data_query_resource_status[i].toString();
 			}
 
-		var resource_query_resource_describe = $("#resource_query_resource_describe").textbox('getValue');
-		poststr += "&resource_describe=" + resource_query_resource_describe;
+		var resource_data_query_resource_describe = $("#resource_data_query_resource_describe").textbox('getValue');
+		poststr += "&resource_describe=" + resource_data_query_resource_describe;
 
-		var resource_query_resource_remark = $("#resource_query_resource_remark").textbox('getValue');
-		poststr += "&resource_remark=" + resource_query_resource_remark;
+		var resource_data_query_resource_remark = $("#resource_data_query_resource_remark").textbox('getValue');
+		poststr += "&resource_remark=" + resource_data_query_resource_remark;
 
-		var resource_query_delete_status = $('#resource_query_delete_status').combobox('getValues');
-	        for(var i=0; i<resource_query_delete_status.length; i++){
-			    poststr += "&delete_status=" + resource_query_delete_status[i].toString();
+		var resource_data_query_delete_status = $('#resource_data_query_delete_status').combobox('getValues');
+	        for(var i=0; i<resource_data_query_delete_status.length; i++){
+			    poststr += "&delete_status=" + resource_data_query_delete_status[i].toString();
 			}
 
-		var resource_query_resource_type = $('#resource_query_resource_type').combobox('getValues');
-	        for(var i=0; i<resource_query_resource_type.length; i++){
-			    poststr += "&resource_type=" + resource_query_resource_type[i].toString();
+		var resource_data_query_resource_type = $('#resource_data_query_resource_type').combobox('getValues');
+	        for(var i=0; i<resource_data_query_resource_type.length; i++){
+			    poststr += "&resource_type=" + resource_data_query_resource_type[i].toString();
 			}
 			
-		var resource_query_clue_dst_sys = $('#resource_query_clue_dst_sys').textbox('getValue');
-		poststr += "&clue_dst_sys=" + resource_query_clue_dst_sys;
+		var resource_data_query_clue_dst_sys = $('#resource_data_query_clue_dst_sys').textbox('getValue');
+		poststr += "&clue_dst_sys=" + resource_data_query_clue_dst_sys;
 		
-		var resource_query_dataset_sensitive_level = $('#resource_query_dataset_sensitive_level').combobox('getValues');
-	        for(var i=0; i<resource_query_dataset_sensitive_level.length; i++){
-			    poststr += "&dataset_sensitive_level=" + resource_query_dataset_sensitive_level[i].toString();
+		var resource_data_query_dataset_sensitive_level = $('#resource_data_query_dataset_sensitive_level').combobox('getValues');
+	        for(var i=0; i<resource_data_query_dataset_sensitive_level.length; i++){
+			    poststr += "&dataset_sensitive_level=" + resource_data_query_dataset_sensitive_level[i].toString();
 			}
 			
-		var resource_query_data_set = $('#resource_query_data_set').combobox('getValues');
-	        for(var i=0; i<resource_query_data_set.length; i++){
-			    poststr += "&data_set=" + resource_query_data_set[i].toString();
+		var resource_data_query_data_set = $('#resource_data_query_data_set').combobox('getValues');
+	        for(var i=0; i<resource_data_query_data_set.length; i++){
+			    poststr += "&data_set=" + resource_data_query_data_set[i].toString();
 			}
 
-		var resource_query_section_class = $('#resource_query_section_class').combobox('getValues');
-	        for(var i=0; i<resource_query_section_class.length; i++){
-			    poststr += "&section_class=" + resource_query_section_class[i].toString();
+		var resource_data_query_section_class = $('#resource_data_query_section_class').combobox('getValues');
+	        for(var i=0; i<resource_data_query_section_class.length; i++){
+			    poststr += "&section_class=" + resource_data_query_section_class[i].toString();
 			}
 			
-		var resource_query_lement = $('#resource_query_lement').combobox('getValues');
-	        for(var i=0; i<resource_query_lement.length; i++){
-			    poststr += "&lement=" + resource_query_lement[i].toString();
+		var resource_data_query_lement = $('#resource_data_query_lement').combobox('getValues');
+	        for(var i=0; i<resource_data_query_lement.length; i++){
+			    poststr += "&lement=" + resource_data_query_lement[i].toString();
 			}
 			
-		var resource_query_section_relation_class = $('#resource_query_section_relation_class').combobox('getValues');
-	        for(var i=0; i<resource_query_section_relation_class.length; i++){
-			    poststr += "&section_relation_class=" + resource_query_section_relation_class[i].toString();
+		var resource_data_query_section_relation_class = $('#resource_data_query_section_relation_class').combobox('getValues');
+	        for(var i=0; i<resource_data_query_section_relation_class.length; i++){
+			    poststr += "&section_relation_class=" + resource_data_query_section_relation_class[i].toString();
 			}
 			
 		alert(poststr);
@@ -248,7 +283,7 @@
 		
 			if(retObj.result == true)
 			{
-//				$("#resource_role_query_resource_win_list_dg").datagrid('reload').datagrid('clearSelections');
+//				$("#resource_role_query_resource_data_win_list_dg").datagrid('reload').datagrid('clearSelections');
 				successTip("提示", '成功');
 			}
 			else
@@ -428,19 +463,25 @@
 	}
     
     function roleQueryResourceReturn(){
-    	$("#resource_role_query_resource_win_list_dg").datagrid('clearSelections');
-    	$("#resource_role_query_resource_win").window('close');
+    	$("#resource_role_query_resource_feature_win_list_dg").datagrid('clearSelections');
+    	$("#resource_role_query_resource_feature_win").window('close');
+    	$("#resource_role_query_resource_data_win_list_dg").datagrid('clearSelections');
+    	$("#resource_role_query_resource_data_win").window('close');
     }
     
     var insertFlag="";
     function roleQueryResourceConfirm(){
-    	var res = $("#resource_role_query_resource_win_list_dg").datagrid('getSelections');
-    	for( var index=0; index<res.length; index++ ) {
+		var resFeature = $("#resource_role_query_resource_feature_win_list_dg").datagrid('getSelections');
+    	var resData= $("#resource_role_query_resource_data_win_list_dg").datagrid('getSelections');
+    	
+    	for( var index=0; index<resFeature.length; index++ ) {
     		if ( insertFlag == "feature" ) {
-	    		insertFeature(res[index]);
+	    		insertFeature(resFeature[index]);
 	    	}
-	    	else if ( insertFlag == "data" ) {
-	    		insertData(res[index]);
+	    }
+	    for( var index=0; index<resData.length; index++ ) {
+			if ( insertFlag == "data" ) {
+	    		insertData(resData[index]);
 	    	}
     	}
     	return roleQueryResourceReturn();
@@ -486,27 +527,28 @@
 				id:data.id, 
 				name:data.name, 
 				resource_id:data.resource_id, 
-				resource_describe:data.resource_describe
+				resource_status:data.resource_status,
+				resource_describe:data.resource_describe, 
+				resource_remark:data.resource_remark,
+				delete_status:data.delete_status, 
+				resource_type:data.resource_type,
+				clue_dst_sys:data.clue_dst_sys,
+				dataset_sensitive_level:data.dataset_sensitive_level,
+				data_set:data.data_set,
+				section_class:data.section_class,
+				element:data.element,
+				section_relation_class:data.section_relation_class
 			}
 		});
     }
     //------------------for value edit datagrid-------
-    function roleQueryResource(url, flag){
-    	$("#resource_role_query_resource_win_list_dg").datagrid({
+    function roleQueryResourceFeature(url, flag){
+    	$("#resource_role_query_resource_feature_win_list_dg").datagrid({
 			url:url,
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
-					res.total = data.total;
-					if(data.features != null) {
-						res.rows = data.features;
-					}
-					else if(data.datas != null) {
-						res.rows = data.datas;
-					}
-					else {
-						res.rows = [];
-					}
+					res.rows = data.features;
 				} else {
 					res.total=0;
 					res.rows = [];
@@ -514,9 +556,29 @@
 				return res;
 			}
 		});
-	   	$("#resource_role_query_resource_win").window({title:'可用值'}).window('open').window('center');
+	   	$("#resource_role_query_resource_feature_win").window({title:'可用值'}).window('open').window('center');
 	   	insertFlag = flag;
     }
+        
+    function roleQueryResourceData(url, flag){
+    	$("#resource_role_query_resource_data_win_list_dg").datagrid({
+			url:url,
+			loadFilter: function(data){
+				var res = new Object();
+				if (data.result == true){
+					res.total = data.total;
+					res.rows = data.datas;
+				} else {
+					res.total=0;
+					res.rows = [];
+				}
+				return res;
+			}
+		});
+	   	$("#resource_role_query_resource_data_win").window({title:'可用值'}).window('open').window('center');
+	   	insertFlag = flag;
+    }
+    
     
     function getRowIndex(target){
 		var tr = $(target).closest('tr.datagrid-row');
@@ -590,10 +652,20 @@ $(document).ready(function () {
 		//idField:'id',
 		//url:'data/datagrid_data.json',
 		columns:[[
-			{field:'name',title:'名称',width:'30%',editor:'text'},
-			{field:'resource_id',title:'编码',width:'30%',editor:'text'},
-			{field:'resource_describe',title:'描述',width:'30%',editor:'text'},
-			{field:'action',title:'操作',width:'10%',align:'center',
+			{field:'name',title:'名称',width:'7%',editor:'text'},
+			{field:'resource_id',title:'资源唯一标识',width:'7%',editor:'text'},
+			{field:'resource_status',title:'资源状态',width:'7%',editor:'text'},
+			{field:'resource_describe',title:'资源描述',width:'7%',editor:'text'},
+			{field:'resource_remark',title:'备注',width:'7%',editor:'text'},
+			{field:'delete_status',title:'删除状态',width:'7%',editor:'text'},			
+			{field:'resource_type',title:'资源类型',width:'7%',editor:'text'},
+			{field:'clue_dst_sys',title:'目标地市',width:'7%',editor:'text'},
+			{field:'dataset_sensitive_level',title:'数据集敏感度编码 ',width:'7%',editor:'text'},
+			{field:'data_set',title:'数据集编码',width:'7%',editor:'text'},
+			{field:'section_class',title:'字段分类编码',width:'7%',editor:'text'},
+			{field:'element',title:'字段编码',width:'7%',editor:'text'},
+			{field:'section_relation_class',title:'字段分类关系编码',width:'7%',editor:'text'},
+			{field:'action',title:'操作',width:'4%',
 				formatter:function(value,row,index){
 					return '<a href="#" onclick="dataDeleterow(this)">删除</a>';
 				}
@@ -654,7 +726,7 @@ $(document).ready(function () {
  		var section_relation_classJSON = (new Function('return '+section_relation_classData +';'))(); 
  		
  		//查询部分
-		$('#resource_query_resource_status').combobox({
+		$('#resource_data_query_resource_status').combobox({
 			data : resource_statusJSON,
 			valueField:'id',
 			textField:'text',
@@ -662,7 +734,7 @@ $(document).ready(function () {
 			editable:false,
 			panelHeight:'auto'
 		});
-		$('#resource_query_delete_status').combobox({
+		$('#resource_data_query_delete_status').combobox({
 			data : delete_statusJSON,
 			valueField:'id',
 			textField:'text',
@@ -670,7 +742,7 @@ $(document).ready(function () {
 			editable:false,
 			panelHeight:'auto'
 		});
-		$('#resource_query_resource_type').combobox({
+		$('#resource_data_query_resource_type').combobox({
 			data : resource_typeJSON,
 			valueField:'id',
 			textField:'text',
@@ -678,7 +750,7 @@ $(document).ready(function () {
 			editable:false,
 			panelHeight:'auto'
 		});
-		$('#resource_query_dataset_sensitive_level').combobox({
+		$('#resource_data_query_dataset_sensitive_level').combobox({
 			data : dataset_sensitive_levelJSON,
 			valueField:'id',
 			textField:'text',
@@ -686,7 +758,7 @@ $(document).ready(function () {
 			editable:false,
 			panelHeight:'auto'
 		});
-		$('#resource_query_data_set').combobox({
+		$('#resource_data_query_data_set').combobox({
 			data : data_setJSON,
 			valueField:'id',
 			textField:'text',
@@ -694,7 +766,7 @@ $(document).ready(function () {
 			editable:false,
 			panelHeight:'auto'
 		});
-		$('#resource_query_section_class').combobox({
+		$('#resource_data_query_section_class').combobox({
 			data : section_classJSON,
 			valueField:'id',
 			textField:'text',
@@ -702,7 +774,7 @@ $(document).ready(function () {
 			editable:false,
 			panelHeight:'auto'
 		});
-		$('#resource_query_lement').combobox({
+		$('#resource_data_query_lement').combobox({
 			data : data_setJSON,
 			valueField:'id',
 			textField:'text',
@@ -710,7 +782,7 @@ $(document).ready(function () {
 			editable:false,
 			panelHeight:'auto'
 		});
-		$('#resource_query_section_relation_class').combobox({
+		$('#resource_data_query_section_relation_class').combobox({
 			data : section_classJSON,
 			valueField:'id',
 			textField:'text',
@@ -729,14 +801,14 @@ $(document).ready(function () {
 		lementJSON.unshift({"id":"","text":"请选择","selected":true})
 		section_relation_classJSON.unshift({"id":"","text":"请选择","selected":true})
 		
-		$("#resource_query_resource_status").combobox('loadData', resource_statusJSON);
-		$("#resource_query_delete_status").combobox('loadData', delete_statusJSON);
-		$("#resource_query_resource_type").combobox('loadData', resource_typeJSON);
-		$("#resource_query_dataset_sensitive_level").combobox('loadData', dataset_sensitive_levelJSON);
-		$("#resource_query_data_set").combobox('loadData', data_setJSON);
-		$("#resource_query_section_class").combobox('loadData', section_classJSON);
-		$("#resource_query_lement").combobox('loadData', lementJSON);
-		$("#resource_query_section_relation_class").combobox('loadData', section_relation_classJSON);
+		$("#resource_data_query_resource_status").combobox('loadData', resource_statusJSON);
+		$("#resource_data_query_delete_status").combobox('loadData', delete_statusJSON);
+		$("#resource_data_query_resource_type").combobox('loadData', resource_typeJSON);
+		$("#resource_data_query_dataset_sensitive_level").combobox('loadData', dataset_sensitive_levelJSON);
+		$("#resource_data_query_data_set").combobox('loadData', data_setJSON);
+		$("#resource_data_query_section_class").combobox('loadData', section_classJSON);
+		$("#resource_data_query_lement").combobox('loadData', lementJSON);
+		$("#resource_data_query_section_relation_class").combobox('loadData', section_relation_classJSON);
 	});	
 });
 </script>	
