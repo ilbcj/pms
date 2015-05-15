@@ -63,6 +63,14 @@
 <!-- 		            </li>  -->
 <!--                 </ul> -->
 <!--             </li> -->
+             <li> 
+                 <span>角色策略</span> 
+                 <ul> 
+                     <li iconCls="icon-leaf" id="menu_system_resource_data_dictionary">
+ 		                <span>数据资源属性字典</span> 
+ 		            </li>  
+                 </ul> 
+             </li> 
         </ul>
 
 <script>
@@ -78,6 +86,9 @@ $(document).ready(function () {
 // 			else if (node.id == 'menu_privilege_authorize_user') {
 // 				$('body').layout('panel','center').panel('refresh','privilege/privilege_authorize_user.html');
 // 			}
+ 			else if (node.id == 'menu_system_resource_data_dictionary') {
+ 				$('body').layout('panel','center').panel('refresh','system/system_resource_data_dictionary.html');
+ 			}
 
 		}
 	});

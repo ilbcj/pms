@@ -26,6 +26,9 @@
  		<action name="saveUserAttrs" class="com.pms.controller.SystemAttrUserAction" method="SaveUserAttrs" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryResourceDataAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryResourceDataAttrs" >
+ 			<result name="success" type="json" />
+ 		</action> 		
 <!--  		<action name="queryUserItems" class="com.pms.controller.UserAction" method="QueryUserItems" > -->
 <!--  			<result name="success" type="json" /> -->
 <!--  		</action> -->

@@ -34,6 +34,115 @@ public class ResourceAction extends ActionSupport {
 	private List<Integer> addFeatureIds;
 	private List<Integer> addDataIds;
 	
+	private String resource_id;
+	private List<String> resource_status;
+	private String resource_describe;
+	private String resource_remark;
+	private List<String> delete_status;
+	private List<String> resource_type;
+	private String clue_dst_sys;
+	private List<String> dataset_sensitive_level;
+	private List<String> data_set;
+	private List<String> section_class;
+	private List<String> lement;
+	private List<String> section_relation_class;
+	
+	public String getResource_id() {
+		return resource_id;
+	}
+
+	public void setResource_id(String resourceId) {
+		resource_id = resourceId;
+	}
+
+	public List<String> getResource_status() {
+		return resource_status;
+	}
+
+	public void setResource_status(List<String> resourceStatus) {
+		resource_status = resourceStatus;
+	}
+
+	public String getResource_describe() {
+		return resource_describe;
+	}
+
+	public void setResource_describe(String resourceDescribe) {
+		resource_describe = resourceDescribe;
+	}
+
+	public String getResource_remark() {
+		return resource_remark;
+	}
+
+	public void setResource_remark(String resourceRemark) {
+		resource_remark = resourceRemark;
+	}
+
+	public List<String> getDelete_status() {
+		return delete_status;
+	}
+
+	public void setDelete_status(List<String> deleteStatus) {
+		delete_status = deleteStatus;
+	}
+
+	public List<String> getResource_type() {
+		return resource_type;
+	}
+
+	public void setResource_type(List<String> resourceType) {
+		resource_type = resourceType;
+	}
+
+	public String getClue_dst_sys() {
+		return clue_dst_sys;
+	}
+
+	public void setClue_dst_sys(String clueDstSys) {
+		clue_dst_sys = clueDstSys;
+	}
+
+	public List<String> getDataset_sensitive_level() {
+		return dataset_sensitive_level;
+	}
+
+	public void setDataset_sensitive_level(List<String> datasetSensitiveLevel) {
+		dataset_sensitive_level = datasetSensitiveLevel;
+	}
+
+	public List<String> getData_set() {
+		return data_set;
+	}
+
+	public void setData_set(List<String> dataSet) {
+		data_set = dataSet;
+	}
+
+	public List<String> getSection_class() {
+		return section_class;
+	}
+
+	public void setSection_class(List<String> sectionClass) {
+		section_class = sectionClass;
+	}
+
+	public List<String> getLement() {
+		return lement;
+	}
+
+	public void setLement(List<String> lement) {
+		this.lement = lement;
+	}
+
+	public List<String> getSection_relation_class() {
+		return section_relation_class;
+	}
+
+	public void setSection_relation_class(List<String> sectionRelationClass) {
+		section_relation_class = sectionRelationClass;
+	}
+
 	public List<Integer> getAddFeatureIds() {
 		return addFeatureIds;
 	}
@@ -310,6 +419,29 @@ public class ResourceAction extends ActionSupport {
 		datas = new ArrayList<ResData>();
 		try {
 			rms.QueryRoleResource( role.getId(), features, datas );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+
+	public String QueryRoleResourceTest()
+	{		
+		System.out.println(resource_id);		
+		for (int i = 0; i < resource_status.size(); i++) {
+			System.out.println(resource_status.get(i));
+		}
+		for (int i = 0; i < delete_status.size(); i++) {
+			System.out.println(delete_status.get(i));
+		}
+//		ResourceManageService rms = new ResourceManageService();
+//		features = new ArrayList<ResFeature>();
+//		datas = new ArrayList<ResData>();
+		try {
+//			rms.QueryRoleResource( role.getId(), features, datas );		
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
