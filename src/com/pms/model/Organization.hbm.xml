@@ -5,17 +5,26 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.pms.model">
 	<!-- 每个class元素对应一个持久化对象 -->
-	<class name="Organization" table="organization">
+	<class name="Organization" table="WA_AUTHORITY_ORGNIZATION">
 		<!-- id元素定义持久化类的标识属性 -->
-		<id name="id" type="java.lang.Integer">
+		<id name="GA_DEPARTMENT" type="java.lang.String" length="64">
 			<generator class="identity"/>
 		</id>
 		<!-- property元素定义常规属性 -->
-		<property name="name" type="java.lang.String" length="64" not-null="true"/>
 		<property name="uid" type="java.lang.String" length="64" unique="true"/>
-		<property name="parent_id" type="java.lang.Integer"/>
+		<property name="name" type="java.lang.String" length="64" not-null="true"/>
 		<property name="org_level" type="java.lang.String" length="64"/>
+		<property name="parent_id" type="java.lang.Integer"/>
 		<property name="description" type="java.lang.String" length="128"/>
 		<property name="tstamp" type="java.lang.String" length="64"/>
 	</class>
 </hibernate-mapping>
+
+	private String GA_DEPARTMENT;
+	private String UNIT;
+	private String ORG_LEVEL;
+	private String PARENT_ORG;
+	private int DELETE_STATUS;
+	private int DATA_VERSION;
+	private String description;
+	private String LATEST_MOD_TIME;
