@@ -1,10 +1,10 @@
 package com.pms.dto;
 
 public class OrgListItem {
-	private int id;
+	private String id;
 	private String name;
-	private String uid;
-	private int pid;
+	//private String uid;
+	private String pid;
 	private String pname;
 	private String orgLevel;
 	
@@ -14,10 +14,10 @@ public class OrgListItem {
 	public void setPname(String pname) {
 		this.pname = pname;
 	}
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -26,16 +26,16 @@ public class OrgListItem {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getUid() {
-		return uid;
-	}
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-	public int getPid() {
+//	public String getUid() {
+//		return uid;
+//	}
+//	public void setUid(String uid) {
+//		this.uid = uid;
+//	}
+	public String getPid() {
 		return pid;
 	}
-	public void setPid(int pid) {
+	public void setPid(String pid) {
 		this.pid = pid;
 	}
 	public String getOrgLevel() {

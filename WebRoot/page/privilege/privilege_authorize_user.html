@@ -206,7 +206,7 @@
     	}
     	$("#privilege_authorize_user_center_list_dg").datagrid('load',{
     		queryAll: true,
-			id: treeNodeId,
+			orgId: treeNodeId,
 			userName: name,
 			userStatus: status,
 			userUnit: unit,
@@ -359,7 +359,7 @@ $(document).ready(function () {
 	    onClick: function(node){
 	    	//alert(node.id);
 			$("#privilege_authorize_user_center_list_dg").datagrid('load',{
-				id: node.id
+				orgId: node.id
 			});
 	    }
 	});

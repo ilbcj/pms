@@ -19,20 +19,20 @@ public class OrganizationAction extends ActionSupport {
 	private int rows;
 	private int total;
 	private List<OrgListItem> items;
-	private int id;
-	private List<Integer> delNodeIds;
+	private String id;
+	private List<String> delNodeIds;
 	private boolean queryAll;
 	private String orgName;
-	private String orgUid;
+	//private String orgUid;
 	private String orgLevel;
 	private boolean result;
 	private String message;
 	
-	public List<Integer> getDelNodeIds() {
+	public List<String> getDelNodeIds() {
 		return delNodeIds;
 	}
 
-	public void setDelNodeIds(List<Integer> delNodeIds) {
+	public void setDelNodeIds(List<String> delNodeIds) {
 		this.delNodeIds = delNodeIds;
 	}
 
@@ -52,13 +52,13 @@ public class OrganizationAction extends ActionSupport {
 		this.orgName = orgName;
 	}
 
-	public String getOrgUid() {
-		return orgUid;
-	}
-
-	public void setOrgUid(String orgUid) {
-		this.orgUid = orgUid;
-	}
+//	public String getOrgUid() {
+//		return orgUid;
+//	}
+//
+//	public void setOrgUid(String orgUid) {
+//		this.orgUid = orgUid;
+//	}
 
 	public String getOrgLevel() {
 		return orgLevel;
@@ -108,11 +108,11 @@ public class OrganizationAction extends ActionSupport {
 		this.treeNodes = treeNodes;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -189,7 +189,8 @@ public class OrganizationAction extends ActionSupport {
 	{
 		OrgManageService oms = new OrgManageService();
 		try {
-			oms.ModifyOrgNodeName(id, orgName, orgUid);
+			//oms.ModifyOrgNodeName(id, orgName, orgUid);
+			oms.ModifyOrgNodeName(id, orgName);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -205,6 +206,9 @@ public class OrganizationAction extends ActionSupport {
 		try {
 			//childrenNodes = oms.QueryChildrenNodes(orgNode.getParent_id());
 			treeNodes = new ArrayList<TreeNode>();
+			if( id == null || id.length() == 0) {
+				id = "0";
+			}
 			childrenNodes = oms.QueryChildrenNodes( id );
 			TreeNode node = null;
 			for(int i=0; i<childrenNodes.size(); i++) {
@@ -224,17 +228,20 @@ public class OrganizationAction extends ActionSupport {
 	{
 		OrgManageService oms = new OrgManageService();
 		items = new ArrayList<OrgListItem>();
+		if( id == null || id.length() == 0) {
+			id = "0";
+		}
+		
 		try {
 			if( queryAll ) {
 				System.out.println(orgName);
 				//orgName = new String(orgName.getBytes("ISO8859-1"), "UTF-8");
 //				orgName = java.net.URLDecoder.decode(orgName,"UTF-8");
-				System.out.println(orgUid);
 				System.out.println(orgLevel);
 				Organization condition = new Organization();
-				condition.setName(orgName);
-				condition.setUid(orgUid);
-				condition.setOrg_level(orgLevel);
+				condition.setUNIT(orgName);
+//				condition.setUid(orgUid);
+				condition.setORG_LEVEL(orgLevel);
 				total = oms.QueryAllChildrenNodes( id, condition, page, rows, items );
 			} else {
 				

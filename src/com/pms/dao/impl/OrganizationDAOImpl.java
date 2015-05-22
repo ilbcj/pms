@@ -100,14 +100,14 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Organization> GetOrgNodeByParentId(int pid) throws Exception {
+	public List<Organization> GetOrgNodeByParentId(String pid) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
-		String sqlString = "select * from organization where parent_id = :parent_id ";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
-			q.setInteger("parent_id", pid);
+			q.setString("PARENT_ORG", pid);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -122,22 +122,22 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 	}
 
 	@Override
-	public boolean OrgHasChild(int pid) throws Exception {
+	public boolean OrgHasChild(String pid) throws Exception {
 		int rs = GetOrgNodeCountByParentId(pid);
 		return rs > 0;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Organization> GetOrgNodeByParentId(int pid, int page, int rows)
+	public List<Organization> GetOrgNodeByParentId(String pid, int page, int rows)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
-		String sqlString = "select * from organization where parent_id = :parent_id ";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
-			q.setInteger("parent_id", pid);
+			q.setString("PARENT_ORG", pid);
 			q.setFirstResult((page-1) * rows);   
 			q.setMaxResults(rows);
 			rs = q.list();
@@ -155,36 +155,36 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Organization> GetOrgNodeByParentId(int pid, Organization condition)
+	public List<Organization> GetOrgNodeByParentId(String pid, Organization condition)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
-		String sqlString = "select * from organization where parent_id = :parent_id ";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG ";
 		if( condition != null ) {
-			if(condition.getName() != null && condition.getName().length() > 0) {
-				sqlString += " and name like :name ";
+			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+				sqlString += " and UNIT like :UNIT ";
 			}
-			if(condition.getUid() != null && condition.getUid().length() > 0) {
-				sqlString += " and uid = :uid ";
-			}
-			if(condition.getOrg_level() != null && condition.getOrg_level().length() > 0) {
-				sqlString += " and org_level = :org_level ";
+//			if(condition.getUid() != null && condition.getUid().length() > 0) {
+//				sqlString += " and uid = :uid ";
+//			}
+			if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+				sqlString += " and ORG_LEVEL = :ORG_LEVEL ";
 			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
-			q.setInteger("parent_id", pid);
+			q.setString("PARENT_ORG", pid);
 			if( condition != null ) {
-				if(condition.getName() != null && condition.getName().length() > 0) {
-					q.setString( "name", "%" + condition.getName() + "%" );
+				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
 				}
-				if(condition.getUid() != null && condition.getUid().length() > 0) {
-					q.setString( "uid", condition.getUid() );
-				}
-				if(condition.getOrg_level() != null && condition.getOrg_level().length() > 0) {
-					q.setString( "org_level", condition.getOrg_level() );
+//				if(condition.getUid() != null && condition.getUid().length() > 0) {
+//					q.setString( "uid", condition.getUid() );
+//				}
+				if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+					q.setString( "ORG_LEVEL", condition.getORG_LEVEL() );
 				}
 			}
 			rs = q.list();
@@ -201,14 +201,14 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 	}
 
 	@Override
-	public int GetOrgNodeCountByParentId(int pid) throws Exception {
+	public int GetOrgNodeCountByParentId(String pid) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from organization where parent_id = :parent_id ";
+		String sqlString = "select count(*) from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG ";
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("parent_id", pid);
+			q.setString("PARENT_ORG", pid);
 			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();
 		} catch (Exception e) {
@@ -223,14 +223,14 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 	}
 
 	@Override
-	public Organization GetOrgNodeById(int id) throws Exception {
+	public Organization GetOrgNodeById(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		Organization rs = null;
-		String sqlString = "select * from organization where id = :id ";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where GA_DEPARTMENT = :GA_DEPARTMENT ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
-			q.setInteger("id", id);
+			q.setString("GA_DEPARTMENT", id);
 			rs = (Organization) q.uniqueResult();
 			tx.commit();
 		} catch (Exception e) {

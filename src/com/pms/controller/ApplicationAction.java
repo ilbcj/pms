@@ -248,12 +248,12 @@ public class ApplicationAction extends ActionSupport {
 			if( id == 0 ) {
 				TreeNode root = new TreeNode();
 				root.setState("closed");
-				root.setId(-1);
+				root.setId("-1");
 				root.setText("应用列表");
 				treeNodes.add(root);
 			}
 			else {
-				ams.QueryAllApps(treeNodes);
+//				ams.QueryAllApps(treeNodes);
 			}
 			
 		} catch (Exception e) {

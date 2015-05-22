@@ -7,7 +7,7 @@ import java.util.Locale;
 
 import com.pms.dao.AppDAO;
 import com.pms.dao.impl.AppDAOImpl;
-import com.pms.dto.TreeNode;
+//import com.pms.dto.TreeNode;
 import com.pms.model.Application;
 
 
@@ -55,28 +55,28 @@ public class AppManageService {
 		return ;
 	}
 
-	public void QueryAllApps(List<TreeNode> treeNodes) throws Exception {
-		AppDAO dao = new AppDAOImpl();
-		List<Application> res = dao.GetApplicationsWithNopage();
-		
-		TreeNode node = null;
-		for(int i=0; i<res.size(); i++) {
-			node = ConvertAppToTreeNode(res.get(i));
-			treeNodes.add(node);
-		}
-		return;
-	}
+//	public void QueryAllApps(List<TreeNode> treeNodes) throws Exception {
+//		AppDAO dao = new AppDAOImpl();
+//		List<Application> res = dao.GetApplicationsWithNopage();
+//		
+//		TreeNode node = null;
+//		for(int i=0; i<res.size(); i++) {
+//			node = ConvertAppToTreeNode(res.get(i));
+//			treeNodes.add(node);
+//		}
+//		return;
+//	}
 
-	public TreeNode ConvertAppToTreeNode(Application application) {
-		TreeNode node = new TreeNode();
-		//String state = hasChild() ? "closed" : "open";
-		String state = "open";
-		node.setState(state);
-		node.setId(application.getId());
-		node.setText(application.getName());
-		
-		return node;
-	}
+//	public TreeNode ConvertAppToTreeNode(Application application) {
+//		TreeNode node = new TreeNode();
+//		//String state = hasChild() ? "closed" : "open";
+//		String state = "open";
+//		node.setState(state);
+//		node.setId(application.getId());
+//		node.setText(application.getName());
+//		
+//		return node;
+//	}
 
 //	public List<Application> QueryAllAppItems() throws Exception {
 //		AppDAO dao = new AppDAOImpl();

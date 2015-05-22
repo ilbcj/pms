@@ -22,7 +22,7 @@ public class UserAction extends ActionSupport {
 	private User user;
 	private ArrayList<UserListItem> items;
 	
-	private int id;
+	private String id;//org_id
 	private String userName;
 	private int userStatus;
 	private String userUnit;
@@ -147,11 +147,11 @@ public class UserAction extends ActionSupport {
 		this.total = total;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	

@@ -25,6 +25,7 @@ public class PrivilegeUserAction extends ActionSupport {
 	private ArrayList<PrivUserListItem> items;
 	private boolean queryAll;
 	private int id;
+	private String orgId;
 	private String userName;
 	private int userStatus;
 	private int userPrivStatus;
@@ -39,6 +40,14 @@ public class PrivilegeUserAction extends ActionSupport {
 	private String userPoliceNum;
 	private List<UserPrivListItem> privs;
 	
+	public String getOrgId() {
+		return orgId;
+	}
+
+	public void setOrgId(String orgId) {
+		this.orgId = orgId;
+	}
+
 	public List<UserPrivListItem> getPrivs() {
 		return privs;
 	}
@@ -225,9 +234,9 @@ public class PrivilegeUserAction extends ActionSupport {
 				criteria.setDept(userDept);
 				criteria.setTitle(userTitle);
 				criteria.setPolice_num(userPoliceNum);
-				total = ums.QueryAllPrivUserItems( id, userPrivStatus, criteria, page, rows, items );
+				total = ums.QueryAllPrivUserItems( orgId, userPrivStatus, criteria, page, rows, items );
 			} else {
-				total = ums.QueryPrivUserItems( id, userPrivStatus, page, rows, items );
+				total = ums.QueryPrivUserItems( orgId, userPrivStatus, page, rows, items );
 			}
 		} catch (Exception e) {
 			message = e.getMessage();

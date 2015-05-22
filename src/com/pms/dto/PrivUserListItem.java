@@ -6,7 +6,7 @@ public class PrivUserListItem {
 	private int id;
 	private String name;
 	private int status;
-	private int parent_id;
+	private String parent_id;
 	private String pname;
 	private String gname;
 	private int priv_status;
@@ -28,10 +28,10 @@ public class PrivUserListItem {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public int getParent_id() {
+	public String getParent_id() {
 		return parent_id;
 	}
-	public void setParent_id(int parent_id) {
+	public void setParent_id(String parent_id) {
 		this.parent_id = parent_id;
 	}
 	public String getPname() {

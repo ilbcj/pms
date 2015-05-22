@@ -31,7 +31,7 @@ public class UserManageService {
 		return user;
 	}
 
-	public int QueryUserItems(int pid, int page, int rows,
+	public int QueryUserItems(String pid, int page, int rows,
 			List<UserListItem> items) throws Exception {
 		UserDAO dao = new UserDAOImpl();
 		List<User> res = dao.GetUsersByParentId( pid, page, rows );
@@ -44,9 +44,9 @@ public class UserManageService {
 		return total;
 	}
 	
-	public int QueryChildrenUsersCount(int id, User criteria) throws Exception {
+	public int QueryChildrenUsersCount(String pid, User criteria) throws Exception {
 		UserDAO dao = new UserDAOImpl();
-		int count = dao.GetUsersCountByParentId( id, criteria );
+		int count = dao.GetUsersCountByParentId( pid, criteria );
 		return count;
 	}
 
@@ -87,14 +87,14 @@ public class UserManageService {
 		return item;
 	}
 
-	public int QueryAllUserItems(int pid, User criteria, int page, int rows,
+	public int QueryAllUserItems(String pid, User criteria, int page, int rows,
 			List<UserListItem> items) throws Exception {
 		//get all orgs;
 		List<Organization> nodes = new ArrayList<Organization>();
 		OrgManageService oms = new OrgManageService();
 		oms.queryAllChildrenNodesById(pid, null, nodes);
 		Organization first = new Organization();
-		first.setId(pid);
+		first.setGA_DEPARTMENT(pid);
 		nodes.add(0, first);
 		
 		//calculate all items' count and get users;
@@ -103,12 +103,12 @@ public class UserManageService {
 		List<User> res = new ArrayList<User>();
 		int pre_count = 0;
 		for(int i = 0; i< nodes.size(); i++) {
-			total += QueryChildrenUsersCount( nodes.get(i).getId(), criteria );
+			total += QueryChildrenUsersCount( nodes.get(i).getGA_DEPARTMENT(), criteria );
 			if( total <= ((page-1) * rows) ) {
 				pre_count = total;
 			}
 			else if ( total <= (page * rows) ) {
-				List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getId(), criteria );
+				List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getGA_DEPARTMENT(), criteria );
 				if( tmp != null && tmp.size() > 0) {
 					if( pre_count < ((page-1) * rows) ) {
 						int fromIndex = rows - (pre_count%rows);
@@ -124,7 +124,7 @@ public class UserManageService {
 			} 
 			else {//total > page * rows
 				if( pre_count < (page * rows) ) {
-					List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getId(), criteria );
+					List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getGA_DEPARTMENT(), criteria );
 					if( tmp != null && tmp.size() > 0 ) {
 						int toIndex =  rows - (pre_count%rows);
 						res.addAll(tmp.subList( 0, toIndex));
@@ -143,10 +143,10 @@ public class UserManageService {
 		return total;
 	}
 
-	public int QueryAllPrivUserItems(int id, int privStatus, User criteria, int page, int rows,
+	public int QueryAllPrivUserItems(String pid, int privStatus, User criteria, int page, int rows,
 			List<PrivUserListItem> items) throws Exception {
 		List<UserListItem> ulItems = new ArrayList<UserListItem>();
-		int total = QueryAllUserItems(id, criteria, page, rows, ulItems);
+		int total = QueryAllUserItems(pid, criteria, page, rows, ulItems);
 		
 		PrivilegeDAO pdao = new PrivilegeDAOImpl();
 		for(int i = 0; i<ulItems.size(); i++) {
@@ -177,10 +177,10 @@ public class UserManageService {
 		return total;
 	}
 
-	public int QueryPrivUserItems(int id, int privStatus, int page, int rows,
+	public int QueryPrivUserItems(String pid, int privStatus, int page, int rows,
 			List<PrivUserListItem> items) throws Exception {
 		List<UserListItem> ulItems = new ArrayList<UserListItem>();
-		int total = QueryUserItems(id, page, rows, ulItems);
+		int total = QueryUserItems(pid, page, rows, ulItems);
 
 		PrivilegeDAO pdao = new PrivilegeDAOImpl();
 		for(int i = 0; i<ulItems.size(); i++) {

@@ -100,7 +100,7 @@ public class UserDAOImpl implements UserDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> GetUsersByParentId(int pid, int page, int rows)
+	public List<User> GetUsersByParentId(String pid, int page, int rows)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -109,7 +109,7 @@ public class UserDAOImpl implements UserDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
-			q.setInteger("parent_id", pid);
+			q.setString("parent_id", pid);
 			q.setFirstResult((page-1) * rows);   
 			q.setMaxResults(rows);   
 			rs = q.list();
@@ -127,7 +127,7 @@ public class UserDAOImpl implements UserDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> GetUsersByParentIdWithNoPage(int pid, User criteria)
+	public List<User> GetUsersByParentIdWithNoPage(String pid, User criteria)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -171,7 +171,7 @@ public class UserDAOImpl implements UserDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
-			q.setInteger("parent_id", pid);
+			q.setString("parent_id", pid);
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
 					q.setString( "name", "%" + criteria.getName() + "%" );
@@ -222,7 +222,7 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public int GetUsersCountByParentId(int pid, User criteria) throws Exception {
+	public int GetUsersCountByParentId(String pid, User criteria) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
@@ -265,7 +265,7 @@ public class UserDAOImpl implements UserDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("parent_id", pid);
+			q.setString("parent_id", pid);
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
 					q.setString( "name", "%" + criteria.getName() + "%" );

@@ -9,7 +9,7 @@ public interface UserDAO {
 	public void UserMod(User user) throws Exception;
 	public void UserDel(User user) throws Exception;
 
-	public List<User> GetUsersByParentId(int pid, int page, int rows) throws Exception;
-	public List<User> GetUsersByParentIdWithNoPage(int pid, User criteria) throws Exception;
-	public int GetUsersCountByParentId(int id, User criteria) throws Exception;
+	public List<User> GetUsersByParentId(String pid, int page, int rows) throws Exception;
+	public List<User> GetUsersByParentIdWithNoPage(String pid, User criteria) throws Exception;
+	public int GetUsersCountByParentId(String pid, User criteria) throws Exception;
 }

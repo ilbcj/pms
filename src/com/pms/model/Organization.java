@@ -1,17 +1,17 @@
 package com.pms.model;
 
 public class Organization {
-	public final static int ROOTNODEID = 1;
+	public final static String ROOTNODEID = "1";
 	
 //	private int id;
 	private String GA_DEPARTMENT;//id
-	private String UNIT;
-	private String ORG_LEVEL;
-	private String PARENT_ORG;
+	private String UNIT;//name
+	private String ORG_LEVEL;//org_level
+	private String PARENT_ORG;//parent_id
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
-	private String description;
-	private String LATEST_MOD_TIME;
+//	private String description;//description
+	private String LATEST_MOD_TIME;//tstamp
 	public String getGA_DEPARTMENT() {
 		return GA_DEPARTMENT;
 	}
@@ -47,12 +47,6 @@ public class Organization {
 	}
 	public void setDATA_VERSION(int dATA_VERSION) {
 		DATA_VERSION = dATA_VERSION;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	public String getLATEST_MOD_TIME() {
 		return LATEST_MOD_TIME;
