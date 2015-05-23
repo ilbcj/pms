@@ -61,5 +61,14 @@
  		<action name="queryRoleResourceTest" class="com.pms.controller.ResourceAction" method="QueryRoleResourceTest" >
  			<result name="success" type="json" />
  		</action> 		
+ 		<action name="fileUpload" class="com.pms.controller.ResourceAction" method="FileUpload" >
+ 			<result name="success" type="json" />
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">1572864</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action> 
 	</package>	
 </struts>    

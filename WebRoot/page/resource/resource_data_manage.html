@@ -50,7 +50,7 @@
 					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addResourceData()">添加</a>
 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modResourceData()">修改</a>
 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delResourceData()">删除</a>
-	            			
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="importFile()">导入</a>	           
 					    </div><!-- end of toolbar -->
 		    		</div><!-- end of resource_data_manage_center_list -->
 		    		
@@ -58,6 +58,31 @@
 
 
 			</div><!-- resource_data_manage_center_main_wapper -->
+
+			<div id="import_file_win" class="easyui-window" title="导入文件" style="width:80%;height:500px;"
+					data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false">
+				<div id="import_file_win_main" class="easyui-layout" data-options="fit:true">
+					<div class="easyui-panel" data-options="fit:true,border:false" >
+						<form id="import_file_form" method="post" enctype="multipart/form-data">
+							<table class="nodt" style="width:100%">
+					            <tr>
+					                <td class="form_name_small text_right">导入策略</td>
+					                <td><input type="checkbox" checked="checked"><span> 覆盖已存在项</span></td>
+					            </tr>
+					            <tr>
+					                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
+					                <td><input id="fi" name="fi" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择组织机构文件(1.5M以内)'"/></td>
+					            </tr>
+					        </table>
+					    </form>
+					    <div class="text_center" style="margin-top:15px;">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importFileSave()">导入文件</a>
+<!--							<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="">预览</a>-->
+						</div>
+
+					</div>
+				</div><!-- end of import_file_win_main -->
+			</div><!-- end of import_file_win -->			
 			
 			<div id="resource_data_manage_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
 				<div id="resource_data_manage_center_detail" class="easyui-panel" 
@@ -229,7 +254,28 @@
             });
 		}
 	}
-    
+    function importFile(){
+	   	$("#import_file_win").window({title:'文件导入'}).window('open').window('center');
+    }
+    function importFileSave(){
+  		$.messager.progress();	// 显示进度条
+		$('#import_file_form').form('submit', {
+			url:'../resource/fileUpload.action',
+			success: function(message){
+//				var mes = $.parseJSON(message);
+//				alert(mes.result);
+				if(message == ''){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+					$.messager.alert("温馨提示","上传失败，此处只可上传小于1.5M的Excel文件");
+			     }
+			     $("#import_file_win").window('close');
+			     $('#resource_data_manage_center_list_dg').datagrid('reload');
+			}
+		});
+  	}   
 $(document).ready(function () { 
 	
 	$("#resource_data_manage_center_list_dg").datagrid({
