@@ -262,9 +262,9 @@
 		$('#import_file_form').form('submit', {
 			url:'../resource/fileUpload.action',
 			success: function(message){
-//				var mes = $.parseJSON(message);
-//				alert(mes.result);
-				if(message == ''){
+				var retObj = $.parseJSON(message);
+				//alert(mes.result);
+				if(retObj.result == true){
 					$.messager.progress('close');	// 隐藏进度条
 			     	$.messager.alert("温馨提示","文件上传成功！");
 			     }else{
