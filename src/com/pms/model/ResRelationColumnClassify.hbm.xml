@@ -5,15 +5,16 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.pms.model">
 	<!-- 每个class元素对应一个持久化对象 -->
-	<class name="ResRoleResource" table="WA_AUTHORITY_RESOURCE_ROLE">
+	<class name="ResRelationColumnClassify" table="WA_COLUMN_ClASSIFY_REALTION">
 		<!-- id元素定义持久化类的标识属性 -->
 		<id name="id" type="java.lang.Integer">
 			<generator class="identity"/>
 		</id>
 		<!-- property元素定义常规属性 -->
-		<property name="RESOURCE_ID" type="java.lang.String" length="64"/>
-		<property name="BUSINESS_ROLE" type="java.lang.String" length="64"/>
-		<property name="restype" type="java.lang.Integer"/>
+		<property name="SECTION_RELATIOIN_CLASS" type="java.lang.String" length="64"/>
+		<property name="CLUE_SRC_SYS" type="java.lang.String" length="256"/>
+		<property name="SRC_CLASS_CODE" type="java.lang.String" length="64"/>
+		<property name="DST_CLASS_CODE" type="java.lang.String" length="64"/>
 		<property name="DELETE_STATUS" type="java.lang.Integer"/>
 		<property name="DATA_VERSION" type="java.lang.Integer"/>
 		<property name="LATEST_MOD_TIME" type="java.lang.String" length="64"/>

@@ -46,8 +46,8 @@ public class PrivilegeSearchService {
 			else {
 				item = new UserPrivListItem();
 				item.setRoleid(res.get(i).getId());
-				item.setRolename(res.get(i).getBusiness_role_name());
-				item.setRolecode(res.get(i).getBusiness_role());
+				item.setRolename(res.get(i).getBUSINESS_ROLE_NAME());
+				item.setRolecode(res.get(i).getBUSINESS_ROLE());
 				List<String> source = new ArrayList<String>();
 				source.add(UserPrivListItem.SOURCETYPEUSER);
 				item.setSource(source);
@@ -76,8 +76,8 @@ public class PrivilegeSearchService {
 			else {
 				item = new UserPrivListItem();
 				item.setRoleid(res.get(i).getId());
-				item.setRolename(res.get(i).getBusiness_role_name());
-				item.setRolecode(res.get(i).getBusiness_role());
+				item.setRolename(res.get(i).getBUSINESS_ROLE_NAME());
+				item.setRolecode(res.get(i).getBUSINESS_ROLE());
 				List<String> source = new ArrayList<String>();
 				source.add(UserPrivListItem.SOURCETYPEORG);
 				item.setSource(source);
@@ -112,8 +112,8 @@ public class PrivilegeSearchService {
 				else {
 					item = new UserPrivListItem();
 					item.setRoleid(res.get(j).getId());
-					item.setRolename(res.get(j).getBusiness_role_name());
-					item.setRolecode(res.get(j).getBusiness_role());
+					item.setRolename(res.get(j).getBUSINESS_ROLE_NAME());
+					item.setRolecode(res.get(j).getBUSINESS_ROLE());
 					List<String> source = new ArrayList<String>();
 					source.add(UserPrivListItem.SOURCETYPEGROUP);
 					item.setSource(source);

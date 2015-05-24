@@ -24,10 +24,10 @@ public interface ResourceDAO {
 	List<ResRole> GetRoles(ResRole criteria, int page, int rows) throws Exception;
 	int GetRolesCount(ResRole criteria) throws Exception;
 	
-	void UpdateFeatureRoleResource(int id, List<Integer> featureIds) throws Exception;
-	void UpdateDataRoleResource(int id, List<Integer> dataIds) throws Exception;
-	List<ResRoleResource> GetRoleResourcesByRoleid(int id) throws Exception;
-	ResFeature GetFeatureById(int id) throws Exception;
-	ResData GetDataById(int id) throws Exception;
+	void UpdateFeatureRoleResource(String roleId, List<String> featureIds) throws Exception;
+	void UpdateDataRoleResource(String roleId, List<String> dataIds) throws Exception;
+	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
+	ResFeature GetFeatureById(String id) throws Exception;
+	ResData GetDataById(String id) throws Exception;
 	
 }

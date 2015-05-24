@@ -225,13 +225,13 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from res_data where 1 = 1 ";
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE where 1 = 1 ";
 		if( criteria != null ) {
 			if(criteria.getName() != null && criteria.getName().length() > 0) {
 				sqlString += " and name like :name ";
 			}
-			if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-				sqlString += " and resource_id like :resource_id ";
+			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+				sqlString += " and RESOURCE_ID like :RESOURCE_ID ";
 			}
 		}
 		
@@ -241,8 +241,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
-				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-					q.setString( "resource_id", "%" + criteria.getResource_id() + "%" );
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					q.setString( "RESOURCE_ID", "%" + criteria.getRESOURCE_ID() + "%" );
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -267,14 +267,14 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from res_data where 1 = 1 ";
+		String sqlString = "select count(*) from WA_AUTHORITY_RESOURCE where 1 = 1 ";
 		if( criteria != null ) {
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
 					sqlString += " and name like :name ";
 				}
-				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-					sqlString += " and resource_id like :resource_id ";
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					sqlString += " and RESOURCE_ID like :RESOURCE_ID ";
 				}
 			}
 		}
@@ -286,8 +286,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 					if(criteria.getName() != null && criteria.getName().length() > 0) {
 						q.setString( "name", "%" + criteria.getName() + "%" );
 					}
-					if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-						q.setString( "resource_id", "%" + criteria.getResource_id() + "%" );
+					if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+						q.setString( "RESOURCE_ID", "%" + criteria.getRESOURCE_ID() + "%" );
 					}
 				}
 			}
@@ -376,24 +376,24 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRole> rs = null;
-		String sqlString = "select * from res_role where 1 = 1 ";
+		String sqlString = "select * from WA_AUTHORITY_ROLE where 1 = 1 ";
 		if( criteria != null ) {
-			if(criteria.getBusiness_role_name() != null && criteria.getBusiness_role_name().length() > 0) {
-				sqlString += " and business_role_name like :business_role_name ";
+			if(criteria.getBUSINESS_ROLE_NAME() != null && criteria.getBUSINESS_ROLE_NAME().length() > 0) {
+				sqlString += " and BUSINESS_ROLE_NAME like :BUSINESS_ROLE_NAME ";
 			}
-			if(criteria.getBusiness_role() != null && criteria.getBusiness_role().length() > 0) {
-				sqlString += " and business_role like :business_role ";
+			if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
+				sqlString += " and BUSINESS_ROLE like :BUSINESS_ROLE ";
 			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
 			if( criteria != null ) {
-				if(criteria.getBusiness_role_name() != null && criteria.getBusiness_role_name().length() > 0) {
-					q.setString( "business_role_name", "%" + criteria.getBusiness_role_name() + "%" );
+				if(criteria.getBUSINESS_ROLE_NAME() != null && criteria.getBUSINESS_ROLE_NAME().length() > 0) {
+					q.setString( "BUSINESS_ROLE_NAME", "%" + criteria.getBUSINESS_ROLE_NAME() + "%" );
 				}
-				if(criteria.getBusiness_role() != null && criteria.getBusiness_role().length() > 0) {
-					q.setString( "business_role", "%" + criteria.getBusiness_role() + "%" );
+				if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
+					q.setString( "BUSINESS_ROLE", "%" + criteria.getBUSINESS_ROLE() + "%" );
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -418,14 +418,14 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from res_role where 1 = 1 ";
+		String sqlString = "select count(*) from WA_AUTHORITY_ROLE where 1 = 1 ";
 		if( criteria != null ) {
 			if( criteria != null ) {
-				if(criteria.getBusiness_role_name() != null && criteria.getBusiness_role_name().length() > 0) {
-					sqlString += " and business_role_name like :business_role_name ";
+				if(criteria.getBUSINESS_ROLE_NAME() != null && criteria.getBUSINESS_ROLE_NAME().length() > 0) {
+					sqlString += " and BUSINESS_ROLE_NAME like :BUSINESS_ROLE_NAME ";
 				}
-				if(criteria.getBusiness_role() != null && criteria.getBusiness_role().length() > 0) {
-					sqlString += " and business_role like :business_role ";
+				if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
+					sqlString += " and BUSINESS_ROLE like :BUSINESS_ROLE ";
 				}
 			}
 		}
@@ -434,11 +434,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 			Query q = session.createSQLQuery(sqlString);
 			if( criteria != null ) {
 				if( criteria != null ) {
-					if(criteria.getBusiness_role_name() != null && criteria.getBusiness_role_name().length() > 0) {
-						q.setString( "business_role_name", "%" + criteria.getBusiness_role_name() + "%" );
+					if(criteria.getBUSINESS_ROLE_NAME() != null && criteria.getBUSINESS_ROLE_NAME().length() > 0) {
+						q.setString( "BUSINESS_ROLE_NAME", "%" + criteria.getBUSINESS_ROLE_NAME() + "%" );
 					}
-					if(criteria.getBusiness_role() != null && criteria.getBusiness_role().length() > 0) {
-						q.setString( "business_role", "%" + criteria.getBusiness_role() + "%" );
+					if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
+						q.setString( "BUSINESS_ROLE", "%" + criteria.getBUSINESS_ROLE() + "%" );
 					}
 				}
 			}
@@ -456,15 +456,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 
 	@Override
-	public void UpdateFeatureRoleResource(int id, List<Integer> featureIds)
+	public void UpdateFeatureRoleResource(String roleId, List<String> featureIds)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		String sqlString = "delete from res_role_resource where roleid = :roleid and restype = :restype ";
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and restype = :restype ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("roleid", id);
+			q.setString("BUSINESS_ROLE", roleId);
 			q.setInteger("restype", ResRoleResource.RESTYPEFEATURE);
 			q.executeUpdate();
 			
@@ -472,8 +472,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 			if(featureIds != null) {
 				for(int i = 0; i<featureIds.size(); i++) {
 					rr = new ResRoleResource();
-					rr.setRoleid(id);
-					rr.setResid(featureIds.get(i));
+					rr.setBUSINESS_ROLE(roleId);
+					rr.setRESOURCE_ID(featureIds.get(i));
 					rr.setRestype(ResRoleResource.RESTYPEFEATURE);
 					session.merge(rr);
 				}
@@ -491,15 +491,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 
 	@Override
-	public void UpdateDataRoleResource(int id, List<Integer> dataIds)
+	public void UpdateDataRoleResource(String roleId, List<String> dataIds)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		String sqlString = "delete from res_role_resource where roleid = :roleid and restype = :restype ";
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and restype = :restype ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("roleid", id);
+			q.setString("BUSINESS_ROLE", roleId);
 			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
 			q.executeUpdate();
 			
@@ -507,8 +507,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 			if( dataIds != null) {
 				for(int i = 0; i<dataIds.size(); i++) {
 					rr = new ResRoleResource();
-					rr.setRoleid(id);
-					rr.setResid(dataIds.get(i));
+					rr.setBUSINESS_ROLE(roleId);
+					rr.setRESOURCE_ID(dataIds.get(i));
 					rr.setRestype(ResRoleResource.RESTYPEDATA);
 					session.merge(rr);
 				}
@@ -527,16 +527,16 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRoleResource> GetRoleResourcesByRoleid(int id)
+	public List<ResRoleResource> GetRoleResourcesByRoleid(String id)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRoleResource> rs = null;
-		String sqlString = "select * from res_role_resource where roleid = :roleid ";
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
-			q.setInteger("roleid", id);
+			q.setString("BUSINESS_ROLE", id);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -551,15 +551,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 
 	@Override
-	public ResFeature GetFeatureById(int id) throws Exception {
+	public ResFeature GetFeatureById(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		ResFeature rs = null;
-		String sqlString = "select * from res_feature where id = :id ";
+		String sqlString = "select * from res_feature where RESOURCE_ID = :RESOURCE_ID ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
-			q.setInteger("id", id);
+			q.setString("RESOURCE_ID", id);
 			rs = (ResFeature) q.uniqueResult();
 			tx.commit();
 		} catch (Exception e) {
@@ -574,15 +574,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 
 	@Override
-	public ResData GetDataById(int id) throws Exception {
+	public ResData GetDataById(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		ResData rs = null;
-		String sqlString = "select * from res_data where id = :id ";
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
-			q.setInteger("id", id);
+			q.setString("RESOURCE_ID", id);
 			rs = (ResData) q.uniqueResult();
 			tx.commit();
 		} catch (Exception e) {

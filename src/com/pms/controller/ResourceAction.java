@@ -47,8 +47,8 @@ public class ResourceAction extends ActionSupport {
 	private List<ResData> datas;
 	private ResRole role;
 	private List<ResRole> roles;
-	private List<Integer> addFeatureIds;
-	private List<Integer> addDataIds;
+	private List<String> addFeatureIds;
+	private List<String> addDataIds;
 	
 	private String resource_id;
 	private List<String> resource_status;
@@ -163,19 +163,19 @@ public class ResourceAction extends ActionSupport {
 		section_relation_class = sectionRelationClass;
 	}
 
-	public List<Integer> getAddFeatureIds() {
+	public List<String> getAddFeatureIds() {
 		return addFeatureIds;
 	}
 
-	public void setAddFeatureIds(List<Integer> addFeatureIds) {
+	public void setAddFeatureIds(List<String> addFeatureIds) {
 		this.addFeatureIds = addFeatureIds;
 	}
 
-	public List<Integer> getAddDataIds() {
+	public List<String> getAddDataIds() {
 		return addDataIds;
 	}
 
-	public void setAddDataIds(List<Integer> addDataIds) {
+	public void setAddDataIds(List<String> addDataIds) {
 		this.addDataIds = addDataIds;
 	}
 
@@ -371,7 +371,7 @@ public class ResourceAction extends ActionSupport {
 
 				ResData criteria = new ResData();
 				criteria.setName(resName);
-				criteria.setResource_id(resCode);
+				criteria.setRESOURCE_ID(resCode);
 				total = rms.QueryAllDataItems( criteria, page, rows, datas );
 		} catch (Exception e) {
 			message = e.getMessage();
@@ -417,8 +417,8 @@ public class ResourceAction extends ActionSupport {
 		try {
 
 			ResRole criteria = new ResRole();
-			criteria.setBusiness_role_name(resName);
-			criteria.setBusiness_role(resCode);
+			criteria.setBUSINESS_ROLE_NAME(resName);
+			criteria.setBUSINESS_ROLE(resCode);
 			total = rms.QueryAllRoleItems( criteria, page, rows, roles );
 		} catch (Exception e) {
 			message = e.getMessage();
@@ -463,7 +463,7 @@ public class ResourceAction extends ActionSupport {
 		features = new ArrayList<ResFeature>();
 		datas = new ArrayList<ResData>();
 		try {
-			rms.QueryRoleResource( role.getId(), features, datas );
+			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, datas );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

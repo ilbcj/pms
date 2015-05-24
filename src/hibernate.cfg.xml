@@ -52,6 +52,18 @@
 	<mapping resource="com/pms/model/GroupUser.hbm.xml" />
 	<mapping resource="com/pms/model/GroupRule.hbm.xml" />
 	<mapping resource="com/pms/model/Rule.hbm.xml" />
+	<mapping resource="com/pms/model/ResRoleOrg.hbm.xml" />
+	<mapping resource="com/pms/model/ResDataOrg.hbm.xml" />
+	<mapping resource="com/pms/model/ResDataSetSensitive.hbm.xml" />
+	<mapping resource="com/pms/model/ResDataSet.hbm.xml" />
+	<mapping resource="com/pms/model/ResColumnClassify.hbm.xml" />
+	<mapping resource="com/pms/model/ResColumn.hbm.xml" />
+	<mapping resource="com/pms/model/ResValueSensitive.hbm.xml" />
+	<mapping resource="com/pms/model/ResValue.hbm.xml" />
+	<mapping resource="com/pms/model/ResRelationColumnClassify.hbm.xml" />
+	<mapping resource="com/pms/model/ResRelationRow.hbm.xml" />
+	<mapping resource="com/pms/model/ResRelationColumn.hbm.xml" />
+	<mapping resource="com/pms/model/ResRelationClassify.hbm.xml" />
 
 </session-factory>
 

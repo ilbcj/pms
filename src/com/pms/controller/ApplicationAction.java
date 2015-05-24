@@ -242,7 +242,7 @@ public class ApplicationAction extends ActionSupport {
 	
 	public String QueryAppNodes()
 	{
-		AppManageService ams = new AppManageService();
+//		AppManageService ams = new AppManageService();
 		try {
 			treeNodes = new ArrayList<TreeNode>();
 			if( id == 0 ) {

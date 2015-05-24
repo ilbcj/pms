@@ -1,23 +1,35 @@
 package com.pms.model;
 
 public class ResData {
-	private int id;
-	private String name="";
-	private String resource_id;
-	private int resource_status;
-	private String resource_describe;
-	private String resource_remark;
-	private int delete_status;
-	private int resource_type;
-	private String clue_dst_sys;
-	private String dataset_sensitive_level;
-	private String data_set;
-	private String section_class;
-	private String element;
-	private String section_relation_class;
-	private String row_constraint;
-	private String latest_mod_time;
+	public final static int RESTYPEPUBLIC = 1;
+	public final static int RESTYPELOCAL = 2;
+	public final static int RESTYPEBILATERAL = 3;
+	public final static int RESSTATUSENABLE = 1;
+	public final static int RESSTATUSDISABLE = 0;
+	public final static int DELSTATUSNO = 0;
+	public final static int DELSTATUSYES = 1;
 	
+	private int id;
+	private String name;
+	private int resource_type;
+	private String RESOURCE_ID;//resource_id;
+	private int RESOURCE_STATUS;//resource_status;
+	private String RESOURCE_DESCRIBE;//resource_describe;
+	private String DATASET_SENSITIVE_LEVEL;//dataset_sensitive_level;
+	private String DATA_SET;//data_set;
+	private String SECTION_CLASS;//section_class;
+	private String ELEMENT;//element;
+	private String SECTION_RELATIOIN_CLASS;//section_relation_class;
+	private String OPERATE_SYMBOL;
+	private String ELEMENT_VALUE;
+	private int DELETE_STATUS;//delete_status;
+	private int DATA_VERSION;
+	private String LATEST_MOD_TIME;//latest_mod_time;
+	private String RESOURCE_REMARK;//resource_remark;
+
+//	private String clue_dst_sys;
+//	private String row_constraint;
+		
 	public int getId() {
 		return id;
 	}
@@ -30,88 +42,94 @@ public class ResData {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getResource_id() {
-		return resource_id;
-	}
-	public void setResource_id(String resource_id) {
-		this.resource_id = resource_id;
-	}
-	public int getResource_status() {
-		return resource_status;
-	}
-	public void setResource_status(int resource_status) {
-		this.resource_status = resource_status;
-	}
-	public String getResource_describe() {
-		return resource_describe;
-	}
-	public void setResource_describe(String resource_describe) {
-		this.resource_describe = resource_describe;
-	}
-	public String getResource_remark() {
-		return resource_remark;
-	}
-	public void setResource_remark(String resource_remark) {
-		this.resource_remark = resource_remark;
-	}
-	public int getDelete_status() {
-		return delete_status;
-	}
-	public void setDelete_status(int delete_status) {
-		this.delete_status = delete_status;
-	}
 	public int getResource_type() {
 		return resource_type;
 	}
 	public void setResource_type(int resource_type) {
 		this.resource_type = resource_type;
 	}
-	public String getClue_dst_sys() {
-		return clue_dst_sys;
+	public String getRESOURCE_ID() {
+		return RESOURCE_ID;
 	}
-	public void setClue_dst_sys(String clue_dst_sys) {
-		this.clue_dst_sys = clue_dst_sys;
+	public void setRESOURCE_ID(String rESOURCE_ID) {
+		RESOURCE_ID = rESOURCE_ID;
 	}
-	public String getDataset_sensitive_level() {
-		return dataset_sensitive_level;
+	public int getRESOURCE_STATUS() {
+		return RESOURCE_STATUS;
 	}
-	public void setDataset_sensitive_level(String dataset_sensitive_level) {
-		this.dataset_sensitive_level = dataset_sensitive_level;
+	public void setRESOURCE_STATUS(int rESOURCE_STATUS) {
+		RESOURCE_STATUS = rESOURCE_STATUS;
 	}
-	public String getData_set() {
-		return data_set;
+	public String getRESOURCE_DESCRIBE() {
+		return RESOURCE_DESCRIBE;
 	}
-	public void setData_set(String data_set) {
-		this.data_set = data_set;
+	public void setRESOURCE_DESCRIBE(String rESOURCE_DESCRIBE) {
+		RESOURCE_DESCRIBE = rESOURCE_DESCRIBE;
 	}
-	public String getSection_class() {
-		return section_class;
+	public String getDATASET_SENSITIVE_LEVEL() {
+		return DATASET_SENSITIVE_LEVEL;
 	}
-	public void setSection_class(String section_class) {
-		this.section_class = section_class;
+	public void setDATASET_SENSITIVE_LEVEL(String dATASET_SENSITIVE_LEVEL) {
+		DATASET_SENSITIVE_LEVEL = dATASET_SENSITIVE_LEVEL;
 	}
-	public String getElement() {
-		return element;
+	public String getDATA_SET() {
+		return DATA_SET;
 	}
-	public void setElement(String element) {
-		this.element = element;
+	public void setDATA_SET(String dATA_SET) {
+		DATA_SET = dATA_SET;
 	}
-	public String getSection_relation_class() {
-		return section_relation_class;
+	public String getSECTION_CLASS() {
+		return SECTION_CLASS;
 	}
-	public void setSection_relation_class(String section_relation_class) {
-		this.section_relation_class = section_relation_class;
+	public void setSECTION_CLASS(String sECTION_CLASS) {
+		SECTION_CLASS = sECTION_CLASS;
 	}
-	public String getRow_constraint() {
-		return row_constraint;
+	public String getELEMENT() {
+		return ELEMENT;
 	}
-	public void setRow_constraint(String row_constraint) {
-		this.row_constraint = row_constraint;
+	public void setELEMENT(String eLEMENT) {
+		ELEMENT = eLEMENT;
 	}
-	public String getLatest_mod_time() {
-		return latest_mod_time;
+	public String getSECTION_RELATIOIN_CLASS() {
+		return SECTION_RELATIOIN_CLASS;
 	}
-	public void setLatest_mod_time(String latest_mod_time) {
-		this.latest_mod_time = latest_mod_time;
+	public void setSECTION_RELATIOIN_CLASS(String sECTION_RELATIOIN_CLASS) {
+		SECTION_RELATIOIN_CLASS = sECTION_RELATIOIN_CLASS;
+	}
+	public String getOPERATE_SYMBOL() {
+		return OPERATE_SYMBOL;
+	}
+	public void setOPERATE_SYMBOL(String oPERATE_SYMBOL) {
+		OPERATE_SYMBOL = oPERATE_SYMBOL;
+	}
+	public String getELEMENT_VALUE() {
+		return ELEMENT_VALUE;
+	}
+	public void setELEMENT_VALUE(String eLEMENT_VALUE) {
+		ELEMENT_VALUE = eLEMENT_VALUE;
+	}
+	public int getDELETE_STATUS() {
+		return DELETE_STATUS;
+	}
+	public void setDELETE_STATUS(int dELETE_STATUS) {
+		DELETE_STATUS = dELETE_STATUS;
+	}
+	public int getDATA_VERSION() {
+		return DATA_VERSION;
+	}
+	public void setDATA_VERSION(int dATA_VERSION) {
+		DATA_VERSION = dATA_VERSION;
+	}
+	public String getLATEST_MOD_TIME() {
+		return LATEST_MOD_TIME;
+	}
+	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
+		LATEST_MOD_TIME = lATEST_MOD_TIME;
+	}
+	public String getRESOURCE_REMARK() {
+		return RESOURCE_REMARK;
+	}
+	public void setRESOURCE_REMARK(String rESOURCE_REMARK) {
+		RESOURCE_REMARK = rESOURCE_REMARK;
 	}
 }

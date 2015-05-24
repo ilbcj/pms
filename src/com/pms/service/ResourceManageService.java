@@ -72,7 +72,7 @@ public class ResourceManageService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
-		data.setLatest_mod_time(timenow);
+		data.setLATEST_MOD_TIME(timenow);
 		data = dao.DataAdd(data);
 		return data;
 	}
@@ -107,16 +107,16 @@ public class ResourceManageService {
 		return count;
 	}
 	
-	public ResRole SaveResourceRole(ResRole role, List<Integer> featureIds, List<Integer> dataIds) throws Exception {
+	public ResRole SaveResourceRole(ResRole role, List<String> featureIds, List<String> dataIds) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
-		role.setLatest_mod_time(timenow);
+		role.setLATEST_MOD_TIME(timenow);
 		role = dao.RoleAdd(role);
 		
-		dao.UpdateFeatureRoleResource(role.getId(), featureIds);
-		dao.UpdateDataRoleResource(role.getId(), dataIds);
+		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds);
+		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds);
 		return role;
 	}
 
@@ -135,18 +135,18 @@ public class ResourceManageService {
 		return ;
 	}
 
-	public void QueryRoleResource(int id, List<ResFeature> features,
+	public void QueryRoleResource(String id, List<ResFeature> features,
 			List<ResData> datas) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(id);
 		
 		for(int i=0; i<rrs.size(); i++) {
 			if ( rrs.get(i).getRestype() == ResRoleResource.RESTYPEFEATURE ) {
-				ResFeature feature = dao.GetFeatureById( rrs.get(i).getResid() );
+				ResFeature feature = dao.GetFeatureById( rrs.get(i).getRESOURCE_ID() );
 				features.add(feature);
 			}
 			else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
-				ResData data = dao.GetDataById( rrs.get(i).getResid() );
+				ResData data = dao.GetDataById( rrs.get(i).getRESOURCE_ID() );
 				datas.add(data);
 			}
 		}

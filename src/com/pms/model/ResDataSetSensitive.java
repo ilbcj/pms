@@ -1,15 +1,13 @@
 package com.pms.model;
 
-public class ResRoleResource {
-	public static final int RESTYPEFEATURE = 1;
-	public static final int RESTYPEDATA = 2;
+public class ResDataSetSensitive {
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
 	
 	private int id;
-	private String RESOURCE_ID;
-	private String BUSINESS_ROLE;
-	private int restype;
+	private String DATASET_SENSITIVE_LEVEL;
+	private String CLUE_SRC_SYS;
+	private String DATASET_SENSITIVE_NAME;
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
@@ -20,23 +18,23 @@ public class ResRoleResource {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getRESOURCE_ID() {
-		return RESOURCE_ID;
+	public String getDATASET_SENSITIVE_LEVEL() {
+		return DATASET_SENSITIVE_LEVEL;
 	}
-	public void setRESOURCE_ID(String rESOURCE_ID) {
-		RESOURCE_ID = rESOURCE_ID;
+	public void setDATASET_SENSITIVE_LEVEL(String dATASET_SENSITIVE_LEVEL) {
+		DATASET_SENSITIVE_LEVEL = dATASET_SENSITIVE_LEVEL;
 	}
-	public String getBUSINESS_ROLE() {
-		return BUSINESS_ROLE;
+	public String getCLUE_SRC_SYS() {
+		return CLUE_SRC_SYS;
 	}
-	public void setBUSINESS_ROLE(String bUSINESS_ROLE) {
-		BUSINESS_ROLE = bUSINESS_ROLE;
+	public void setCLUE_SRC_SYS(String cLUE_SRC_SYS) {
+		CLUE_SRC_SYS = cLUE_SRC_SYS;
 	}
-	public int getRestype() {
-		return restype;
+	public String getDATASET_SENSITIVE_NAME() {
+		return DATASET_SENSITIVE_NAME;
 	}
-	public void setRestype(int restype) {
-		this.restype = restype;
+	public void setDATASET_SENSITIVE_NAME(String dATASET_SENSITIVE_NAME) {
+		DATASET_SENSITIVE_NAME = dATASET_SENSITIVE_NAME;
 	}
 	public int getDELETE_STATUS() {
 		return DELETE_STATUS;
