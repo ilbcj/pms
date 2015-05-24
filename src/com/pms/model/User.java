@@ -1,79 +1,114 @@
 package com.pms.model;
 
 public class User {
-	public final static int STATUSNONE = 0;
-	public final static int STATUSINUSE = 1;
-	public final static int STATUSHANGUP = 2;
+	public final static int USERSTATUSINUSE = 0;
+	public final static int USERSTATUSREVOKE = 1;
+	public final static int DELSTATUSNO = 0;
+	public final static int DELSTATUSYES = 1;
 	
 	private int id;
-	private String name="";
-	private int status;
-	private String parent_id;
-	private String unit;
-	private String police_type;
-	private String sex;
-	private String idnum;
-	private String max_sensitive_level;
+	private String NAME="";//name
+	private String CERTIFICATE_CODE_MD5;//idnum
+	private String CERTIFICATE_CODE_SUFFIX;
+	private String SEXCODE;//sex
+	private String GA_DEPARTMENT;//parent_id
+	private String UNIT;
+	private String ORG_LEVEL;
+	private String POLICE_SORT;//police_type
+	private String POLICE_NO;//police_num
+	private String SENSITIVE_LEVEL;//max_sensitive_level
+	private String BUSINESS_TYPE;//unit
+	private String TAKE_OFFICE;//title
+	private int USER_STATUS;//status
 	private String position;
 	private String dept;
-	private String title;
-	private String police_num;
-	private String tstamp;
+	private int DELETE_STATUS;
+	private int DATA_VERSION;
+	private String LATEST_MOD_TIME;//tstamp
+	
+	public int getUSER_STATUS() {
+		return USER_STATUS;
+	}
+	public void setUSER_STATUS(int uSER_STATUS) {
+		USER_STATUS = uSER_STATUS;
+	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getNAME() {
+		return NAME;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setNAME(String nAME) {
+		NAME = nAME;
 	}
-
-	
-	public int getStatus() {
-		return status;
+	public String getCERTIFICATE_CODE_MD5() {
+		return CERTIFICATE_CODE_MD5;
 	}
-	public void setStatus(int status) {
-		this.status = status;
+	public void setCERTIFICATE_CODE_MD5(String cERTIFICATE_CODE_MD5) {
+		CERTIFICATE_CODE_MD5 = cERTIFICATE_CODE_MD5;
 	}
-	public String getParent_id() {
-		return parent_id;
+	public String getCERTIFICATE_CODE_SUFFIX() {
+		return CERTIFICATE_CODE_SUFFIX;
 	}
-	public void setParent_id(String parent_id) {
-		this.parent_id = parent_id;
+	public void setCERTIFICATE_CODE_SUFFIX(String cERTIFICATE_CODE_SUFFIX) {
+		CERTIFICATE_CODE_SUFFIX = cERTIFICATE_CODE_SUFFIX;
 	}
-	public String getUnit() {
-		return unit;
+	public String getSEXCODE() {
+		return SEXCODE;
 	}
-	public void setUnit(String unit) {
-		this.unit = unit;
+	public void setSEXCODE(String sEXCODE) {
+		SEXCODE = sEXCODE;
 	}
-	public String getPolice_type() {
-		return police_type;
+	public String getGA_DEPARTMENT() {
+		return GA_DEPARTMENT;
 	}
-	public void setPolice_type(String police_type) {
-		this.police_type = police_type;
+	public void setGA_DEPARTMENT(String gA_DEPARTMENT) {
+		GA_DEPARTMENT = gA_DEPARTMENT;
 	}
-	public String getSex() {
-		return sex;
+	public String getUNIT() {
+		return UNIT;
 	}
-	public void setSex(String sex) {
-		this.sex = sex;
+	public void setUNIT(String uNIT) {
+		UNIT = uNIT;
 	}
-	public String getIdnum() {
-		return idnum;
+	public String getORG_LEVEL() {
+		return ORG_LEVEL;
 	}
-	public void setIdnum(String idnum) {
-		this.idnum = idnum;
+	public void setORG_LEVEL(String oRG_LEVEL) {
+		ORG_LEVEL = oRG_LEVEL;
 	}
-	public String getMax_sensitive_level() {
-		return max_sensitive_level;
+	public String getPOLICE_SORT() {
+		return POLICE_SORT;
 	}
-	public void setMax_sensitive_level(String max_sensitive_level) {
-		this.max_sensitive_level = max_sensitive_level;
+	public void setPOLICE_SORT(String pOLICE_SORT) {
+		POLICE_SORT = pOLICE_SORT;
+	}
+	public String getPOLICE_NO() {
+		return POLICE_NO;
+	}
+	public void setPOLICE_NO(String pOLICE_NO) {
+		POLICE_NO = pOLICE_NO;
+	}
+	public String getSENSITIVE_LEVEL() {
+		return SENSITIVE_LEVEL;
+	}
+	public void setSENSITIVE_LEVEL(String sENSITIVE_LEVEL) {
+		SENSITIVE_LEVEL = sENSITIVE_LEVEL;
+	}
+	public String getBUSINESS_TYPE() {
+		return BUSINESS_TYPE;
+	}
+	public void setBUSINESS_TYPE(String bUSINESS_TYPE) {
+		BUSINESS_TYPE = bUSINESS_TYPE;
+	}
+	public String getTAKE_OFFICE() {
+		return TAKE_OFFICE;
+	}
+	public void setTAKE_OFFICE(String tAKE_OFFICE) {
+		TAKE_OFFICE = tAKE_OFFICE;
 	}
 	public String getPosition() {
 		return position;
@@ -87,24 +122,22 @@ public class User {
 	public void setDept(String dept) {
 		this.dept = dept;
 	}
-	public String getTitle() {
-		return title;
+	public int getDELETE_STATUS() {
+		return DELETE_STATUS;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setDELETE_STATUS(int dELETE_STATUS) {
+		DELETE_STATUS = dELETE_STATUS;
 	}
-	public String getPolice_num() {
-		return police_num;
+	public int getDATA_VERSION() {
+		return DATA_VERSION;
 	}
-	public void setPolice_num(String police_num) {
-		this.police_num = police_num;
+	public void setDATA_VERSION(int dATA_VERSION) {
+		DATA_VERSION = dATA_VERSION;
 	}
-	public String getTstamp() {
-		return tstamp;
+	public String getLATEST_MOD_TIME() {
+		return LATEST_MOD_TIME;
 	}
-	public void setTstamp(String tstamp) {
-		this.tstamp = tstamp;
-	}
-	
-	
+	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
+		LATEST_MOD_TIME = lATEST_MOD_TIME;
+	}	
 }

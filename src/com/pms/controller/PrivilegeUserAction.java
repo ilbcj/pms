@@ -223,17 +223,17 @@ public class PrivilegeUserAction extends ActionSupport {
 		try {
 			if( queryAll ) {
 				User criteria = new User();
-				criteria.setName(userName);
-				criteria.setStatus(userStatus);
-				criteria.setUnit(userUnit);
-				criteria.setPolice_type(userPoliceType);
-				criteria.setSex(userSex);
-				criteria.setIdnum(userIdnum);
-				criteria.setMax_sensitive_level(userMaxSensitiveLevel);
+				criteria.setNAME(userName);
+				criteria.setUSER_STATUS(userStatus);
+				criteria.setBUSINESS_TYPE(userUnit);
+				criteria.setPOLICE_SORT(userPoliceType);
+				criteria.setSEXCODE(userSex);
+				criteria.setCERTIFICATE_CODE_SUFFIX(userIdnum);
+				criteria.setSENSITIVE_LEVEL(userMaxSensitiveLevel);
 				criteria.setPosition(userPosition);
 				criteria.setDept(userDept);
-				criteria.setTitle(userTitle);
-				criteria.setPolice_num(userPoliceNum);
+				criteria.setTAKE_OFFICE(userTitle);
+				criteria.setPOLICE_NO(userPoliceNum);
 				total = ums.QueryAllPrivUserItems( orgId, userPrivStatus, criteria, page, rows, items );
 			} else {
 				total = ums.QueryPrivUserItems( orgId, userPrivStatus, page, rows, items );

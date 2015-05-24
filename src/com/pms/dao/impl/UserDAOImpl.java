@@ -105,11 +105,11 @@ public class UserDAOImpl implements UserDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<User> rs = null;
-		String sqlString = "select * from user where parent_id = :parent_id ";
+		String sqlString = "select * from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
-			q.setString("parent_id", pid);
+			q.setString("GA_DEPARTMENT", pid);
 			q.setFirstResult((page-1) * rows);   
 			q.setMaxResults(rows);   
 			rs = q.list();
@@ -132,28 +132,28 @@ public class UserDAOImpl implements UserDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<User> rs = null;
-		String sqlString = "select * from user where parent_id = :parent_id ";
+		String sqlString = "select * from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT ";
 		if( criteria != null ) {
-			if(criteria.getName() != null && criteria.getName().length() > 0) {
-				sqlString += " and name like :name ";
+			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+				sqlString += " and NAME like :NAME ";
 			}
-			if(criteria.getStatus() != User.STATUSNONE) {
-				sqlString += " and status = :status ";
+//			if(criteria.getUSER_STATUS() != User.STATUSNONE) {
+//				sqlString += " and status = :status ";
+//			}
+			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
 			}
-			if(criteria.getUnit() != null && criteria.getUnit().length() > 0) {
-				sqlString += " and unit like :unit ";
+			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+				sqlString += " and POLICE_SORT like :POLICE_SORT ";
 			}
-			if(criteria.getPolice_type() != null && criteria.getPolice_type().length() > 0) {
-				sqlString += " and police_type like :police_type ";
+			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+				sqlString += " and SEXCODE like :SEXCODE ";
 			}
-			if(criteria.getSex() != null && criteria.getSex().length() > 0) {
-				sqlString += " and sex like :sex ";
+			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
 			}
-			if(criteria.getIdnum() != null && criteria.getIdnum().length() > 0) {
-				sqlString += " and idnum like :idnum ";
-			}
-			if(criteria.getMax_sensitive_level() != null && criteria.getMax_sensitive_level().length() > 0) {
-				sqlString += " and max_sensitive_level like :max_sensitive_level ";
+			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
 			}
 			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 				sqlString += " and position like :position ";
@@ -161,39 +161,39 @@ public class UserDAOImpl implements UserDAO {
 			if(criteria.getDept() != null && criteria.getDept().length() > 0) {
 				sqlString += " and dept like :dept ";
 			}
-			if(criteria.getTitle() != null && criteria.getTitle().length() > 0) {
-				sqlString += " and title like :title ";
+			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
 			}
-			if(criteria.getPolice_num() != null && criteria.getPolice_num().length() > 0) {
-				sqlString += " and police_num like :police_num ";
+			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+				sqlString += " and POLICE_NO like :POLICE_NO ";
 			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
-			q.setString("parent_id", pid);
+			q.setString("GA_DEPARTMENT", pid);
 			if( criteria != null ) {
-				if(criteria.getName() != null && criteria.getName().length() > 0) {
-					q.setString( "name", "%" + criteria.getName() + "%" );
+				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
 				}
-				if(criteria.getStatus() != User.STATUSNONE) {
-					q.setInteger( "status", criteria.getStatus() );
-				}
+//				if(criteria.getStatus() != User.STATUSNONE) {
+//					q.setInteger( "status", criteria.getStatus() );
+//				}
 	
-				if(criteria.getUnit() != null && criteria.getUnit().length() > 0) {
-					q.setString( "unit", "%" + criteria.getUnit() + "%" );
+				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
 				}
-				if(criteria.getPolice_type() != null && criteria.getPolice_type().length() > 0) {
-					q.setString( "police_type", "%" + criteria.getPolice_type() + "%" );
+				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
 				}
-				if(criteria.getSex() != null && criteria.getSex().length() > 0) {
-					q.setString( "sex", "%" + criteria.getSex() + "%" );
+				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
 				}
-				if(criteria.getIdnum() != null && criteria.getIdnum().length() > 0) {
-					q.setString( "idnum", "%" + criteria.getIdnum() + "%" );
+				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
 				}
-				if(criteria.getMax_sensitive_level() != null && criteria.getMax_sensitive_level().length() > 0) {
-					q.setString( "max_sensitive_level", "%" + criteria.getMax_sensitive_level() + "%" );
+				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
 				}
 				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 					q.setString( "position", "%" + criteria.getPosition() + "%" );
@@ -201,11 +201,11 @@ public class UserDAOImpl implements UserDAO {
 				if(criteria.getDept() != null && criteria.getDept().length() > 0) {
 					q.setString( "dept", "%" + criteria.getDept() + "%" );
 				}
-				if(criteria.getTitle() != null && criteria.getTitle().length() > 0) {
-					q.setString( "title", "%" + criteria.getTitle() + "%" );
+				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
 				}
-				if(criteria.getPolice_num() != null && criteria.getPolice_num().length() > 0) {
-					q.setString( "police_num", "%" + criteria.getPolice_num() + "%" );
+				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
 				}
 			}
 			rs = q.list();
@@ -226,28 +226,28 @@ public class UserDAOImpl implements UserDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from user where parent_id = :parent_id ";
+		String sqlString = "select count(*) from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT ";
 		if( criteria != null ) {
-			if(criteria.getName() != null && criteria.getName().length() > 0) {
-				sqlString += " and name like :name ";
+			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+				sqlString += " and NAME like :NAME ";
 			}
-			if(criteria.getStatus() != User.STATUSNONE) {
-				sqlString += " and status = :status ";
+//			if(criteria.getStatus() != User.STATUSNONE) {
+//				sqlString += " and status = :status ";
+//			}
+			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
 			}
-			if(criteria.getUnit() != null && criteria.getUnit().length() > 0) {
-				sqlString += " and unit like :unit ";
+			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+				sqlString += " and POLICE_SORT like :POLICE_SORT ";
 			}
-			if(criteria.getPolice_type() != null && criteria.getPolice_type().length() > 0) {
-				sqlString += " and police_type like :police_type ";
+			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+				sqlString += " and SEXCODE like :SEXCODE ";
 			}
-			if(criteria.getSex() != null && criteria.getSex().length() > 0) {
-				sqlString += " and sex like :sex ";
+			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
 			}
-			if(criteria.getIdnum() != null && criteria.getIdnum().length() > 0) {
-				sqlString += " and idnum like :idnum ";
-			}
-			if(criteria.getMax_sensitive_level() != null && criteria.getMax_sensitive_level().length() > 0) {
-				sqlString += " and max_sensitive_level like :max_sensitive_level ";
+			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
 			}
 			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 				sqlString += " and position like :position ";
@@ -255,39 +255,39 @@ public class UserDAOImpl implements UserDAO {
 			if(criteria.getDept() != null && criteria.getDept().length() > 0) {
 				sqlString += " and dept like :dept ";
 			}
-			if(criteria.getTitle() != null && criteria.getTitle().length() > 0) {
-				sqlString += " and title like :title ";
+			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
 			}
-			if(criteria.getPolice_num() != null && criteria.getPolice_num().length() > 0) {
-				sqlString += " and police_num like :police_num ";
+			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+				sqlString += " and POLICE_NO like :POLICE_NO ";
 			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setString("parent_id", pid);
+			q.setString("GA_DEPARTMENT", pid);
 			if( criteria != null ) {
-				if(criteria.getName() != null && criteria.getName().length() > 0) {
-					q.setString( "name", "%" + criteria.getName() + "%" );
+				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
 				}
-				if(criteria.getStatus() != User.STATUSNONE) {
-					q.setInteger( "status", criteria.getStatus() );
-				}
+//				if(criteria.getStatus() != User.STATUSNONE) {
+//					q.setInteger( "status", criteria.getStatus() );
+//				}
 	
-				if(criteria.getUnit() != null && criteria.getUnit().length() > 0) {
-					q.setString( "unit", "%" + criteria.getUnit() + "%" );
+				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
 				}
-				if(criteria.getPolice_type() != null && criteria.getPolice_type().length() > 0) {
-					q.setString( "police_type", "%" + criteria.getPolice_type() + "%" );
+				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
 				}
-				if(criteria.getSex() != null && criteria.getSex().length() > 0) {
-					q.setString( "sex", "%" + criteria.getSex() + "%" );
+				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
 				}
-				if(criteria.getIdnum() != null && criteria.getIdnum().length() > 0) {
-					q.setString( "idnum", "%" + criteria.getIdnum() + "%" );
+				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
 				}
-				if(criteria.getMax_sensitive_level() != null && criteria.getMax_sensitive_level().length() > 0) {
-					q.setString( "max_sensitive_level", "%" + criteria.getMax_sensitive_level() + "%" );
+				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
 				}
 				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 					q.setString( "position", "%" + criteria.getPosition() + "%" );
@@ -295,11 +295,11 @@ public class UserDAOImpl implements UserDAO {
 				if(criteria.getDept() != null && criteria.getDept().length() > 0) {
 					q.setString( "dept", "%" + criteria.getDept() + "%" );
 				}
-				if(criteria.getTitle() != null && criteria.getTitle().length() > 0) {
-					q.setString( "title", "%" + criteria.getTitle() + "%" );
+				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
 				}
-				if(criteria.getPolice_num() != null && criteria.getPolice_num().length() > 0) {
-					q.setString( "police_num", "%" + criteria.getPolice_num() + "%" );
+				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();

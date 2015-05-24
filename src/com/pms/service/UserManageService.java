@@ -26,7 +26,7 @@ public class UserManageService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
-		user.setTstamp(timenow);
+		user.setLATEST_MOD_TIME(timenow);
 		user = dao.UserAdd(user);
 		return user;
 	}
@@ -53,21 +53,21 @@ public class UserManageService {
 	public UserListItem ConvertUserToListItem(User user) throws Exception {
 		UserListItem item = new UserListItem();
 		item.setId(user.getId());
-		item.setName(user.getName());
-		item.setParent_id(user.getParent_id());
+		item.setName(user.getNAME());
+		item.setParent_id(user.getGA_DEPARTMENT());
 		item.setDept(user.getDept());
-		item.setIdnum(user.getIdnum());
-		item.setMax_sensitive_level(user.getMax_sensitive_level());
-		item.setPolice_num(user.getPolice_num());
-		item.setPolice_type(user.getPolice_type());
+		item.setIdnum(user.getCERTIFICATE_CODE_SUFFIX());
+		item.setMax_sensitive_level(user.getSENSITIVE_LEVEL());
+		item.setPolice_num(user.getPOLICE_NO());
+		item.setPolice_type(user.getPOLICE_SORT());
 		item.setPosition(user.getPosition());
-		item.setSex(user.getSex());
-		item.setStatus(user.getStatus());
-		item.setTitle(user.getTitle());
-		item.setUnit(user.getUnit());
+		item.setSex(user.getSEXCODE());
+		item.setStatus(user.getUSER_STATUS());
+		item.setTitle(user.getTAKE_OFFICE());
+		item.setUnit(user.getBUSINESS_TYPE());
 
 		OrgManageService oms = new OrgManageService();
-		String path = oms.QueryNodePath(user.getParent_id());
+		String path = oms.QueryNodePath(user.getGA_DEPARTMENT());
 		if(path != null && path.length() > 0){
 			//name1/name2/name3/name4 -->  name1/name2/name3  and  name4
 			int index = path.lastIndexOf('/');

@@ -118,47 +118,47 @@
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 姓名</td>
-				                <td><input id="user_name" name="user.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入姓名'"></input></td>
+				                <td><input id="user_name" name="user.NAME" class="form_value_mid easyui-textbox" data-options="prompt:'请输入姓名'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 身份证</td>
-				                <td><input id="user_idnum" name="user.idnum" class="form_value_mid easyui-textbox" data-options="prompt:'请输入身份证'"></input></td>
+				                <td><input id="user_idnum" name="user.CERTIFICATE_CODE_SUFFIX" class="form_value_mid easyui-textbox" data-options="prompt:'请输入身份证'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 状态</td>
-				                <td><input id="user_status" name="user.status" class="form_value_mid easyui-combobox" 
-				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '1',selected:true}]" /></td>
+				                <td><input id="user_status" name="user.USER_STATUS" class="form_value_mid easyui-combobox" 
+				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '0',selected:true}]" /></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 性别</td>
-				                <td><input id="user_sex" name="user.sex" class="form_value_mid easyui-textbox" data-options="prompt:'请输入性别'"></input></td>
+				                <td><input id="user_sex" name="user.SEXCODE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入性别'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 组织机构</td>
 				                <td>
-				                	<input id="user_pid" name="user.parent_id" class="form_value_mid easyui-textbox" data-options="prompt:'请选择上级机构',editable:false"></input>
+				                	<input id="user_pid" name="user.GA_DEPARTMENT" class="form_value_mid easyui-textbox" data-options="prompt:'请选择上级机构',editable:false"></input>
 				                	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="openOrgSelectWin()">选择</a>
 				                </td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 警种</td>
-				                <td><input id="user_police_type" name="user.police_type" class="form_value_mid easyui-textbox" data-options="prompt:'请输入警种'"></input></td>
+				                <td><input id="user_police_type" name="user.POLICE_SORT" class="form_value_mid easyui-textbox" data-options="prompt:'请输入警种'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 警号</td>
-				                <td><input id="user_police_num" name="user.police_num" class="form_value_mid easyui-textbox" data-options="prompt:'请输入警号'"></input></td>
+				                <td><input id="user_police_num" name="user.POLICE_NO" class="form_value_mid easyui-textbox" data-options="prompt:'请输入警号'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 最高敏感级别</td>
-				                <td><input id="user_max_sensitive_level" name="user.max_sensitive_level" class="form_value_mid easyui-textbox" data-options="prompt:'请输入最高敏感级别'"></input></td>
+				                <td><input id="user_max_sensitive_level" name="user.SENSITIVE_LEVEL" class="form_value_mid easyui-textbox" data-options="prompt:'请输入最高敏感级别'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right">业务部门类别</td>
-				                <td><input id="user_dept" name="user.dept" class="form_value_mid easyui-textbox" data-options="prompt:'请输入部门'"></input></td>
+				                <td><input id="user_dept" name="user.BUSINESS_TYPE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入部门'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right">职务/职称</td>
-				                <td><input id="user_title" name="user.title" class="form_value_mid easyui-textbox" data-options="prompt:'请输入职务/职称'"></input></td>
+				                <td><input id="user_title" name="user.TAKE_OFFICE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入职务/职称'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right">岗位</td>
@@ -166,7 +166,7 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right">二级部门</td>
-				                <td><input id="user_unit" name="user.unit" class="form_value_mid easyui-textbox" data-options="prompt:'请输入二级部门'"></input></td>
+				                <td><input id="user_unit" name="user.dept" class="form_value_mid easyui-textbox" data-options="prompt:'请输入二级部门'"></input></td>
 				            </tr>
 				        </table>
 				    </form>
@@ -338,10 +338,10 @@
     }
     
     function formatStatus(val,row){
-		if (val == 1){
+		if (val == 0){
 			return "使用中";
-		} else if (val == 2) {
-			return "挂起";
+		} else if (val == 1) {
+			return "注销";
 		}
 		else {
 			return "未知状态";
@@ -405,13 +405,13 @@ $(document).ready(function () {
 		textField: 'label',
 		data:[{
 			label: '请选择',
-			value: '0',
+			value: '-1',
 		},{
 			label: '使用中',
-			value: '1'
+			value: '0'
 		},{
-			label: '挂起',
-			value: '2'
+			label: '注销',
+			value: '1'
 		}]
 	});
 	

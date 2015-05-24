@@ -2,6 +2,8 @@ package com.pms.model;
 
 public class Organization {
 	public final static String ROOTNODEID = "1";
+	public final static int DELSTATUSNO = 0;
+	public final static int DELSTATUSYES = 1;
 	
 //	private int id;
 	private String GA_DEPARTMENT;//id
