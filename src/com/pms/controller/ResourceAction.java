@@ -512,6 +512,7 @@ public class ResourceAction extends ActionSupport {
 		try {
 			ResourceUploadService rus = new ResourceUploadService();
 			InputStream in=new FileInputStream(fi);
+			rus.UploadResource(in);
 			String path=ServletActionContext.getServletContext().getRealPath("")+"/upload/"+fiFileName;
 			System.out.println(path);
 			
