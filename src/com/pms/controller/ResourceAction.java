@@ -2,16 +2,13 @@ package com.pms.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -502,7 +499,6 @@ public class ResourceAction extends ActionSupport {
 		
 		System.out.println("文件的名称："+fiFileName);
 		System.out.println("文件的类型："+fiContentType);
-		long length = fi.length();
 		if(fi.length()==0){
 			System.out.println("上传文件长度为0");
 			setResult(true);
@@ -510,85 +506,26 @@ public class ResourceAction extends ActionSupport {
 		}
 		
 		try {
+//			String path=ServletActionContext.getServletContext().getRealPath("")+"/upload/"+fiFileName;
+//			System.out.println(path);
+//			InputStream in=new FileInputStream(fi);
+//			OutputStream out=new FileOutputStream(new File(path));
+//			byte b[]=new byte[1024*1024*5];
+//			int i=0;
+//			while((i=in.read(b))!=-1) {
+//				out.write(b, 0, i);
+//			}
+//			out.flush();
+//			out.close();
+			
 			ResourceUploadService rus = new ResourceUploadService();
-			InputStream in=new FileInputStream(fi);
-			rus.UploadResource(in);
-			String path=ServletActionContext.getServletContext().getRealPath("")+"/upload/"+fiFileName;
-			System.out.println(path);
-			
-			OutputStream out=new FileOutputStream(new File(path));
-			byte b[]=new byte[1024*1024*5];
-			int i=0;
-			while((i=in.read(b))!=-1) {
-				out.write(b, 0, i);
-			}
-			out.flush();
-			out.close();
-			
-		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
- 
-			        File excelFile = new File(path); //创建文件对象
-		        FileInputStream is = new FileInputStream(excelFile); //文件流  
-		        Workbook workbook = WorkbookFactory.create(is);
-		        int sheetCount = workbook.getNumberOfSheets();  //Sheet的数量  
-		        //遍历每个Sheet  
-		        for (int s = 0; s < sheetCount; s++) {  
-		            Sheet sheet = workbook.getSheetAt(s);
-		            System.out.println(sheet.getSheetName());
-		            int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数  
-		            //遍历每一行  
-		            for (int r = 0; r < rowCount; r++) {  
-		                Row row = sheet.getRow(r);  
-		                int cellCount = row.getPhysicalNumberOfCells(); //获取总列数  
-		                //遍历每一列  
-		                for (int c = 0; c < cellCount; c++) {  
-		                    Cell cell = row.getCell(c);  
-		                    int cellType = cell.getCellType();  
-		                    String cellValue = null;  
-		                    switch(cellType) {  
-		                        case Cell.CELL_TYPE_STRING: //文本  
-		                            cellValue = cell.getStringCellValue();  
-		                            break;  
-		                        case Cell.CELL_TYPE_NUMERIC: //数字、日期  
-		                            if(DateUtil.isCellDateFormatted(cell)) {  
-		                                cellValue = sdf.format(cell.getDateCellValue()); //日期型  
-		                            }  
-		                            else {  
-		                                cellValue = String.valueOf(cell.getNumericCellValue()); //数字  
-		                            }  
-		                            break;  
-		                        case Cell.CELL_TYPE_BOOLEAN: //布尔型  
-		                            cellValue = String.valueOf(cell.getBooleanCellValue());  
-		                            break;  
-		                        case Cell.CELL_TYPE_BLANK: //空白  
-		                            cellValue = cell.getStringCellValue();  
-		                            break;  
-		                        case Cell.CELL_TYPE_ERROR: //错误  
-		                            cellValue = "错误";  
-		                            break;  
-		                        case Cell.CELL_TYPE_FORMULA: //公式  
-		                            cellValue = "错误";  
-		                            break;  
-		                        default:  
-		                            cellValue = "错误";  
-		                    }  
-		                    System.out.print(cellValue + "\t");
-			                    
-			                }  
-			                System.out.println(); 
-						    
-			            }  
-			        }  
-			  
- 
-
-			    
-				in.close();			
-
-			
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			rus.UploadResource(fi);
+		} catch (Exception e) {
+			//e.printStackTrace();
+			setResult(false);
+			this.setMessage("导入文件失败。" + e.getMessage());
+			return SUCCESS;
+		}
 
 		setResult(true);
 		return SUCCESS;
