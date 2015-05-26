@@ -187,7 +187,7 @@
 								        <thead>
 								            <tr>
 								                <th data-options="field:'name'" style="width:33%;">机构名称</th>
-								                <th data-options="field:'uid'" style="width:33%;">机构编码</th>
+								                <th data-options="field:'id'" style="width:33%;">机构编码</th>
 								                <th data-options="field:'pname'" style="width:33%;">上级机构</th>
 								            </tr>
 								        </thead>
@@ -367,13 +367,13 @@
 			$("#user_name").textbox('setValue',rows[0].name);
 			$("#user_pid").textbox('setValue',rows[0].pname);
 			$("#user_unit").textbox('setValue',rows[0].unit);
-			$("#user_police_type").textbox('setText',rows[0].police_type);
+			$("#user_police_type").textbox('setValue',rows[0].police_type);
 			var sex=$("#user_sex").textbox('setValue',rows[0].sex);
 			$("#user_idnum").textbox('setValue',rows[0].idnum);
 			$("#user_max_sensitive_level").textbox('setValue',rows[0].max_sensitive_level);
 			$("#user_position").textbox('setValue',rows[0].position);
 			$("#user_dept").textbox('setValue',rows[0].dept);
-			$("#user_title").textbox('setText',rows[0].title);
+			$("#user_title").textbox('setValue',rows[0].title);
 			$("#user_police_num").textbox('setValue',rows[0].police_num);
 			
 			$("#user_maintain_center_main_wapper").panel('close');
