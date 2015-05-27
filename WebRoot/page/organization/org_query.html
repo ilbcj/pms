@@ -59,7 +59,7 @@
 							            <tr>
 							            	<th field="ck" checkbox="true"></th>
 							                <th data-options="field:'name'" style="width:33%;">机构名称</th>
-							                <th data-options="field:'uid'" style="width:33%;">机构编码</th>
+							                <th data-options="field:'id'" style="width:33%;">机构编码</th>
 							                <th data-options="field:'pname'" style="width:33%;">上级机构</th>
 							            </tr>
 							        </thead>
@@ -179,7 +179,7 @@
 		
 		$("#org_id").val(rows[0].id);
 		$("#org_name").textbox('setValue',rows[0].name);
-		$("#org_uid").textbox('setValue',rows[0].uid);
+		$("#org_uid").textbox('setValue',rows[0].id);
 		$("#org_pid").textbox('setValue',rows[0].pid);
 		$("#org_pid").textbox('setText',rows[0].pname);
 		$("#org_level").textbox('setValue',rows[0].orgLevel);

@@ -40,9 +40,9 @@
 					        <thead>
 					            <tr>
 					            	<th field="ck" checkbox="true"></th>
-					                <th data-options="field:'business_role_name'" style="width:33%;">名称</th>
-					                <th data-options="field:'business_role'" style="width:33%;">编码</th>
-					                <th data-options="field:'role_describe'" style="width:33%;">描述</th>
+					                <th data-options="field:'BUSINESS_ROLE_NAME'" style="width:33%;">名称</th>
+					                <th data-options="field:'BUSINESS_ROLE'" style="width:33%;">编码</th>
+					                <th data-options="field:'ROLE_DESC'" style="width:33%;">描述</th>
 					            </tr>
 					        </thead>
 					    </table>
@@ -195,18 +195,18 @@
 						            <tr>
 						            	<th field="ck" checkbox="true"></th>
 						                <th data-options="field:'name'">名称</th>
-						                <th data-options="field:'resource_id'">资源唯一标识</th>
-						                <th data-options="field:'resource_status'">资源状态 </th>
-						                <th data-options="field:'resource_describe'">资源描述</th>
-						                <th data-options="field:'resource_remark'">备注</th>
-						                <th data-options="field:'delete_status'">删除状态 </th>
+						                <th data-options="field:'RESOURCE_ID'">资源唯一标识</th>
+						                <th data-options="field:'RESOURCE_STATUS'">资源状态 </th>
+						                <th data-options="field:'RESOURCE_DESCRIBE'">资源描述</th>
+						                <th data-options="field:'RESOURCE_REMARK'">备注</th>
+						                <th data-options="field:'DELETE_STATUS'">删除状态 </th>
 						                <th data-options="field:'resource_type'">资源类型</th>
-						                <th data-options="field:'clue_dst_sys'">目标地市</th>
-						                <th data-options="field:'dataset_sensitive_level'">数据集敏感度编码 </th>					                
-						                <th data-options="field:'data_set'">数据集编码</th>
-						                <th data-options="field:'section_class'">字段分类编码</th>
-						                <th data-options="field:'element'">字段编码</th>
-						                <th data-options="field:'section_relation_class'">字段分类关系编码 </th>
+						                <th data-options="field:'CLUE_DST_SYS'">目标地市</th>
+						                <th data-options="field:'DATASET_SENSITIVE_LEVEL'">数据集敏感度编码 </th>					                
+						                <th data-options="field:'DATA_SET'">数据集编码</th>
+						                <th data-options="field:'SECTION_CLASS'">字段分类编码</th>
+						                <th data-options="field:'ELEMENT'">字段编码</th>
+						                <th data-options="field:'SECTION_RELATIOIN_CLASS'">字段分类关系编码 </th>
 						            </tr>
 						        </thead>
 						    </table>
@@ -303,28 +303,28 @@
     	var poststr = "role.id=" + roleId;
     	
     	var roleName = $("#role_name").textbox('getValue');
-    	poststr += "&role.business_role_name=" + roleName;
+    	poststr += "&role.BUSINESS_ROLE_NAME=" + roleName;
     	
     	var roleCode = $("#role_code").textbox('getValue');
-    	poststr += "&role.business_role=" + roleCode;
+    	poststr += "&role.BUSINESS_ROLE=" + roleCode;
     	
     	var roleType = $("#role_type").textbox('getValue');
-    	poststr += "&role.business_role_type=" + roleType;
+    	poststr += "&role.BUSINESS_ROLE_TYPE=" + roleType;
     	
     	var roleDestcity = $("#role_destcity").textbox('getValue');
-    	poststr += "&role.clue_dst_sys=" + roleDestcity;
+    	poststr += "&role.CLUE_DST_SYS=" + roleDestcity;
     	
     	var roleSystype = $("#role_systype").textbox('getValue');
-    	poststr += "&role.system_type=" + roleSystype;
+    	poststr += "&role.SYSTEM_TYPE=" + roleSystype;
     	
     	var roleSrccity = $("#role_srccity").textbox('getValue');
-    	poststr += "&role.clue_src_sys=" + roleSrccity;
+    	poststr += "&role.CLUE_SRC_SYS=" + roleSrccity;
     	
     	var roleDelstatus = $("#role_delstatus").textbox('getValue');
-    	poststr += "&role.delete_status=" + roleDelstatus;
+    	poststr += "&role.DELETE_STATUS=" + roleDelstatus;
     	
     	var roleDescrib = $("#role_describe").textbox('getValue');
-    	poststr += "&role.role_describe=" + roleDescrib;
+    	poststr += "&role.ROLE_DESC=" + roleDescrib;
     	
      	var rows = $("#role_resource_feature_dg").datagrid('getRows');
      	var index = 0;
@@ -387,14 +387,14 @@
 		}
 		
 		$("#role_id").val(rows[0].id);
-		$("#role_name").textbox('setValue',rows[0].business_role_name);
-		$("#role_code").textbox('setValue',rows[0].business_role);
-		$("#role_type").textbox('setValue',rows[0].business_role_type);
-		$("#role_destcity").textbox('setValue',rows[0].clue_dst_sys);
-		$("#role_systype").textbox('setValue',rows[0].system_type);
-		$("#role_srccity").textbox('setValue',rows[0].clue_src_sys);
-		$("#role_delstatus").textbox('setValue',rows[0].delete_status);
-		$("#role_describe").textbox('setValue',rows[0].role_describe);
+		$("#role_name").textbox('setValue',rows[0].BUSINESS_ROLE_NAME);
+		$("#role_code").textbox('setValue',rows[0].BUSINESS_ROLE);
+		$("#role_type").textbox('setValue',rows[0].BUSINESS_ROLE_TYPE);
+		$("#role_destcity").textbox('setValue',rows[0].CLUE_DST_SYS);
+		$("#role_systype").textbox('setValue',rows[0].SYSTEM_TYPE);
+		$("#role_srccity").textbox('setValue',rows[0].CLUE_SRC_SYS);
+		$("#role_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
+		$("#role_describe").textbox('setValue',rows[0].ROLE_DESC);
 		
 		//load datagrid's data
 		var poststr = "role.id=" + rows[0].id;
@@ -526,18 +526,18 @@
 			row:{
 				id:data.id, 
 				name:data.name, 
-				resource_id:data.resource_id, 
-				resource_status:data.resource_status,
-				resource_describe:data.resource_describe, 
-				resource_remark:data.resource_remark,
-				delete_status:data.delete_status, 
+				resource_id:data.RESOURCE_ID, 
+				resource_status:data.RESOURCE_STATUS,
+				resource_describe:data.RESOURCE_DESCRIBE, 
+				resource_remark:data.RESOURCE_REMARK,
+				delete_status:data.DELETE_STATUS, 
 				resource_type:data.resource_type,
-				clue_dst_sys:data.clue_dst_sys,
-				dataset_sensitive_level:data.dataset_sensitive_level,
-				data_set:data.data_set,
-				section_class:data.section_class,
-				element:data.element,
-				section_relation_class:data.section_relation_class
+				clue_dst_sys:data.CLUE_DST_SYS,
+				dataset_sensitive_level:DATA.DATASET_SENSITIVE_LEVEL,
+				data_set:data.DATA_SET,
+				section_class:data.SECTION_CLASS,
+				element:data.ELEMENT,
+				section_relation_class:data.SECTION_RELATIOIN_CLASS
 			}
 		});
     }
@@ -653,18 +653,18 @@ $(document).ready(function () {
 		//url:'data/datagrid_data.json',
 		columns:[[
 			{field:'name',title:'名称',width:'7%',editor:'text'},
-			{field:'resource_id',title:'资源唯一标识',width:'7%',editor:'text'},
-			{field:'resource_status',title:'资源状态',width:'7%',editor:'text'},
-			{field:'resource_describe',title:'资源描述',width:'7%',editor:'text'},
-			{field:'resource_remark',title:'备注',width:'7%',editor:'text'},
-			{field:'delete_status',title:'删除状态',width:'7%',editor:'text'},			
+			{field:'RESOURCE_ID',title:'资源唯一标识',width:'7%',editor:'text'},
+			{field:'RESOURCE_STATUS',title:'资源状态',width:'7%',editor:'text'},
+			{field:'RESOURCE_DESCRIBE',title:'资源描述',width:'7%',editor:'text'},
+			{field:'RESOURCE_REMARK',title:'备注',width:'7%',editor:'text'},
+			{field:'DELETE_STATUS',title:'删除状态',width:'7%',editor:'text'},			
 			{field:'resource_type',title:'资源类型',width:'7%',editor:'text'},
-			{field:'clue_dst_sys',title:'目标地市',width:'7%',editor:'text'},
-			{field:'dataset_sensitive_level',title:'数据集敏感度编码 ',width:'7%',editor:'text'},
-			{field:'data_set',title:'数据集编码',width:'7%',editor:'text'},
-			{field:'section_class',title:'字段分类编码',width:'7%',editor:'text'},
-			{field:'element',title:'字段编码',width:'7%',editor:'text'},
-			{field:'section_relation_class',title:'字段分类关系编码',width:'7%',editor:'text'},
+			{field:'CLUE_DST_SYS',title:'目标地市',width:'7%',editor:'text'},
+			{field:'DATASET_SENSITIVE_LEVEL',title:'数据集敏感度编码 ',width:'10%',editor:'text'},
+			{field:'DATA_SET',title:'数据集编码',width:'7%',editor:'text'},
+			{field:'SECTION_CLASS',title:'字段分类编码',width:'7%',editor:'text'},
+			{field:'ELEMENT',title:'字段编码',width:'7%',editor:'text'},
+			{field:'SECTION_RELATIOIN_CLASS',title:'字段分类关系编码',width:'10%',editor:'text'},
 			{field:'action',title:'操作',width:'4%',
 				formatter:function(value,row,index){
 					return '<a href="#" onclick="dataDeleterow(this)">删除</a>';
