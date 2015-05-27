@@ -177,7 +177,7 @@ public class GroupDAOImpl implements GroupDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<User> rs = null;
-		String sqlString = "SELECT * FROM user where id in (SELECT userid FROM group_user where groupid = :groupid) ";
+		String sqlString = "SELECT * FROM WA_AUTHORITY_POLICE where id in (SELECT userid FROM group_user where groupid = :groupid) ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
