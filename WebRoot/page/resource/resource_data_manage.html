@@ -41,8 +41,8 @@
 					            <tr>
 					            	<th field="ck" checkbox="true"></th>
 					                <th data-options="field:'name'" style="width:33%;">名称</th>
-					                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
-					                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
+					                <th data-options="field:'RESOURCE_ID'" style="width:33%;">编码</th>
+					                <th data-options="field:'RESOURCE_DESCRIBE'" style="width:33%;">描述</th>
 					            </tr>
 					        </thead>
 					    </table>
@@ -97,23 +97,23 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 资源唯一标识</td>
-				                <td><input id="res_resid" name="data.resource_id" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源唯一标识'"></input></td>
+				                <td><input id="res_resid" name="data.RESOURCE_ID" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源唯一标识'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 资源状态</td>
-				                <td><input id="res_status" name="data.resource_status" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
+				                <td><input id="res_status" name="data.RESOURCE_STATUS" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 资源描述</td>
-				                <td><input id="res_desc" name="data.resource_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源描述'"></input></td>
+				                <td><input id="res_desc" name="data.RESOURCE_DESCRIBE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源描述'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 备注</td>
-				                <td><input id="res_memo" name="data.resource_remark" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
+				                <td><input id="res_memo" name="data.RESOURCE_REMARK" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 删除状态</td>
-				                <td><input id="res_delstatus" name="data.delete_status" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
+				                <td><input id="res_delstatus" name="data.DELETE_STATUS" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 资源类型</td>
@@ -121,27 +121,27 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 目标地市</td>
-				                <td><input id="res_dest" name="data.clue_dst_sys" class="form_value_mid easyui-textbox" data-options="prompt:'请输入目标地市'"></input></td>
+				                <td><input id="res_dest" name="data.CLUE_DST_SYS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入目标地市'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 数据集敏感度编码</td>
-				                <td><input id="res_dsl" name="data.dataset_sensitive_level" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集敏感度编码'"></input></td>
+				                <td><input id="res_dsl" name="data.DATASET_SENSITIVE_LEVEL" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集敏感度编码'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 数据集编码</td>
-				                <td><input id="res_dataset" name="data.data_set" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集编码'"></input></td>
+				                <td><input id="res_dataset" name="data.DATA_SET" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集编码'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 字段分类编码</td>
-				                <td><input id="res_sectionclass" name="data.section_class" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类编码'"></input></td>
+				                <td><input id="res_sectionclass" name="data.SECTION_CLASS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类编码'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 字段编码</td>
-				                <td><input id="res_element" name="data.element" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段编码'"></input></td>
+				                <td><input id="res_element" name="data.ELEMENT" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段编码'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 字段分类关系编码</td>
-				                <td><input id="res_secrelacls" name="data.section_relation_class" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类关系编码'"></input></td>
+				                <td><input id="res_secrelacls" name="data.SECTION_RELATIOIN_CLASS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类关系编码'"></input></td>
 				            </tr>
 				        </table>
 				    </form>
@@ -203,18 +203,18 @@
 		
 		$("#res_id").val(rows[0].id);
 		$("#res_name").textbox('setValue',rows[0].name);
-		$("#res_resid").textbox('setValue',rows[0].resource_id);
-		$("#res_status").textbox('setValue',rows[0].resource_status);
-		$("#res_desc").textbox('setValue',rows[0].resource_describe);
-		$("#res_memo").textbox('setValue',rows[0].resource_remark);
-		$("#res_delstatus").textbox('setValue',rows[0].delete_status);
+		$("#res_resid").textbox('setValue',rows[0].RESOURCE_ID);
+		$("#res_status").textbox('setValue',rows[0].RESOURCE_STATUS);
+		$("#res_desc").textbox('setValue',rows[0].RESOURCE_DESCRIBE);
+		$("#res_memo").textbox('setValue',rows[0].RESOURCE_REMARK);
+		$("#res_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
 		$("#res_type").textbox('setValue',rows[0].resource_type);
-		$("#res_dest").textbox('setValue',rows[0].clue_dst_sys);
-		$("#res_dsl").textbox('setValue',rows[0].dataset_sensitive_level);
-		$("#res_dataset").textbox('setValue',rows[0].data_set);
-		$("#res_sectionclass").textbox('setValue',rows[0].section_class);
-		$("#res_element").textbox('setValue',rows[0].element);
-		$("#res_secrelacls").textbox('setValue',rows[0].section_relation_class);
+		$("#res_dest").textbox('setValue',rows[0].CLUE_DST_SYS);
+		$("#res_dsl").textbox('setValue',rows[0].DATASET_SENSITIVE_LEVEL);
+		$("#res_dataset").textbox('setValue',rows[0].DATA_SET);
+		$("#res_sectionclass").textbox('setValue',rows[0].SECTION_CLASS);
+		$("#res_element").textbox('setValue',rows[0].ELEMENT);
+		$("#res_secrelacls").textbox('setValue',rows[0].SECTION_RELATIOIN_CLASS);
 		
 		$("#resource_data_manage_center_main_wapper").panel('close');
    		$("#resource_data_manage_center_detail_wapper").panel('open');
@@ -233,9 +233,9 @@
 			});
 			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选资源？', function(r){
                 if (r){
-                	var poststr = "delResourceIds=" + rows[0].id;
+                	var poststr = "delIds=" + rows[0].id;
                 	for(var i=1; i<rows.length; i++){
-					    poststr += "&delResourceIds=" + rows[i].id;
+					    poststr += "&delIds=" + rows[i].id;
 					}
 
                     $.getJSON("../resource/deleteResourceDatas.action", poststr, function(retObj) {
