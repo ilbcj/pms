@@ -12,6 +12,7 @@ public class ResRelationRow {
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
+	
 	public int getId() {
 		return id;
 	}
@@ -59,5 +60,15 @@ public class ResRelationRow {
 	}
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
+	}
+	
+	public boolean isValid() {
+		if( (DATA_SET == null || DATA_SET.isEmpty()) 
+				&& (COLUMN_ID == null || COLUMN_ID.isEmpty()) 
+				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
+				&& (VALUE_ID == null || VALUE_ID.isEmpty()) ) {
+			return false;
+		}
+		return true;
 	}
 }

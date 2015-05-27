@@ -61,4 +61,14 @@ public class ResDataSet {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
+	
+	public boolean isValid() {
+		if( (DATA_SET == null || DATA_SET.isEmpty()) 
+				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				&& (DATASET_NAME == null || DATASET_NAME.isEmpty())
+				&& (DATASET_SENSITIVE_LEVEL == null || DATASET_SENSITIVE_LEVEL.isEmpty()) ) {
+			return false;
+		}
+		return true;
+	}
 }

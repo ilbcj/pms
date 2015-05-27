@@ -54,4 +54,13 @@ public class ResColumnClassify {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
+	
+	public boolean isValid() {
+		if( (SECTION_CLASS == null || SECTION_CLASS.isEmpty()) 
+				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				&& (CLASSIFY_NAME == null || CLASSIFY_NAME.isEmpty()) ) {
+			return false;
+		}
+		return true;
+	}
 }

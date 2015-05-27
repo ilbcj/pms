@@ -68,4 +68,15 @@ public class ResValue {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
+	
+	public boolean isValid() {
+		if( (VALUE_ID == null || VALUE_ID.isEmpty()) 
+				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				&& (VALUE_NAME == null || VALUE_NAME.isEmpty())
+				&& (VALUE_SENSITIVE_ID == null || VALUE_SENSITIVE_ID.isEmpty())
+				&& (COLUMN_ID == null || COLUMN_ID.isEmpty()) ) {
+			return false;
+		}
+		return true;
+	}
 }

@@ -75,4 +75,16 @@ public class ResColumn {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
+	
+	public boolean isValid() {
+		if( (COLUMN_ID == null || COLUMN_ID.isEmpty()) 
+				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				&& (DATA_SET == null || DATA_SET.isEmpty())
+				&& (COLUMU_CN == null || COLUMU_CN.isEmpty())
+				&& (COLUMN_NAME == null || COLUMN_NAME.isEmpty())
+				&& (COLUMN_RMK == null || COLUMN_RMK.isEmpty()) ) {
+			return false;
+		}
+		return true;
+	}
 }

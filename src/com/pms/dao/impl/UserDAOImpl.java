@@ -28,7 +28,7 @@ public class UserDAOImpl implements UserDAO {
 		catch(ConstraintViolationException cne){
 			tx.rollback();
 			System.out.println(cne.getSQLException().getMessage());
-			throw new Exception("存在重名机构。");
+			throw new Exception("存在重名用户。");
 		}
 		catch(org.hibernate.exception.SQLGrammarException e)
 		{

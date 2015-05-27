@@ -61,4 +61,14 @@ public class ResRelationColumnClassify {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
+	
+	public boolean isValid() {
+		if( (SECTION_RELATIOIN_CLASS == null || SECTION_RELATIOIN_CLASS.isEmpty()) 
+				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				&& (SRC_CLASS_CODE == null || SRC_CLASS_CODE.isEmpty())
+				&& (DST_CLASS_CODE == null || DST_CLASS_CODE.isEmpty()) ) {
+			return false;
+		}
+		return true;
+	}
 }

@@ -54,4 +54,13 @@ public class ResValueSensitive {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
+	
+	public boolean isValid() {
+		if( (VALUE_SENSITTIVE_ID == null || VALUE_SENSITTIVE_ID.isEmpty()) 
+				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				&& (VALUE_SENSITIVE_NAME == null || VALUE_SENSITIVE_NAME.isEmpty()) ) {
+			return false;
+		}
+		return true;
+	}
 }
