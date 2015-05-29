@@ -341,7 +341,6 @@
 		
 			if(retObj.result == true)
 			{
-				$("#resource_role_manage_center_list_dg").datagrid('reload').datagrid('clearSelections');
 				successTip("提示", '保存角色信息成功');
 			}
 			else
@@ -356,6 +355,7 @@
     	$("#resource_role_manage_center_main_wapper").panel('open');
     	$("#resource_role_manage_center_main_wapper").panel('resize');
     	$("#resource_role_manage_center_detail_wapper").panel('close');
+    	$("#resource_role_manage_center_list_dg").datagrid('reload').datagrid('clearSelections');
     	refreshDetailPage();
     }
     
@@ -397,7 +397,7 @@
 		$("#role_describe").textbox('setValue',rows[0].ROLE_DESC);
 		
 		//load datagrid's data
-		var poststr = "role.id=" + rows[0].id;
+		var poststr = "role.BUSINESS_ROLE=" + rows[0].BUSINESS_ROLE;
 		$.getJSON("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
