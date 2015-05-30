@@ -234,6 +234,20 @@
     	$("#org_maintain_center_main_wapper").panel('open');
     	$("#org_maintain_center_main_wapper").panel('resize');
     	$("#org_maintain_center_detail_wapper").panel('close');
+    	//reload org_main_tree
+    	$('#org_maintain_tree').tree('reload');
+		$('#org_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+    	
+    	refreshDetailPage();
+    }
+    
+    function refreshDetailPage() {
+		$("#org_uid").textbox({editable:true});
+		$("#org_id").val("");
+       	$("#org_name").textbox('setValue',"");
+       	$("#org_uid").textbox('setValue',"");
+       	$("#org_pid").textbox('setValue',"");
+       	$("#org_level").textbox('setValue',"");
     }
     
     function openOrgSelectWin(){
@@ -314,11 +328,15 @@
 		if( orgPreMod() ) {
 			var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
 			$("#org_mod_win_name").textbox('setValue',rows[0].name);
-			$("#org_mod_win_uid").textbox('setValue',rows[0].uid);
+			$("#org_mod_win_uid").textbox('setValue',rows[0].id);
+			
+			$("#org_mod_win_uid").textbox({editable:false});
+			
 			$('#org_mod_name_win').window('open').window('center');
 		}
 		return;
 	}
+	
 	function orgModNameConfirm(){
 		var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
 		var name = $("#org_mod_win_name").textbox('getValue');
@@ -350,6 +368,8 @@
 			$("#org_pid").textbox('setValue',rows[0].pid);
 			$("#org_pid").textbox('setText',rows[0].pname);
 			$("#org_level").textbox('setValue',rows[0].orgLevel);
+
+			$("#org_uid").textbox({editable:false});
 			
 			$("#org_maintain_center_main_wapper").panel('close');
     		$("#org_maintain_center_detail_wapper").panel('open');
@@ -451,14 +471,7 @@ $(document).ready(function () {
 	        	errorTip("保存机构信息失败："+recive.message);
 	        } else {
 	        	successTip('保存机构信息','保存成功',1000);
-	        	$("#org_id").val("");
-	        	$("#org_name").textbox('setValue',"");
-	        	$("#org_uid").textbox('setValue',"");
-	        	$("#org_pid").textbox('setValue',"");
-	        	$("#org_level").textbox('setValue',"");
-	        	//reload org_main_tree
-	        	$('#org_maintain_tree').tree('reload');
-				$('#org_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+
 	        	addOrgReturn();
 	        }
 	    }
