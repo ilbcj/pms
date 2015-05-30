@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Query;
@@ -67,6 +68,32 @@ public class ResDatasetSensitiveDAOImpl implements ResDatasetSensitiveDAO {
 			HibernateUtil.closeSession();
 		}
 		return dss;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataSetSensitive> QueryAllDataSetSensitive()
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResDataSetSensitive> rs = null;
+		String sqlString = "select * from WA_DATASET_SENSITIVE ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSetSensitive.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 
 }

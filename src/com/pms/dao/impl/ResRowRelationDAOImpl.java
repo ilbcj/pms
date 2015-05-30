@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Query;
@@ -67,6 +68,31 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 			HibernateUtil.closeSession();
 		}
 		return rr;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRelationRow> QueryAllResRelationRow() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResRelationRow> rs = null;
+		String sqlString = "select * from WA_ROW_RELATION ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRow.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 
 }

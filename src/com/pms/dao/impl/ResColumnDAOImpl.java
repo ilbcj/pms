@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Query;
@@ -24,10 +25,12 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResColumn rs = null;
-		String sqlString = "select * from WA_COLUMN where COLUMN_ID = :COLUMN_ID ";
+		String sqlString = "select * from WA_COLUMN where DATA_SET = :DATA_SET and COLUMN_ID = :COLUMN_ID and CLUE_SRC_SYS = :CLUE_SRC_SYS ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
+			q.setString("DATA_SET", c.getDATA_SET());
 			q.setString("COLUMN_ID", c.getCOLUMN_ID());
+			q.setString("CLUE_SRC_SYS", c.getCLUE_SRC_SYS());
 			rs = (ResColumn) q.uniqueResult();
 			
 			if(rs != null) {
@@ -67,6 +70,31 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 			HibernateUtil.closeSession();
 		}
 		return c;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResColumn> QueryAllColumn() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResColumn> rs = null;
+		String sqlString = "select * from WA_COLUMN ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 
 }

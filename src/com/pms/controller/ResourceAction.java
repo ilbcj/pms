@@ -354,11 +354,10 @@ public class ResourceAction extends ActionSupport {
 		ResourceManageService rms = new ResourceManageService();
 		datas = new ArrayList<ResData>();
 		try {
-
-				ResData criteria = new ResData();
-				criteria.setName(resName);
-				criteria.setRESOURCE_ID(resCode);
-				total = rms.QueryAllDataItems( criteria, page, rows, datas );
+			ResData criteria = new ResData();
+			criteria.setName(resName);
+			criteria.setRESOURCE_ID(resCode);
+			total = rms.QueryAllDataItems( criteria, page, rows, datas );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -508,7 +507,6 @@ public class ResourceAction extends ActionSupport {
 			ResourceUploadService rus = new ResourceUploadService();
 			rus.UploadResource(fi);
 		} catch (Exception e) {
-			//e.printStackTrace();
 			setResult(false);
 			this.setMessage("导入文件失败。" + e.getMessage());
 			return SUCCESS;

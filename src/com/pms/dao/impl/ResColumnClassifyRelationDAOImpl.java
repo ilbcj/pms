@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Query;
@@ -67,6 +68,32 @@ public class ResColumnClassifyRelationDAOImpl implements ResColumnClassifyRelati
 			HibernateUtil.closeSession();
 		}
 		return rcc;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRelationColumnClassify> QueryAllResRelationColumnClassify()
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResRelationColumnClassify> rs = null;
+		String sqlString = "select * from WA_COLUMN_ClASSIFY_REALTION ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationColumnClassify.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 
 }

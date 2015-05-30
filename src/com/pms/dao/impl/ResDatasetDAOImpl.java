@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Query;
@@ -67,6 +68,32 @@ public class ResDatasetDAOImpl implements ResDatasetDAO {
 			HibernateUtil.closeSession();
 		}
 		return ds;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataSet> QueryAllDataSet() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		List<ResDataSet> rs = null;
+		String sqlString = "select * from WA_DATASET ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSet.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 
 }

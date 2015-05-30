@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -19,6 +20,7 @@ import com.pms.dao.ResColumnClassifyDAO;
 import com.pms.dao.ResColumnClassifyRelationDAO;
 import com.pms.dao.ResColumnDAO;
 import com.pms.dao.ResColumnRelationDAO;
+import com.pms.dao.ResDataDAO;
 import com.pms.dao.ResDatasetDAO;
 import com.pms.dao.ResDatasetSensitiveDAO;
 import com.pms.dao.ResRowRelationDAO;
@@ -29,6 +31,7 @@ import com.pms.dao.impl.ResColumnClassifyDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyRelationDAOImpl;
 import com.pms.dao.impl.ResColumnDAOImpl;
 import com.pms.dao.impl.ResColumnRelationDAOImpl;
+import com.pms.dao.impl.ResDataDAOImpl;
 import com.pms.dao.impl.ResDatasetDAOImpl;
 import com.pms.dao.impl.ResDatasetSensitiveDAOImpl;
 import com.pms.dao.impl.ResRowRelationDAOImpl;
@@ -36,6 +39,7 @@ import com.pms.dao.impl.ResValueDAOImpl;
 import com.pms.dao.impl.ResValueSensitiveDAOImpl;
 import com.pms.model.ResColumn;
 import com.pms.model.ResColumnClassify;
+import com.pms.model.ResData;
 import com.pms.model.ResDataSet;
 import com.pms.model.ResDataSetSensitive;
 import com.pms.model.ResRelationClassify;
@@ -114,7 +118,7 @@ public class ResourceUploadService {
         Workbook workbook = WorkbookFactory.create(in);
         
         int sheetCount = workbook.getNumberOfSheets();  //Sheet的数量  
-        //deal with seven elements
+        //deal with seven elements and relationships
         for (int s = 0; s < sheetCount; s++) {
             Sheet sheet = workbook.getSheetAt(s);
             String sheetName = sheet.getSheetName();
@@ -132,14 +136,7 @@ public class ResourceUploadService {
             	updateValue(sheet);
             } else if ( SHEET_COLUMN_ClASSIFY_REALTION.equals(sheetName) ) {
             	updateColumnClassifyRelation(sheet);
-            }
-        }
-        
-        //deal with relationships
-        for (int s = 0; s < sheetCount; s++) {
-        	Sheet sheet = workbook.getSheetAt(s);
-            String sheetName = sheet.getSheetName();
-            if ( SHEET_ROW_RELATION.equals(sheetName) ) {
+            } else if ( SHEET_ROW_RELATION.equals(sheetName) ) {
             	updateRowRelation(sheet);
             } else if ( SHEET_COLUMN_RELATION.equals(sheetName) ) {
             	updateColumnRelation(sheet);
@@ -147,7 +144,12 @@ public class ResourceUploadService {
             	updateClassifyRelation(sheet);
             }
         }
+        
         in.close();
+        
+        //update resource;
+        updateResources();
+        
         return;
 	}
 	
@@ -159,6 +161,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		dss = new ResDataSetSensitive();
         	}
@@ -204,6 +209,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		ds = new ResDataSet();
         	}
@@ -255,6 +263,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		cc = new ResColumnClassify();
         	}
@@ -300,6 +311,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		col = new ResColumn();
         	}
@@ -308,7 +322,6 @@ public class ResourceUploadService {
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
             	String cellValue = getCellValue(cell);
-            	
             	if(r == 0) {
             		if ( SHEET_COLUMN_COL_COLUMN_ID.equals(cellValue) ) {
             			idx.put(SHEET_COLUMN_COL_COLUMN_ID, c);
@@ -357,6 +370,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		vs = new ResValueSensitive();
         	}
@@ -402,6 +418,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		val = new ResValue();
         	}
@@ -455,6 +474,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		rcc = new ResRelationColumnClassify();
         	}
@@ -504,6 +526,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		rr = new ResRelationRow();
         	}
@@ -557,6 +582,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		rc = new ResRelationColumn();
         	}
@@ -610,6 +638,9 @@ public class ResourceUploadService {
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
         	if( r > 0 ) {
         		rc = new ResRelationClassify();
         	}
@@ -668,6 +699,9 @@ public class ResourceUploadService {
                 }  
                 else {  
                     cellValue = String.valueOf(cell.getNumericCellValue()); //数字  
+                    if(cellValue.contains(".")) {
+                    	cellValue = cellValue.substring(0, cellValue.indexOf('.'));
+                    }
                 }  
                 break;  
             case Cell.CELL_TYPE_BOOLEAN: //布尔型  
@@ -686,6 +720,111 @@ public class ResourceUploadService {
                 cellValue = "错误";  
         }
         return cellValue;
+	}
+	
+	private void updateResources() throws Exception {
+		//perpare dataset 
+		ResDatasetDAO rdsdao = new ResDatasetDAOImpl();
+		List<ResDataSet> rdss = rdsdao.QueryAllDataSet();
+		
+		Map<String, ResDataSet> rdsMap = new HashMap<String, ResDataSet>();
+		for(int i = 0; i<rdss.size(); i++) {
+			rdsMap.put(rdss.get(i).getDATA_SET(), rdss.get(i));
+		}
+		
+		//updateColumn
+		ResColumnDAO rcdao = new ResColumnDAOImpl();
+		List<ResColumn> rcs = rcdao.QueryAllColumn();
+		
+		for(int i = 0; i<rcs.size(); i++) {
+			updateResourceOfColumn( rcs.get(i), rdsMap );
+		}
+		
+		//updateColumnRelation
+		ResColumnRelationDAO rcrdao = new ResColumnRelationDAOImpl();
+		List<ResRelationColumn> rrcs = rcrdao.QueryAllResRelationColumn();
+		
+		for(int i = 0; i<rrcs.size(); i++) {
+			updateResourceOfRelationColumn( rrcs.get(i), rdsMap );
+		}
+		
+		//updateRowRelation
+		ResRowRelationDAO rrrdao = new ResRowRelationDAOImpl();
+		List<ResRelationRow> rrrs = rrrdao.QueryAllResRelationRow();
+		
+		for(int i = 0; i<rrrs.size(); i++) {
+			updateResourceOfRelationRow( rrrs.get(i), rdsMap );
+		}
+		
+		//updateClassifyRelation
+		ResClassifyRelationDAO rclassrdao = new ResClassifyRelationDAOImpl();
+		List<ResRelationClassify> rrclasss = rclassrdao.QueryAllResRelationClassify();
+		
+		for(int i = 0; i<rrclasss.size(); i++) {
+			updateResourceOfRelationClassify( rrclasss.get(i), rdsMap );
+		}
+	}
+	
+	private void updateResourceOfColumn( ResColumn rc, Map<String, ResDataSet> rdsMap ) throws Exception {
+		ResDataDAO rddao = new ResDataDAOImpl();
+		ResData rd = new ResData();
+		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rd.setRESOURCE_DESCRIBE("字段数据资源");
+		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
+		rd.setDATA_SET(rc.getDATA_SET());
+		rd.setELEMENT(rc.getCOLUMN_ID());
+		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rd.setResource_type(ResData.RESTYPEPUBLIC);
+		rd.setName(rc.getCOLUMU_CN());
+		rddao.ResDataOfColumnSave(rd, rc.getCLUE_SRC_SYS());
+	}
+	
+	private void updateResourceOfRelationColumn( ResRelationColumn rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
+		ResDataDAO rddao = new ResDataDAOImpl();
+		ResData rd = new ResData();
+		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rd.setResource_type(ResData.RESTYPEPUBLIC);
+		rd.setRESOURCE_DESCRIBE("数据集-字段分类-字段数据资源");
+		rd.setDATA_SET(rrc.getDATA_SET());
+		rd.setELEMENT(rrc.getCOLUMN_ID());
+		rd.setSECTION_CLASS(rrc.getCOLUMN_CLASS_ID());
+		
+		rddao.ResDataOfRelationColumnSave(rd, rrc.getCLUE_SRC_SYS());
+	}
+
+	private void updateResourceOfRelationRow( ResRelationRow rrr, Map<String, ResDataSet> rdsMap ) throws Exception {
+		ResDataDAO rddao = new ResDataDAOImpl();
+		ResData rd = new ResData();
+		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rd.setResource_type(ResData.RESTYPEPUBLIC);
+		rd.setRESOURCE_DESCRIBE("数据集-字段-字段值数据资源");
+		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrr.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
+		rd.setDATA_SET(rrr.getDATA_SET());
+		rd.setELEMENT(rrr.getCOLUMN_ID());
+		rd.setELEMENT_VALUE(rrr.getVALUE_ID());
+		rd.setOPERATE_SYMBOL("等于");
+		rd.setName(rrr.getCOLUMN_ID());
+		
+		rddao.ResDataOfRelationRowSave(rd, rrr.getCLUE_SRC_SYS());
+	}
+	
+	
+	
+	private void updateResourceOfRelationClassify( ResRelationClassify rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
+		ResDataDAO rddao = new ResDataDAOImpl();
+		ResData rd = new ResData();
+		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rd.setResource_type(ResData.RESTYPEPUBLIC);
+		rd.setRESOURCE_DESCRIBE("数据集-字段分类关系数据资源");
+		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
+		rd.setDATA_SET(rrc.getDATA_SET());
+		rd.setSECTION_RELATIOIN_CLASS(rrc.getCOLUMN_CLASS_ID());
+		rd.setName("字段分类关系" + rrc.getCOLUMN_CLASS_ID());
+		
+		rddao.ResDataOfRelationClassifySave(rd, rrc.getCLUE_SRC_SYS());
 	}
 	
 //	private void sheetProcess(Sheet sheet){

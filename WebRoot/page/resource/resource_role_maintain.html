@@ -101,13 +101,13 @@
 					<table class="nodt" id="role_resource_feature_dg" >
 				    </table>
 				    <div id="featureToolbar" style="background-color:#E7F0FF">
-				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceFeature('../resource/queryFeatureItems.action', 'feature')">添加</a>
+<!-- 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceFeature('../resource/queryFeatureItems.action', 'feature')">添加</a> -->
 				    </div><!-- end of featureToolbar -->
 				    
 				    <table class="nodt" id="role_resource_data_dg" >
 				    </table>
 				    <div id="dataToolbar" style="background-color:#E7F0FF">
-				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData('../resource/queryDataItems.action', 'data')">添加</a>
+<!-- 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData('../resource/queryDataItems.action', 'data')">添加</a> -->
 				    </div><!-- end of featureToolbar -->
 				    
 				</div><!-- end of resource_role_manage_center_detail -->
@@ -303,28 +303,28 @@
     	var poststr = "role.id=" + roleId;
     	
     	var roleName = $("#role_name").textbox('getValue');
-    	poststr += "&role.BUSINESS_ROLE_NAME=" + roleName;
+    	poststr += "&role.BUSINESS_ROLE_NAME=" + encodeURIComponent(roleName);
     	
     	var roleCode = $("#role_code").textbox('getValue');
-    	poststr += "&role.BUSINESS_ROLE=" + roleCode;
+    	poststr += "&role.BUSINESS_ROLE=" + encodeURIComponent(roleCode);
     	
     	var roleType = $("#role_type").textbox('getValue');
-    	poststr += "&role.BUSINESS_ROLE_TYPE=" + roleType;
+    	poststr += "&role.BUSINESS_ROLE_TYPE=" + encodeURIComponent(roleType);
     	
     	var roleDestcity = $("#role_destcity").textbox('getValue');
-    	poststr += "&role.CLUE_DST_SYS=" + roleDestcity;
+    	poststr += "&role.CLUE_DST_SYS=" + encodeURIComponent(roleDestcity);
     	
     	var roleSystype = $("#role_systype").textbox('getValue');
-    	poststr += "&role.SYSTEM_TYPE=" + roleSystype;
+    	poststr += "&role.SYSTEM_TYPE=" + encodeURIComponent(roleSystype);
     	
     	var roleSrccity = $("#role_srccity").textbox('getValue');
-    	poststr += "&role.CLUE_SRC_SYS=" + roleSrccity;
+    	poststr += "&role.CLUE_SRC_SYS=" + encodeURIComponent(roleSrccity);
     	
     	var roleDelstatus = $("#role_delstatus").textbox('getValue');
-    	poststr += "&role.DELETE_STATUS=" + roleDelstatus;
+    	poststr += "&role.DELETE_STATUS=" + encodeURIComponent(roleDelstatus);
     	
     	var roleDescrib = $("#role_describe").textbox('getValue');
-    	poststr += "&role.ROLE_DESC=" + roleDescrib;
+    	poststr += "&role.ROLE_DESC=" + encodeURIComponent(roleDescrib);
     	
      	var rows = $("#role_resource_feature_dg").datagrid('getRows');
      	var index = 0;
@@ -336,8 +336,7 @@
     	for(index=0; index < rows.length; index++) {
 	 		poststr += '&addDataIds=' + rows[index].id;
     	}
-		
-    	$.getJSON("../resource/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../resource/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -349,7 +348,7 @@
 				warningTip("提示", '保存角色信息失败');	
 			}
 			addRoleReturn();
-		});
+		}, "json");
     }
     
     function addRoleReturn(){
