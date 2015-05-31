@@ -70,7 +70,7 @@
 			            </tr>
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 角色编码</td>
-			                <td><input id="role_code" class="form_value_mid easyui-textbox" data-options="prompt:'请输入角色编码'"></input></td>
+			                <td><input id="role_code" class="form_value_mid easyui-textbox" data-options="editable:false,prompt:'此项由后台生成'"></input></td>
 			            </tr>
 			            <tr>
 			                <td class="form_name_small text_right"> 角色类型</td>
@@ -101,13 +101,13 @@
 					<table class="nodt" id="role_resource_feature_dg" >
 				    </table>
 				    <div id="featureToolbar" style="background-color:#E7F0FF">
-<!-- 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceFeature('../resource/queryFeatureItems.action', 'feature')">添加</a> -->
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceFeature()">添加</a>
 				    </div><!-- end of featureToolbar -->
 				    
 				    <table class="nodt" id="role_resource_data_dg" >
 				    </table>
 				    <div id="dataToolbar" style="background-color:#E7F0FF">
-<!-- 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData('../resource/queryDataItems.action', 'data')">添加</a> -->
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData()">添加</a>
 				    </div><!-- end of featureToolbar -->
 				    
 				</div><!-- end of resource_role_manage_center_detail -->
@@ -133,8 +133,8 @@
 						    </table>
 						</div>
 						<div id="resource_role_query_resource_feature_win_ft" style="padding:5px;text-align:center">
-					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceConfirm();">确定</a>
-	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceReturn();">返回</a>
+					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceFeatureConfirm();">确定</a>
+	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceFeatureReturn();">返回</a>
 					    </div>
 					    
 				    </div><!--  end of resource_role_query_resource_feature_win_main -->
@@ -190,7 +190,7 @@
 					            </table>
 				    		</div><!-- end of resource_role_query_resource_data_win_list_dg_tb -->					
 							<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  
-						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',noheader:true,fit:true">
+						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
 						        <thead>
 						            <tr>
 						            	<th field="ck" checkbox="true"></th>
@@ -212,8 +212,8 @@
 						    </table>
 						</div>
 						<div id="resource_role_query_resource_data_win_ft" style="padding:5px;text-align:center">
-					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceConfirm();">确定</a>
-	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceReturn();">返回</a>
+					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceDataConfirm();">确定</a>
+	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceDataReturn();">返回</a>
 					    </div>
 					    
 				    </div><!-- end of resource_role_query_resource_data_win_main -->
@@ -461,30 +461,48 @@
 		}
 	}
     
-    function roleQueryResourceReturn(){
+    function roleQueryResourceFeatureReturn(){
     	$("#resource_role_query_resource_feature_win_list_dg").datagrid('clearSelections');
     	$("#resource_role_query_resource_feature_win").window('close');
+    }
+    function roleQueryResourceDataReturn(){
     	$("#resource_role_query_resource_data_win_list_dg").datagrid('clearSelections');
     	$("#resource_role_query_resource_data_win").window('close');
     }
     
-    var insertFlag="";
-    function roleQueryResourceConfirm(){
-		var resFeature = $("#resource_role_query_resource_feature_win_list_dg").datagrid('getSelections');
-    	var resData= $("#resource_role_query_resource_data_win_list_dg").datagrid('getSelections');
-    	
-    	for( var index=0; index<resFeature.length; index++ ) {
-    		if ( insertFlag == "feature" ) {
-	    		insertFeature(resFeature[index]);
-	    	}
-	    }
-	    for( var index=0; index<resData.length; index++ ) {
-			if ( insertFlag == "data" ) {
-	    		insertData(resData[index]);
-	    	}
+    function roleQueryResourceFeatureConfirm(){
+		var res = $("#resource_role_query_resource_feature_win_list_dg").datagrid('getSelections');
+    	for( var index=0; index<res.length; index++ ) {
+    		insertFeature(res[index]);
     	}
-    	return roleQueryResourceReturn();
+    	return roleQueryResourceFeatureReturn();
     }
+    
+    function roleQueryResourceDataConfirm(){
+		var res = $("#resource_role_query_resource_data_win_list_dg").datagrid('getSelections');
+    	for( var index=0; index<res.length; index++ ) {
+    		insertData(res[index]);
+    	}
+    	return roleQueryResourceDataReturn();
+    }
+    
+//    var insertFlag="";
+//     function roleQueryResourceConfirm(){
+// 		var resFeature = $("#resource_role_query_resource_feature_win_list_dg").datagrid('getSelections');
+//     	var resData= $("#resource_role_query_resource_data_win_list_dg").datagrid('getSelections');
+    	
+//     	for( var index=0; index<resFeature.length; index++ ) {
+//     		if ( insertFlag == "feature" ) {
+// 	    		insertFeature(resFeature[index]);
+// 	    	}
+// 	    }
+// 	    for( var index=0; index<resData.length; index++ ) {
+// 			if ( insertFlag == "data" ) {
+// 	    		insertData(resData[index]);
+// 	    	}
+//     	}
+//     	return roleQueryResourceReturn();
+//     }
     
     function isExist(data, id) {
     	for(var index = 0; index<data.length; index++) {
@@ -525,28 +543,29 @@
 			row:{
 				id:data.id, 
 				name:data.name, 
-				resource_id:data.RESOURCE_ID, 
-				resource_status:data.RESOURCE_STATUS,
-				resource_describe:data.RESOURCE_DESCRIBE, 
-				resource_remark:data.RESOURCE_REMARK,
-				delete_status:data.DELETE_STATUS, 
+				RESOURCE_ID:data.RESOURCE_ID, 
+				RESOURCE_STATUS:data.RESOURCE_STATUS,
+				RESOURCE_DESCRIBE:data.RESOURCE_DESCRIBE, 
+				RESOURCE_REMARK:data.RESOURCE_REMARK,
+				DELETE_STATUS:data.DELETE_STATUS, 
 				resource_type:data.resource_type,
-				clue_dst_sys:data.CLUE_DST_SYS,
-				dataset_sensitive_level:DATA.DATASET_SENSITIVE_LEVEL,
-				data_set:data.DATA_SET,
-				section_class:data.SECTION_CLASS,
-				element:data.ELEMENT,
-				section_relation_class:data.SECTION_RELATIOIN_CLASS
+				CLUE_DST_SYS:data.CLUE_DST_SYS,
+				DATASET_SENSITIVE_LEVEL:data.DATASET_SENSITIVE_LEVEL,
+				DATA_SET:data.DATA_SET,
+				SECTION_CLASS:data.SECTION_CLASS,
+				ELEMENT:data.ELEMENT,
+				SECTION_RELATIOIN_CLASS:data.SECTION_RELATIOIN_CLASS
 			}
 		});
-    }
+	}
     //------------------for value edit datagrid-------
-    function roleQueryResourceFeature(url, flag){
+    function roleQueryResourceFeature(){
     	$("#resource_role_query_resource_feature_win_list_dg").datagrid({
-			url:url,
+			url:'../resource/queryFeatureItems.action',
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
+					res.total = data.total;
 					res.rows = data.features;
 				} else {
 					res.total=0;
@@ -556,12 +575,12 @@
 			}
 		});
 	   	$("#resource_role_query_resource_feature_win").window({title:'可用值'}).window('open').window('center');
-	   	insertFlag = flag;
+	   	//insertFlag = 'feature';
     }
         
-    function roleQueryResourceData(url, flag){
+    function roleQueryResourceData(){
     	$("#resource_role_query_resource_data_win_list_dg").datagrid({
-			url:url,
+			url:'../resource/queryDataItems.action',
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
@@ -575,7 +594,7 @@
 			}
 		});
 	   	$("#resource_role_query_resource_data_win").window({title:'可用值'}).window('open').window('center');
-	   	insertFlag = flag;
+	   	//insertFlag = 'data';
     }
     
     

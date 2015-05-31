@@ -71,7 +71,7 @@
 <!-- 					            </tr> -->
 					            <tr>
 					                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
-					                <td><input id="fi" name="fi" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择资源文件(1.5M以内)'"/></td>
+					                <td><input id="fi" name="fi" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择资源文件(50M以内)'"/></td>
 					            </tr>
 					        </table>
 					    </form>
@@ -207,7 +207,7 @@
 		$("#res_status").textbox('setValue',rows[0].RESOURCE_STATUS);
 		$("#res_desc").textbox('setValue',rows[0].RESOURCE_DESCRIBE);
 		$("#res_memo").textbox('setValue',rows[0].RESOURCE_REMARK);
-		$("#res_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
+		$("#res_delstatus").textbox('setValue',''+rows[0].DELETE_STATUS);
 		$("#res_type").textbox('setValue',rows[0].resource_type);
 		$("#res_dest").textbox('setValue',rows[0].CLUE_DST_SYS);
 		$("#res_dsl").textbox('setValue',rows[0].DATASET_SENSITIVE_LEVEL);
@@ -259,7 +259,7 @@
     }
     function importFileSave(){
   		$.messager.progress();	// 显示进度条
-		$('#import_file_form').form('submit', {
+		$("#import_file_form").form('submit', {
 			url:'../resource/fileUpload.action',
 			success: function(message){
 				var retObj = $.parseJSON(message);
@@ -269,7 +269,8 @@
 			     	$.messager.alert("温馨提示","文件上传成功！");
 			     }else{
 			     	$.messager.progress('close');
-					$.messager.alert("温馨提示","上传失败，此处只可上传小于50M的Excel文件");
+			     	errorTip("上传数据资源信息失败："+retObj.message);
+					//$.messager.alert("温馨提示","上传失败，此处只可上传小于50M的Excel文件");
 			     }
 			     $("#import_file_win").window('close');
 			     $('#resource_data_manage_center_list_dg').datagrid('reload');

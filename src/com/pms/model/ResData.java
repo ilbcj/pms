@@ -1,9 +1,9 @@
 package com.pms.model;
 
 public class ResData {
-	public final static int RESTYPEPUBLIC = 1;
-	public final static int RESTYPELOCAL = 2;
-	public final static int RESTYPEBILATERAL = 3;
+	public final static int RESTYPEPUBLIC = 0;
+	public final static int RESTYPELOCAL = 1;
+	public final static int RESTYPEBILATERAL = 2;
 	public final static int RESSTATUSENABLE = 1;
 	public final static int RESSTATUSDISABLE = 0;
 	public final static int DELSTATUSNO = 0;

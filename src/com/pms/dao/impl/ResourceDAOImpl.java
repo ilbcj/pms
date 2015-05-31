@@ -27,6 +27,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 		try
 		{
 			feature = (ResFeature) session.merge(feature);
+			feature.setResource_id(new Integer(feature.getId()).toString());
+			feature = (ResFeature) session.merge(feature);
 			tx.commit();
 		}
 		catch(ConstraintViolationException cne){
@@ -312,6 +314,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Transaction tx = session.beginTransaction();
 		try
 		{
+			role = (ResRole) session.merge(role);
+			role.setBUSINESS_ROLE(new Integer(role.getId()).toString());
 			role = (ResRole) session.merge(role);
 			tx.commit();
 		}

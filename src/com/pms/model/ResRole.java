@@ -3,6 +3,9 @@ package com.pms.model;
 public class ResRole {
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
+	public final static int RESROLETYPEPUBLIC = 0;
+	public final static int RESROLETYPELOCAL = 1;
+	public final static int RESROLETYPEBILATERAL = 2;
 	
 	private int id;
 	private String BUSINESS_ROLE;
