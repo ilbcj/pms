@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="authCallBackService" targetNamespace="http://cyberpolice.org/authCallBack" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://cyberpolice.org/authCallBack" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <types>
+    <xs:schema targetNamespace="http://cyberpolice.org/authCallBack" version="1.0" xmlns:tns="http://cyberpolice.org/authCallBack" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+			<xs:element name="commit" type="tns:commit"/>
+			<xs:element name="commitResponse" type="tns:commitResponse"/>
+			<xs:complexType name="commit">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="xml" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="commitResponse">
+				<xs:sequence>
+					<xs:element name="result" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+  </types>
+  <message name="commit">
+    <part name="parameters" element="tns:commit">
+    </part>
+  </message>
+  <message name="commitResponse">
+    <part name="parameters" element="tns:commitResponse">
+    </part>
+  </message>
+  <portType name="authCallBackService">
+    <operation name="commit">
+      <input message="tns:commit">
+    </input>
+      <output message="tns:commitResponse">
+    </output>
+    </operation>
+  </portType>
+  <binding name="authCallBackServicePortBinding" type="tns:authCallBackService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="commit">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="authCallBackService">
+    <port name="authCallBackServicePort" binding="tns:authCallBackServicePortBinding">
+      <soap:address location="http://cyberpolice.org/services/authCallBackService"/>
+    </port>
+  </service>
+</definitions>

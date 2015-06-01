@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: 1.6.2  Built on : Apr 17, 2012 (05:33:49 IST) -->
+<serviceGroup>
+    <service name="authService">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="org.cyberpolice.auth.AuthServiceMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">org.cyberpolice.auth.AuthServiceSkeleton</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="execute" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://cyberpolice.org/auth">
+            <actionMapping>http://cyberpolice.org/auth/authService/executeRequest</actionMapping>
+            <outputActionMapping>http://cyberpolice.org/auth/authService/executeResponse</outputActionMapping>
+        </operation>
+    </service>
+    <service name="authCallBackService">
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out" class="org.cyberpolice.authcallback.AuthCallBackServiceMessageReceiverInOut"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">org.cyberpolice.authcallback.AuthCallBackServiceSkeleton</parameter>
+        <parameter name="useOriginalwsdl">true</parameter>
+        <parameter name="modifyUserWSDLPortAddress">true</parameter>
+        <operation name="commit" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://cyberpolice.org/authCallBack">
+            <actionMapping>http://cyberpolice.org/authCallBack/authCallBackService/commitRequest</actionMapping>
+            <outputActionMapping>http://cyberpolice.org/authCallBack/authCallBackService/commitResponse</outputActionMapping>
+        </operation>
+    </service>
+</serviceGroup>
