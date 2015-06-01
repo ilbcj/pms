@@ -6,6 +6,8 @@
  * by the Apache Axis2 version: 1.6.2  Built on : Apr 17, 2012 (05:33:49 IST)
  */
     package org.cyberpolice.auth;
+
+import com.pms.webservice.WSExecuteController;
     /**
      *  AuthServiceSkeleton java skeleton for the axisService
      */
@@ -24,8 +26,14 @@
                   org.cyberpolice.auth.ExecuteE execute
                   )
             {
-                //TODO : fill this with the necessary business logic
-                throw new  java.lang.UnsupportedOperationException("Please implement " + this.getClass().getName() + "#execute");
+                
+                	 WSExecuteController controller = new WSExecuteController();
+                	 String result = controller.process(execute.localExecute.localXml);
+                	 org.cyberpolice.auth.ExecuteResponseE response = new org.cyberpolice.auth.ExecuteResponseE();
+                	 org.cyberpolice.auth.ExecuteResponse executeResponse = new org.cyberpolice.auth.ExecuteResponse();
+                	 executeResponse.setResult(result);
+                	 response.setExecuteResponse(executeResponse);
+                	 return response;
         }
      
     }
