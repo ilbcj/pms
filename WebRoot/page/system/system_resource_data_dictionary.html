@@ -128,6 +128,7 @@
 		$("#attr_dict_resource_data_maintain_center_main_wapper").panel('open');
 	   	$("#attr_dict_resource_data_maintain_center_main_wapper").panel('resize');
 	   	$("#attr_dict_resource_data_maintain_center_detail_wapper").panel('close');
+	   	$("#attr_dict_resource_data_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
 	   	//refreshDetailPage();
 	}
 	
@@ -149,14 +150,13 @@
 		
 			if(retObj.result == true)
 			{
-				$("#attr_dict_resource_data_maintain_center_list_dg").datagrid('clearSelections');
-				warningTip("提示", '保存属性字典成功');
+				successTip("提示", '保存属性字典成功');
 			}
 			else
 			{
 				warningTip("提示", '保存属性字典失败');	
 			}
-			attrDictresource_dataReturn();
+			attrDictResourceDataReturn();
 		});
 	}
 	
