@@ -156,6 +156,22 @@
 	
 	</div><!-- end of layout -->
 <script>
+    function queryResourceData(){
+    	var name = $("#resource_data_query_name").val();
+    	var code = $("#resource_data_query_code").val();
+     	
+    	$("#resource_data_manage_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			resName: name,
+			resCode: code
+		});
+    }
+    
+    function clearQueryOrgCondition(){
+    	$("#resource_data_query_name").textbox({value:""});
+    	$("#resource_data_query_code").textbox({value:""});
+    }
+    
     function addResourceData() {
     	$("#resource_data_manage_center_main_wapper").panel('close');
     	$("#resource_data_manage_center_detail_wapper").panel('open');
@@ -254,9 +270,11 @@
             });
 		}
 	}
+	
     function importFile(){
 	   	$("#import_file_win").window({title:'文件导入'}).window('open').window('center');
     }
+    
     function importFileSave(){
   		$.messager.progress();	// 显示进度条
 		$("#import_file_form").form('submit', {

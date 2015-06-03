@@ -92,7 +92,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-				sqlString += " and resource_id like :resource_id ";
+				sqlString += " and resource_id = :resource_id ";
 			}
 		}
 		
@@ -103,7 +103,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-					q.setString( "resource_id", "%" + criteria.getResource_id() + "%" );
+					q.setString( "resource_id",  criteria.getResource_id());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -134,7 +134,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-				sqlString += " and resource_id like :resource_id ";
+				sqlString += " and resource_id = :resource_id ";
 			}
 		}
 		
@@ -145,7 +145,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-					q.setString( "resource_id", "%" + criteria.getResource_id() + "%" );
+					q.setString( "resource_id", criteria.getResource_id());
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
@@ -233,7 +233,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
-				sqlString += " and RESOURCE_ID like :RESOURCE_ID ";
+				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
 			}
 		}
 		
@@ -244,7 +244,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
-					q.setString( "RESOURCE_ID", "%" + criteria.getRESOURCE_ID() + "%" );
+					q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -276,7 +276,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					sqlString += " and name like :name ";
 				}
 				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
-					sqlString += " and RESOURCE_ID like :RESOURCE_ID ";
+					sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
 				}
 			}
 		}
@@ -289,7 +289,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 						q.setString( "name", "%" + criteria.getName() + "%" );
 					}
 					if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
-						q.setString( "RESOURCE_ID", "%" + criteria.getRESOURCE_ID() + "%" );
+						q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
 					}
 				}
 			}
@@ -386,7 +386,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 				sqlString += " and BUSINESS_ROLE_NAME like :BUSINESS_ROLE_NAME ";
 			}
 			if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
-				sqlString += " and BUSINESS_ROLE like :BUSINESS_ROLE ";
+				sqlString += " and BUSINESS_ROLE = :BUSINESS_ROLE ";
 			}
 		}
 		
@@ -397,7 +397,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					q.setString( "BUSINESS_ROLE_NAME", "%" + criteria.getBUSINESS_ROLE_NAME() + "%" );
 				}
 				if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
-					q.setString( "BUSINESS_ROLE", "%" + criteria.getBUSINESS_ROLE() + "%" );
+					q.setString( "BUSINESS_ROLE", criteria.getBUSINESS_ROLE());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -429,7 +429,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					sqlString += " and BUSINESS_ROLE_NAME like :BUSINESS_ROLE_NAME ";
 				}
 				if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
-					sqlString += " and BUSINESS_ROLE like :BUSINESS_ROLE ";
+					sqlString += " and BUSINESS_ROLE = :BUSINESS_ROLE ";
 				}
 			}
 		}
@@ -442,7 +442,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 						q.setString( "BUSINESS_ROLE_NAME", "%" + criteria.getBUSINESS_ROLE_NAME() + "%" );
 					}
 					if(criteria.getBUSINESS_ROLE() != null && criteria.getBUSINESS_ROLE().length() > 0) {
-						q.setString( "BUSINESS_ROLE", "%" + criteria.getBUSINESS_ROLE() + "%" );
+						q.setString( "BUSINESS_ROLE", criteria.getBUSINESS_ROLE());
 					}
 				}
 			}
