@@ -119,6 +119,22 @@
 	
 	</div><!-- end of layout -->
 <script>
+    function queryResourceFeature(){
+    	var name = $("#resource_feature_query_name").val();
+    	var code = $("#resource_feature_query_code").val();
+     	
+    	$("#resource_feature_manage_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			resName: name,
+			resCode: code
+		});
+    }
+    
+    function clearQueryOrgCondition(){
+    	$("#resource_feature_query_name").textbox({value:""});
+    	$("#resource_feature_query_code").textbox({value:""});
+    }
+    
     function addResourceFeature() {
     	$("#resource_feature_manage_center_main_wapper").panel('close');
     	$("#resource_feature_manage_center_detail_wapper").panel('open');

@@ -121,7 +121,7 @@
 					<div id="resource_role_query_resource_feature_win_main" class="easyui-layout" data-options="fit:true" >
 						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_feature_win_ft'">				
 							<table class="nodt" id="resource_role_query_resource_feature_win_list_dg"  
-						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',noheader:true,fit:true">
+						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
 						        <thead>
 						            <tr>
 						            	<th field="ck" checkbox="true"></th>
@@ -188,28 +188,29 @@
 					                    </td>
 					                </tr>					                
 					            </table>
-				    		</div><!-- end of resource_role_query_resource_data_win_list_dg_tb -->					
-							<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  
-						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
-						        <thead>
-						            <tr>
-						            	<th field="ck" checkbox="true"></th>
-						                <th data-options="field:'name'">名称</th>
-						                <th data-options="field:'RESOURCE_ID'">资源唯一标识</th>
-						                <th data-options="field:'RESOURCE_STATUS'">资源状态 </th>
-						                <th data-options="field:'RESOURCE_DESCRIBE'">资源描述</th>
-						                <th data-options="field:'RESOURCE_REMARK'">备注</th>
-						                <th data-options="field:'DELETE_STATUS'">删除状态 </th>
-						                <th data-options="field:'resource_type'">资源类型</th>
-						                <th data-options="field:'CLUE_DST_SYS'">目标地市</th>
-						                <th data-options="field:'DATASET_SENSITIVE_LEVEL'">数据集敏感度编码 </th>					                
-						                <th data-options="field:'DATA_SET'">数据集编码</th>
-						                <th data-options="field:'SECTION_CLASS'">字段分类编码</th>
-						                <th data-options="field:'ELEMENT'">字段编码</th>
-						                <th data-options="field:'SECTION_RELATIOIN_CLASS'">字段分类关系编码 </th>
-						            </tr>
-						        </thead>
-						    </table>
+				    				
+								<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  
+							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
+							        <thead>
+							            <tr>
+							            	<th field="ck" checkbox="true"></th>
+							                <th data-options="field:'name'">名称</th>
+							                <th data-options="field:'RESOURCE_ID'">资源唯一标识</th>
+							                <th data-options="field:'RESOURCE_STATUS'">资源状态 </th>
+							                <th data-options="field:'RESOURCE_DESCRIBE'">资源描述</th>
+							                <th data-options="field:'RESOURCE_REMARK'">备注</th>
+							                <th data-options="field:'DELETE_STATUS'">删除状态 </th>
+							                <th data-options="field:'resource_type'">资源类型</th>
+							                <th data-options="field:'CLUE_DST_SYS'">目标地市</th>
+							                <th data-options="field:'DATASET_SENSITIVE_LEVEL'">数据集敏感度编码 </th>					                
+							                <th data-options="field:'DATA_SET'">数据集编码</th>
+							                <th data-options="field:'SECTION_CLASS'">字段分类编码</th>
+							                <th data-options="field:'ELEMENT'">字段编码</th>
+							                <th data-options="field:'SECTION_RELATIOIN_CLASS'">字段分类关系编码 </th>
+							            </tr>
+							        </thead>
+							    </table>
+						    </div><!-- end of resource_role_query_resource_data_win_list_dg_tb -->
 						</div>
 						<div id="resource_role_query_resource_data_win_ft" style="padding:5px;text-align:center">
 					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceDataConfirm();">确定</a>
@@ -292,7 +293,23 @@
 			}
 		});		
 	}
- 
+	
+    function queryResourceRole(){
+    	var name = $("#resource_role_query_name").val();
+    	var code = $("#resource_role_query_code").val();
+     	
+    	$("#resource_role_manage_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			resName: name,
+			resCode: code
+		});
+    }
+    
+    function clearQueryOrgCondition(){
+    	$("#resource_role_query_name").textbox({value:""});
+    	$("#resource_role_query_code").textbox({value:""});
+    }
+    
     function addResourceRole() {
     	$("#resource_role_manage_center_main_wapper").panel('close');
     	$("#resource_role_manage_center_detail_wapper").panel('open');

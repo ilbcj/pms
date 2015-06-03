@@ -156,6 +156,22 @@
 	
 	</div><!-- end of layout -->
 <script>
+    function queryResourceData(){
+    	var name = $("#resource_data_query_name").val();
+    	var code = $("#resource_data_query_code").val();
+     	
+    	$("#resource_data_manage_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			resName: name,
+			resCode: code
+		});
+    }
+    
+    function clearQueryOrgCondition(){
+    	$("#resource_data_query_name").textbox({value:""});
+    	$("#resource_data_query_code").textbox({value:""});
+    }
+    
     function addResourceData() {
     	$("#resource_data_manage_center_main_wapper").panel('close');
     	$("#resource_data_manage_center_detail_wapper").panel('open');
@@ -254,9 +270,11 @@
             });
 		}
 	}
+	
     function importFile(){
 	   	$("#import_file_win").window({title:'文件导入'}).window('open').window('center');
     }
+    
     function importFileSave(){
   		$.messager.progress();	// 显示进度条
 		$("#import_file_form").form('submit', {
@@ -313,6 +331,136 @@ $(document).ready(function () {
 	        }
 	    }
 	});
+
+	$.getJSON("../system/queryResourceDataAttrs.action", function(data) {
+		var resource_status="";				//资源状态
+		var delete_status="";				//删除状态
+		var resource_type="";				//资源类型
+		var dataset_sensitive_level="";		//数据集敏感度编码
+		var data_set="";					//数据集编码
+		var section_class="";				//字段分类编码
+		var lement="";						//字段编码
+		var section_relation_class="";		//字段分类关系编码
+	
+		for(var i=0;i<data.items[0].dictionary.length;i++){
+			resource_status+= "{id:'"+data.items[0].dictionary[i]+"',text:'"+data.items[0].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[1].dictionary.length;i++){
+			delete_status+= "{id:'"+data.items[1].dictionary[i]+"',text:'"+data.items[1].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[2].dictionary.length;i++){
+			resource_type+= "{id:'"+data.items[2].dictionary[i]+"',text:'"+data.items[2].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[3].dictionary.length;i++){
+			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i]+"',text:'"+data.items[3].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[4].dictionary.length;i++){
+			data_set+= "{id:'"+data.items[4].dictionary[i]+"',text:'"+data.items[4].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[5].dictionary.length;i++){
+			section_class+= "{id:'"+data.items[5].dictionary[i]+"',text:'"+data.items[5].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[6].dictionary.length;i++){
+			lement+= "{id:'"+data.items[6].dictionary[i]+"',text:'"+data.items[6].dictionary[i]+"'},"; 
+		};
+		for(var i=0;i<data.items[7].dictionary.length;i++){
+			section_relation_class+= "{id:'"+data.items[7].dictionary[i]+"',text:'"+data.items[7].dictionary[i]+"'},"; 
+		};
+
+		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';
+ 		var resource_statusJSON = (new Function('return '+resource_statusData +';'))();
+ 		var delete_statusData='([' + delete_status.substring(0,delete_status.length-1) + '])';
+ 		var delete_statusJSON = (new Function('return '+delete_statusData +';'))();
+ 		var resource_typeData='([' + resource_type.substring(0,resource_type.length-1) + '])';
+ 		var resource_typeJSON = (new Function('return '+resource_typeData +';'))(); 
+ 		var dataset_sensitive_levelData='([' + dataset_sensitive_level.substring(0,dataset_sensitive_level.length-1) + '])';
+ 		var dataset_sensitive_levelJSON = (new Function('return '+dataset_sensitive_levelData +';'))(); 
+ 		var data_setData='([' + data_set.substring(0,data_set.length-1) + '])';
+ 		var data_setJSON = (new Function('return '+data_setData +';'))(); 
+ 		var section_classData='([' + section_class.substring(0,section_class.length-1) + '])';
+ 		var section_classJSON = (new Function('return '+section_classData +';'))();
+ 		var lementData='([' + lement.substring(0,lement.length-1) + '])';
+ 		var lementJSON = (new Function('return '+lementData +';'))(); 
+ 		var section_relation_classData='([' + section_relation_class.substring(0,section_relation_class.length-1) + '])';
+ 		var section_relation_classJSON = (new Function('return '+section_relation_classData +';'))(); 
+ 		
+ 		//查询部分
+		$('#res_status').combobox({
+			data : resource_statusJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+		});
+		$('#res_delstatus').combobox({
+			data : delete_statusJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+		});
+		$('#res_type').combobox({
+			data : resource_typeJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+		});
+		$('#res_dsl').combobox({
+			data : dataset_sensitive_levelJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+		});
+		$('#res_dataset').combobox({
+			data : data_setJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+		});
+		$('#res_sectionclass').combobox({
+			data : section_classJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+		});
+		$('#res_element').combobox({
+			data : data_setJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+		});
+		$('#res_secrelacls').combobox({
+			data : section_classJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
+			
+		});
+
+		resource_statusJSON.unshift({"id":"","text":"请选择","selected":true})
+		delete_statusJSON.unshift({"id":"","text":"请选择","selected":true})
+		resource_typeJSON.unshift({"id":"","text":"请选择","selected":true})
+		dataset_sensitive_levelJSON.unshift({"id":"","text":"请选择","selected":true})
+		data_setJSON.unshift({"id":"","text":"请选择","selected":true})
+		section_classJSON.unshift({"id":"","text":"请选择","selected":true})
+		lementJSON.unshift({"id":"","text":"请选择","selected":true})
+		section_relation_classJSON.unshift({"id":"","text":"请选择","selected":true})
+		
+		$("#res_status").combobox('loadData', resource_statusJSON);
+		$("#res_delstatus").combobox('loadData', delete_statusJSON);
+		$("#res_type").combobox('loadData', resource_typeJSON);
+		$("#res_dsl").combobox('loadData', dataset_sensitive_levelJSON);
+		$("#res_dataset").combobox('loadData', data_setJSON);
+		$("#res_sectionclass").combobox('loadData', section_classJSON);
+		$("#res_element").combobox('loadData', lementJSON);
+		$("#res_secrelacls").combobox('loadData', section_relation_classJSON);
+	});	
 });
 </script>	
   </body>
