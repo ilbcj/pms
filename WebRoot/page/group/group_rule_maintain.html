@@ -23,12 +23,12 @@
 		    			<table class="nodt" style="width:100%">
 			                <tr>
 			                    <td class="query_name_small text_right">名称</td>
-			                    <td class="query_value_small"><input id="group_user_query_name" class="easyui-textbox"></input></td>
+			                    <td class="query_value_small"><input id="group_rule_query_name" class="easyui-textbox"></input></td>
 			                    <td class="query_name_small text_right">编码</td>
-			                    <td class="query_value_small"><input id="group_user_query_code" class="easyui-textbox"></input></td>
+			                    <td class="query_value_small"><input id="group_rule_query_code" class="easyui-textbox"></input></td>
 			                    <td>
-			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUserGroup()">查询</a>
-	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryUserGroupCondition()">重置</a>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryRuleGroup()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryRuleGroupCondition()">重置</a>
 			                    </td>
 			                </tr>
 			            </table>
@@ -135,7 +135,22 @@
 		</div><!-- end of center -->
 	</div><!-- end of layout -->
 <script>
+	function queryRuleGroup(){
+    	var name = $("#group_rule_query_name").val();
+    	var code = $("#group_rule_query_code").val();
+
+    	$("#group_rule_maintain_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			groupName: name,
+			groupCode: code
+		});
+    }
     
+    function clearQueryRuleGroupCondition(){
+    	$("#group_rule_query_name").textbox({value:""});
+    	$("#group_rule_query_code").textbox({value:""});
+    }
+        
 	function addGroupOfRule() {
 		$("#group_rule_maintain_center_main_wapper").panel('close');
     	$("#group_rule_maintain_center_detail_wapper").panel('open');
