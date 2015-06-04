@@ -27,7 +27,7 @@
 			                    <td class="query_name_small text_right">编码</td>
 			                    <td class="query_value_small"><input id="attr_query_code" class="easyui-textbox"></input></td>
 			                    <td>
-			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceData()">查询</a>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryAttResourceData()">查询</a>
 	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrgCondition()">重置</a>
 			                    </td>
 			                </tr>
@@ -92,7 +92,22 @@
 		</div><!-- end of content -->
 	</div><!-- end of layout -->
 <script>
-	
+	function queryAttResourceData(){
+    	var name = $("#attr_query_name").val();
+    	var code = $("#attr_query_code").val();
+
+    	$("#attr_dict_resource_data_maintain_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			attrName: name,
+			attrCode: code
+		});
+    }
+    
+    function clearQueryOrgCondition(){
+    	$("#attr_query_name").textbox({value:""});
+    	$("#attr_query_code").textbox({value:""});
+    }
+    	
 	function rowData(value){
     	this.value = value;
 	}

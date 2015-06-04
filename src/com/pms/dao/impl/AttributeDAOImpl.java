@@ -30,7 +30,7 @@ public class AttributeDAOImpl implements AttributeDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				sqlString += " and code like :code ";
+				sqlString += " and code = :code ";
 			}
 			if(criteria.getType() != 0) {
 				sqlString += " and type = :type ";
@@ -44,7 +44,7 @@ public class AttributeDAOImpl implements AttributeDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-					q.setString( "code", "%" + criteria.getCode() + "%" );
+					q.setString( "code", criteria.getCode());
 				}
 				if(criteria.getType() != 0) {
 					q.setInteger( "type", criteria.getType() );
@@ -79,7 +79,7 @@ public class AttributeDAOImpl implements AttributeDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				sqlString += " and code like :code ";
+				sqlString += " and code = :code ";
 			}
 			if(criteria.getType() != 0) {
 				sqlString += " and type = :type ";
@@ -93,7 +93,7 @@ public class AttributeDAOImpl implements AttributeDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-					q.setString( "code", "%" + criteria.getCode() + "%" );
+					q.setString( "code", criteria.getCode());
 				}
 				if(criteria.getType() != 0) {
 					q.setInteger( "type", criteria.getType() );
