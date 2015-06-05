@@ -100,7 +100,7 @@ public class GroupDAOImpl implements GroupDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				sqlString += " and code like :code ";
+				sqlString += " and code = :code ";
 			}
 		}
 		
@@ -112,7 +112,7 @@ public class GroupDAOImpl implements GroupDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-					q.setString( "code", "%" + criteria.getCode() + "%" );
+					q.setString( "code", criteria.getCode());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -143,7 +143,7 @@ public class GroupDAOImpl implements GroupDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				sqlString += " and code like :code ";
+				sqlString += " and code = :code ";
 			}
 		}
 		
@@ -155,7 +155,7 @@ public class GroupDAOImpl implements GroupDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-					q.setString( "code", "%" + criteria.getCode() + "%" );
+					q.setString( "code", criteria.getCode());
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
@@ -283,7 +283,7 @@ public class GroupDAOImpl implements GroupDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				sqlString += " and code like :code ";
+				sqlString += " and code = :code ";
 			}
 		}
 		
@@ -294,7 +294,7 @@ public class GroupDAOImpl implements GroupDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-					q.setString( "code", "%" + criteria.getCode() + "%" );
+					q.setString( "code", criteria.getCode());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -378,7 +378,7 @@ public class GroupDAOImpl implements GroupDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				sqlString += " and code like :code ";
+				sqlString += " and code = :code ";
 			}
 		}
 		
@@ -390,7 +390,7 @@ public class GroupDAOImpl implements GroupDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-					q.setString( "code", "%" + criteria.getCode() + "%" );
+					q.setString( "code", criteria.getCode());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -421,7 +421,7 @@ public class GroupDAOImpl implements GroupDAO {
 				sqlString += " and name like :name ";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				sqlString += " and code like :code ";
+				sqlString += " and code = :code ";
 			}
 		}
 		
@@ -433,7 +433,7 @@ public class GroupDAOImpl implements GroupDAO {
 					q.setString( "name", "%" + criteria.getName() + "%" );
 				}
 				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-					q.setString( "code", "%" + criteria.getCode() + "%" );
+					q.setString( "code", criteria.getCode());
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();

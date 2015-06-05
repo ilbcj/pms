@@ -181,6 +181,22 @@
 		</div><!-- end of center -->
 	</div><!-- end of layout -->
 <script>
+	function queryUserGroup(){
+    	var name = $("#group_user_query_name").val();
+    	var code = $("#group_user_query_code").val();
+
+    	$("#group_user_maintain_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			groupName: name,
+			groupCode: code
+		});
+    }
+    
+    function clearQueryUserGroupCondition(){
+    	$("#group_user_query_name").textbox({value:""});
+    	$("#group_user_query_code").textbox({value:""});
+    }
+    
     var isDetailQuery = false;
     function toggleDetailQuery(){
     	var currentHeight = $("#group_user_query_user_win_center_main").layout('panel','north').height();
