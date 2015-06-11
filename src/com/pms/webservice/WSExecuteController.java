@@ -33,7 +33,6 @@ public class WSExecuteController {
 				System.out.println("传入数据不正确，未找到message结点");
 				resultXml = "<error>" + "传入数据不正确，未找到message结点" + "</error>";
 			}
-				
 		}
 		catch(Exception e) {
 			e.printStackTrace();
