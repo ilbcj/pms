@@ -8,7 +8,8 @@ public class SearchCondition {
 	private String onceNum;
 	private String isAsyn;
 	private String CONDITION;
-	private List<String> CONDITIONITEMS;
+	private List<Condition> CONDITIONITEMS;
+	private List<String> RETURNINFO;
 	
 	public String getTableName() {
 		return tableName;
@@ -40,11 +41,17 @@ public class SearchCondition {
 	public void setCONDITION(String cONDITION) {
 		CONDITION = cONDITION;
 	}
-	public List<String> getCONDITIONITEMS() {
+	public List<Condition> getCONDITIONITEMS() {
 		return CONDITIONITEMS;
 	}
-	public void setCONDITIONITEMS(List<String> cONDITIONITEMS) {
+	public void setCONDITIONITEMS(List<Condition> cONDITIONITEMS) {
 		CONDITIONITEMS = cONDITIONITEMS;
+	}
+	public List<String> getRETURNINFO() {
+		return RETURNINFO;
+	}
+	public void setRETURNINFO(List<String> rETURNINFO) {
+		RETURNINFO = rETURNINFO;
 	}
 	
 }
