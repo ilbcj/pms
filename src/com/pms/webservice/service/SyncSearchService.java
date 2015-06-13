@@ -2,6 +2,7 @@ package com.pms.webservice.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -11,6 +12,11 @@ import org.jdom2.output.XMLOutputter;
 
 public class SyncSearchService extends SyncService {
 
+	public static void main(String[] argc) {
+		SyncSearchService s = new SyncSearchService();
+		s.GetResult();
+	}
+	
 	@Override
 	public String GetResult() {
 		String result = "";
@@ -65,23 +71,23 @@ public class SyncSearchService extends SyncService {
 			//format.setIndent("    ");
 			XMLOutputter XMLOut = new XMLOutputter(Format.getPrettyFormat().setEncoding("utf-8"));
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			OutputStreamWriter writer = new OutputStreamWriter(baos, "utf-8"); 
+			PrintWriter writer = new PrintWriter(baos);
 			XMLOut.output(doc, writer);
 			writer.close();
 			result = baos.toString();
-			System.out.println(result);
-			result = "业务服务类型（数据存储访问服务）";
-			String sqlStr = "select ";
-			if( this.getSc().getRETURNINFO() == null || this.getSc().getRETURNINFO().size() == 0 ) {
-				sqlStr += "* ";
-			}
-			else {
-				// TODO parse return column
-			}
+			//System.out.println(result);
 			
-			if( this.getSc().getTableName() == null || this.getSc().getTableName().length() == 0) {
-				
-			}
+			String sqlStr = "select ";
+//			if( this.getSc().getRETURNINFO() == null || this.getSc().getRETURNINFO().size() == 0 ) {
+//				sqlStr += "* ";
+//			}
+//			else {
+//				// TODO parse return column
+//			}
+//			
+//			if( this.getSc().getTableName() == null || this.getSc().getTableName().length() == 0) {
+//				
+//			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
