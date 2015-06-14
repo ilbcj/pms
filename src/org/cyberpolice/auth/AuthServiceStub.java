@@ -1,4 +1,4 @@
-
+  
 /**
  * AuthServiceStub.java
  *
@@ -19,9 +19,12 @@
         protected org.apache.axis2.description.AxisOperation[] _operations;
 
         //hashmaps to keep the fault mapping
-        private java.util.HashMap faultExceptionNameMap = new java.util.HashMap();
-        private java.util.HashMap faultExceptionClassNameMap = new java.util.HashMap();
-        private java.util.HashMap faultMessageMap = new java.util.HashMap();
+        @SuppressWarnings("rawtypes")
+		private java.util.HashMap faultExceptionNameMap = new java.util.HashMap();
+        @SuppressWarnings("rawtypes")
+		private java.util.HashMap faultExceptionClassNameMap = new java.util.HashMap();
+        @SuppressWarnings("rawtypes")
+		private java.util.HashMap faultMessageMap = new java.util.HashMap();
 
         private static int counter = 0;
 
@@ -136,7 +139,8 @@
 
                     
 
-                            public  org.cyberpolice.auth.ExecuteResponseE execute(
+                            @SuppressWarnings({ "rawtypes", "unchecked" })
+							public  org.cyberpolice.auth.ExecuteResponseE execute(
 
                             org.cyberpolice.auth.ExecuteE execute10)
                         
@@ -253,7 +257,8 @@
        /**
         *  A utility method that copies the namepaces from the SOAPEnvelope
         */
-       private java.util.Map getEnvelopeNamespaces(org.apache.axiom.soap.SOAPEnvelope env){
+       @SuppressWarnings({ "rawtypes", "unchecked" })
+	private java.util.Map getEnvelopeNamespaces(org.apache.axiom.soap.SOAPEnvelope env){
         java.util.Map returnMap = new java.util.HashMap();
         java.util.Iterator namespaceIterator = env.getAllDeclaredNamespaces();
         while (namespaceIterator.hasNext()) {
@@ -280,7 +285,8 @@
         return false;
     }
      //http://cyberpolice.org/services/authService
-            private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteE param, boolean optimizeContent)
+            @SuppressWarnings("unused")
+			private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
@@ -294,7 +300,8 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteResponseE param, boolean optimizeContent)
+            @SuppressWarnings("unused")
+			private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
@@ -334,12 +341,14 @@
         /**
         *  get the default envelope
         */
-        private org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory){
+        @SuppressWarnings("unused")
+		private org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory){
         return factory.getDefaultEnvelope();
         }
 
 
-        private  java.lang.Object fromOM(
+        @SuppressWarnings("rawtypes")
+		private  java.lang.Object fromOM(
         org.apache.axiom.om.OMElement param,
         java.lang.Class type,
         java.util.Map extraNamespaces) throws org.apache.axis2.AxisFault{

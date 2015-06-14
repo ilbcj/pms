@@ -69,7 +69,8 @@
         }
         
         //
-            private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteE param, boolean optimizeContent)
+            @SuppressWarnings("unused")
+			private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
@@ -83,7 +84,8 @@
 
             }
         
-            private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteResponseE param, boolean optimizeContent)
+            @SuppressWarnings("unused")
+			private  org.apache.axiom.om.OMElement  toOM(org.cyberpolice.auth.ExecuteResponseE param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 
             
@@ -111,7 +113,8 @@
                     }
                     }
                     
-                         private org.cyberpolice.auth.ExecuteResponseE wrapexecute(){
+                         @SuppressWarnings("unused")
+						private org.cyberpolice.auth.ExecuteResponseE wrapexecute(){
                                 org.cyberpolice.auth.ExecuteResponseE wrappedElement = new org.cyberpolice.auth.ExecuteResponseE();
                                 return wrappedElement;
                          }
@@ -121,12 +124,14 @@
         /**
         *  get the default envelope
         */
-        private org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory){
+        @SuppressWarnings("unused")
+		private org.apache.axiom.soap.SOAPEnvelope toEnvelope(org.apache.axiom.soap.SOAPFactory factory){
         return factory.getDefaultEnvelope();
         }
 
 
-        private  java.lang.Object fromOM(
+        @SuppressWarnings("rawtypes")
+		private  java.lang.Object fromOM(
         org.apache.axiom.om.OMElement param,
         java.lang.Class type,
         java.util.Map extraNamespaces) throws org.apache.axis2.AxisFault{
@@ -160,7 +165,8 @@
         /**
         *  A utility method that copies the namepaces from the SOAPEnvelope
         */
-        private java.util.Map getEnvelopeNamespaces(org.apache.axiom.soap.SOAPEnvelope env){
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+		private java.util.Map getEnvelopeNamespaces(org.apache.axiom.soap.SOAPEnvelope env){
         java.util.Map returnMap = new java.util.HashMap();
         java.util.Iterator namespaceIterator = env.getAllDeclaredNamespaces();
         while (namespaceIterator.hasNext()) {
@@ -170,7 +176,8 @@
         return returnMap;
         }
 
-        private org.apache.axis2.AxisFault createAxisFault(java.lang.Exception e) {
+        @SuppressWarnings("unused")
+		private org.apache.axis2.AxisFault createAxisFault(java.lang.Exception e) {
         org.apache.axis2.AxisFault f;
         Throwable cause = e.getCause();
         if (cause != null) {

@@ -13,7 +13,7 @@
             /**
             *  Execute bean class
             */
-            @SuppressWarnings({"unchecked","unused"})
+            @SuppressWarnings({"unchecked","unused", "serial"})
         
         public  class Execute
         implements org.apache.axis2.databinding.ADBBean{
