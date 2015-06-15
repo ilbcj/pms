@@ -2,6 +2,7 @@ package com.pms.dao;
 
 import java.util.List;
 
+import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
@@ -18,6 +19,7 @@ public interface ResourceDAO {
 	void DataDel(ResData data) throws Exception;
 	List<ResData> GetDatas(ResData criteria, int page, int rows) throws Exception;
 	int GetDatasCount(ResData criteria) throws Exception;
+	List<AttrDictionary> GetDatasDictionarys(int id) throws Exception;
 	
 	ResRole RoleAdd(ResRole role) throws Exception;
 	void RoleDel(ResRole role) throws Exception;

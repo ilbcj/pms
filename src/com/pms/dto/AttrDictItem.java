@@ -2,11 +2,13 @@ package com.pms.dto;
 
 import java.util.List;
 
+import com.pms.model.AttrDictionary;
+
 public class AttrDictItem {
 	private int id;
 	private String name;
 	private String code;
-	private List<String> dictionary;
+	private List<AttrDictionary> dictionary;
 	public int getId() {
 		return id;
 	}
@@ -25,10 +27,17 @@ public class AttrDictItem {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public List<String> getDictionary() {
+//	public List<String> getDictionary() {
+//		return dictionary;
+//	}
+//	public void setDictionary(List<String> dictionary) {
+//		this.dictionary = dictionary;
+//	}
+	public List<AttrDictionary> getDictionary() {
 		return dictionary;
 	}
-	public void setDictionary(List<String> dictionary) {
+	public void setDictionary(List<AttrDictionary> dictionary) {
 		this.dictionary = dictionary;
 	}
+	
 }

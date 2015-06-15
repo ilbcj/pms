@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -138,7 +139,7 @@ public class AttributeDAOImpl implements AttributeDAO {
 	}
 	
 	@Override
-	public void UpdateAttrDictionary(int attrId, List<String> dictionary) throws Exception
+	public void UpdateAttrDictionary(int attrId, List<AttrDictionary> dictionary) throws Exception
 	{
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -152,12 +153,15 @@ public class AttributeDAOImpl implements AttributeDAO {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 					Locale.SIMPLIFIED_CHINESE);
 			String timenow = sdf.format(new Date());
+
 			for(int i=0;i<dictionary.size(); i++) {
 				AttrDictionary attrDict = new AttrDictionary();
 				attrDict.setAttrid(attrId);
-				attrDict.setValue(dictionary.get(i));
+				attrDict.setValue(dictionary.get(i).getValue().toString());
+				attrDict.setCode(dictionary.get(i).getCode().toString());
 				attrDict.setTstamp(timenow);
 				session.merge(attrDict);
+				System.out.println(dictionary.get(i));
 			}
 			tx.commit();
 		} catch (Exception e) {

@@ -9,6 +9,8 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.ResourceDAO;
+import com.pms.dto.ResDataListItem;
+import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
@@ -294,6 +296,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetDatasDictionarys(int id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM wa_authority_resource a,attrdict b,attrdef c " +
+				" WHERE a.DELETE_STATUS=b.code AND b.attrid=c.id and a.id=:id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("id", id);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
