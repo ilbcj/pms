@@ -13,7 +13,7 @@
             /**
             *  ExecuteE bean class
             */
-            @SuppressWarnings({"unchecked","unused"})
+            @SuppressWarnings({"unused", "serial"})
         
         public  class ExecuteE
         implements org.apache.axis2.databinding.ADBBean{
@@ -296,7 +296,8 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static ExecuteE parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+        @SuppressWarnings("rawtypes")
+		public static ExecuteE parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
             ExecuteE object =
                 new ExecuteE();
 

@@ -13,7 +13,7 @@
             /**
             *  Commit bean class
             */
-            @SuppressWarnings({"unchecked","unused"})
+            @SuppressWarnings({"unchecked","unused", "serial"})
         
         public  class Commit
         implements org.apache.axis2.databinding.ADBBean{
@@ -319,7 +319,8 @@
         * databinding method to get an XML representation of this object
         *
         */
-        public javax.xml.stream.XMLStreamReader getPullParser(javax.xml.namespace.QName qName)
+        @SuppressWarnings("rawtypes")
+		public javax.xml.stream.XMLStreamReader getPullParser(javax.xml.namespace.QName qName)
                     throws org.apache.axis2.databinding.ADBException{
 
 
@@ -361,7 +362,8 @@
         * Postcondition: If this object is an element, the reader is positioned at its end element
         *                If this object is a complex type, the reader is positioned at the end element of its outer element
         */
-        public static Commit parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
+        @SuppressWarnings("rawtypes")
+		public static Commit parse(javax.xml.stream.XMLStreamReader reader) throws java.lang.Exception{
             Commit object =
                 new Commit();
 
