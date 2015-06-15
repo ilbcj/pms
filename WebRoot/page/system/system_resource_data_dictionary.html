@@ -108,10 +108,11 @@
     	$("#attr_query_code").textbox({value:""});
     }
     	
-	function rowData(value){
+	function rowData(value,code){
     	this.value = value;
+    	this.code = code;
 	}
-	
+
 	function modAttrDictResourceDataValue() {
 		var rows = $("#attr_dict_resource_data_maintain_center_list_dg").datagrid('getSelections');
 		if(rows.length == 0) {
@@ -126,13 +127,12 @@
 		$("#attr_id").val(rows[0].id);
 		$("#attr_name").textbox('setValue',rows[0].name);
 		$("#attr_code").textbox('setValue',rows[0].code);
-
 		var dataArray = new Array();
 		for(var index=0; index < rows[0].dictionary.length; index++) {
-			var rowdata = new rowData( rows[0].dictionary[index] );
+			var rowdata = new rowData( rows[0].dictionary[index].value,+rows[0].dictionary[index].code );
 			dataArray.push(rowdata);
 		}
-		
+
 		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid({data: dataArray });
 			
 		$("#attr_dict_resource_data_maintain_center_main_wapper").panel('close');
@@ -147,6 +147,11 @@
 	   	//refreshDetailPage();
 	}
 	
+    function newdictValue(value,code){
+    	this.value = value;
+    	this.code = code;
+    }
+    
 	function attrDictResourceDataValueSave() {
 		var attrId = $("#attr_id").val();
     	var poststr = "attrItem.id=" + attrId;
@@ -155,12 +160,13 @@
     	var convertArray = new Array();
     	
     	for(var index=0; index < rows.length; index++) {
-	    	var dictValue = rows[index].value;
+	    	var dictValue = new newdictValue(rows[index].value,rows[index].code);
 	 		convertArray.push(dictValue);
     	}
     	var tmp = $.toJSON(convertArray);
     	poststr += '&attrItem.dictionary='+ tmp;
     	
+//		alert(poststr);
     	$.getJSON("../system/saveUserAttrs.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
@@ -255,7 +261,8 @@ $(document).ready(function () {
 		//idField:'id',
 		//url:'data/datagrid_data.json',
 		columns:[[
-			{field:'value',title:'属性可选值',width:'80%',editor:'text'},
+			{field:'value',title:'属性可选值',width:'40%',editor:'text'},
+			{field:'code',title:'属性后台值',width:'40%',editor:'text'},
 			{field:'action',title:'操作',width:'20%',align:'center',
 				formatter:function(value,row,index){
 					if (row.editing){

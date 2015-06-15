@@ -202,7 +202,7 @@
     	}
     	var tmp = $.toJSON(convertArray);
     	poststr += '&rules='+ tmp;
-		
+
     	$.getJSON("../group/saveGroupRule.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
@@ -504,7 +504,7 @@ $(document).ready(function () {
 			if( record.dictionary && record.dictionary.length > 0 ) {
 				var str = "[";
 				for(var index in record.dictionary){
-					str += '{"rulevalue":"' + record.dictionary[index] + '"},';
+					str += '{"rulevalue":"' + record.dictionary[index].value + '"},';
 				}
 				str = str.substring(0, str.lastIndexOf(',')) + "]";
 				var attrListValues = $.parseJSON(str);

@@ -1,12 +1,16 @@
 package com.pms.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.ResourceDAOImpl;
+import com.pms.dto.ResDataListItem;
+import com.pms.model.AttrDefinition;
+import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
@@ -53,13 +57,54 @@ public class ResourceManageService {
 		return ;
 	}
 	
-	public int QueryAllDataItems(ResData criteria, int page, int rows, List<ResData> items) throws Exception {
+	public int QueryAllDataItems(ResData criteria, int page, int rows, List<ResDataListItem> items) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResData> res = dao.GetDatas( criteria, page, rows );
-		items.addAll(res);
+		ResDataListItem resDataListItem = null;
+		for(int i=0; i<res.size(); i++) {
+			resDataListItem = ConvertDatasDefinitonToResDataListItem(res.get(i));
+			items.add(resDataListItem);
+		}
 		int total = QueryAllDatasCount( criteria );
+
 		return total;
 	}
+	
+	public ResDataListItem ConvertDatasDefinitonToResDataListItem(ResData attr) throws Exception {
+		ResDataListItem item = new ResDataListItem();
+		item.setId(attr.getId());
+		item.setName(attr.getName());
+		item.setRESOURCE_ID(attr.getRESOURCE_ID());
+		item.setRESOURCE_STATUS(attr.getRESOURCE_STATUS());
+		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
+		item.setRESOURCE_REMARK(attr.getRESOURCE_REMARK());				
+		item.setDELETE_STATUS(attr.getDELETE_STATUS());
+		item.setResource_type(attr.getResource_type());	
+//		item.setCLUE_DST_SYS(attr.getCLUE_DST_SYS());
+		item.setDATASET_SENSITIVE_LEVEL(attr.getDATASET_SENSITIVE_LEVEL());	
+		item.setDATA_SET(attr.getDATA_SET());
+		item.setSECTION_CLASS(attr.getSECTION_CLASS());
+		item.setELEMENT(attr.getELEMENT());
+		item.setSECTION_RELATIOIN_CLASS(attr.getSECTION_RELATIOIN_CLASS());
+
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<AttrDictionary> attrDicts = dao.GetDatasDictionarys(attr.getId());
+		List data = new ArrayList();
+		for(int i = 0; i < attrDicts.size(); i++) {
+			AttrDictionary attrDictionary=new AttrDictionary();
+
+//			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
+			attrDictionary.setValue(attrDicts.get(i).getValue());
+//			attrDictionary.setCode(attrDicts.get(i).getCode());
+//			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			data.add(attrDictionary);
+		}
+		
+		item.setValue(data);
+
+		return item;
+	}	
 	
 	private int QueryAllDatasCount(ResData criteria) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();

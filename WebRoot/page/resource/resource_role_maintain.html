@@ -551,7 +551,7 @@
     function insertData(data){
     	var rows = $("#role_resource_data_dg").datagrid('getRows');
 		var index = rows.length;
-		
+
 		if( isExist( rows, data.id ) )
 			return;
 			
@@ -602,7 +602,7 @@
 				var res = new Object();
 				if (data.result == true){
 					res.total = data.total;
-					res.rows = data.datas;
+					res.rows = data.items;
 				} else {
 					res.total=0;
 					res.rows = [];
@@ -719,28 +719,28 @@ $(document).ready(function () {
 		var section_relation_class="";		//字段分类关系编码
 	
 		for(var i=0;i<data.items[0].dictionary.length;i++){
-			resource_status+= "{id:'"+data.items[0].dictionary[i]+"',text:'"+data.items[0].dictionary[i]+"'},"; 
+			resource_status+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[1].dictionary.length;i++){
-			delete_status+= "{id:'"+data.items[1].dictionary[i]+"',text:'"+data.items[1].dictionary[i]+"'},"; 
+			delete_status+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[2].dictionary.length;i++){
-			resource_type+= "{id:'"+data.items[2].dictionary[i]+"',text:'"+data.items[2].dictionary[i]+"'},"; 
+			resource_type+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[3].dictionary.length;i++){
-			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i]+"',text:'"+data.items[3].dictionary[i]+"'},"; 
+			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
-			data_set+= "{id:'"+data.items[4].dictionary[i]+"',text:'"+data.items[4].dictionary[i]+"'},"; 
+			data_set+= "{id:'"+data.items[4].dictionary[i].value+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[5].dictionary.length;i++){
-			section_class+= "{id:'"+data.items[5].dictionary[i]+"',text:'"+data.items[5].dictionary[i]+"'},"; 
+			section_class+= "{id:'"+data.items[5].dictionary[i].value+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[6].dictionary.length;i++){
-			lement+= "{id:'"+data.items[6].dictionary[i]+"',text:'"+data.items[6].dictionary[i]+"'},"; 
+			lement+= "{id:'"+data.items[6].dictionary[i].value+"',text:'"+data.items[6].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[7].dictionary.length;i++){
-			section_relation_class+= "{id:'"+data.items[7].dictionary[i]+"',text:'"+data.items[7].dictionary[i]+"'},"; 
+			section_relation_class+= "{id:'"+data.items[7].dictionary[i].value+"',text:'"+data.items[7].dictionary[i].value+"'},"; 
 		};
 
 		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';
