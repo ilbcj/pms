@@ -203,97 +203,97 @@ public class SyncSearchService extends SyncService {
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030014");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.J030014");
 			itemSetAttribute(item, "val", user.getCERTIFICATE_CODE_MD5());
 			itemSetAttribute(item, "rmk", "身份证哈希值");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030015");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.J030015");
 			itemSetAttribute(item, "val", user.getCERTIFICATE_CODE_SUFFIX());
 			itemSetAttribute(item, "rmk", "身份证后6位");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "B010001");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.B010001");
 			itemSetAttribute(item, "val", user.getNAME());
 			itemSetAttribute(item, "rmk", "姓名");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "B010011");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.B010011");
 			itemSetAttribute(item, "val", user.getSEXCODE());
 			itemSetAttribute(item, "rmk", "性别");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "A010001");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.A010001");
 			itemSetAttribute(item, "val", user.getGA_DEPARTMENT());
 			itemSetAttribute(item, "rmk", "公安组织机构代码");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "E010002");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.E010002");
 			itemSetAttribute(item, "val", user.getUNIT());
 			itemSetAttribute(item, "rmk", "公安组织机构名称");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010052");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.I010052");
 			itemSetAttribute(item, "val", user.getORG_LEVEL());
 			itemSetAttribute(item, "rmk", "公安组织机构级别");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "A010003");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.A010003");
 			itemSetAttribute(item, "val", user.getPOLICE_SORT());
 			itemSetAttribute(item, "rmk", "警种");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "B010028");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.B010028");
 			itemSetAttribute(item, "val", user.getPOLICE_NO());
 			itemSetAttribute(item, "rmk", "警号");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "H010034");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.H010034");
 			itemSetAttribute(item, "val", user.getSENSITIVE_LEVEL());
 			itemSetAttribute(item, "rmk", "最高敏感级别");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010031");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.I010031");
 			itemSetAttribute(item, "val", user.getBUSINESS_TYPE());
 			itemSetAttribute(item, "rmk", "业务部门类别");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "B030026");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.B030026");
 			itemSetAttribute(item, "val", user.getTAKE_OFFICE());
 			itemSetAttribute(item, "rmk", "职务/职称");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030016");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.J030016");
 			itemSetAttribute(item, "val", ""+user.getUSER_STATUS());
 			itemSetAttribute(item, "rmk", "用户状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "H010029");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.H010029");
 			itemSetAttribute(item, "val", ""+user.getDELETE_STATUS());
 			itemSetAttribute(item, "rmk", "删除状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030017");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.J030017");
 			itemSetAttribute(item, "val", ""+user.getDATA_VERSION());
 			itemSetAttribute(item, "rmk", "数据版本号");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.I010005");
 			itemSetAttribute(item, "val", ""+user.getLATEST_MOD_TIME());
 			itemSetAttribute(item, "rmk", "最新修改时间");
 			
@@ -303,43 +303,43 @@ public class SyncSearchService extends SyncService {
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "A010001");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.A010001");
 			itemSetAttribute(item, "val", org.getGA_DEPARTMENT());
 			itemSetAttribute(item, "rmk", "公安组织机构代码");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "E010002");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.E010002");
 			itemSetAttribute(item, "val", org.getUNIT());
 			itemSetAttribute(item, "rmk", "公安组织机构名称");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010052");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.I010052");
 			itemSetAttribute(item, "val", org.getORG_LEVEL());
 			itemSetAttribute(item, "rmk", "公安组织机构级别");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "A010005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.A010005");
 			itemSetAttribute(item, "val", org.getPARENT_ORG());
 			itemSetAttribute(item, "rmk", "组织机构父节点(上级组织机构)");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "H010029");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.H010029");
 			itemSetAttribute(item, "val", ""+org.getDELETE_STATUS());
 			itemSetAttribute(item, "rmk", "删除状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030017");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.J030017");
 			itemSetAttribute(item, "val", ""+org.getDATA_VERSION());
 			itemSetAttribute(item, "rmk", "数据版本号");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.I010005");
 			itemSetAttribute(item, "val", ""+org.getLATEST_MOD_TIME());
 			itemSetAttribute(item, "rmk", "最新修改时间");
 		}
@@ -348,43 +348,43 @@ public class SyncSearchService extends SyncService {
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010026");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.I010026");
 			itemSetAttribute(item, "val", role.getBUSINESS_ROLE());
 			itemSetAttribute(item, "rmk", "角色编码");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010025");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.I010025");
 			itemSetAttribute(item, "val", ""+role.getBUSINESS_ROLE_TYPE());
 			itemSetAttribute(item, "rmk", "角色类型");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010054");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.I010054");
 			itemSetAttribute(item, "val", role.getBUSINESS_ROLE_NAME());
 			itemSetAttribute(item, "rmk", "角色名称");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "B050016");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.B050016");
 			itemSetAttribute(item, "val", role.getSYSTEM_TYPE());
 			itemSetAttribute(item, "rmk", "系统类型");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "H010029");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.H010029");
 			itemSetAttribute(item, "val", ""+role.getDELETE_STATUS());
 			itemSetAttribute(item, "rmk", "删除状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030017");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.J030017");
 			itemSetAttribute(item, "val", ""+role.getDATA_VERSION());
 			itemSetAttribute(item, "rmk", "数据版本号");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.I010005");
 			itemSetAttribute(item, "val", ""+role.getLATEST_MOD_TIME());
 			itemSetAttribute(item, "rmk", "最新修改时间");
 			
@@ -394,85 +394,85 @@ public class SyncSearchService extends SyncService {
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030006");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030006");
 			itemSetAttribute(item, "val", resData.getRESOURCE_ID());
 			itemSetAttribute(item, "rmk", "资源唯一标识");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030010");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030010");
 			itemSetAttribute(item, "val", ""+resData.getRESOURCE_STATUS());
 			itemSetAttribute(item, "rmk", "资源状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030012");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030012");
 			itemSetAttribute(item, "val", resData.getRESOURCE_DESCRIBE());
 			itemSetAttribute(item, "rmk", "资源描述");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030003");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030003");
 			itemSetAttribute(item, "val", resData.getDATASET_SENSITIVE_LEVEL());
 			itemSetAttribute(item, "rmk", "数据集敏感度编码（表控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "A010004");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.A010004");
 			itemSetAttribute(item, "val", resData.getDATA_SET());
 			itemSetAttribute(item, "rmk", "数据集编码（表控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030001");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030001");
 			itemSetAttribute(item, "val", resData.getSECTION_CLASS());
 			itemSetAttribute(item, "rmk", "字段分类编码（列控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030004");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030004");
 			itemSetAttribute(item, "val", resData.getELEMENT());
 			itemSetAttribute(item, "rmk", "字段编码（原目标字段列控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030002");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030002");
 			itemSetAttribute(item, "val", resData.getSECTION_RELATIOIN_CLASS());
 			itemSetAttribute(item, "rmk", "字段分类关系编码（列控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030021");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030021");
 			itemSetAttribute(item, "val", resData.getOPERATE_SYMBOL());
 			itemSetAttribute(item, "rmk", "操作符");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030005");
 			itemSetAttribute(item, "val", resData.getELEMENT_VALUE());
 			itemSetAttribute(item, "rmk", "字段值");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030013");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030013");
 			itemSetAttribute(item, "val", resData.getRESOURCE_REMARK());
 			itemSetAttribute(item, "rmk", "备注");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "H010029");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.H010029");
 			itemSetAttribute(item, "val", ""+resData.getDELETE_STATUS());
 			itemSetAttribute(item, "rmk", "删除状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "J030017");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030017");
 			itemSetAttribute(item, "val", ""+resData.getDATA_VERSION());
 			itemSetAttribute(item, "rmk", "数据版本号");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "I010005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.I010005");
 			itemSetAttribute(item, "val", ""+resData.getLATEST_MOD_TIME());
 			itemSetAttribute(item, "rmk", "最新修改时间");
 		}
