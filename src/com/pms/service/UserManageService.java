@@ -27,6 +27,7 @@ public class UserManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		user.setLATEST_MOD_TIME(timenow);
+		user.setDATA_VERSION(user.getDATA_VERSION()+1);
 		user = dao.UserAdd(user);
 		return user;
 	}
@@ -65,6 +66,7 @@ public class UserManageService {
 		item.setStatus(user.getUSER_STATUS());
 		item.setTitle(user.getTAKE_OFFICE());
 		item.setUnit(user.getBUSINESS_TYPE());
+		item.setData_version(user.getDATA_VERSION());
 
 		OrgManageService oms = new OrgManageService();
 		String path = oms.QueryNodePath(user.getGA_DEPARTMENT());

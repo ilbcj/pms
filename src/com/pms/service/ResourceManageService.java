@@ -9,7 +9,6 @@ import java.util.Locale;
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dto.ResDataListItem;
-import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
