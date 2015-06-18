@@ -1,7 +1,10 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -9,7 +12,6 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.ResourceDAO;
-import com.pms.dto.ResDataListItem;
 import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
@@ -500,12 +502,17 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setInteger("restype", ResRoleResource.RESTYPEFEATURE);
 			q.executeUpdate();
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			
 			ResRoleResource rr;
 			if(featureIds != null) {
 				for(int i = 0; i<featureIds.size(); i++) {
 					rr = new ResRoleResource();
 					rr.setBUSINESS_ROLE(roleId);
 					rr.setRESOURCE_ID(featureIds.get(i));
+					rr.setLATEST_MOD_TIME(timenow);
 					rr.setRestype(ResRoleResource.RESTYPEFEATURE);
 					session.merge(rr);
 				}
@@ -535,12 +542,17 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
 			q.executeUpdate();
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			
 			ResRoleResource rr;
 			if( dataIds != null) {
 				for(int i = 0; i<dataIds.size(); i++) {
 					rr = new ResRoleResource();
 					rr.setBUSINESS_ROLE(roleId);
 					rr.setRESOURCE_ID(dataIds.get(i));
+					rr.setLATEST_MOD_TIME(timenow);
 					rr.setRestype(ResRoleResource.RESTYPEDATA);
 					session.merge(rr);
 				}

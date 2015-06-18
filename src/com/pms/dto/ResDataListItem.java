@@ -18,6 +18,7 @@ public class ResDataListItem {
 	private String SECTION_CLASS;
 	private String ELEMENT;
 	private String SECTION_RELATIOIN_CLASS;
+	private int DATA_VERSION;
 	
 	private List<String> value;
 
@@ -131,6 +132,14 @@ public class ResDataListItem {
 
 	public void setSECTION_RELATIOIN_CLASS(String sECTIONRELATIOINCLASS) {
 		SECTION_RELATIOIN_CLASS = sECTIONRELATIOINCLASS;
+	}
+
+	public int getDATA_VERSION() {
+		return DATA_VERSION;
+	}
+
+	public void setDATA_VERSION(int dATAVERSION) {
+		DATA_VERSION = dATAVERSION;
 	}
 
 	public List<String> getValue() {

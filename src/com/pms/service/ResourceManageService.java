@@ -85,6 +85,7 @@ public class ResourceManageService {
 		item.setSECTION_CLASS(attr.getSECTION_CLASS());
 		item.setELEMENT(attr.getELEMENT());
 		item.setSECTION_RELATIOIN_CLASS(attr.getSECTION_RELATIOIN_CLASS());
+		item.setDATA_VERSION(attr.getDATA_VERSION());
 
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<AttrDictionary> attrDicts = dao.GetDatasDictionarys(attr.getId());
@@ -117,6 +118,7 @@ public class ResourceManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		data.setLATEST_MOD_TIME(timenow);
+		data.setDATA_VERSION(data.getDATA_VERSION()+1);
 		data = dao.DataAdd(data);
 		return data;
 	}
@@ -157,6 +159,7 @@ public class ResourceManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		role.setLATEST_MOD_TIME(timenow);
+		role.setDATA_VERSION(role.getDATA_VERSION()+1);
 		role = dao.RoleAdd(role);
 		
 		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds);

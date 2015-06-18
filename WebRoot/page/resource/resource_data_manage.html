@@ -89,7 +89,8 @@
 								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_data_manage_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 				    <form id="resource_data_manage_center_detail_form" method="post">
-				    	<input id="res_id" name="data.id" type="hidden"/> 
+				    	<input id="res_id" name="data.id" type="hidden"/>
+				    	<input id="res_data_version" name="data.DATA_VERSION" type="hidden"/>
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 名称</td>
@@ -192,6 +193,7 @@
     
     function refreshDetailPage() {
 		$("#res_id").val("");
+		$("#res_data_version").val("");
      	$("#res_name").textbox('setValue',"");
      	$("#res_resid").textbox('setValue',"");
      	$("#res_status").textbox('setValue',"");
@@ -219,6 +221,7 @@
 		}
 		
 		$("#res_id").val(rows[0].id);
+		$("#res_data_version").val(rows[0].DATA_VERSION);
 		$("#res_name").textbox('setValue',rows[0].name);
 		$("#res_resid").textbox('setValue',rows[0].RESOURCE_ID);
 		$("#res_status").textbox('setValue',rows[0].RESOURCE_STATUS);
@@ -406,7 +409,7 @@ $(document).ready(function () {
  		var section_relation_classData='([' + section_relation_class.substring(0,section_relation_class.length-1) + '])';
  		var section_relation_classJSON = (new Function('return '+section_relation_classData +';'))(); 
  		
- 		//查询部分
+ 		//添加部分
 		$('#res_status').combobox({
 			data : resource_statusJSON,
 			valueField:'id',

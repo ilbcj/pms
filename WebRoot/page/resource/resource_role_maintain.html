@@ -62,7 +62,8 @@
 				<div id="resource_role_manage_center_detail" class="easyui-panel" 
 								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_role_manage_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
-					<input id="role_id" type="hidden"/> 
+					<input id="role_id" type="hidden"/>
+					<input id="role_data_version" type="hidden"/> 
 			        <table class="nodt" style="width:100%">
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 角色名称</td>
@@ -319,6 +320,9 @@
 		var roleId = $("#role_id").val();
     	var poststr = "role.id=" + roleId;
     	
+    	var roleDataVersion = $("#role_data_version").val();
+    	poststr += "&role.DATA_VERSION=" + roleDataVersion;
+    	
     	var roleName = $("#role_name").textbox('getValue');
     	poststr += "&role.BUSINESS_ROLE_NAME=" + encodeURIComponent(roleName);
     	
@@ -377,6 +381,7 @@
     
     function refreshDetailPage() {
 		$("#role_id").val("");
+		$("#role_data_version").val("");
      	$("#role_name").textbox('setValue',"");
      	$("#role_code").textbox('setValue',"");
      	$("#role_type").textbox('setValue',"");
@@ -403,6 +408,7 @@
 		}
 		
 		$("#role_id").val(rows[0].id);
+		$("#role_data_version").val(rows[0].DATA_VERSION);
 		$("#role_name").textbox('setValue',rows[0].BUSINESS_ROLE_NAME);
 		$("#role_code").textbox('setValue',rows[0].BUSINESS_ROLE);
 		$("#role_type").textbox('setValue',rows[0].BUSINESS_ROLE_TYPE);

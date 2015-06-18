@@ -161,7 +161,6 @@ public class AttributeDAOImpl implements AttributeDAO {
 				attrDict.setCode(dictionary.get(i).getCode().toString());
 				attrDict.setTstamp(timenow);
 				session.merge(attrDict);
-				System.out.println(dictionary.get(i));
 			}
 			tx.commit();
 		} catch (Exception e) {
