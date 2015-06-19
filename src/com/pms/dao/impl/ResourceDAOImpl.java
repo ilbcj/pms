@@ -513,6 +513,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					rr.setBUSINESS_ROLE(roleId);
 					rr.setRESOURCE_ID(featureIds.get(i));
 					rr.setLATEST_MOD_TIME(timenow);
+					rr.setDATA_VERSION(1);
 					rr.setRestype(ResRoleResource.RESTYPEFEATURE);
 					session.merge(rr);
 				}
@@ -553,6 +554,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					rr.setBUSINESS_ROLE(roleId);
 					rr.setRESOURCE_ID(dataIds.get(i));
 					rr.setLATEST_MOD_TIME(timenow);
+					rr.setDATA_VERSION(1);
 					rr.setRestype(ResRoleResource.RESTYPEDATA);
 					session.merge(rr);
 				}
