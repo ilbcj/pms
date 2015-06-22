@@ -2,6 +2,7 @@ package com.pms.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dto.AttrDictItem;
@@ -46,12 +47,19 @@ public class AttrDictionaryService {
 		
 		AttributeDAO dao = new AttributeDAOImpl();
 		List<AttrDictionary> attrDicts = dao.GetAttrDictionarysByAttrId(attr.getId());
-		List<String> values = new ArrayList<String>();
+		List data = new ArrayList();
 		for(int i = 0; i < attrDicts.size(); i++) {
-			values.add( attrDicts.get(i).getValue() );
+			AttrDictionary attrDictionary=new AttrDictionary();
+			
+			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
+			attrDictionary.setValue(attrDicts.get(i).getValue());
+			attrDictionary.setCode(attrDicts.get(i).getCode());
+			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			data.add(attrDictionary);
 		}
-		
-		item.setDictionary(values);
+
+		item.setDictionary(data);
 		return item;
 	}
 

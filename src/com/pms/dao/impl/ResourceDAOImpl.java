@@ -1,7 +1,10 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -9,6 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.ResourceDAO;
+import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
@@ -306,6 +310,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetDatasDictionarys(int id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM wa_authority_resource a,attrdict b,attrdef c " +
+				" WHERE a.DELETE_STATUS=b.code AND b.attrid=c.id and a.id=:id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("id", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@Override
 	public ResRole RoleAdd(ResRole role) throws Exception {
 		//打开线程安全的session对象
@@ -472,12 +502,18 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setInteger("restype", ResRoleResource.RESTYPEFEATURE);
 			q.executeUpdate();
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			
 			ResRoleResource rr;
 			if(featureIds != null) {
 				for(int i = 0; i<featureIds.size(); i++) {
 					rr = new ResRoleResource();
 					rr.setBUSINESS_ROLE(roleId);
 					rr.setRESOURCE_ID(featureIds.get(i));
+					rr.setLATEST_MOD_TIME(timenow);
+					rr.setDATA_VERSION(1);
 					rr.setRestype(ResRoleResource.RESTYPEFEATURE);
 					session.merge(rr);
 				}
@@ -507,12 +543,18 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
 			q.executeUpdate();
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			
 			ResRoleResource rr;
 			if( dataIds != null) {
 				for(int i = 0; i<dataIds.size(); i++) {
 					rr = new ResRoleResource();
 					rr.setBUSINESS_ROLE(roleId);
 					rr.setRESOURCE_ID(dataIds.get(i));
+					rr.setLATEST_MOD_TIME(timenow);
+					rr.setDATA_VERSION(1);
 					rr.setRestype(ResRoleResource.RESTYPEDATA);
 					session.merge(rr);
 				}

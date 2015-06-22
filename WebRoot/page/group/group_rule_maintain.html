@@ -202,13 +202,13 @@
     	}
     	var tmp = $.toJSON(convertArray);
     	poststr += '&rules='+ tmp;
-		
+
     	$.getJSON("../group/saveGroupRule.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
 				$("#group_rule_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
-				warningTip("提示", '保存规则群体信息成功');
+				successTip("提示", '保存规则群体信息成功');
 			}
 			else
 			{
@@ -504,7 +504,7 @@ $(document).ready(function () {
 			if( record.dictionary && record.dictionary.length > 0 ) {
 				var str = "[";
 				for(var index in record.dictionary){
-					str += '{"rulevalue":"' + record.dictionary[index] + '"},';
+					str += '{"rulevalue":"' + record.dictionary[index].value + '"},';
 				}
 				str = str.substring(0, str.lastIndexOf(',')) + "]";
 				var attrListValues = $.parseJSON(str);

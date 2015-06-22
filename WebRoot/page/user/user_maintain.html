@@ -114,7 +114,8 @@
 								data-options="fit:true,border:false,title:'基本信息',footer:'#user_maintain_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 				    <form id="user_maintain_center_detail_form" method="post">
-				    	<input id="user_id" name="user.id" type="hidden"/> 
+				    	<input id="user_id" name="user.id" type="hidden"/>
+				    	<input id="user_data_version" name="user.DATA_VERSION" type="hidden"/> 
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 姓名</td>
@@ -339,6 +340,7 @@
     
     function refreshDetailPage() {
        	$("#user_id").val("");
+       	$("#user_data_version").val("");
        	$("#user_name").textbox('setValue',"");
        	$("#user_pid").textbox('setValue',"");
        	$("#user_unit").textbox('setValue',"");
@@ -385,6 +387,7 @@
 		if( userPreMod() ) {
 			var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
 			$("#user_id").val(rows[0].id);
+			$("#user_data_version").val(rows[0].data_version);
 			$("#user_name").textbox('setValue',rows[0].name);
 			$("#user_pid").textbox('setValue',rows[0].parent_id);
 			$("#user_pid").textbox('setText',rows[0].pname);
@@ -525,22 +528,22 @@ $(document).ready(function () {
 		var title="";					//职务/职称
 		
 		for(var i=0;i<data.items[0].dictionary.length;i++){
-			sex+= "{id:'"+data.items[0].dictionary[i]+"',text:'"+data.items[0].dictionary[i]+"'},"; 
+			sex+= "{id:'"+data.items[0].dictionary[i].value+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[1].dictionary.length;i++){
-			police_type+= "{id:'"+data.items[1].dictionary[i]+"',text:'"+data.items[1].dictionary[i]+"'},"; 
+			police_type+= "{id:'"+data.items[1].dictionary[i].value+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[2].dictionary.length;i++){
-			police_num+= "{id:'"+data.items[2].dictionary[i]+"',text:'"+data.items[2].dictionary[i]+"'},"; 
+			police_num+= "{id:'"+data.items[2].dictionary[i].value+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[3].dictionary.length;i++){
-			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i]+"',text:'"+data.items[3].dictionary[i]+"'},"; 
+			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i].value+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
-			dept+= "{id:'"+data.items[4].dictionary[i]+"',text:'"+data.items[4].dictionary[i]+"'},"; 
+			dept+= "{id:'"+data.items[4].dictionary[i].value+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[5].dictionary.length;i++){
-			title+= "{id:'"+data.items[5].dictionary[i]+"',text:'"+data.items[5].dictionary[i]+"'},"; 
+			title+= "{id:'"+data.items[5].dictionary[i].value+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
 		};
 		
 		var sexData='([' + sex.substring(0,sex.length-1) + '])';

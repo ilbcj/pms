@@ -25,6 +25,7 @@ public class OrgManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		org.setLATEST_MOD_TIME(timenow);
+		org.setDATA_VERSION(org.getDATA_VERSION()+1);
 		org = dao.OrgNodeAdd(org);
 		return org;
 	}
@@ -111,6 +112,7 @@ public class OrgManageService {
 		item.setName(org.getUNIT());
 		item.setPid(org.getPARENT_ORG());
 		item.setOrgLevel(org.getORG_LEVEL());
+		item.setData_version(org.getDATA_VERSION());
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		Organization parent = dao.GetOrgNodeById(org.getPARENT_ORG());
 		item.setPname(parent == null ? "" : parent.getUNIT());
@@ -177,6 +179,7 @@ public class OrgManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		node.setLATEST_MOD_TIME(timenow);
+		node.setDATA_VERSION(node.getDATA_VERSION()+1);
 		node = dao.OrgNodeAdd(node);
 		return;
 	}
