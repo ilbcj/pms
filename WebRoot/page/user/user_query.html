@@ -362,22 +362,22 @@ $(document).ready(function () {
 		var title="";					//职务/职称
 		
 		for(var i=0;i<data.items[0].dictionary.length;i++){
-			sex+= "{id:'"+data.items[0].dictionary[i]+"',text:'"+data.items[0].dictionary[i]+"'},"; 
+			sex+= "{id:'"+data.items[0].dictionary[i].value+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[1].dictionary.length;i++){
-			police_type+= "{id:'"+data.items[1].dictionary[i]+"',text:'"+data.items[1].dictionary[i]+"'},"; 
+			police_type+= "{id:'"+data.items[1].dictionary[i].value+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[2].dictionary.length;i++){
-			police_num+= "{id:'"+data.items[2].dictionary[i]+"',text:'"+data.items[2].dictionary[i]+"'},"; 
+			police_num+= "{id:'"+data.items[2].dictionary[i].value+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[3].dictionary.length;i++){
-			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i]+"',text:'"+data.items[3].dictionary[i]+"'},"; 
+			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i].value+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
-			dept+= "{id:'"+data.items[4].dictionary[i]+"',text:'"+data.items[4].dictionary[i]+"'},"; 
+			dept+= "{id:'"+data.items[4].dictionary[i].value+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[5].dictionary.length;i++){
-			title+= "{id:'"+data.items[5].dictionary[i]+"',text:'"+data.items[5].dictionary[i]+"'},"; 
+			title+= "{id:'"+data.items[5].dictionary[i].value+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
 		};
 		
 		var sexData='([' + sex.substring(0,sex.length-1) + '])';

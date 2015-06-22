@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.pms.dto.ResDataListItem;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
@@ -35,6 +36,7 @@ public class ResourceAction extends ActionSupport {
 	private List<ResRole> roles;
 	private List<String> addFeatureIds;
 	private List<String> addDataIds;
+	private List<ResDataListItem> items;
 	
 	private String resource_id;
 	private List<String> resource_status;
@@ -53,6 +55,14 @@ public class ResourceAction extends ActionSupport {
 	private String fiFileName;
 	private String fiContentType;
 	
+	public List<ResDataListItem> getItems() {
+		return items;
+	}
+
+	public void setItems(List<ResDataListItem> items) {
+		this.items = items;
+	}
+
 	public String getResource_id() {
 		return resource_id;
 	}
@@ -352,12 +362,12 @@ public class ResourceAction extends ActionSupport {
 	public String QueryDataItems()
 	{
 		ResourceManageService rms = new ResourceManageService();
-		datas = new ArrayList<ResData>();
+		items = new ArrayList<ResDataListItem>();
 		try {
 			ResData criteria = new ResData();
 			criteria.setName(resName);
 			criteria.setRESOURCE_ID(resCode);
-			total = rms.QueryAllDataItems( criteria, page, rows, datas );
+			total = rms.QueryAllDataItems( criteria, page, rows, items );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
