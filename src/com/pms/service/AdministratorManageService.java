@@ -93,7 +93,7 @@ public class AdministratorManageService {
 		}
 		else
 		{
-			throw new Exception("原口令不正确，修改口令失败�?");
+			throw new Exception("原口令不正确，修改口令失败!");
 		}
 		return ;
 	}

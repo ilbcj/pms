@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import com.pms.model.HibernateUtil;
 import com.pms.model.Organization;
 import com.pms.model.ResData;
+import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.User;
 import com.pms.webservice.dao.SearchDAO;
@@ -38,7 +39,10 @@ public class SearchDAOImpl implements SearchDAO {
 			else if(type == TYPERESDATA) {
 				q = ((SQLQuery)q).addEntity(ResData.class);
 			}
-			q.setFirstResult(first - 1);   
+			else if(type == TYPERESFUN) {
+				q = ((SQLQuery)q).addEntity(ResFeature.class);
+			}
+			q.setFirstResult(first);   
 			q.setMaxResults(count);   
 			rs = q.list();
 			tx.commit();

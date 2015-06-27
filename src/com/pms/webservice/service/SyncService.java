@@ -2,7 +2,9 @@ package com.pms.webservice.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jdom2.Element;
 
@@ -44,50 +46,46 @@ public abstract class SyncService {
 		this.sc = sc;
 	}
 
-	public static SyncService getInstance(Element root) {
+	public static SyncService getInstance(Element root) throws Exception {
 		SyncService result = null;
 		DataCommonInfo dci = null;
 		UserAuth ua = null;
 		SearchCondition sc = null;
-		try{
-			List<Element> datasetList = root.getChildren();//getElementsByTagName("DATASET");
-			for(int i=0;i<datasetList.size();i++) {
+		
+		List<Element> datasetList = root.getChildren();//getElementsByTagName("DATASET");
+		for(int i=0;i<datasetList.size();i++) {
+			Element element = datasetList.get(i); //得到"page"的第i+1组标签
+			if("DATASET".equals(element.getName())) {
+				String name = element.getAttributeValue("name"); //获得name属性
+				if("WA_COMMON_010117".equals(name) ) {
+					result = new SyncSearchService();
+				}
+			}
+		}
+		
+		if( result != null ) {
+			for(int i=0;i<datasetList.size();i++){
 				Element element = datasetList.get(i); //得到"page"的第i+1组标签
 				if("DATASET".equals(element.getName())) {
-					String name = element.getAttributeValue("name"); //获得name属性
-					if("WA_COMMON_010117".equals(name) ) {
-						result = new SyncSearchService();
-					}
-				}
-			}
-			
-			if( result != null ) {
-				for(int i=0;i<datasetList.size();i++){
-					Element element = datasetList.get(i); //得到"page"的第i+1组标签
-					if("DATASET".equals(element.getName())) {
-						String name = element.getAttributeValue("name");  //获得ID属性
-						if("WA_COMMON_010000".equals(name) ) {
-							dci = parseDataCommonInfo( element );
-							result.setDci(dci);
-						} else if ("WA_COMMON_010001".equals(name) ) {
-							ua = parseUserAuth( element );
-							result.setUa(ua);
-						} else if("WA_COMMON_010117".equals(name) ) {
-							sc = parseSearchCondition( element );
-							result.setSc(sc);
-						}
+					String name = element.getAttributeValue("name");  //获得ID属性
+					if("WA_COMMON_010000".equals(name) ) {
+						dci = parseDataCommonInfo( element );
+						result.setDci(dci);
+					} else if ("WA_COMMON_010001".equals(name) ) {
+						ua = parseUserAuth( element );
+						result.setUa(ua);
+					} else if("WA_COMMON_010117".equals(name) ) {
+						sc = parseSearchCondition( element );
+						result.setSc(sc);
 					}
 				}
 			}
 		}
-		catch( Exception e ) {
-			e.printStackTrace();
-			result = null;
-		}
+		
 		return result;
 	}
 	
-	private static SearchCondition parseSearchCondition(Element element) {
+	private static SearchCondition parseSearchCondition(Element element) throws Exception {
 		SearchCondition result = null;
 		String name = element.getChildren().get(0).getName();
 		if( "DATA".equals(name) ) {
@@ -113,8 +111,11 @@ public abstract class SyncService {
 						Element condition = conditionList.get(j);
 						Condition con = new Condition();
 						con.setKey( condition.getAttributeValue("key") );
-						con.setEng( condition.getAttributeValue("eng") );
+						con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
 						con.setVal( condition.getAttributeValue("val") );
+						if(con.getEng() == null || con.getEng().length() == 0) {
+							throw new Exception("unsupport search column key:" + con.getKey());
+						}
 						conditions.add(con);
 					}
 					result.setCONDITIONITEMS(conditions);
@@ -135,6 +136,26 @@ public abstract class SyncService {
 		return result;
 	}
 
+	private static String convertKeyToTableColumnName(String key) {
+		Map<String, String> keyColumnMap = new HashMap<String, String>();
+		
+		keyColumnMap.put("A010001", "GA_DEPARTMENT");
+		keyColumnMap.put("A010004", "DATA_SET");
+		
+		keyColumnMap.put("J030001", "SECTION_CLASS");
+		keyColumnMap.put("J030002", "SECTION_RELATIOIN_CLASS");
+		keyColumnMap.put("J030003", "DATASET_SENSITIVE_LEVEL");
+		keyColumnMap.put("J030006", "RESOURCE_ID");
+		keyColumnMap.put("J030010", "RESOURCE_STATUS");
+		keyColumnMap.put("J030014", "CERTIFICATE_CODE_MD5");
+		keyColumnMap.put("J030016", "USER_STATUS");
+		keyColumnMap.put("J030029", "RESOURCE_TYPE");
+		
+		keyColumnMap.put("I010026", "BUSINESS_ROLE");
+		
+		return keyColumnMap.get(key);
+	}
+	
 	private static UserAuth parseUserAuth(Element element) {
 		UserAuth result = null;
 		String name = element.getChildren().get(0).getName();

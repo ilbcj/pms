@@ -3,8 +3,10 @@ package com.pms.webservice.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -152,18 +154,19 @@ public class SyncSearchService extends SyncService {
 			else {
 				sqlStr += "where ";
 				List<Condition> cons = this.getSc().getCONDITIONITEMS();
-				sqlStr += cons.get(0).getEng() + "='" + cons.get(0).getVal() + "' ";
+				sqlStr += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "='" + cons.get(0).getVal() + "' ";
 				for(int i = 1; i<cons.size(); i++) {
-					sqlStr += this.getSc().getCONDITION() + " " + cons.get(i).getEng() + "='" + cons.get(i).getVal() + "' ";
+					sqlStr += this.getSc().getCONDITION() + " ";
+					sqlStr += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "='" + cons.get(i).getVal() + "' ";
 				}
 			}
 				
 			System.out.println(sqlStr);
 			SearchDAO dao = new SearchDAOImpl();
 			int type = getSearchType(this.getSc().getTableName());
-			int first = Integer.parseInt(this.getSc().getOnceNum());
-			int count = Integer.parseInt(this.getSc().getTotalNum());
-			List datas = dao.SqlQueryAllCols(sqlStr, type, first, count);
+//			int first = Integer.parseInt(this.getSc().getOnceNum());
+			int total = Integer.parseInt(this.getSc().getTotalNum());
+			List datas = dao.SqlQueryAllCols(sqlStr, type, 0, total);
 			
 			for( int i = 0; i<datas.size(); i++) {
 				data = new Element("DATA");
@@ -294,7 +297,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.I010005");
-			itemSetAttribute(item, "val", ""+user.getLATEST_MOD_TIME());
+			itemSetAttribute(item, "val", ""+ getLongTime(user.getLATEST_MOD_TIME()) );
 			itemSetAttribute(item, "rmk", "最新修改时间");
 			
 		}
@@ -340,7 +343,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.I010005");
-			itemSetAttribute(item, "val", ""+org.getLATEST_MOD_TIME());
+			itemSetAttribute(item, "val", ""+ getLongTime(org.getLATEST_MOD_TIME()) );
 			itemSetAttribute(item, "rmk", "最新修改时间");
 		}
 		else if( type == SearchDAO.TYPEROLE ) {
@@ -385,7 +388,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "WA_AUTHORITY_ROLE.I010005");
-			itemSetAttribute(item, "val", ""+role.getLATEST_MOD_TIME());
+			itemSetAttribute(item, "val", ""+ getLongTime(role.getLATEST_MOD_TIME()) );
 			itemSetAttribute(item, "rmk", "最新修改时间");
 			
 		}
@@ -394,90 +397,109 @@ public class SyncSearchService extends SyncService {
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030006");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030006");
 			itemSetAttribute(item, "val", resData.getRESOURCE_ID());
 			itemSetAttribute(item, "rmk", "资源唯一标识");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030010");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030010");
 			itemSetAttribute(item, "val", ""+resData.getRESOURCE_STATUS());
 			itemSetAttribute(item, "rmk", "资源状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030012");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030012");
 			itemSetAttribute(item, "val", resData.getRESOURCE_DESCRIBE());
 			itemSetAttribute(item, "rmk", "资源描述");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030003");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030003");
 			itemSetAttribute(item, "val", resData.getDATASET_SENSITIVE_LEVEL());
 			itemSetAttribute(item, "rmk", "数据集敏感度编码（表控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.A010004");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.A010004");
 			itemSetAttribute(item, "val", resData.getDATA_SET());
 			itemSetAttribute(item, "rmk", "数据集编码（表控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030001");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030001");
 			itemSetAttribute(item, "val", resData.getSECTION_CLASS());
 			itemSetAttribute(item, "rmk", "字段分类编码（列控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030004");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030004");
 			itemSetAttribute(item, "val", resData.getELEMENT());
 			itemSetAttribute(item, "rmk", "字段编码（原目标字段列控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030002");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030002");
 			itemSetAttribute(item, "val", resData.getSECTION_RELATIOIN_CLASS());
 			itemSetAttribute(item, "rmk", "字段分类关系编码（列控）");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030021");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030021");
 			itemSetAttribute(item, "val", resData.getOPERATE_SYMBOL());
 			itemSetAttribute(item, "rmk", "操作符");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030005");
 			itemSetAttribute(item, "val", resData.getELEMENT_VALUE());
 			itemSetAttribute(item, "rmk", "字段值");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030013");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030013");
 			itemSetAttribute(item, "val", resData.getRESOURCE_REMARK());
 			itemSetAttribute(item, "rmk", "备注");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.H010029");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.H010029");
 			itemSetAttribute(item, "val", ""+resData.getDELETE_STATUS());
 			itemSetAttribute(item, "rmk", "删除状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.J030017");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030017");
 			itemSetAttribute(item, "val", ""+resData.getDATA_VERSION());
 			itemSetAttribute(item, "rmk", "数据版本号");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE.I010005");
-			itemSetAttribute(item, "val", ""+resData.getLATEST_MOD_TIME());
+			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.I010005");
+			itemSetAttribute(item, "val", ""+ getLongTime(resData.getLATEST_MOD_TIME()) );
 			itemSetAttribute(item, "rmk", "最新修改时间");
 		}
-		
-
+	}
+	
+	private long getLongTime(String time) {
+		long longtime = 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+        try {
+            // 
+            // The get the date object from the string just called the 
+            // parse method and pass the time string to it. The method 
+            // throws ParseException if the time string is in an 
+            // invalid format. But remember as we don't pass the date 
+            // information this date object will represent the 1st of
+            // january 1970.
+            Date date = sdf.parse(time);        
+            System.out.println("Date and Time: " + date);
+            longtime = date.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return longtime;
 	}
 	
 	private int getSearchType(String tableName) {
@@ -491,8 +513,11 @@ public class SyncSearchService extends SyncService {
 		else if ("WA_AUTHORITY_ROLE".equals(tableName) ) {
 			type = SearchDAO.TYPEROLE;
 		}
-		else if ("WA_AUTHORITY_RESOURCE".equals(tableName) ) {
+		else if ("WA_AUTHORITY_DATA_RESOURCE".equals(tableName) ) {
 			type = SearchDAO.TYPERESDATA;
+		}
+		else if ("WA_AUTHORITY_FUNC_RESOURCE".equals(tableName) ) {
+			type = SearchDAO.TYPERESFUN;
 		}
 		return type;
 	}

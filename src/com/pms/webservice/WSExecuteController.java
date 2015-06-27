@@ -37,6 +37,7 @@ public class WSExecuteController {
 		}
 		catch(Exception e) {
 			e.printStackTrace();
+			resultXml = e.getMessage();
 		}
 		return resultXml;
 	}
