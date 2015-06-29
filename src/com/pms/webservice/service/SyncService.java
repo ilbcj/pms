@@ -230,6 +230,7 @@ public abstract class SyncService {
 		
 		keyColumnMap.put("A010001", "GA_DEPARTMENT");
 		keyColumnMap.put("A010004", "DATA_SET");
+		keyColumnMap.put("A010005", "PARENT_ORG");
 		
 		keyColumnMap.put("J030001", "SECTION_CLASS");
 		keyColumnMap.put("J030002", "SECTION_RELATIOIN_CLASS");

@@ -201,7 +201,6 @@ public class SyncSearchService extends SyncService {
 			}
 			else {
 				for(int i = 0; i< this.getSsc().getRETURNITEMS().size(); i++) {
-					
 					subSearch += " " + ((Condition)this.getSsc().getRETURNITEMS().get(i)).getEng() + ", ";
 				}
 				subSearch = subSearch.substring(0,subSearch.lastIndexOf(','));
@@ -209,17 +208,23 @@ public class SyncSearchService extends SyncService {
 			}
 			subSearch += "from " + this.getSsc().getTableName() + " ";
 			List<Condition> subCons = this.getSsc().getCONDITIONITEMS();
-			if( "IN".equalsIgnoreCase(this.getSsc().getCONDITION()) ) {
-				subSearch += subCons.get(0).getEng() + " in (" + subCons.get(0).getVal() + ") ";
-			}else {
-				subSearch += subCons.get(0).getVal().length() == 0 ? subCons.get(0).getEng() + " is null " : subCons.get(0).getEng() + "='" + subCons.get(0).getVal() + "' ";
-				for(int i = 1; i<subCons.size(); i++) {
-					subSearch += this.getSsc().getCONDITION() + " ";
-					subSearch += subCons.get(i).getVal().length() == 0 ? subCons.get(i).getEng() + " is null " : subCons.get(i).getEng() + "='" + subCons.get(i).getVal() + "' ";
+			if(subCons != null && subCons.size() > 0) {
+				subSearch += " where ";
+				if( "IN".equalsIgnoreCase(this.getSsc().getCONDITION()) ) {
+					subSearch += subCons.get(0).getEng() + " in (" + subCons.get(0).getVal() + ") ";
+				}else {
+					subSearch += subCons.get(0).getVal().length() == 0 ? subCons.get(0).getEng() + " is null " : subCons.get(0).getEng() + "='" + subCons.get(0).getVal() + "' ";
+					for(int i = 1; i<subCons.size(); i++) {
+						subSearch += this.getSsc().getCONDITION() + " ";
+						subSearch += subCons.get(i).getVal().length() == 0 ? subCons.get(i).getEng() + " is null " : subCons.get(i).getEng() + "='" + subCons.get(i).getVal() + "' ";
+					}
 				}
-			}
-			
+			}			
 			subMap.put(this.getSsc().getAlias(), subSearch);
+			if( this.getSsc().getRETURNITEMS().size() == 1 ) {
+				String retColFlag = ((Condition)this.getSsc().getRETURNITEMS().get(0)).getKey();
+				subMap.put(this.getSsc().getAlias() + "." + retColFlag, subSearch);
+			}
 		}
 		
 		
@@ -227,12 +232,12 @@ public class SyncSearchService extends SyncService {
 		List<Condition> cons = this.getSc().getCONDITIONITEMS();
 		
 		if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
-			where += cons.get(0).getEng() + " in (" + matchSubSearch(subMap, cons.get(0).getVal()) + ") ";
+			where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
 		}else {
-			where += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "='" + cons.get(0).getVal() + "' ";
+			where += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "=" + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
 			for(int i = 1; i<cons.size(); i++) {
 				where += this.getSc().getCONDITION() + " ";
-				where += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "='" + cons.get(i).getVal() + "' ";
+				where += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "=" + matchSubSearch(subMap, cons.get(i).getVal()) + " ";
 			}
 		}
 		return where;
@@ -241,9 +246,9 @@ public class SyncSearchService extends SyncService {
 	private String matchSubSearch(Map<String, String> subMap, String columnValue) {
 		String result = null;
 		if( subMap.containsKey(columnValue) ) {
-			result = subMap.get(columnValue);
+			result = " ( " + subMap.get(columnValue) + " ) ";
 		} else {
-			result = columnValue;
+			result = " '" + columnValue + "' ";
 		}
 		return result;	
 	}
