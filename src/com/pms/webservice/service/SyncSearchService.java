@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -130,7 +132,7 @@ public class SyncSearchService extends SyncService {
 			}
 			
 			String sqlStr = "select ";
-			if( this.getSc().getRETURNINFO() == null || this.getSc().getRETURNINFO().size() == 0 ) {
+			if( this.getSc().getRETURNITEMS() == null || this.getSc().getRETURNITEMS().size() == 0 ) {
 				sqlStr += "* ";
 			}
 			else {
@@ -152,13 +154,7 @@ public class SyncSearchService extends SyncService {
 				//no where case
 			}
 			else {
-				sqlStr += "where ";
-				List<Condition> cons = this.getSc().getCONDITIONITEMS();
-				sqlStr += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "='" + cons.get(0).getVal() + "' ";
-				for(int i = 1; i<cons.size(); i++) {
-					sqlStr += this.getSc().getCONDITION() + " ";
-					sqlStr += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "='" + cons.get(i).getVal() + "' ";
-				}
+				sqlStr += addSearchConditionToSQL();
 			}
 				
 			System.out.println(sqlStr);
@@ -193,6 +189,63 @@ public class SyncSearchService extends SyncService {
 			System.out.println(result);
 		}
 		return result;
+	}
+	
+	private String addSearchConditionToSQL() {
+		Map<String, String> subMap = new HashMap<String, String>();
+		if( this.getSsc() != null ) {
+			String subSearch = "";
+			subSearch = "select ";
+			if(this.getSsc().getRETURNITEMS() == null || this.getSsc().getRETURNITEMS().size() == 0 ) {
+				subSearch +=  " * ";
+			}
+			else {
+				for(int i = 0; i< this.getSsc().getRETURNITEMS().size(); i++) {
+					
+					subSearch += " " + ((Condition)this.getSsc().getRETURNITEMS().get(i)).getEng() + ", ";
+				}
+				subSearch = subSearch.substring(0,subSearch.lastIndexOf(','));
+				subSearch += " ";
+			}
+			subSearch += "from " + this.getSsc().getTableName() + " ";
+			List<Condition> subCons = this.getSsc().getCONDITIONITEMS();
+			if( "IN".equalsIgnoreCase(this.getSsc().getCONDITION()) ) {
+				subSearch += subCons.get(0).getEng() + " in (" + subCons.get(0).getVal() + ") ";
+			}else {
+				subSearch += subCons.get(0).getVal().length() == 0 ? subCons.get(0).getEng() + " is null " : subCons.get(0).getEng() + "='" + subCons.get(0).getVal() + "' ";
+				for(int i = 1; i<subCons.size(); i++) {
+					subSearch += this.getSsc().getCONDITION() + " ";
+					subSearch += subCons.get(i).getVal().length() == 0 ? subCons.get(i).getEng() + " is null " : subCons.get(i).getEng() + "='" + subCons.get(i).getVal() + "' ";
+				}
+			}
+			
+			subMap.put(this.getSsc().getAlias(), subSearch);
+		}
+		
+		
+		String where = "where ";
+		List<Condition> cons = this.getSc().getCONDITIONITEMS();
+		
+		if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
+			where += cons.get(0).getEng() + " in (" + matchSubSearch(subMap, cons.get(0).getVal()) + ") ";
+		}else {
+			where += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "='" + cons.get(0).getVal() + "' ";
+			for(int i = 1; i<cons.size(); i++) {
+				where += this.getSc().getCONDITION() + " ";
+				where += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "='" + cons.get(i).getVal() + "' ";
+			}
+		}
+		return where;
+	}
+	
+	private String matchSubSearch(Map<String, String> subMap, String columnValue) {
+		String result = null;
+		if( subMap.containsKey(columnValue) ) {
+			result = subMap.get(columnValue);
+		} else {
+			result = columnValue;
+		}
+		return result;	
 	}
 	
 	private void itemSetAttribute(Element item, String key, String value) {

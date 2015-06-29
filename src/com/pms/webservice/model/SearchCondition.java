@@ -9,7 +9,7 @@ public class SearchCondition {
 	private String isAsyn;
 	private String CONDITION;
 	private List<Condition> CONDITIONITEMS;
-	private List<String> RETURNINFO;
+	private List<Condition> RETURNITEMS;
 	
 	public String getTableName() {
 		return tableName;
@@ -47,11 +47,10 @@ public class SearchCondition {
 	public void setCONDITIONITEMS(List<Condition> cONDITIONITEMS) {
 		CONDITIONITEMS = cONDITIONITEMS;
 	}
-	public List<String> getRETURNINFO() {
-		return RETURNINFO;
+	public List<Condition> getRETURNITEMS() {
+		return RETURNITEMS;
 	}
-	public void setRETURNINFO(List<String> rETURNINFO) {
-		RETURNINFO = rETURNINFO;
+	public void setRETURNITEMS(List<Condition> rETURNITEMS) {
+		RETURNITEMS = rETURNITEMS;
 	}
-	
 }
