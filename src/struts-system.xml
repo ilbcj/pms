@@ -44,5 +44,8 @@
 <!--  		<action name="modifyOrgNodeName" class="com.pms.controller.OrganizationAction" method="ModifyOrgNodeName" > -->
 <!--  			<result name="success" type="json" /> -->
 <!--  		</action> -->
+  		<action name="dataSync" class="com.pms.controller.SystemAttrUserAction" method="DataSync" > 
+  			<result name="success" type="json" /> 
+  		</action> 
 	</package>	
 </struts>    
