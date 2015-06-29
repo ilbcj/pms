@@ -134,4 +134,18 @@ public class SystemAttrUserAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
+	
+	public String DataSync()
+	{
+		AttrDictionaryService ads = new AttrDictionaryService();
+		try {
+			ads.downLoad();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
 }

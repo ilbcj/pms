@@ -12,6 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.ResourceDAO;
+import com.pms.model.Admin;
 import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
@@ -298,6 +299,29 @@ public class ResourceDAOImpl implements ResourceDAO {
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResData> GetAllDatas() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE ";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
