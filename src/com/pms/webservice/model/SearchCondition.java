@@ -11,6 +11,35 @@ public class SearchCondition {
 	private List<Condition> CONDITIONITEMS;
 	private List<Condition> RETURNITEMS;
 	
+	private String CONDITION_START;
+	private List<Condition> STARTITEMS;
+	private String CONDITION_CONNECT;
+	private List<Condition> CONNECTITEMS;
+	
+	public String getCONDITION_START() {
+		return CONDITION_START;
+	}
+	public void setCONDITION_START(String cONDITION_START) {
+		CONDITION_START = cONDITION_START;
+	}
+	public List<Condition> getSTARTITEMS() {
+		return STARTITEMS;
+	}
+	public void setSTARTITEMS(List<Condition> sTARTITEMS) {
+		STARTITEMS = sTARTITEMS;
+	}
+	public String getCONDITION_CONNECT() {
+		return CONDITION_CONNECT;
+	}
+	public void setCONDITION_CONNECT(String cONDITION_CONNECT) {
+		CONDITION_CONNECT = cONDITION_CONNECT;
+	}
+	public List<Condition> getCONNECTITEMS() {
+		return CONNECTITEMS;
+	}
+	public void setCONNECTITEMS(List<Condition> cONNECTITEMS) {
+		CONNECTITEMS = cONNECTITEMS;
+	}
 	public String getTableName() {
 		return tableName;
 	}

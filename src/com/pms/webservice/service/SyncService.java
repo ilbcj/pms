@@ -139,7 +139,6 @@ public abstract class SyncService {
 								List<Condition> retCols = new ArrayList<Condition>();
 								for(int k=0; k<retColList.size(); k++) {
 									
-									
 									Element condition = retColList.get(k);
 									Condition con = new Condition();
 									con.setKey( condition.getAttributeValue("key") );
@@ -160,68 +159,131 @@ public abstract class SyncService {
 		return result;
 	}
 	
-	private static SearchCondition parseSearchCondition(Element element) throws Exception {
-		SearchCondition result = null;
+//	<DATASET name="WA_COMMON_010143" rmk="查询要求返回数据列">
+//		<DATA>
+//			<!--层次化查询起点-->
+//			<CONDITION rel="AND">
+//				<ITEM key="A010001" val="320100" chn="公安组织机构代码"/>
+//			</CONDITION>
+//			<!--父子之间关联关系-->
+//			<CONDITION rel="AND">
+//				<ITEM key="A010001" dstkey="E010011" chn="父子之间关联关系"/>
+//			</CONDITION>
+//		</DATA>
+//	</DATASET>
+	private static void parse010143( Element element, SearchCondition sc ) throws Exception{
 		String name = element.getChildren().get(0).getName();
 		if( "DATA".equals(name) ) {
-			result = new SearchCondition();
 			List<Element> itemList = element.getChildren().get(0).getChildren();
-			for(int i=0; i<itemList.size(); i++) {
-				Element item = itemList.get(i);
-				if("ITEM".equals(item.getName())) {
-					if( "J010002".equals(item.getAttributeValue("key")) ) {
-						result.setTableName( item.getAttributeValue("val") );
-					} else if ( "I010017".equals(item.getAttributeValue("key"))  ) {
-						result.setTotalNum( item.getAttributeValue("val") );
-					} else if ( "I010019".equals(item.getAttributeValue("key"))  ) {
-						result.setOnceNum( item.getAttributeValue("val") );
-					} else if ( "I010018".equals(item.getAttributeValue("key"))  ) {
-						result.setIsAsyn( item.getAttributeValue("val") );
-					}
-				} else if ( "CONDITION".equals(item.getName()) ) {
-					result.setCONDITION( item.getAttributeValue("rel") );
-					List<Condition> conditions = new ArrayList<Condition>();
-					List<Element> conditionList = item.getChildren();
-					for(int j=0; j<conditionList.size(); j++) {
-						Element condition = conditionList.get(j);
-						Condition con = new Condition();
-						con.setKey( condition.getAttributeValue("key") );
-						con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
-						con.setVal( condition.getAttributeValue("val") );
-						if(con.getEng() == null || con.getEng().length() == 0) {
-							throw new Exception("unsupport search column key:" + con.getKey());
+			Element item = itemList.get(0);
+			sc.setCONDITION_START(item.getAttributeValue("rel"));
+			List<Element> conditionList = item.getChildren();
+			List<Condition> conditions = new ArrayList<Condition>();
+			for(int i=0; i<conditionList.size(); i++) {
+				Element condition = conditionList.get(i);
+				Condition con = new Condition();
+				con.setKey( condition.getAttributeValue("key") );
+				con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+				con.setVal( condition.getAttributeValue("val") );
+				if(con.getEng() == null || con.getEng().length() == 0) {
+					throw new Exception("unsupport search column key:" + con.getKey());
+				}
+				conditions.add(con);
+			}
+			sc.setSTARTITEMS(conditions);
+			
+			item = itemList.get(1);
+			sc.setCONDITION_CONNECT(item.getAttributeValue("rel"));
+			conditionList = item.getChildren();
+			conditions = new ArrayList<Condition>();
+			for(int i=0; i<conditionList.size(); i++) {
+				Element condition = conditionList.get(i);
+				Condition con = new Condition();
+				con.setKey( condition.getAttributeValue("key") );
+				con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+				con.setVal( condition.getAttributeValue("val") );
+				if(con.getEng() == null || con.getEng().length() == 0) {
+					throw new Exception("unsupport search column key:" + con.getKey());
+				}
+				conditions.add(con);
+			}
+			sc.setCONNECTITEMS(conditions);
+		}
+		return;
+	}
+	
+	private static SearchCondition parseSearchCondition(Element element) throws Exception {
+		SearchCondition result = new SearchCondition();
+		List<Element> rootChildren = element.getChildren();
+		for(int k = 0; k<rootChildren.size(); k++) {
+			String name = rootChildren.get(k).getName();
+			if( "DATA".equals(name) ) {
+				List<Element> itemList = rootChildren.get(k).getChildren();
+				for(int i=0; i<itemList.size(); i++) {
+					Element item = itemList.get(i);
+					if("ITEM".equals(item.getName())) {
+						if( "J010002".equals(item.getAttributeValue("key")) ) {
+							result.setTableName( item.getAttributeValue("val") );
+						} else if ( "I010017".equals(item.getAttributeValue("key"))  ) {
+							result.setTotalNum( item.getAttributeValue("val") );
+						} else if ( "I010019".equals(item.getAttributeValue("key"))  ) {
+							result.setOnceNum( item.getAttributeValue("val") );
+						} else if ( "I010018".equals(item.getAttributeValue("key"))  ) {
+							result.setIsAsyn( item.getAttributeValue("val") );
 						}
-						conditions.add(con);
-					}
-					result.setCONDITIONITEMS(conditions);
-				} else if ( "DATASET".equals(item.getName()) ) {
-					if( "WA_COMMON_010118".equals( item.getAttributeValue("name")) ) {
-						List<Element> children = item.getChildren();
-						if( children.size() > 0 ) {
-							String childName = children.get(0).getName();
-							if( "DATA".equals(childName) ) {
-								List<Element> retColList = children.get(0).getChildren();
-								List<Condition> retCols = new ArrayList<Condition>();
-								for(int k=0; k<retColList.size(); k++) {
-									
-									
-									Element condition = retColList.get(k);
-									Condition con = new Condition();
-									con.setKey( condition.getAttributeValue("key") );
-									con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
-									con.setVal( condition.getAttributeValue("val") );
-									if(con.getEng() == null || con.getEng().length() == 0) {
-										throw new Exception("unsupport search column key:" + con.getKey());
+					} else if ( "CONDITION".equals(item.getName()) ) {
+						result.setCONDITION( item.getAttributeValue("rel") );
+						List<Condition> conditions = new ArrayList<Condition>();
+						List<Element> conditionList = item.getChildren();
+						for(int j=0; j<conditionList.size(); j++) {
+							Element condition = conditionList.get(j);
+							Condition con = new Condition();
+							con.setKey( condition.getAttributeValue("key") );
+							con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+							con.setVal( condition.getAttributeValue("val") );
+							if(con.getEng() == null || con.getEng().length() == 0) {
+								throw new Exception("unsupport search column key:" + con.getKey());
+							}
+							conditions.add(con);
+						}
+						result.setCONDITIONITEMS(conditions);
+					} else if ( "DATASET".equals(item.getName()) ) {
+						if( "WA_COMMON_010118".equals( item.getAttributeValue("name")) ) {
+							List<Element> children = item.getChildren();
+							if( children.size() > 0 ) {
+								String childName = children.get(0).getName();
+								if( "DATA".equals(childName) ) {
+									List<Element> retColList = children.get(0).getChildren();
+									List<Condition> retCols = new ArrayList<Condition>();
+									for(int j=0; j<retColList.size(); j++) {
+										
+										
+										Element condition = retColList.get(j);
+										Condition con = new Condition();
+										con.setKey( condition.getAttributeValue("key") );
+										con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+										con.setVal( condition.getAttributeValue("val") );
+										if(con.getEng() == null || con.getEng().length() == 0) {
+											throw new Exception("unsupport search column key:" + con.getKey());
+										}
+										retCols.add(con);
 									}
-									retCols.add(con);
+									result.setRETURNITEMS(retCols);
 								}
-								result.setRETURNITEMS(retCols);
 							}
 						}
 					}
 				}
 			}
+			else if ( "DATASET".equals(name)  ) {
+				String datasetName = rootChildren.get(k).getAttributeValue("name"); //获得name属性
+				if("WA_COMMON_010143".equals(datasetName) ) {
+					parse010143(rootChildren.get(k), result);
+				}
+				
+			}
 		}
+		
 		return result;
 	}
 
