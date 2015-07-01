@@ -15,6 +15,8 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.pms.dao.OrganizationDAO;
+import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.model.Organization;
 import com.pms.model.ResData;
 import com.pms.model.ResRole;
@@ -22,6 +24,7 @@ import com.pms.model.User;
 import com.pms.webservice.dao.SearchDAO;
 import com.pms.webservice.dao.impl.SearchDAOImpl;
 import com.pms.webservice.model.Condition;
+import com.pms.webservice.model.SearchCondition;
 
 public class SyncSearchService extends SyncService {
 
@@ -149,20 +152,33 @@ public class SyncSearchService extends SyncService {
 				sqlStr += this.getSc().getTableName() + " ";
 			}
 			
-			if( this.getSc().getCONDITION() == null || this.getSc().getCONDITION().length() == 0 
-					|| this.getSc().getCONDITIONITEMS() == null || this.getSc().getCONDITIONITEMS().size() == 0 ) {
+			if( (this.getSc().getCONDITION() == null || this.getSc().getCONDITION().length() == 0 
+						|| this.getSc().getCONDITIONITEMS() == null || this.getSc().getCONDITIONITEMS().size() == 0 ) 
+					&& ( this.getSc().getCONDITION_START() == null || this.getSc().getCONDITION_START().length() == 0 
+						|| this.getSc().getSTARTITEMS() == null || this.getSc().getSTARTITEMS().size() == 0
+						|| this.getSc().getCONDITION_CONNECT() == null || this.getSc().getCONDITION_CONNECT().length() == 0
+						|| this.getSc().getCONNECTITEMS() == null || this.getSc().getCONNECTITEMS().size() == 0) ) {
 				//no where case
 			}
 			else {
 				sqlStr += addSearchConditionToSQL();
 			}
-				
+
 			System.out.println(sqlStr);
+			
 			SearchDAO dao = new SearchDAOImpl();
 			int type = getSearchType(this.getSc().getTableName());
 //			int first = Integer.parseInt(this.getSc().getOnceNum());
 			int total = Integer.parseInt(this.getSc().getTotalNum());
-			List datas = dao.SqlQueryAllCols(sqlStr, type, 0, total);
+			List datas = null;
+			if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_NO ) {
+				datas = dao.SqlQueryAllCols(sqlStr, type, 0, total);
+			}
+			else if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_010117 ) {
+				datas = queryOrgChildrenList(this.getSc().getSTARTITEMS().get(0).getVal());
+			}
+			
+			
 			
 			for( int i = 0; i<datas.size(); i++) {
 				data = new Element("DATA");
@@ -191,7 +207,17 @@ public class SyncSearchService extends SyncService {
 		return result;
 	}
 	
-	private String addSearchConditionToSQL() {
+	@SuppressWarnings("rawtypes")
+	private List queryOrgChildrenList(String orgId) throws Exception {
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		Organization base = dao.GetOrgNodeById(orgId);
+		List<Organization> res = dao.GetOrgNodeByParentId(orgId);
+		res.add(0, base);
+		return res;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private String addSearchConditionToSQL() throws Exception {
 		Map<String, String> subMap = new HashMap<String, String>();
 		if( this.getSsc() != null ) {
 			String subSearch = "";
@@ -208,6 +234,8 @@ public class SyncSearchService extends SyncService {
 			}
 			subSearch += "from " + this.getSsc().getTableName() + " ";
 			List<Condition> subCons = this.getSsc().getCONDITIONITEMS();
+			List<Condition> subStartCons = this.getSsc().getSTARTITEMS();
+			List<Condition> subConnectCons = this.getSsc().getCONNECTITEMS();
 			if(subCons != null && subCons.size() > 0) {
 				subSearch += " where ";
 				if( "IN".equalsIgnoreCase(this.getSsc().getCONDITION()) ) {
@@ -219,7 +247,20 @@ public class SyncSearchService extends SyncService {
 						subSearch += subCons.get(i).getVal().length() == 0 ? subCons.get(i).getEng() + " is null " : subCons.get(i).getEng() + "='" + subCons.get(i).getVal() + "' ";
 					}
 				}
-			}			
+			}
+			else if (subStartCons != null && subStartCons.size() > 0 && subConnectCons != null && subConnectCons.size() > 0) {
+				List<Organization> datas = queryOrgChildrenList(this.getSsc().getSTARTITEMS().get(0).getVal());
+				subSearch = "";
+				for(int i = 0; i<datas.size(); i++) {
+					if( "GA_DEPARTMENT".equals(((Condition)this.getSsc().getRETURNITEMS().get(0)).getEng())) {
+						subSearch += datas.get(i).getGA_DEPARTMENT() + ", ";
+					}
+				}
+				if(subSearch.length() > 0) {
+					subSearch = subSearch.substring(0,subSearch.lastIndexOf(','));
+					subSearch += " ";
+				}
+			}
 			subMap.put(this.getSsc().getAlias(), subSearch);
 			if( this.getSsc().getRETURNITEMS().size() == 1 ) {
 				String retColFlag = ((Condition)this.getSsc().getRETURNITEMS().get(0)).getKey();
@@ -230,15 +271,22 @@ public class SyncSearchService extends SyncService {
 		
 		String where = "where ";
 		List<Condition> cons = this.getSc().getCONDITIONITEMS();
-		
-		if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
-			where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
-		}else {
-			where += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "=" + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
-			for(int i = 1; i<cons.size(); i++) {
-				where += this.getSc().getCONDITION() + " ";
-				where += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "=" + matchSubSearch(subMap, cons.get(i).getVal()) + " ";
+		List<Condition> startCons = this.getSc().getSTARTITEMS();
+		List<Condition> connectCons = this.getSc().getCONNECTITEMS();
+		if(cons != null && cons.size() > 0) {
+			if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
+				where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
+			}else {
+				where += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "=" + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
+				for(int i = 1; i<cons.size(); i++) {
+					where += this.getSc().getCONDITION() + " ";
+					where += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "=" + matchSubSearch(subMap, cons.get(i).getVal()) + " ";
+				}
 			}
+		}
+		else if( startCons != null && startCons.size() > 0 && connectCons != null && connectCons.size() > 0 ) {
+			where = "CONNECT BY PRIOR " + connectCons.get(0).getEng() + " = " + connectCons.get(0).getVal() + " ";
+			where += " START WITH " + startCons.get(0).getEng() + " = " + startCons.get(0).getVal();
 		}
 		return where;
 	}

@@ -153,6 +153,10 @@ public abstract class SyncService {
 							}
 						}
 					}
+					else if( "WA_COMMON_010143".equals( item.getAttributeValue("name")) ) {
+						parse010143(item, result);
+						result.setCONNECTTYPE(SearchCondition.CONNECT_TYPE_010121);
+					}
 				}
 			}
 		}
@@ -201,7 +205,7 @@ public abstract class SyncService {
 				Condition con = new Condition();
 				con.setKey( condition.getAttributeValue("key") );
 				con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
-				con.setVal( condition.getAttributeValue("val") );
+				con.setVal( convertKeyToTableColumnName( condition.getAttributeValue("dstkey") ) );
 				if(con.getEng() == null || con.getEng().length() == 0) {
 					throw new Exception("unsupport search column key:" + con.getKey());
 				}
@@ -279,6 +283,7 @@ public abstract class SyncService {
 				String datasetName = rootChildren.get(k).getAttributeValue("name"); //获得name属性
 				if("WA_COMMON_010143".equals(datasetName) ) {
 					parse010143(rootChildren.get(k), result);
+					result.setCONNECTTYPE(SearchCondition.CONNECT_TYPE_010117);
 				}
 				
 			}

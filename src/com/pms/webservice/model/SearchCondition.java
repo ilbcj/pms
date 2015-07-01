@@ -3,6 +3,9 @@ package com.pms.webservice.model;
 import java.util.List;
 
 public class SearchCondition {
+	public static final int CONNECT_TYPE_NO = 0;
+	public static final int CONNECT_TYPE_010117 = 1;
+	public static final int CONNECT_TYPE_010121 = 2;
 	private String tableName;
 	private String totalNum;
 	private String onceNum;
@@ -16,6 +19,14 @@ public class SearchCondition {
 	private String CONDITION_CONNECT;
 	private List<Condition> CONNECTITEMS;
 	
+	private int CONNECTTYPE;
+	
+	public int getCONNECTTYPE() {
+		return CONNECTTYPE;
+	}
+	public void setCONNECTTYPE(int cONNECTTYPE) {
+		CONNECTTYPE = cONNECTTYPE;
+	}
 	public String getCONDITION_START() {
 		return CONDITION_START;
 	}
