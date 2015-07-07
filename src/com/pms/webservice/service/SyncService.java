@@ -12,18 +12,28 @@ import org.jdom2.Element;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
 
-import com.pms.webservice.model.Condition;
+import com.pms.webservice.model.Item;
 import com.pms.webservice.model.DataCommonInfo;
 import com.pms.webservice.model.SearchCondition;
 import com.pms.webservice.model.SubSearchCondition;
 import com.pms.webservice.model.UserAuth;
+import com.pms.webservice.model.auth.AuthCondition;
 
 public abstract class SyncService {
 	private DataCommonInfo dci;
 	private UserAuth ua;
 	private SearchCondition sc;
 	private SubSearchCondition ssc;
+	private AuthCondition ac;
 	
+	public AuthCondition getAc() {
+		return ac;
+	}
+
+	public void setAc(AuthCondition ac) {
+		this.ac = ac;
+	}
+
 	public SubSearchCondition getSsc() {
 		return ssc;
 	}
@@ -62,6 +72,7 @@ public abstract class SyncService {
 		UserAuth ua = null;
 		SearchCondition sc = null;
 		SubSearchCondition ssc = null;
+		AuthCondition ac = null;
 		
 		List<Element> datasetList = root.getChildren();//getElementsByTagName("DATASET");
 		for(int i=0;i<datasetList.size();i++) {
@@ -70,6 +81,8 @@ public abstract class SyncService {
 				String name = element.getAttributeValue("name"); //获得name属性
 				if("WA_COMMON_010117".equals(name) ) {
 					result = new SyncSearchService();
+				} else if ("WA_COMMON_010031".equals(name) ) {
+					result = new SyncAuthenticateService();
 				}
 			}
 		}
@@ -91,11 +104,78 @@ public abstract class SyncService {
 					} else if("WA_COMMON_010121".equals(name) ) {
 						ssc = parseSubSearchCondition( element );
 						result.setSsc(ssc);
+					} else if("WA_COMMON_010031".equals(name) ) {
+						ac = parseAuthCondition( element );
+						result.setAc(ac);
 					}
 				}
 			}
 		}
 		
+		return result;
+	}
+	
+	private static AuthCondition parseAuthCondition(Element element) throws Exception {
+		AuthCondition result = null;
+//		String name = element.getChildren().get(0).getName();
+//		if( "DATA".equals(name) ) {
+//			result = new SubSearchCondition();
+//			List<Element> itemList = element.getChildren().get(0).getChildren();
+//			for(int i=0; i<itemList.size(); i++) {
+//				Element item = itemList.get(i);
+//				if("ITEM".equals(item.getName())) {
+//				    if( "J010015".equals(item.getAttributeValue("key")) ) {
+//				    	result.setAlias( item.getAttributeValue("val") );
+//				    } else if( "J010002".equals(item.getAttributeValue("key")) ) {
+//						result.setTableName( item.getAttributeValue("val") );
+//					} 
+//				} else if ( "CONDITION".equals(item.getName()) ) {
+//					result.setCONDITION( item.getAttributeValue("rel") );
+//					List<Item> conditions = new ArrayList<Item>();
+//					List<Element> conditionList = item.getChildren();
+//					for(int j=0; j<conditionList.size(); j++) {
+//						Element condition = conditionList.get(j);
+//						Item con = new Item();
+//						con.setKey( condition.getAttributeValue("key") );
+//						con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+//						con.setVal( condition.getAttributeValue("val") );
+//						if(con.getEng() == null || con.getEng().length() == 0) {
+//							throw new Exception("unsupport search column key:" + con.getKey());
+//						}
+//						conditions.add(con);
+//					}
+//					result.setCONDITIONITEMS(conditions);
+//				} else if ( "DATASET".equals(item.getName()) ) {
+//					if( "WA_COMMON_010118".equals( item.getAttributeValue("name")) ) {
+//						List<Element> children = item.getChildren();
+//						if( children.size() > 0 ) {
+//							String childName = children.get(0).getName();
+//							if( "DATA".equals(childName) ) {
+//								List<Element> retColList = children.get(0).getChildren();
+//								List<Item> retCols = new ArrayList<Item>();
+//								for(int k=0; k<retColList.size(); k++) {
+//									
+//									Element condition = retColList.get(k);
+//									Item con = new Item();
+//									con.setKey( condition.getAttributeValue("key") );
+//									con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+//									con.setVal( condition.getAttributeValue("val") );
+//									if(con.getEng() == null || con.getEng().length() == 0) {
+//										throw new Exception("unsupport search column key:" + con.getKey());
+//									}
+//									retCols.add(con);
+//								}
+//								result.setRETURNITEMS(retCols);
+//							}
+//						}
+//					}
+//					else if( "WA_COMMON_010143".equals( item.getAttributeValue("name")) ) {
+//						parse010143(item, result);
+//						result.setCONNECTTYPE(SearchCondition.CONNECT_TYPE_010121);
+//					}
+//				}
+//			}
+//		}
 		return result;
 	}
 	
@@ -115,11 +195,11 @@ public abstract class SyncService {
 					} 
 				} else if ( "CONDITION".equals(item.getName()) ) {
 					result.setCONDITION( item.getAttributeValue("rel") );
-					List<Condition> conditions = new ArrayList<Condition>();
+					List<Item> conditions = new ArrayList<Item>();
 					List<Element> conditionList = item.getChildren();
 					for(int j=0; j<conditionList.size(); j++) {
 						Element condition = conditionList.get(j);
-						Condition con = new Condition();
+						Item con = new Item();
 						con.setKey( condition.getAttributeValue("key") );
 						con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
 						con.setVal( condition.getAttributeValue("val") );
@@ -136,11 +216,11 @@ public abstract class SyncService {
 							String childName = children.get(0).getName();
 							if( "DATA".equals(childName) ) {
 								List<Element> retColList = children.get(0).getChildren();
-								List<Condition> retCols = new ArrayList<Condition>();
+								List<Item> retCols = new ArrayList<Item>();
 								for(int k=0; k<retColList.size(); k++) {
 									
 									Element condition = retColList.get(k);
-									Condition con = new Condition();
+									Item con = new Item();
 									con.setKey( condition.getAttributeValue("key") );
 									con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
 									con.setVal( condition.getAttributeValue("val") );
@@ -182,10 +262,10 @@ public abstract class SyncService {
 			Element item = itemList.get(0);
 			sc.setCONDITION_START(item.getAttributeValue("rel"));
 			List<Element> conditionList = item.getChildren();
-			List<Condition> conditions = new ArrayList<Condition>();
+			List<Item> conditions = new ArrayList<Item>();
 			for(int i=0; i<conditionList.size(); i++) {
 				Element condition = conditionList.get(i);
-				Condition con = new Condition();
+				Item con = new Item();
 				con.setKey( condition.getAttributeValue("key") );
 				con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
 				con.setVal( condition.getAttributeValue("val") );
@@ -199,10 +279,10 @@ public abstract class SyncService {
 			item = itemList.get(1);
 			sc.setCONDITION_CONNECT(item.getAttributeValue("rel"));
 			conditionList = item.getChildren();
-			conditions = new ArrayList<Condition>();
+			conditions = new ArrayList<Item>();
 			for(int i=0; i<conditionList.size(); i++) {
 				Element condition = conditionList.get(i);
-				Condition con = new Condition();
+				Item con = new Item();
 				con.setKey( condition.getAttributeValue("key") );
 				con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
 				con.setVal( convertKeyToTableColumnName( condition.getAttributeValue("dstkey") ) );
@@ -237,11 +317,11 @@ public abstract class SyncService {
 						}
 					} else if ( "CONDITION".equals(item.getName()) ) {
 						result.setCONDITION( item.getAttributeValue("rel") );
-						List<Condition> conditions = new ArrayList<Condition>();
+						List<Item> conditions = new ArrayList<Item>();
 						List<Element> conditionList = item.getChildren();
 						for(int j=0; j<conditionList.size(); j++) {
 							Element condition = conditionList.get(j);
-							Condition con = new Condition();
+							Item con = new Item();
 							con.setKey( condition.getAttributeValue("key") );
 							con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
 							con.setVal( condition.getAttributeValue("val") );
@@ -258,12 +338,12 @@ public abstract class SyncService {
 								String childName = children.get(0).getName();
 								if( "DATA".equals(childName) ) {
 									List<Element> retColList = children.get(0).getChildren();
-									List<Condition> retCols = new ArrayList<Condition>();
+									List<Item> retCols = new ArrayList<Item>();
 									for(int j=0; j<retColList.size(); j++) {
 										
 										
 										Element condition = retColList.get(j);
-										Condition con = new Condition();
+										Item con = new Item();
 										con.setKey( condition.getAttributeValue("key") );
 										con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
 										con.setVal( condition.getAttributeValue("val") );

@@ -23,7 +23,7 @@ import com.pms.model.ResRole;
 import com.pms.model.User;
 import com.pms.webservice.dao.SearchDAO;
 import com.pms.webservice.dao.impl.SearchDAOImpl;
-import com.pms.webservice.model.Condition;
+import com.pms.webservice.model.Item;
 import com.pms.webservice.model.SearchCondition;
 
 public class SyncSearchService extends SyncService {
@@ -227,15 +227,15 @@ public class SyncSearchService extends SyncService {
 			}
 			else {
 				for(int i = 0; i< this.getSsc().getRETURNITEMS().size(); i++) {
-					subSearch += " " + ((Condition)this.getSsc().getRETURNITEMS().get(i)).getEng() + ", ";
+					subSearch += " " + ((Item)this.getSsc().getRETURNITEMS().get(i)).getEng() + ", ";
 				}
 				subSearch = subSearch.substring(0,subSearch.lastIndexOf(','));
 				subSearch += " ";
 			}
 			subSearch += "from " + this.getSsc().getTableName() + " ";
-			List<Condition> subCons = this.getSsc().getCONDITIONITEMS();
-			List<Condition> subStartCons = this.getSsc().getSTARTITEMS();
-			List<Condition> subConnectCons = this.getSsc().getCONNECTITEMS();
+			List<Item> subCons = this.getSsc().getCONDITIONITEMS();
+			List<Item> subStartCons = this.getSsc().getSTARTITEMS();
+			List<Item> subConnectCons = this.getSsc().getCONNECTITEMS();
 			if(subCons != null && subCons.size() > 0) {
 				subSearch += " where ";
 				if( "IN".equalsIgnoreCase(this.getSsc().getCONDITION()) ) {
@@ -252,7 +252,7 @@ public class SyncSearchService extends SyncService {
 				List<Organization> datas = queryOrgChildrenList(this.getSsc().getSTARTITEMS().get(0).getVal());
 				subSearch = "";
 				for(int i = 0; i<datas.size(); i++) {
-					if( "GA_DEPARTMENT".equals(((Condition)this.getSsc().getRETURNITEMS().get(0)).getEng())) {
+					if( "GA_DEPARTMENT".equals(((Item)this.getSsc().getRETURNITEMS().get(0)).getEng())) {
 						subSearch += datas.get(i).getGA_DEPARTMENT() + ", ";
 					}
 				}
@@ -263,16 +263,16 @@ public class SyncSearchService extends SyncService {
 			}
 			subMap.put(this.getSsc().getAlias(), subSearch);
 			if( this.getSsc().getRETURNITEMS().size() == 1 ) {
-				String retColFlag = ((Condition)this.getSsc().getRETURNITEMS().get(0)).getKey();
+				String retColFlag = ((Item)this.getSsc().getRETURNITEMS().get(0)).getKey();
 				subMap.put(this.getSsc().getAlias() + "." + retColFlag, subSearch);
 			}
 		}
 		
 		
 		String where = "where ";
-		List<Condition> cons = this.getSc().getCONDITIONITEMS();
-		List<Condition> startCons = this.getSc().getSTARTITEMS();
-		List<Condition> connectCons = this.getSc().getCONNECTITEMS();
+		List<Item> cons = this.getSc().getCONDITIONITEMS();
+		List<Item> startCons = this.getSc().getSTARTITEMS();
+		List<Item> connectCons = this.getSc().getCONNECTITEMS();
 		if(cons != null && cons.size() > 0) {
 			if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
 				where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";

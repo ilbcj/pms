@@ -11,13 +11,13 @@ public class SearchCondition {
 	private String onceNum;
 	private String isAsyn;
 	private String CONDITION;
-	private List<Condition> CONDITIONITEMS;
-	private List<Condition> RETURNITEMS;
+	private List<Item> CONDITIONITEMS;
+	private List<Item> RETURNITEMS;
 	
 	private String CONDITION_START;
-	private List<Condition> STARTITEMS;
+	private List<Item> STARTITEMS;
 	private String CONDITION_CONNECT;
-	private List<Condition> CONNECTITEMS;
+	private List<Item> CONNECTITEMS;
 	
 	private int CONNECTTYPE;
 	
@@ -33,10 +33,10 @@ public class SearchCondition {
 	public void setCONDITION_START(String cONDITION_START) {
 		CONDITION_START = cONDITION_START;
 	}
-	public List<Condition> getSTARTITEMS() {
+	public List<Item> getSTARTITEMS() {
 		return STARTITEMS;
 	}
-	public void setSTARTITEMS(List<Condition> sTARTITEMS) {
+	public void setSTARTITEMS(List<Item> sTARTITEMS) {
 		STARTITEMS = sTARTITEMS;
 	}
 	public String getCONDITION_CONNECT() {
@@ -45,10 +45,10 @@ public class SearchCondition {
 	public void setCONDITION_CONNECT(String cONDITION_CONNECT) {
 		CONDITION_CONNECT = cONDITION_CONNECT;
 	}
-	public List<Condition> getCONNECTITEMS() {
+	public List<Item> getCONNECTITEMS() {
 		return CONNECTITEMS;
 	}
-	public void setCONNECTITEMS(List<Condition> cONNECTITEMS) {
+	public void setCONNECTITEMS(List<Item> cONNECTITEMS) {
 		CONNECTITEMS = cONNECTITEMS;
 	}
 	public String getTableName() {
@@ -81,16 +81,16 @@ public class SearchCondition {
 	public void setCONDITION(String cONDITION) {
 		CONDITION = cONDITION;
 	}
-	public List<Condition> getCONDITIONITEMS() {
+	public List<Item> getCONDITIONITEMS() {
 		return CONDITIONITEMS;
 	}
-	public void setCONDITIONITEMS(List<Condition> cONDITIONITEMS) {
+	public void setCONDITIONITEMS(List<Item> cONDITIONITEMS) {
 		CONDITIONITEMS = cONDITIONITEMS;
 	}
-	public List<Condition> getRETURNITEMS() {
+	public List<Item> getRETURNITEMS() {
 		return RETURNITEMS;
 	}
-	public void setRETURNITEMS(List<Condition> rETURNITEMS) {
+	public void setRETURNITEMS(List<Item> rETURNITEMS) {
 		RETURNITEMS = rETURNITEMS;
 	}
 }

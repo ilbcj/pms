@@ -1,25 +1,21 @@
 package com.pms.webservice.model;
 
+import java.util.List;
+
 public class Condition {
-	private String key;
-	private String eng;
-	private String val;
-	public String getKey() {
-		return key;
+	private String rel;
+	private List<Item> items;
+	
+	public String getRel() {
+		return rel;
 	}
-	public void setKey(String key) {
-		this.key = key;
+	public void setRel(String rel) {
+		this.rel = rel;
 	}
-	public String getEng() {
-		return eng;
+	public List<Item> getItems() {
+		return items;
 	}
-	public void setEng(String eng) {
-		this.eng = eng;
-	}
-	public String getVal() {
-		return val;
-	}
-	public void setVal(String val) {
-		this.val = val;
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
 }
