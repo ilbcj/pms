@@ -1,4 +1,4 @@
-package com.pms.service;
+package com.pms.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -9,11 +9,11 @@ import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class ZipService {
+public class ZipUtil {
 	private File zipFile;  
 	static final int BUFFER = 8192;    
 	
-    public ZipService(String pathName) {  
+    public ZipUtil(String pathName) {  
         zipFile = new File(pathName);  
     } 
    public void compress(String srcPathName) {    
