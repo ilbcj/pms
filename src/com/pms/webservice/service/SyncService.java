@@ -12,12 +12,14 @@ import org.jdom2.Element;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
 
+import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.DataCommonInfo;
 import com.pms.webservice.model.SearchCondition;
 import com.pms.webservice.model.SubSearchCondition;
 import com.pms.webservice.model.UserAuth;
 import com.pms.webservice.model.auth.AuthCondition;
+import com.pms.webservice.model.auth.Common010032;
 
 public abstract class SyncService {
 	private DataCommonInfo dci;
@@ -115,70 +117,119 @@ public abstract class SyncService {
 		return result;
 	}
 	
-	private static AuthCondition parseAuthCondition(Element element) throws Exception {
+	private static AuthCondition parseAuthCondition(Element root) throws Exception {
 		AuthCondition result = null;
-//		String name = element.getChildren().get(0).getName();
-//		if( "DATA".equals(name) ) {
-//			result = new SubSearchCondition();
-//			List<Element> itemList = element.getChildren().get(0).getChildren();
-//			for(int i=0; i<itemList.size(); i++) {
-//				Element item = itemList.get(i);
-//				if("ITEM".equals(item.getName())) {
-//				    if( "J010015".equals(item.getAttributeValue("key")) ) {
-//				    	result.setAlias( item.getAttributeValue("val") );
-//				    } else if( "J010002".equals(item.getAttributeValue("key")) ) {
-//						result.setTableName( item.getAttributeValue("val") );
-//					} 
-//				} else if ( "CONDITION".equals(item.getName()) ) {
-//					result.setCONDITION( item.getAttributeValue("rel") );
-//					List<Item> conditions = new ArrayList<Item>();
-//					List<Element> conditionList = item.getChildren();
-//					for(int j=0; j<conditionList.size(); j++) {
-//						Element condition = conditionList.get(j);
-//						Item con = new Item();
-//						con.setKey( condition.getAttributeValue("key") );
-//						con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
-//						con.setVal( condition.getAttributeValue("val") );
-//						if(con.getEng() == null || con.getEng().length() == 0) {
-//							throw new Exception("unsupport search column key:" + con.getKey());
-//						}
-//						conditions.add(con);
-//					}
-//					result.setCONDITIONITEMS(conditions);
-//				} else if ( "DATASET".equals(item.getName()) ) {
-//					if( "WA_COMMON_010118".equals( item.getAttributeValue("name")) ) {
-//						List<Element> children = item.getChildren();
-//						if( children.size() > 0 ) {
-//							String childName = children.get(0).getName();
-//							if( "DATA".equals(childName) ) {
-//								List<Element> retColList = children.get(0).getChildren();
-//								List<Item> retCols = new ArrayList<Item>();
-//								for(int k=0; k<retColList.size(); k++) {
-//									
-//									Element condition = retColList.get(k);
-//									Item con = new Item();
-//									con.setKey( condition.getAttributeValue("key") );
-//									con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
-//									con.setVal( condition.getAttributeValue("val") );
-//									if(con.getEng() == null || con.getEng().length() == 0) {
-//										throw new Exception("unsupport search column key:" + con.getKey());
-//									}
-//									retCols.add(con);
-//								}
-//								result.setRETURNITEMS(retCols);
-//							}
-//						}
-//					}
-//					else if( "WA_COMMON_010143".equals( item.getAttributeValue("name")) ) {
-//						parse010143(item, result);
-//						result.setCONNECTTYPE(SearchCondition.CONNECT_TYPE_010121);
-//					}
-//				}
-//			}
-//		}
+		String name = root.getChildren().get(0).getName();
+		if( "DATA".equals(name) ) {
+			result = new AuthCondition();
+			List<Element> elementList = root.getChildren().get(0).getChildren();
+			for(int i=0; i<elementList.size(); i++) {
+				Element element = elementList.get(i);
+				if ( "CONDITION".equals(element.getName()) || "STC".equalsIgnoreCase( element.getAttributeValue("rel") ) ) {
+					Condition stc = new Condition();
+					stc.setRel("STC");
+					List<Item> items = new ArrayList<Item>();
+					List<Element> itemList = element.getChildren();
+					for(int j=0; j<itemList.size(); j++) {
+						Element current = itemList.get(j);
+						Item item = new Item();
+						item.setKey( current.getAttributeValue("key") );
+						item.setEng( convertKeyToTableColumnName( current.getAttributeValue("key") ) );
+						item.setVal( current.getAttributeValue("val") );
+						if(item.getEng() == null || item.getEng().length() == 0) {
+							throw new Exception("unsupport stc item key:" + item.getKey());
+						}
+						items.add(item);
+					}
+					stc.setItems(items);
+					result.setStc(stc);
+				} else if ( "DATASET".equals(element.getName()) ) {
+					if( "WA_COMMON_010032".equals( element.getAttributeValue("name")) ) {
+						List<Common010032> common010032 = parse010032(element);
+						result.setCommon010032(common010032);
+					}
+				}
+			}
+		}
 		return result;
 	}
 	
+//<DATASET name="WA_COMMON_010032">
+//	<DATA>
+//		<DATASET name="WA_SOURCE_0001">
+//			<DATA>
+//				<CONDITION rel="AND">
+//					<CONDITION rel="BTW">
+//						<ITEM key="H010014" eng="CAPTURE_TIME" val="1426694400"/>
+//						<ITEM key="H010014" eng="CAPTURE_TIME" val="1434556799"/>
+//					</CONDITION>
+//					<CONDITION rel="IN">
+//						<ITEM key="B020001" eng="ISP_ID" val="01,02,03,04,05,06"/>
+//					</CONDITION>
+//					<CONDITION rel="IN">
+//						<ITEM key="H010001" eng="HTTP_TYPE" val="1000001,1000002,1000003,1000004,1009996,1009997,1009999"/>
+//					</CONDITION>
+//					<CONDITION rel="IN">
+//						<ITEM key="B050016" eng="DATA_SOURCE" val="111,120,123,124"/>
+//					</CONDITION>
+//				</CONDITION>
+//			</DATA>
+//			<DATA/>
+//		</DATASET>
+//	</DATA>
+//</DATASET>
+	private static List<Common010032> parse010032(Element root) {
+		// TODO Auto-generated method stub
+		List<Common010032> result = new ArrayList<Common010032>();
+		List<Element> children = root.getChildren();
+		for(int i = 0; i < children.size(); i++) {
+			Common010032 common010032 = new Common010032();
+			String name = children.get(i).getName();
+			if( "DATA".equals(name) ) {
+				Element sourceDataSet = children.get(i).getChildren().get(0);
+				common010032.setSourceName(sourceDataSet.getAttributeValue("name"));
+			}
+		}
+		
+		if( "DATA".equals(name) ) {
+			List<Element> itemList = element.getChildren().get(0).getChildren();
+			Element item = itemList.get(0);
+			sc.setCONDITION_START(item.getAttributeValue("rel"));
+			List<Element> conditionList = item.getChildren();
+			List<Item> conditions = new ArrayList<Item>();
+			for(int i=0; i<conditionList.size(); i++) {
+				Element condition = conditionList.get(i);
+				Item con = new Item();
+				con.setKey( condition.getAttributeValue("key") );
+				con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+				con.setVal( condition.getAttributeValue("val") );
+				if(con.getEng() == null || con.getEng().length() == 0) {
+					throw new Exception("unsupport search column key:" + con.getKey());
+				}
+				conditions.add(con);
+			}
+			sc.setSTARTITEMS(conditions);
+			
+			item = itemList.get(1);
+			sc.setCONDITION_CONNECT(item.getAttributeValue("rel"));
+			conditionList = item.getChildren();
+			conditions = new ArrayList<Item>();
+			for(int i=0; i<conditionList.size(); i++) {
+				Element condition = conditionList.get(i);
+				Item con = new Item();
+				con.setKey( condition.getAttributeValue("key") );
+				con.setEng( convertKeyToTableColumnName( condition.getAttributeValue("key") ) );
+				con.setVal( convertKeyToTableColumnName( condition.getAttributeValue("dstkey") ) );
+				if(con.getEng() == null || con.getEng().length() == 0) {
+					throw new Exception("unsupport search column key:" + con.getKey());
+				}
+				conditions.add(con);
+			}
+			sc.setCONNECTITEMS(conditions);
+		}
+		return null;
+	}
+
 	private static SubSearchCondition parseSubSearchCondition(Element element) throws Exception {
 		SubSearchCondition result = null;
 		String name = element.getChildren().get(0).getName();
@@ -389,6 +440,8 @@ public abstract class SyncService {
 		keyColumnMap.put("J030029", "RESOURCE_TYPE");
 		
 		keyColumnMap.put("I010026", "BUSINESS_ROLE");
+		
+		keyColumnMap.put("H010005", "SEARCH_ID");
 		
 		if(key.contains(".")) {
 			key = key.substring(key.indexOf('.')+1);

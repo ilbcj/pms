@@ -7,7 +7,8 @@ import com.pms.webservice.model.Item;
 
 public class Common010032 {
 	private String sourceName;
-	private List<Condition> conditions;
+	private String parentCondition;
+	private List<Condition> subConditions;
 	private List<Item> items;
 	
 	public String getSourceName() {
@@ -16,16 +17,22 @@ public class Common010032 {
 	public void setSourceName(String sourceName) {
 		this.sourceName = sourceName;
 	}
-	public List<Condition> getConditions() {
-		return conditions;
-	}
-	public void setConditions(List<Condition> conditions) {
-		this.conditions = conditions;
-	}
 	public List<Item> getItems() {
 		return items;
 	}
 	public void setItems(List<Item> items) {
 		this.items = items;
+	}
+	public String getParentCondition() {
+		return parentCondition;
+	}
+	public void setParentCondition(String parentCondition) {
+		this.parentCondition = parentCondition;
+	}
+	public List<Condition> getSubConditions() {
+		return subConditions;
+	}
+	public void setSubConditions(List<Condition> subConditions) {
+		this.subConditions = subConditions;
 	}
 }
