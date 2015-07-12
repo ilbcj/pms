@@ -187,7 +187,6 @@ public class SyncSearchService extends SyncService {
 				addDBResultItemToXML(data, datas.get(i), type);
 			}
 			
-
 		}
 		catch (Exception e) {
 			e.printStackTrace();

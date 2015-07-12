@@ -21,26 +21,26 @@
 	</servlet-mapping>
 	
 	
-<!--     <filter> -->
-<!-- 		<filter-name>AuthFilter</filter-name> -->
-<!-- 		<filter-class>com.pms.filter.AuthFilter</filter-class> -->
-<!-- 		<init-param> -->
-<!-- 			<param-name>whiteList</param-name> -->
-<!-- 			<param-value>/login.jsp;/login.html;/login/loginpwd.action;/axis2-web/listService.jsp</param-value> -->
-<!-- 		</init-param> -->
-<!-- 	</filter> -->
-<!-- 	<filter-mapping> -->
-<!-- 		<filter-name>AuthFilter</filter-name> -->
-<!-- 		<url-pattern>*.action</url-pattern> -->
-<!-- 	</filter-mapping> -->
-<!-- 	<filter-mapping> -->
-<!-- 		<filter-name>AuthFilter</filter-name> -->
-<!-- 		<url-pattern>*.jsp</url-pattern> -->
-<!-- 	</filter-mapping> -->
-<!-- 	<filter-mapping> -->
-<!-- 		<filter-name>AuthFilter</filter-name> -->
-<!-- 		<url-pattern>*.html</url-pattern> -->
-<!-- 	</filter-mapping> -->
+     <filter>
+ 		<filter-name>AuthFilter</filter-name>
+ 		<filter-class>com.pms.filter.AuthFilter</filter-class>
+ 		<init-param>
+ 			<param-name>whiteList</param-name>
+ 			<param-value>/login.jsp;/login.html;/login/loginpwd.action;/axis2-web/listService.jsp</param-value>
+ 		</init-param>
+ 	</filter>
+ 	<filter-mapping>
+ 		<filter-name>AuthFilter</filter-name>
+ 		<url-pattern>*.action</url-pattern>
+ 	</filter-mapping>
+ 	<filter-mapping>
+ 		<filter-name>AuthFilter</filter-name>
+ 		<url-pattern>*.jsp</url-pattern>
+ 	</filter-mapping>
+ 	<filter-mapping>
+ 		<filter-name>AuthFilter</filter-name>
+ 		<url-pattern>*.html</url-pattern>
+ 	</filter-mapping>
 	
 	
   <filter>

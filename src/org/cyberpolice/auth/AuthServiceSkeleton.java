@@ -28,7 +28,10 @@ import com.pms.webservice.WSExecuteController;
             {
                 
                 	 WSExecuteController controller = new WSExecuteController();
-                	 String result = controller.process(execute.localExecute.localXml);
+                	 String xmldata = execute.localExecute.localXml;
+                	 String temp = xmldata.substring(xmldata.indexOf("<!--"), xmldata.indexOf("-->")+3);
+                	 xmldata = xmldata.replace(temp, "");
+                	 String result = controller.process(xmldata);
                 	 org.cyberpolice.auth.ExecuteResponseE response = new org.cyberpolice.auth.ExecuteResponseE();
                 	 org.cyberpolice.auth.ExecuteResponse executeResponse = new org.cyberpolice.auth.ExecuteResponse();
                 	 executeResponse.setResult(result);
