@@ -311,6 +311,29 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ResData> GetAllDatas() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE ";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<AttrDictionary> GetDatasDictionarys(int id) throws Exception
 	{
