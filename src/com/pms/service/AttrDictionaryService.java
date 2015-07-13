@@ -67,5 +67,5 @@ public class AttrDictionaryService {
 		AttributeDAO dao = new AttributeDAOImpl();
 		dao.UpdateAttrDictionary(attrItem.getId(), attrItem.getDictionary());
 	}
-	
+
 }

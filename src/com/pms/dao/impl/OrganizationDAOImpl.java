@@ -243,5 +243,27 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		}
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Organization> GetAllOrgs() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Organization> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION ";
 
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 }

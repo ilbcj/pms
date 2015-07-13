@@ -6,6 +6,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.AttrDictItem;
 import com.pms.model.AttrDefinition;
 import com.pms.service.AttrDictionaryService;
+import com.pms.service.DataSyncService;
 
 public class SystemAttrUserAction extends ActionSupport {
 
@@ -134,4 +135,47 @@ public class SystemAttrUserAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
+	
+	public String DataSyncRes()
+	{
+		DataSyncService dss = new DataSyncService();
+		try {
+			dss.DownLoadRes();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String DataSyncOrg()
+	{
+		DataSyncService dss = new DataSyncService();
+		try {
+			dss.DownLoadOrg();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String DataSyncUser()
+	{
+		DataSyncService dss = new DataSyncService();
+		try {
+			dss.DownLoadUser();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 }
