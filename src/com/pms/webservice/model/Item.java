@@ -4,6 +4,14 @@ public class Item {
 	private String key;
 	private String eng;
 	private String val;
+	private boolean	hasAccessAuth;
+	
+	public boolean isHasAccessAuth() {
+		return hasAccessAuth;
+	}
+	public void setHasAccessAuth(boolean hasAccessAuth) {
+		this.hasAccessAuth = hasAccessAuth;
+	}
 	public String getKey() {
 		return key;
 	}

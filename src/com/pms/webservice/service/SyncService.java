@@ -587,6 +587,10 @@ public abstract class SyncService {
 		return result;
 	}
 	
+	protected void itemSetAttribute(Element item, String key, String value) {
+		item.setAttribute(key, value == null ? "" : value);
+	}
+	
 	public abstract String GetResult() throws IOException;
 
 }

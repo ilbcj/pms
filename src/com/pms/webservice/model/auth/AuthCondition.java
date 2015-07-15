@@ -10,9 +10,16 @@ import com.pms.webservice.model.Condition;
  *
  */
 public class AuthCondition {
+	private String sensitiveLevel;
 	private Condition stc;
 	private List<Common010032> common010032;
 	
+	public String getSensitiveLevel() {
+		return sensitiveLevel;
+	}
+	public void setSensitiveLevel(String sensitiveLevel) {
+		this.sensitiveLevel = sensitiveLevel;
+	}
 	public Condition getStc() {
 		return stc;
 	}
