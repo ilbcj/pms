@@ -32,4 +32,6 @@ public interface ResourceDAO {
 	ResFeature GetFeatureById(String id) throws Exception;
 	ResData GetDataById(String id) throws Exception;
 	
+	List<ResData> GetDatasByRole(String roleId) throws Exception;
+	
 }

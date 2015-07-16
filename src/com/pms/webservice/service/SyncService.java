@@ -219,14 +219,17 @@ public abstract class SyncService {
 								List<Item> items = new ArrayList<Item>();
 								for(int k = 0; k < xmlItems.size(); k++) {
 									Element xmlCurrentItem = xmlItems.get(k);
-									Item item = new Item();
-									item.setKey( xmlCurrentItem.getAttributeValue("key") );
-									item.setEng( convertKeyToEngName( xmlCurrentItem.getAttributeValue("key") ) );
-									item.setVal( xmlCurrentItem.getAttributeValue("val") );
-									if(item.getEng() == null || item.getEng().length() == 0) {
-										throw new Exception("unsupport search column key:" + item.getKey());
+									String[] values = xmlCurrentItem.getAttributeValue("val").split(",");
+									for(int x = 0; x < values.length; x++) {
+										Item item = new Item();
+										item.setKey( xmlCurrentItem.getAttributeValue("key") );
+										item.setEng( convertKeyToEngName( xmlCurrentItem.getAttributeValue("key") ) );
+										item.setVal( values[x] );
+										if(item.getEng() == null || item.getEng().length() == 0) {
+											throw new Exception("unsupport search column key:" + item.getKey());
+										}
+										items.add(item);
 									}
-									items.add(item);
 								}
 								condition.setItems(items);
 							}

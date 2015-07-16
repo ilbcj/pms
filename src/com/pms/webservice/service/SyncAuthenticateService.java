@@ -3,6 +3,7 @@ package com.pms.webservice.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,14 +16,15 @@ import org.jdom2.output.XMLOutputter;
 
 import com.pms.dao.GroupDAO;
 import com.pms.dao.PrivilegeDAO;
+import com.pms.dao.ResourceDAO;
 import com.pms.dao.UserDAO;
 import com.pms.dao.impl.GroupDAOImpl;
 import com.pms.dao.impl.PrivilegeDAOImpl;
+import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.model.GroupUser;
 import com.pms.model.Privilege;
 import com.pms.model.ResData;
-import com.pms.model.ResRole;
 import com.pms.model.User;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
@@ -30,7 +32,9 @@ import com.pms.webservice.model.auth.Common010032;
 
 public class SyncAuthenticateService extends SyncService {
 
+	@SuppressWarnings("unused")
 	private Log logger = LogFactory.getLog(SyncAuthenticateService.class);
+	
 	@Override
 	public String GetResult() throws Exception {
 		//1. get resource's by user id
@@ -99,10 +103,20 @@ public class SyncAuthenticateService extends SyncService {
 		// get org's role
 		
 		// get resource of role
-		
-		return null;
+		List<ResData> result = new ArrayList<ResData>();
+		ResourceDAO rdao = new ResourceDAOImpl();
+		for(int i = 0; i < privileges.size(); i++) {
+			List<ResData> dataResources = rdao.GetDatasByRole(getBusinessRoleByRoleId( privileges.get(i).getRole_id() ));
+			result.addAll(dataResources);
+		}
+		return result;
 	}
 	
+	private String getBusinessRoleByRoleId(int role_id) {
+		String businessRole = "" + role_id;
+		return businessRole;
+	}
+
 	private boolean checkResourceAccessRights(List<ResData> resources,
 			String dataset, String column, String value) {
 		boolean result = false;
