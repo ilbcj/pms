@@ -12,4 +12,5 @@ public interface UserDAO {
 	public List<User> GetUsersByParentId(String pid, int page, int rows) throws Exception;
 	public List<User> GetUsersByParentIdWithNoPage(String pid, User criteria) throws Exception;
 	public int GetUsersCountByParentId(String pid, User criteria) throws Exception;
+	public User GetUserByUserName(String name) throws Exception;
 }

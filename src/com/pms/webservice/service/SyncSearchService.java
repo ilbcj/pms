@@ -177,16 +177,13 @@ public class SyncSearchService extends SyncService {
 			else if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_010117 ) {
 				datas = queryOrgChildrenList(this.getSc().getSTARTITEMS().get(0).getVal());
 			}
-			
-			
-			
+					
 			for( int i = 0; i<datas.size(); i++) {
 				data = new Element("DATA");
 				dataset.addContent(data);
 				
 				addDBResultItemToXML(data, datas.get(i), type);
 			}
-			
 		}
 		catch (Exception e) {
 			e.printStackTrace();

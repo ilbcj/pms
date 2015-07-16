@@ -6,23 +6,37 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.pms.dao.GroupDAO;
+import com.pms.dao.PrivilegeDAO;
+import com.pms.dao.UserDAO;
+import com.pms.dao.impl.GroupDAOImpl;
+import com.pms.dao.impl.PrivilegeDAOImpl;
+import com.pms.dao.impl.UserDAOImpl;
+import com.pms.model.GroupUser;
+import com.pms.model.Privilege;
 import com.pms.model.ResData;
+import com.pms.model.ResRole;
+import com.pms.model.User;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.auth.Common010032;
 
 public class SyncAuthenticateService extends SyncService {
 
+	private Log logger = LogFactory.getLog(SyncAuthenticateService.class);
 	@Override
-	public String GetResult() throws IOException {
+	public String GetResult() throws Exception {
 		//1. get resource's by user id
-		List<ResData> resources =  queryResourceByUser(this.getUa().getUSER_NAME());
-		
+
+		List<ResData> resources = queryResourceByUser(this.getUa().getUSER_NAME());
+
 		//2. compare if seaching data in the query result of step 1.
 		String dataset = null;
 		for( int i = 0; i < this.getAc().getCommon010032().size(); i++ ) {
@@ -60,18 +74,32 @@ public class SyncAuthenticateService extends SyncService {
 		return result;
 	}
 
-	private List<ResData> queryResourceByUser(String userId) {
-		// get use's role
+	private List<ResData> queryResourceByUser(String userId) throws Exception {
+		// get user by username
+		UserDAO udao = new UserDAOImpl();
+		User user = udao.GetUserByUserName(userId);
+		
+		// get user's role
+		PrivilegeDAO pdao = new PrivilegeDAOImpl();
+		List<Privilege> privileges = pdao.QueryPrivilegesByOwnerId(user.getId(), Privilege.OWNERTYPEUSER);
 		
 		// get use's usergroup
+		GroupDAO gdao = new GroupDAOImpl();
+		List<GroupUser> ugs = gdao.GetGroupsByUserId(user.getId());
 		
 		// get usegroup's role
+		for(int i = 0; i < ugs.size(); i++) {
+			List<Privilege> privilegesOfUserGroup = pdao.QueryPrivilegesByOwnerId(ugs.get(i).getGroupid(), Privilege.OWNERTYPEUSERGROUP);
+			privileges.addAll(privilegesOfUserGroup);
+		}
 		
-		// get use's org
+		// TODO organization id's type has changed to string, so handle it later
+		// get user's org
 		
 		// get org's role
 		
 		// get resource of role
+		
 		return null;
 	}
 	
@@ -263,7 +291,7 @@ public class SyncAuthenticateService extends SyncService {
 				datasetResult.addContent(dataResult);
 
 		//parse auth result
-				boolean hasAuthCondition = false, hasAuthColumn = false;
+				boolean hasAuthCondition = false, hasAuthColumn = false, hasUnauthCondition = false, hasUnauthColumn = false;
 				// 6------ WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result) --> dataset(success)
 				Element datasetSuccess = null;
 				datasetSuccess = new Element("DATASET");
@@ -362,79 +390,79 @@ public class SyncAuthenticateService extends SyncService {
 					conditionParent.setAttribute("rel", common010032.getParentCondition());
 				}
 				
+				subConditions = common010032.getSubConditions();
+				for( int j = 0; j < subConditions.size(); j++ ) {
+					Condition condition = subConditions.get(j);
+					boolean isLink2Parent = false;
+					List<Item> subConditionItems = condition.getItems();
+					
+					Element subCondition = null;
+					subCondition = new Element("CONDITION");
+					//conditionParent.addContent(subCondition);
+					subCondition.setAttribute("rel", condition.getRel());
+					
+					for( int k = 0; k < subConditionItems.size(); k++ ) {
+						Item item = subConditionItems.get(k);
+						Element itemCondition = null;
+						itemCondition = new Element("ITEM");
+						subCondition.addContent(itemCondition);
+						itemSetAttribute(itemCondition, "key", item.getKey());
+						itemSetAttribute(itemCondition, "eng", item.getEng());
+						itemSetAttribute(itemCondition, "val", item.getVal());
+						
+						if( "H010014".equals(item.getKey()) ) {
+							if( !hasAuthCondition ) {
+								isLink2Parent = true;
+							}
+						}
+						else if( !item.isHasAccessAuth() ) {
+							isLink2Parent = true;
+							hasUnauthCondition = true;
+						}
+						else {
+							//if not time, and have authenticated condition, then do nothing
+						}
+					}
+					
+					if ( isLink2Parent ) {
+						if( !hasAuthCondition ) {
+							conditionParent.addContent(subCondition);
+						}
+						else {
+							dataFailCondition.addContent(subCondition);
+						}
+					}
+				}
+				// 7------- traverse return columns, find fail record
+				Element dataFailColumn = null;
+				dataFailColumn = new Element("DATA");
+				
+				retColumnItems = common010032.getItems();
+				for( int j = 0; j < retColumnItems.size(); j++ ) {
+					Item item = retColumnItems.get(j);
+					
+					Element itemRetColumn = null;
+					itemRetColumn = new Element("ITEM");
+					
+					itemSetAttribute(itemRetColumn, "key", item.getKey());
+					itemSetAttribute(itemRetColumn, "eng", item.getEng());
+					itemSetAttribute(itemRetColumn, "val", item.getVal());
+					
+					if( !item.isHasAccessAuth() ) {
+						hasUnauthColumn = true;
+						dataFailColumn.addContent(itemRetColumn);
+					}
+				}
+				
+				if( hasUnauthCondition || hasUnauthColumn ) {
+					datasetFail.addContent(dataFailCondition);
+					datasetFail.addContent(dataFailColumn);
+				}
+				else {
+					// if there isn't any unauthorized condition or unauthorized column ,then nothing fail returned.
+				}
+				
 			}
-			
-			
-//			
-//			
-//			item = new Element("ITEM");
-//			data.addContent(item);
-//			itemSetAttribute(item, "key", "H010005");
-//			itemSetAttribute(item, "val", "");
-//			itemSetAttribute(item, "rmk", "查询任务标识（异步查询时必填）");
-//			
-//			dataset = new Element("DATASET");
-//			data.addContent(dataset);
-//			dataset.setAttribute("name", "WA_COMMON_010125");
-//			dataset.setAttribute("rmk", "查询返回数据");
-//			
-//			if(this.getSc() == null) {
-//				setError(getDataSet(message, "WA_COMMON_010004"), "-10001", "查询条件不存在");
-//				throw new Exception("search condition data error");
-//			}
-//			
-//			String sqlStr = "select ";
-//			if( this.getSc().getRETURNITEMS() == null || this.getSc().getRETURNITEMS().size() == 0 ) {
-//				sqlStr += "* ";
-//			}
-//			else {
-//				// TODO parse return column
-//			}
-//			
-//			sqlStr += "from ";
-//			
-//			if( this.getSc().getTableName() == null || this.getSc().getTableName().length() == 0) {
-//				setError(getDataSet(message, "WA_COMMON_010004"), "-10002", "查询条件不正确，表名不存在");
-//				throw new Exception("search condition data error");
-//			}
-//			else {
-//				sqlStr += this.getSc().getTableName() + " ";
-//			}
-//			
-//			if( (this.getSc().getCONDITION() == null || this.getSc().getCONDITION().length() == 0 
-//						|| this.getSc().getCONDITIONITEMS() == null || this.getSc().getCONDITIONITEMS().size() == 0 ) 
-//					&& ( this.getSc().getCONDITION_START() == null || this.getSc().getCONDITION_START().length() == 0 
-//						|| this.getSc().getSTARTITEMS() == null || this.getSc().getSTARTITEMS().size() == 0
-//						|| this.getSc().getCONDITION_CONNECT() == null || this.getSc().getCONDITION_CONNECT().length() == 0
-//						|| this.getSc().getCONNECTITEMS() == null || this.getSc().getCONNECTITEMS().size() == 0) ) {
-//				//no where case
-//			}
-//			else {
-//				sqlStr += addSearchConditionToSQL();
-//			}
-//
-//			System.out.println(sqlStr);
-//			
-//			SearchDAO dao = new SearchDAOImpl();
-//			int type = getSearchType(this.getSc().getTableName());
-////			int first = Integer.parseInt(this.getSc().getOnceNum());
-//			int total = Integer.parseInt(this.getSc().getTotalNum());
-//			List datas = null;
-//			if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_NO ) {
-//				datas = dao.SqlQueryAllCols(sqlStr, type, 0, total);
-//			}
-//			else if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_010117 ) {
-//				datas = queryOrgChildrenList(this.getSc().getSTARTITEMS().get(0).getVal());
-//			}
-//			
-//			
-//			
-//			for( int i = 0; i<datas.size(); i++) {
-//				data = new Element("DATA");
-//				dataset.addContent(data);
-//				
-//				addDBResultItemToXML(data, datas.get(i), type);
-//			}
 			
 		}
 		catch (Exception e) {

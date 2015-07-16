@@ -337,6 +337,37 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public User GetUserByUserName(String name)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<User> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE where NAME = :NAME ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
+			q.setString("NAME", name);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		if(rs == null) {
+			return null;
+		}
+		else if ( rs.size() != 1) {
+			throw new Exception("query user by name(" + name + ") returns multiple records.");
+		}
+		return rs.get(0);
+	}
 
 //	@SuppressWarnings("unchecked")
 //	@Override

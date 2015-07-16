@@ -1,6 +1,5 @@
 package com.pms.webservice.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -591,6 +590,6 @@ public abstract class SyncService {
 		item.setAttribute(key, value == null ? "" : value);
 	}
 	
-	public abstract String GetResult() throws IOException;
+	public abstract String GetResult() throws Exception;
 
 }
