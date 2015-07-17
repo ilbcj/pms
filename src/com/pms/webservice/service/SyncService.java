@@ -233,6 +233,7 @@ public abstract class SyncService {
 								}
 								condition.setItems(items);
 							}
+							conditions.add(condition);
 						}
 						common010032.setSubConditions(conditions);
 					}
@@ -494,41 +495,39 @@ public abstract class SyncService {
 		
 		keyColumnMap.put("G010002", "URL");
 		
-//		220040B
-//		B020001
-//		B020005
-//		B020007
-//		B040005
-//		B040021
-//		B040022
-//		
-//		C040003
-//		C050001
-//				
-//		F010008
-//		F020004
-//		F020005
-//		F020006
-//		F020007
-//		F020010
-//		F020011
-//		F020016
-//		F020017
-//		F030002
-//		
-//		G010003
-//		G020004
-//		
-//		H010001
-//		H010013
-//		H010014
-//		H010018
-//		H010019
-//		H010021
-//		H010035
-//		H010036
+		keyColumnMap.put("220040B", "AUTH_ACCOUNT");
+		keyColumnMap.put("B020001", "ISP_ID");
+		keyColumnMap.put("B020005", "BUYPHONE");
+		keyColumnMap.put("B020007", "IMSI");
+		keyColumnMap.put("B040005", "PASSWORD");
+		keyColumnMap.put("B040021", "AUTH_TYPE");
+		keyColumnMap.put("B040022", "AUTH_ACCOUNT");
 		
+		keyColumnMap.put("C040003", "HARDWARE_SIGNATURE");
+		keyColumnMap.put("C050001", "EQUIPMENT_ID");
 		
+		keyColumnMap.put("F010008", "COLLECT_PLACE");
+		keyColumnMap.put("F020004", "SRC_IP");
+		keyColumnMap.put("F020005", "DST_IP");
+		keyColumnMap.put("F020006", "SRC_PORT");
+		keyColumnMap.put("F020007", "DST_PORT");
+		keyColumnMap.put("F020010", "SRC_IPV6");
+		keyColumnMap.put("F020011", "DST_IPV6");
+		keyColumnMap.put("F020016", "SRC_IP_AREA");
+		keyColumnMap.put("F020017", "DST_IP_AREA");
+		keyColumnMap.put("F030002", "BASE_STATION_ID");
+		
+		keyColumnMap.put("G010003", "TopDomain");
+		keyColumnMap.put("G020004", "SERVICECODE");
+		
+		keyColumnMap.put("H010001", "VOICE_TYPE");
+		keyColumnMap.put("H010013", "SESSIONID");
+		keyColumnMap.put("H010014", "CAPTURE_TIME");
+		keyColumnMap.put("H010018", "DEVICE_ID");
+		keyColumnMap.put("H010019", "MAINFILE");
+		keyColumnMap.put("H010021", "FILESIZE");
+		keyColumnMap.put("H010035", "OWNERSHIP_LAND");
+		keyColumnMap.put("H010036", "INTERNET_LAND");
 		
 		if(key.contains(".")) {
 			key = key.substring(key.indexOf('.')+1);

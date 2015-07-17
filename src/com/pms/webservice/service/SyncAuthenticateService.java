@@ -37,9 +37,13 @@ public class SyncAuthenticateService extends SyncService {
 	
 	@Override
 	public String GetResult() throws Exception {
+		//0. get user by user id
+		UserDAO udao = new UserDAOImpl();
+		User user = udao.GetUserByUserName(this.getUa().getUSER_NAME());
+		this.getAc().setSensitiveLevel(user.getSENSITIVE_LEVEL());
+		
 		//1. get resource's by user id
-
-		List<ResData> resources = queryResourceByUser(this.getUa().getUSER_NAME());
+		List<ResData> resources = queryResourceByUser(user.getId());
 
 		//2. compare if seaching data in the query result of step 1.
 		String dataset = null;
@@ -78,18 +82,15 @@ public class SyncAuthenticateService extends SyncService {
 		return result;
 	}
 
-	private List<ResData> queryResourceByUser(String userId) throws Exception {
-		// get user by username
-		UserDAO udao = new UserDAOImpl();
-		User user = udao.GetUserByUserName(userId);
+	private List<ResData> queryResourceByUser(int userId) throws Exception {
 		
 		// get user's role
 		PrivilegeDAO pdao = new PrivilegeDAOImpl();
-		List<Privilege> privileges = pdao.QueryPrivilegesByOwnerId(user.getId(), Privilege.OWNERTYPEUSER);
+		List<Privilege> privileges = pdao.QueryPrivilegesByOwnerId(userId, Privilege.OWNERTYPEUSER);
 		
 		// get use's usergroup
 		GroupDAO gdao = new GroupDAOImpl();
-		List<GroupUser> ugs = gdao.GetGroupsByUserId(user.getId());
+		List<GroupUser> ugs = gdao.GetGroupsByUserId(userId);
 		
 		// get usegroup's role
 		for(int i = 0; i < ugs.size(); i++) {
@@ -128,7 +129,7 @@ public class SyncAuthenticateService extends SyncService {
 			}
 			
 			if ( dataset.equals(res.getDATA_SET()) && column.equals(res.getELEMENT()) ) {		
-				if ( value != null && value.length() == 0 ) {
+				if ( value != null && value.length() != 0 ) {
 					if ( value.equals(res.getELEMENT_VALUE()) ) {
 						result = true;
 						break;
