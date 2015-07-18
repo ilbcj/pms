@@ -1,10 +1,13 @@
 package com.pms.service;
 
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import sun.misc.BASE64Encoder;
 
 import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.UserDAO;
@@ -210,9 +213,16 @@ public class UserManageService {
 	
 	private String generateHash(String idNum) throws Exception {
 		
-		String value = idNum.substring( 0, idNum.length()-6 );
-		
-		return value;
+		MessageDigest digest = MessageDigest.getInstance("MD5");
+
+		if(digest == null)
+		{
+			throw new Exception("generate hash operator fail.");
+		}
+		byte[] hash = digest.digest(idNum.getBytes());
+
+		String result =  new BASE64Encoder().encode(hash);
+		return result;
 	}
 	
 	private String generateSuffix(String idNum) throws Exception {

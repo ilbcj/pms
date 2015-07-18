@@ -121,8 +121,8 @@
 				                <td><input id="res_type" name="data.resource_type" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源类型'"></input></td>
 				            </tr>
 				            <tr>
-				                <td class="form_name_small text_right"> 目标地市</td>
-				                <td><input id="res_dest" name="data.CLUE_DST_SYS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入目标地市'"></input></td>
+				                <td class="form_name_small text_right"> 字段分类关系编码</td>
+				                <td><input id="res_secrelacls" name="data.SECTION_RELATIOIN_CLASS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类关系编码'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 数据集敏感度编码</td>
@@ -140,10 +140,10 @@
 				                <td class="form_name_small text_right"> 字段编码</td>
 				                <td><input id="res_element" name="data.ELEMENT" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段编码'"></input></td>
 				            </tr>
-				            <tr>
-				                <td class="form_name_small text_right"> 字段分类关系编码</td>
-				                <td><input id="res_secrelacls" name="data.SECTION_RELATIOIN_CLASS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类关系编码'"></input></td>
-				            </tr>
+<!-- 				            <tr> -->
+<!-- 				             	<td class="form_name_small text_right"> 目标地市</td> -->
+<!-- 				                <td><input id="res_dest" name="data.CLUE_DST_SYS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入目标地市'"></input></td> -->
+<!-- 				            </tr> -->
 				        </table>
 				    </form>
 				    
@@ -201,7 +201,7 @@
      	$("#res_memo").textbox('setValue',"");
      	$("#res_delstatus").textbox('setValue',"");
      	$("#res_type").textbox('setValue',"");
-     	$("#res_dest").textbox('setValue',"");
+//      	$("#res_dest").textbox('setValue',"");
      	$("#res_dsl").textbox('setValue',"");
      	$("#res_dataset").textbox('setValue',"");
      	$("#res_sectionclass").textbox('setValue',"");
@@ -244,7 +244,7 @@
 				$("#res_type").textbox('setText',rows[0].value[i].value);	
 			}
 		};
-		$("#res_dest").textbox('setValue',rows[0].CLUE_DST_SYS);
+// 		$("#res_dest").textbox('setValue',rows[0].CLUE_DST_SYS);
 		$("#res_dsl").textbox('setValue',rows[0].DATASET_SENSITIVE_LEVEL);
 		for(var i=0;i<rows[0].value.length;i++){
 			if(rows[0].value[i].attrid==10){//数据集敏感度编码attrid==10

@@ -48,8 +48,8 @@ public class ResourceAction extends ActionSupport {
 	private List<String> dataset_sensitive_level;
 	private List<String> data_set;
 	private List<String> section_class;
-	private List<String> lement;
-	private List<String> section_relation_class;
+	private List<String> element;
+	private List<String> section_relatioin_class;
 	
 	private File fi;
 	private String fiFileName;
@@ -143,20 +143,20 @@ public class ResourceAction extends ActionSupport {
 		section_class = sectionClass;
 	}
 
-	public List<String> getLement() {
-		return lement;
+	public List<String> getElement() {
+		return element;
 	}
 
-	public void setLement(List<String> lement) {
-		this.lement = lement;
+	public void setElement(List<String> element) {
+		this.element = element;
 	}
 
-	public List<String> getSection_relation_class() {
-		return section_relation_class;
+	public List<String> getSection_relatioin_class() {
+		return section_relatioin_class;
 	}
 
-	public void setSection_relation_class(List<String> sectionRelationClass) {
-		section_relation_class = sectionRelationClass;
+	public void setSection_relatioin_class(List<String> sectionRelatioinClass) {
+		section_relatioin_class = sectionRelatioinClass;
 	}
 
 	public List<String> getAddFeatureIds() {
@@ -366,7 +366,12 @@ public class ResourceAction extends ActionSupport {
 		try {
 			ResData criteria = new ResData();
 			criteria.setRESOURCE_ID(resource_id);
-			total = rms.QueryAllDataItems(resource_status, criteria, page, rows, items );
+			criteria.setRESOURCE_DESCRIBE(resource_describe);
+			criteria.setRESOURCE_REMARK(resource_remark);
+			total = rms.QueryAllDataItems(resource_status, delete_status, resource_type, 
+					dataset_sensitive_level, data_set, section_class, 
+					element,section_relatioin_class, 
+					criteria, page, rows, items );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
