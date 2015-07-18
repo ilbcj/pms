@@ -56,9 +56,9 @@ public class ResourceManageService {
 		return ;
 	}
 	
-	public int QueryAllDataItems(ResData criteria, int page, int rows, List<ResDataListItem> items) throws Exception {
+	public int QueryAllDataItems(List<String> resource_status, ResData criteria, int page, int rows, List<ResDataListItem> items) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		List<ResData> res = dao.GetDatas( criteria, page, rows );
+		List<ResData> res = dao.GetDatas( resource_status, criteria, page, rows );
 		ResDataListItem resDataListItem = null;
 		for(int i=0; i<res.size(); i++) {
 			resDataListItem = ConvertDatasDefinitonToResDataListItem(res.get(i));

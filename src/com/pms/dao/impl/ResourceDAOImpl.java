@@ -2,6 +2,8 @@ package com.pms.dao.impl;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -226,7 +228,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResData> GetDatas(ResData criteria, int page, int rows)
+	public List<ResData> GetDatas(List<String> resource_status, ResData criteria, int page, int rows)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -239,8 +241,12 @@ public class ResourceDAOImpl implements ResourceDAO {
 			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
 				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
 			}
+			if(resource_status != null) {
+				sqlString += " and RESOURCE_STATUS in (:RESOURCE_STATUS) ";
+			}
 		}
 		
+		List<String> list=null;
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			if( criteria != null ) {
@@ -250,6 +256,12 @@ public class ResourceDAOImpl implements ResourceDAO {
 				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
 					q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
 				}
+				if(resource_status != null) {
+					for (int i = 0; i < resource_status.size(); i++) {
+						list =Arrays.asList(resource_status.get(i).split(","));	
+					} 
+					q.setParameterList("RESOURCE_STATUS", list);
+				}			
 			}
 			if( page > 0 && rows > 0) {
 				q.setFirstResult((page-1) * rows);   

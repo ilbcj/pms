@@ -17,7 +17,7 @@ public interface ResourceDAO {
 	
 	ResData DataAdd(ResData data) throws Exception;
 	void DataDel(ResData data) throws Exception;
-	List<ResData> GetDatas(ResData criteria, int page, int rows) throws Exception;
+	List<ResData> GetDatas(List<String> resource_status, ResData criteria, int page, int rows) throws Exception;
 	int GetDatasCount(ResData criteria) throws Exception;
 	List<AttrDictionary> GetDatasDictionarys(int id) throws Exception;
 	

@@ -189,7 +189,8 @@
 					                    </td>
 					                </tr>					                
 					            </table>
-				    				
+				    			
+<!--				    			<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  >-->
 								<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  
 							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
 							        <thead>
@@ -228,37 +229,59 @@
 <script>
 	function queryResourceData(){
 		var resource_data_query_resource_id = $("#resource_data_query_resource_id").textbox('getValue');
-    	var poststr = "resource_id=" + resource_data_query_resource_id;
+		var resId=resource_data_query_resource_id;
 
 		var resource_data_query_resource_status = $('#resource_data_query_resource_status').combobox('getValues');
-	        for(var i=0; i<resource_data_query_resource_status.length; i++){
-			    poststr += "&resource_status=" + resource_data_query_resource_status[i].toString();
+		var resStatus = "";
+	        for(var i = 0; i < resource_data_query_resource_status.length; i++){
+				resStatus += resource_data_query_resource_status[i].toString();
+				if( i < resource_data_query_resource_status.length - 1 ){
+					resStatus += ',';
+				}
 			}
 
 		var resource_data_query_resource_describe = $("#resource_data_query_resource_describe").textbox('getValue');
-		poststr += "&resource_describe=" + resource_data_query_resource_describe;
-
-		var resource_data_query_resource_remark = $("#resource_data_query_resource_remark").textbox('getValue');
-		poststr += "&resource_remark=" + resource_data_query_resource_remark;
-
-		var resource_data_query_delete_status = $('#resource_data_query_delete_status').combobox('getValues');
-	        for(var i=0; i<resource_data_query_delete_status.length; i++){
-			    poststr += "&delete_status=" + resource_data_query_delete_status[i].toString();
+		var resDescribe = "";
+	        for(var i = 0; i < resource_data_query_resource_describe.length; i++){
+				resDescribe += resource_data_query_resource_describe[i].toString();
+				if( i < resource_data_query_resource_describe.length - 1 ){
+					resDescribe += ',';
+				}
 			}
 
+		var resource_data_query_resource_remark = $("#resource_data_query_resource_remark").textbox('getValue');
+		var resRemark=resource_data_query_resource_remark;
+		
+		var resource_data_query_delete_status = $('#resource_data_query_delete_status').combobox('getValues');
+		var deleteStatus = "";
+	        for(var i = 0; i < resource_data_query_delete_status.length; i++){
+				deleteStatus += resource_data_query_delete_status[i].toString();
+				if( i < resource_data_query_delete_status.length - 1 ){
+					deleteStatus += ',';
+				}
+			}
+		
 		var resource_data_query_resource_type = $('#resource_data_query_resource_type').combobox('getValues');
-	        for(var i=0; i<resource_data_query_resource_type.length; i++){
-			    poststr += "&resource_type=" + resource_data_query_resource_type[i].toString();
+		var resTtype = "";
+	        for(var i = 0; i < resource_data_query_resource_type.length; i++){
+				resTtype += resource_data_query_resource_type[i].toString();
+				if( i < resource_data_query_resource_type.length - 1 ){
+					resTtype += ',';
+				}
 			}
 			
 		var resource_data_query_clue_dst_sys = $('#resource_data_query_clue_dst_sys').textbox('getValue');
-		poststr += "&clue_dst_sys=" + resource_data_query_clue_dst_sys;
+		var resRemark=resource_data_query_resource_remark;
 		
 		var resource_data_query_dataset_sensitive_level = $('#resource_data_query_dataset_sensitive_level').combobox('getValues');
 	        for(var i=0; i<resource_data_query_dataset_sensitive_level.length; i++){
 			    poststr += "&dataset_sensitive_level=" + resource_data_query_dataset_sensitive_level[i].toString();
 			}
-			
+			// 			 datasetSensitiveLevel,
+// 		 dataSet,
+// 		sectionClass,
+// 			 lement,
+// 			sectionRelationClass	
 		var resource_data_query_data_set = $('#resource_data_query_data_set').combobox('getValues');
 	        for(var i=0; i<resource_data_query_data_set.length; i++){
 			    poststr += "&data_set=" + resource_data_query_data_set[i].toString();
@@ -279,20 +302,21 @@
 			    poststr += "&section_relation_class=" + resource_data_query_section_relation_class[i].toString();
 			}
 			
-		alert(poststr);
-
-    	$.getJSON("../resource/queryRoleResourceTest.action", poststr , function(retObj) {
-		
-			if(retObj.result == true)
-			{
-//				$("#resource_role_query_resource_data_win_list_dg").datagrid('reload').datagrid('clearSelections');
-				successTip("提示", '成功');
-			}
-			else
-			{
-				warningTip("提示", '失败');	
-			}
-		});		
+		$("#resource_role_query_resource_data_win_list_dg").datagrid('load',{
+			resource_id: resId,
+			resource_status: resStatus
+// 			,
+// 			resource_describe: resDescribe,
+// 			resource_remark: resRemark,
+// 			delete_status: deleteStatus,
+// 			resource_type: resTtype,
+// 			clue_dst_sys: clueDstSys,
+// 			dataset_sensitive_level: datasetSensitiveLevel,
+// 			data_set: dataSet,
+// 			section_class: sectionClass,
+// 			lement: lement,
+// 			section_relation_class: sectionRelationClass
+		});
 	}
 	
     function queryResourceRole(){
@@ -833,14 +857,14 @@ $(document).ready(function () {
 			
 		});
 
-		resource_statusJSON.unshift({"id":"","text":"请选择","selected":true})
-		delete_statusJSON.unshift({"id":"","text":"请选择","selected":true})
-		resource_typeJSON.unshift({"id":"","text":"请选择","selected":true})
-		dataset_sensitive_levelJSON.unshift({"id":"","text":"请选择","selected":true})
-		data_setJSON.unshift({"id":"","text":"请选择","selected":true})
-		section_classJSON.unshift({"id":"","text":"请选择","selected":true})
-		lementJSON.unshift({"id":"","text":"请选择","selected":true})
-		section_relation_classJSON.unshift({"id":"","text":"请选择","selected":true})
+		resource_statusJSON.unshift({"id":"null","text":"请选择","selected":true})
+		delete_statusJSON.unshift({"id":"null","text":"请选择","selected":true})
+		resource_typeJSON.unshift({"id":"null","text":"请选择","selected":true})
+		dataset_sensitive_levelJSON.unshift({"id":"null","text":"请选择","selected":true})
+		data_setJSON.unshift({"id":"null","text":"请选择","selected":true})
+		section_classJSON.unshift({"id":"null","text":"请选择","selected":true})
+		lementJSON.unshift({"id":"null","text":"请选择","selected":true})
+		section_relation_classJSON.unshift({"id":"null","text":"请选择","selected":true})
 		
 		$("#resource_data_query_resource_status").combobox('loadData', resource_statusJSON);
 		$("#resource_data_query_delete_status").combobox('loadData', delete_statusJSON);
