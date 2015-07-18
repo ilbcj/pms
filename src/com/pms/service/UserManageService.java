@@ -28,10 +28,16 @@ public class UserManageService {
 		String timenow = sdf.format(new Date());
 		user.setLATEST_MOD_TIME(timenow);
 		user.setDATA_VERSION(user.getDATA_VERSION()+1);
+		String idNum = user.getCERTIFICATE_CODE_SUFFIX();
+		if( idNum.length() > 6 ){
+			user.setCERTIFICATE_CODE_MD5( generateHash(idNum) );
+			user.setCERTIFICATE_CODE_SUFFIX( generateSuffix(idNum) );
+		}
+		
 		user = dao.UserAdd(user);
 		return user;
 	}
-
+	
 	public int QueryUserItems(String pid, int page, int rows,
 			List<UserListItem> items) throws Exception {
 		UserDAO dao = new UserDAOImpl();
@@ -67,6 +73,7 @@ public class UserManageService {
 		item.setTitle(user.getTAKE_OFFICE());
 		item.setUnit(user.getBUSINESS_TYPE());
 		item.setData_version(user.getDATA_VERSION());
+		item.setCertificate_code_md5(user.getCERTIFICATE_CODE_MD5());
 
 		OrgManageService oms = new OrgManageService();
 		String path = oms.QueryNodePath(user.getGA_DEPARTMENT());
@@ -201,4 +208,17 @@ public class UserManageService {
 		return total;
 	}
 	
+	private String generateHash(String idNum) throws Exception {
+		
+		String value = idNum.substring( 0, idNum.length()-6 );
+		
+		return value;
+	}
+	
+	private String generateSuffix(String idNum) throws Exception {
+		
+		String value = idNum.substring( idNum.length()-6, idNum.length() );
+
+		return value;
+	}
 }
