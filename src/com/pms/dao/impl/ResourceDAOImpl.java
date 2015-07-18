@@ -689,4 +689,29 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return rs;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResData> GetColumnDatasByDataSet(String dataSet)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where DATA_SET = :DATA_SET and ELEMENT is not null and ELEMENT_VALUE is null";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("DATA_SET", dataSet);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 }

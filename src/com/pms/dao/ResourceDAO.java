@@ -33,5 +33,6 @@ public interface ResourceDAO {
 	ResData GetDataById(String id) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
+	List<ResData> GetColumnDatasByDataSet(String dataSet) throws Exception;
 	
 }

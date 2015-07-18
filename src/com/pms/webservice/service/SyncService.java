@@ -465,7 +465,7 @@ public abstract class SyncService {
 		return result;
 	}
 
-	private static String convertKeyToEngName(String key) {
+	protected static String convertKeyToEngName(String key) {
 		Map<String, String> keyColumnMap = new HashMap<String, String>();
 		
 		keyColumnMap.put("A010001", "GA_DEPARTMENT");
@@ -483,51 +483,99 @@ public abstract class SyncService {
 		
 		keyColumnMap.put("I010026", "BUSINESS_ROLE");
 		
-		keyColumnMap.put("H010001", "H010001");//??????
 		keyColumnMap.put("H010005", "SEARCH_ID");
-		keyColumnMap.put("H010014", "H010014");//??????
 		keyColumnMap.put("H010034", "SENSITIVE_LEVEL");
 		
-		keyColumnMap.put("B020001", "B020001");//??????
 		keyColumnMap.put("B050016", "SYSTEM_TYPE");
 		keyColumnMap.put("B030005", "CERTIFICATE_CODE");
 		
 		
 		keyColumnMap.put("G010002", "URL");
-		
+/////////////////////////////////////////////////////////////////////////////		
 		keyColumnMap.put("220040B", "AUTH_ACCOUNT");
+		keyColumnMap.put("B010001", "NAME");
 		keyColumnMap.put("B020001", "ISP_ID");
 		keyColumnMap.put("B020005", "BUYPHONE");
 		keyColumnMap.put("B020007", "IMSI");
+		keyColumnMap.put("B030001", "COUNTRY_TYPE");
+		keyColumnMap.put("B030002", "AREA_CODE");
+		keyColumnMap.put("B030004", "CERTIFICATE_TYPE");
+		keyColumnMap.put("B030020", "LANGUAGES");
+		keyColumnMap.put("B030021", "CHINESE_LANGUAGES");
+		keyColumnMap.put("B040002", "USERNAME");
+		keyColumnMap.put("B040003", "ACCOUNT_ID");
 		keyColumnMap.put("B040005", "PASSWORD");
+		keyColumnMap.put("B040014", "PASSWORD_HASH_STRING");
 		keyColumnMap.put("B040021", "AUTH_TYPE");
 		keyColumnMap.put("B040022", "AUTH_ACCOUNT");
 		
+		keyColumnMap.put("C020011", "TERMINAL_MODEL");
+		keyColumnMap.put("C020005", "TERMINAL_OS_VERSION");
+		keyColumnMap.put("C020006", "BROWSE_TYPE");
+		keyColumnMap.put("C020007", "BROWSE_VERSION");
+		keyColumnMap.put("C020009", "TERMINAL_OS_TYPE");
+		keyColumnMap.put("C020017", "TERMINAL_TYPE");
+		keyColumnMap.put("C020021", "SOFTWARE_NAME");
+		keyColumnMap.put("C020022", "SOFTWARE_VERSION");
+		keyColumnMap.put("C040002", "MAC");
 		keyColumnMap.put("C040003", "HARDWARE_SIGNATURE");
+		keyColumnMap.put("C040004", "HARDWARESTRING_TYPE");
 		keyColumnMap.put("C050001", "EQUIPMENT_ID");
+		keyColumnMap.put("C110008", "COOKIE");
 		
+		keyColumnMap.put("F010001", "LONGITUDE");
+		keyColumnMap.put("F010002", "LATITUDE");
 		keyColumnMap.put("F010008", "COLLECT_PLACE");
+		keyColumnMap.put("F010009", "ABOVE_SEALEVEL");
+		keyColumnMap.put("F020001", "CLINET_IP");
 		keyColumnMap.put("F020004", "SRC_IP");
 		keyColumnMap.put("F020005", "DST_IP");
 		keyColumnMap.put("F020006", "SRC_PORT");
 		keyColumnMap.put("F020007", "DST_PORT");
 		keyColumnMap.put("F020010", "SRC_IPV6");
 		keyColumnMap.put("F020011", "DST_IPV6");
+		keyColumnMap.put("F020012", "SRC_PORT_V6");
+		keyColumnMap.put("F020013", "DST_PORT_V6");
 		keyColumnMap.put("F020016", "SRC_IP_AREA");
 		keyColumnMap.put("F020017", "DST_IP_AREA");
 		keyColumnMap.put("F030002", "BASE_STATION_ID");
+		keyColumnMap.put("F030013", "UP_TEID");
+		keyColumnMap.put("F030014", "DOWN_TEID");
+		keyColumnMap.put("F040007", "ROOM_ID");
 		
 		keyColumnMap.put("G010003", "TopDomain");
+		keyColumnMap.put("G010004", "CONTENT_TYPE");
+		keyColumnMap.put("G010005", "REFERER");
 		keyColumnMap.put("G020004", "SERVICECODE");
+		keyColumnMap.put("G020013", "SECURITY_SOFTWARE_ORGCODE");
+		keyColumnMap.put("G020014", "COMPANY_NAME");
+		keyColumnMap.put("G020036", "ICP_PROVIDER");
 		
 		keyColumnMap.put("H010001", "VOICE_TYPE");
+		keyColumnMap.put("H010002", "APP_TYPE");
+		keyColumnMap.put("H010006", "CLUE_SRC_SYS");
+		keyColumnMap.put("H010007", "CLUE_DST_SYS");
 		keyColumnMap.put("H010013", "SESSIONID");
 		keyColumnMap.put("H010014", "CAPTURE_TIME");
 		keyColumnMap.put("H010018", "DEVICE_ID");
 		keyColumnMap.put("H010019", "MAINFILE");
+		keyColumnMap.put("H010020", "OTHER_FILE");
 		keyColumnMap.put("H010021", "FILESIZE");
+		keyColumnMap.put("H010028", "FILE_MD5");
+		keyColumnMap.put("H010031", "PRXOY_TOOLE_TYPE");
+		keyColumnMap.put("H010032", "PROXY_ADDRESS");
+		keyColumnMap.put("H010033", "PROXY_PROVIDER");
 		keyColumnMap.put("H010035", "OWNERSHIP_LAND");
 		keyColumnMap.put("H010036", "INTERNET_LAND");
+		keyColumnMap.put("H010037", "INTERRUPT_FILE");
+		keyColumnMap.put("H010038", "OTHER_FILE_MD5");
+		keyColumnMap.put("H010041", "APPLICATION_LAYER_PROTOCOL");
+		keyColumnMap.put("H010042", "RECORD_ID");
+		keyColumnMap.put("H020002", "TITLE");
+		keyColumnMap.put("H040002", "LOCAL_ACTION");
+		keyColumnMap.put("H070003", "TOOLTYPE");
+		
+		keyColumnMap.put("I010009", "CONTEXT");
 		
 		if(key.contains(".")) {
 			key = key.substring(key.indexOf('.')+1);

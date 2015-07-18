@@ -78,7 +78,7 @@ public class SyncAuthenticateService extends SyncService {
 		
 		//3. generate result
 		String result = null;
-		result = generateAuthResult();
+		result = generateAuthResult(resources);
 		return result;
 	}
 
@@ -108,6 +108,29 @@ public class SyncAuthenticateService extends SyncService {
 		ResourceDAO rdao = new ResourceDAOImpl();
 		for(int i = 0; i < privileges.size(); i++) {
 			List<ResData> dataResources = rdao.GetDatasByRole(getBusinessRoleByRoleId( privileges.get(i).getRole_id() ));
+//			boolean isExist = false;
+//			for(int j = 0; j < dataResources.size(); j++) {
+//				for(int k = 0; k < result.size(); k++) {
+//					if( dataResources.get(j).getId() == result.get(k).getId() ) {
+//						isExist = true;
+//						break;
+//					}
+//				}
+//				if(isExist) {
+//					isExist = false;
+//				}
+//				else {
+//					result.add(dataResources.get(j));
+//				}
+//			}
+			for(int j = 0; j < result.size(); j ++) {
+				for(int k = 0; k < dataResources.size(); k ++) {
+					if(result.get(j).getId() == dataResources.get(k).getId()) {
+						dataResources.remove(k);
+						break;
+					}
+				}
+			}
 			result.addAll(dataResources);
 		}
 		return result;
@@ -146,8 +169,7 @@ public class SyncAuthenticateService extends SyncService {
 		return result;
 	}
 
-
-	private String generateAuthResult() throws IOException {
+	private String generateAuthResult(List<ResData> userResources) throws IOException {
 		String result = null;
 		Document doc = null;
 		try{
@@ -338,17 +360,19 @@ public class SyncAuthenticateService extends SyncService {
 						Item item = subConditionItems.get(k);
 						Element itemCondition = null;
 						itemCondition = new Element("ITEM");
-						subCondition.addContent(itemCondition);
+						
 						itemSetAttribute(itemCondition, "key", item.getKey());
 						itemSetAttribute(itemCondition, "eng", item.getEng());
 						itemSetAttribute(itemCondition, "val", item.getVal());
 						
 						if( "H010014".equals(item.getKey()) ) {
 							isLink2Parent = true;
+							subCondition.addContent(itemCondition);
 						}
 						else if( item.isHasAccessAuth() ) {
 							isLink2Parent = true;
 							hasAuthCondition = true;
+							subCondition.addContent(itemCondition);
 						}
 						else {
 							//if not time, and don't have authenticated condition, then do nothing
@@ -364,28 +388,55 @@ public class SyncAuthenticateService extends SyncService {
 				dataSuccessColumn = new Element("DATA");
 				
 				List<Item> retColumnItems = common010032.getItems();
-				for( int j = 0; j < retColumnItems.size(); j++ ) {
-					Item item = retColumnItems.get(j);
-					
-					Element itemRetColumn = null;
-					itemRetColumn = new Element("ITEM");
-					
-					itemSetAttribute(itemRetColumn, "key", item.getKey());
-					itemSetAttribute(itemRetColumn, "eng", item.getEng());
-					itemSetAttribute(itemRetColumn, "val", item.getVal());
-					
-					if( item.isHasAccessAuth() ) {
-						hasAuthColumn = true;
-						dataSuccessColumn.addContent(itemRetColumn);
+				if(retColumnItems == null || retColumnItems.size() == 0) {
+					for( int j = 0; j < userResources.size(); j++ ) {
+						ResData resource = userResources.get(j);
+						if( common010032.getSourceName().equals(resource.getDATA_SET()) 
+								&& resource.getELEMENT() != null && resource.getELEMENT().length() > 0 
+								&& (resource.getELEMENT_VALUE() == null || resource.getELEMENT_VALUE().length() == 0) ) {
+							Element itemRetColumn = null;
+							itemRetColumn = new Element("ITEM");
+							
+							itemSetAttribute(itemRetColumn, "key", resource.getELEMENT());
+							itemSetAttribute(itemRetColumn, "eng", convertKeyToEngName(resource.getELEMENT()));
+							itemSetAttribute(itemRetColumn, "val", "");
+							hasAuthColumn = true;
+							dataSuccessColumn.addContent(itemRetColumn);
+						}
+					}
+				}
+				else {
+					for( int j = 0; j < retColumnItems.size(); j++ ) {
+						Item item = retColumnItems.get(j);
+						
+						Element itemRetColumn = null;
+						itemRetColumn = new Element("ITEM");
+						
+						itemSetAttribute(itemRetColumn, "key", item.getKey());
+						itemSetAttribute(itemRetColumn, "eng", item.getEng());
+						itemSetAttribute(itemRetColumn, "val", item.getVal());
+						
+						if( item.isHasAccessAuth() ) {
+							hasAuthColumn = true;
+							dataSuccessColumn.addContent(itemRetColumn);
+						}
 					}
 				}
 				
-				if( hasAuthCondition && hasAuthColumn ) {
-					datasetSuccess.addContent(dataSuccessCondition);
-					datasetSuccess.addContent(dataSuccessColumn);
+				if( subConditions.size() == 0 ) {
+					if( hasAuthColumn ) {
+						datasetSuccess.addContent(dataSuccessCondition);
+						datasetSuccess.addContent(dataSuccessColumn);
+					}
 				}
 				else {
-					// if there is no authenticated condition or there is no authenticated column ,then nothing success returned.
+					if( hasAuthCondition && hasAuthColumn ) {
+						datasetSuccess.addContent(dataSuccessCondition);
+						datasetSuccess.addContent(dataSuccessColumn);
+					}
+					else {
+						// if there is no authenticated condition or there is no authenticated column ,then nothing success returned.
+					}
 				}
 				
 				// 6------ WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result) --> dataset(fail)
@@ -420,7 +471,7 @@ public class SyncAuthenticateService extends SyncService {
 						Item item = subConditionItems.get(k);
 						Element itemCondition = null;
 						itemCondition = new Element("ITEM");
-						subCondition.addContent(itemCondition);
+						
 						itemSetAttribute(itemCondition, "key", item.getKey());
 						itemSetAttribute(itemCondition, "eng", item.getEng());
 						itemSetAttribute(itemCondition, "val", item.getVal());
@@ -428,11 +479,13 @@ public class SyncAuthenticateService extends SyncService {
 						if( "H010014".equals(item.getKey()) ) {
 							if( !hasAuthCondition ) {
 								isLink2Parent = true;
+								subCondition.addContent(itemCondition);
 							}
 						}
 						else if( !item.isHasAccessAuth() ) {
 							isLink2Parent = true;
 							hasUnauthCondition = true;
+							subCondition.addContent(itemCondition);
 						}
 						else {
 							//if not time, and have authenticated condition, then do nothing
@@ -453,19 +506,45 @@ public class SyncAuthenticateService extends SyncService {
 				dataFailColumn = new Element("DATA");
 				
 				retColumnItems = common010032.getItems();
-				for( int j = 0; j < retColumnItems.size(); j++ ) {
-					Item item = retColumnItems.get(j);
+				if(retColumnItems == null || retColumnItems.size() == 0) {
+					List<ResData> allColumnResource = queryColumnResourceByDataSet(common010032.getSourceName());
+					for( int j = 0; j < userResources.size(); j++ ) {
+						for( int k = 0; k < allColumnResource.size(); k++ ) {
+							if( allColumnResource.get(k).getId() == userResources.get(j).getId()) {
+								allColumnResource.remove(k);
+								break;
+							}
+						}
+					}
 					
-					Element itemRetColumn = null;
-					itemRetColumn = new Element("ITEM");
-					
-					itemSetAttribute(itemRetColumn, "key", item.getKey());
-					itemSetAttribute(itemRetColumn, "eng", item.getEng());
-					itemSetAttribute(itemRetColumn, "val", item.getVal());
-					
-					if( !item.isHasAccessAuth() ) {
+					for( int j = 0; j < allColumnResource.size(); j++ ) {
+						ResData resource = allColumnResource.get(j);
+						
+						Element itemRetColumn = null;
+						itemRetColumn = new Element("ITEM");
+						
+						itemSetAttribute(itemRetColumn, "key", resource.getELEMENT());
+						itemSetAttribute(itemRetColumn, "eng", convertKeyToEngName(resource.getELEMENT()));
+						itemSetAttribute(itemRetColumn, "val", "");
 						hasUnauthColumn = true;
 						dataFailColumn.addContent(itemRetColumn);
+					}
+				}
+				else {
+					for( int j = 0; j < retColumnItems.size(); j++ ) {
+						Item item = retColumnItems.get(j);
+						
+						Element itemRetColumn = null;
+						itemRetColumn = new Element("ITEM");
+						
+						itemSetAttribute(itemRetColumn, "key", item.getKey());
+						itemSetAttribute(itemRetColumn, "eng", item.getEng());
+						itemSetAttribute(itemRetColumn, "val", item.getVal());
+						
+						if( !item.isHasAccessAuth() ) {
+							hasUnauthColumn = true;
+							dataFailColumn.addContent(itemRetColumn);
+						}
 					}
 				}
 				
@@ -492,6 +571,12 @@ public class SyncAuthenticateService extends SyncService {
 			result = baos.toString();
 			System.out.println(result);
 		}
+		return result;
+	}
+
+	private List<ResData> queryColumnResourceByDataSet(String dataSet) throws Exception {
+		ResourceDAO rdao = new ResourceDAOImpl();
+		List<ResData> result = rdao.GetColumnDatasByDataSet(dataSet);
 		return result;
 	}
 }
