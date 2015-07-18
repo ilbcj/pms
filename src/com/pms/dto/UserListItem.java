@@ -17,7 +17,8 @@ public class UserListItem {
 	private String title;
 	private String police_num;
 	private int data_version;
-	
+	private String certificate_code_md5;
+
 	public int getId() {
 		return id;
 	}
@@ -115,4 +116,11 @@ public class UserListItem {
 	public void setData_version(int dataVersion) {
 		data_version = dataVersion;
 	}
+	public String getCertificate_code_md5() {
+		return certificate_code_md5;
+	}
+	public void setCertificate_code_md5(String certificateCodeMd5) {
+		certificate_code_md5 = certificateCodeMd5;
+	}
+	
 }
