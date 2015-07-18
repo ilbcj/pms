@@ -103,7 +103,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 	@Override
 	public List<Privilege> QueryPrivilegesByOwnerId(int ownerid, int ownertype)
 			throws Exception {
-		Session session = HibernateUtil.currentSession();
+ 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Privilege> rs = null;
 		String sqlString = "select * from privilege where owner_id = :owner_id and owner_type = :owner_type ";

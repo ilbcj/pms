@@ -233,7 +233,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE where 1 = 1 ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where 1 = 1 ";
 		if( criteria != null ) {
 			if(criteria.getName() != null && criteria.getName().length() > 0) {
 				sqlString += " and name like :name ";
@@ -285,7 +285,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from WA_AUTHORITY_RESOURCE where 1 = 1 ";
+		String sqlString = "select count(*) from WA_AUTHORITY_DATA_RESOURCE where 1 = 1 ";
 		if( criteria != null ) {
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
@@ -327,7 +327,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE ";
 
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
@@ -353,7 +353,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Transaction tx = session.beginTransaction();
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
-				" FROM wa_authority_resource a,attrdict b,attrdef c " +
+				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
 				" WHERE a.DELETE_STATUS=b.code AND b.attrid=c.id and a.id=:id ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
@@ -659,12 +659,37 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		ResData rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("RESOURCE_ID", id);
 			rs = (ResData) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResData> GetDatasByRole(String roleId) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID in (SELECT resource_id FROM wa_authority_resource_role where business_role = :business_role and restype = :restype);";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("business_role", roleId);
+			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

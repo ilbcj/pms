@@ -31,7 +31,7 @@ public class SyncSearchService extends SyncService {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public String GetResult() throws IOException {
-		String result = "";
+		String result = null;
 		Document doc = null;
 		try{
 			Element message = null, dataset = null, data = null, item = null;
@@ -177,16 +177,13 @@ public class SyncSearchService extends SyncService {
 			else if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_010117 ) {
 				datas = queryOrgChildrenList(this.getSc().getSTARTITEMS().get(0).getVal());
 			}
-			
-			
-			
+					
 			for( int i = 0; i<datas.size(); i++) {
 				data = new Element("DATA");
 				dataset.addContent(data);
 				
 				addDBResultItemToXML(data, datas.get(i), type);
 			}
-			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -298,10 +295,6 @@ public class SyncSearchService extends SyncService {
 			result = " '" + columnValue + "' ";
 		}
 		return result;	
-	}
-	
-	private void itemSetAttribute(Element item, String key, String value) {
-		item.setAttribute(key, value == null ? "" : value);
 	}
 	
 	private void addDBResultItemToXML(Element data, Object model, int type) {
