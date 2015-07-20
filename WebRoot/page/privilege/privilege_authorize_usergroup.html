@@ -109,6 +109,21 @@
 	
 	</div><!-- end of layout -->
 <script>
+	function queryGroup(){
+    	var name = $("#privilege_query_group_name").val();
+    	var code = $("#privilege_query_group_code").val();
+     	
+    	$("#privilege_authorize_usergroup_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			groupName: name,
+			groupCode: code
+		});
+    }
+    
+    function clearQueryGroupCondition(){
+    	$("#privilege_query_group_name").textbox({value:""});
+    	$("#privilege_query_group_code").textbox({value:""});
+    }
     
     function addGroupAuth() {
     	var rows = $("#privilege_authorize_usergroup_center_list_dg").datagrid('getSelections');
