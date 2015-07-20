@@ -22,6 +22,7 @@ import com.pms.model.Organization;
 import com.pms.model.ResData;
 import com.pms.model.SystemConfig;
 import com.pms.model.User;
+import com.pms.util.FileChooserUtil;
 import com.pms.util.ZipUtil;
 
 public class DataSyncService {
@@ -29,7 +30,7 @@ public class DataSyncService {
 		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
-        String rootPath = "E:/" + second + "/";
+        String rootPath = System.getProperty("java.io.tmpdir")+"/" + second + "/";
         File DirFile = new File(rootPath);		
 		if(!DirFile.exists()){
     	    DirFile.mkdir();
@@ -46,10 +47,7 @@ public class DataSyncService {
         }
         
         for (int j = 1; j <= count; j++) {
-            Document dom = DocumentHelper.createDocument();//创建xml文件 
-            Element root = dom.addElement("root");//添加根元素,XValue  
-            root.addAttribute("name", "WA_AUTHORITY_RESOURCE");
-            String str = "\n" + "id" + "\t" + "name" + "\t" + "resource_type" + "\t"  + 
+            String str = "id" + "\t" + "name" + "\t" + "resource_type" + "\t"  + 
 	    		"RESOURCE_ID" + "\t" + "RESOURCE_STATUS" + "\t" + "RESOURCE_DESCRIBE" + "\t"  + 
 				"DATASET_SENSITIVE_LEVEL" + "\t" + "DATA_SET" + "\t" + "SECTION_CLASS" + "\t"  + 
 				"ELEMENT" + "\t" + "SECTION_RELATIOIN_CLASS" + "\t" + "OPERATE_SYMBOL" + "\t"  + 
@@ -67,12 +65,10 @@ public class DataSyncService {
                 	break;
                 }
             }
-        	root.setText(str);
-            String xml = dom.asXML();
-            String filename = "wa_authority_resource_" + j + ".xml";
+            String filename = "wa_authority_resource_" + j + ".bcp";
             File file = new File(rootPath + filename);  
             PrintWriter pw = new PrintWriter(file);
-            pw.write(xml);  
+            pw.write(str);  
             pw.close();
 		}
 
@@ -101,7 +97,7 @@ public class DataSyncService {
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
         	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource_" + j+".xml").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource_" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
         
@@ -136,7 +132,7 @@ public class DataSyncService {
        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
        Date date = timeFormat.parse("1970-01-01 00:00:00");
        long second = (System.currentTimeMillis() - date.getTime())/1000;
-       String rootPath = "E:/" + second + "/";
+       String rootPath = System.getProperty("java.io.tmpdir")+"/" + second + "/";
        File DirFile = new File(rootPath);		
        if(!DirFile.exists()){
     	   DirFile.mkdir();
@@ -153,10 +149,7 @@ public class DataSyncService {
         }
         
         for (int j = 1; j <= count; j++) {
-            Document dom = DocumentHelper.createDocument();//创建xml文件 
-            Element root = dom.addElement("root");//添加根元素,XValue  
-            root.addAttribute("name", "WA_AUTHORITY_ORGNIZATION");
-            String str = "\n" + "GA_DEPARTMENT" + "\t" + "UNIT" + "\t" + "ORG_LEVEL" + "\t"  + 
+            String str = "GA_DEPARTMENT" + "\t" + "UNIT" + "\t" + "ORG_LEVEL" + "\t"  + 
 	    		"PARENT_ORG" + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"  + 
 				"LATEST_MOD_TIME" + "\n";
             for (int i = num; i < org.size(); i++)  {
@@ -168,12 +161,10 @@ public class DataSyncService {
                 	break;
                 }
             }
-        	root.setText(str);
-            String xml = dom.asXML();
-            String filename = "wa_authority_orgnization_" + j + ".xml";
+            String filename = "wa_authority_orgnization_" + j + ".bcp";
             File file = new File(rootPath + filename); 
             PrintWriter pw = new PrintWriter(file);
-            pw.write(xml);  
+            pw.write(str);  
             pw.close();
 		}
 
@@ -202,7 +193,7 @@ public class DataSyncService {
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
         	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_orgnization_" + j+".xml").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_orgnization_" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
 
@@ -225,7 +216,7 @@ public class DataSyncService {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
-        String rootPath = "E:/" + second + "/";
+        String rootPath = System.getProperty("java.io.tmpdir")+"/" + second + "/";
         File DirFile = new File(rootPath);		
         if(!DirFile.exists()){
      	   DirFile.mkdir();
@@ -242,10 +233,7 @@ public class DataSyncService {
         }
 
         for (int j = 1; j <= count; j++) {
-            Document dom = DocumentHelper.createDocument();//创建xml文件 
-            Element root = dom.addElement("root");//添加根元素,XValue  
-            root.addAttribute("name", "WA_AUTHORITY_POLICE");
-            String str = "\n" + "id" + "\t" + "NAME" + "\t" + "CERTIFICATE_CODE_MD5" + "\t"
+            String str = "id" + "\t" + "NAME" + "\t" + "CERTIFICATE_CODE_MD5" + "\t"
             	 + "CERTIFICATE_CODE_SUFFIX" + "\t" + "SEXCODE" + "\t" + "GA_DEPARTMENT" + "\t"
             	 + "UNIT" + "\t"+ "ORG_LEVEL" + "\t" + "POLICE_SORT" + "\t"
             	 + "POLICE_NO" + "\t" + "SENSITIVE_LEVEL" + "\t" + "BUSINESS_TYPE" + "\t"
@@ -265,12 +253,10 @@ public class DataSyncService {
                 	break;
                 }
             }
-        	root.setText(str);
-            String xml = dom.asXML();
-            String filename = "wa_authority_police_" + j + ".xml";
+            String filename = "wa_authority_police_" + j + ".bcp";
             File file = new File(rootPath + filename);
             PrintWriter pw = new PrintWriter(file);
-            pw.write(xml);  
+            pw.write(str);  
             pw.close();
 		}
         
@@ -299,7 +285,7 @@ public class DataSyncService {
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
         	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_police_" + j+".xml").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_police_" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
 
@@ -364,8 +350,8 @@ public class DataSyncService {
         sn = String.format("%05d", Integer.parseInt(sn));  
 
         String zipNnme = businessType + "-" + dataSource + "-All-" + second + "-" + sn + ".zip";
-
-        ZipUtil zs = new  ZipUtil("E:/" + zipNnme);
+        
+        ZipUtil zs = new  ZipUtil(new FileChooserUtil().fileChooser() + zipNnme);
 	    zs.compress(rootPath);
 
 	    UpdateConfig(SystemConfigList);
