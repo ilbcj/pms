@@ -3,6 +3,7 @@ package com.pms.model;
 public class AttrDefinition {
 	public final static int ATTRTYPEUSER = 1;
 	public final static int ATTRTYPERESOURCEDATA = 2;
+	public final static int ATTRTYPEREORG = 3;
 
 	private int id;
 	private String name="";

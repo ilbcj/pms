@@ -71,6 +71,14 @@
  		            </li>  
                  </ul> 
              </li>
+             <li> 
+                 <span>机构策略</span> 
+                 <ul> 
+                     <li iconCls="icon-leaf" id="menu_system_organization_dictionary">
+ 		                <span>机构属性字典</span> 
+ 		            </li>  
+                 </ul> 
+             </li>
 	         <li iconCls="icon-leaf" id="menu_system_data_export">
 	            <span>数据导出</span>
 	         </li>
@@ -91,6 +99,9 @@ $(document).ready(function () {
 // 			}
  			else if (node.id == 'menu_system_resource_data_dictionary') {
  				$('body').layout('panel','center').panel('refresh','system/system_resource_data_dictionary.html');
+ 			}
+ 			else if (node.id == 'menu_system_organization_dictionary') {
+ 				$('body').layout('panel','center').panel('refresh','system/system_organization_dictionary.html');
  			}
  			else if (node.id == 'menu_system_data_export') {
  				$('body').layout('panel','center').panel('refresh','system/system_data_export.html');

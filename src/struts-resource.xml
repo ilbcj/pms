@@ -57,10 +57,7 @@
 <!-- 		</action>-->
  		<action name="queryRoleResource" class="com.pms.controller.ResourceAction" method="QueryRoleResource" >
  			<result name="success" type="json" />
- 		</action>
- 		<action name="queryRoleResourceTest" class="com.pms.controller.ResourceAction" method="QueryRoleResourceTest" >
- 			<result name="success" type="json" />
- 		</action> 		
+ 		</action>		
  		<action name="fileUpload" class="com.pms.controller.ResourceAction" method="FileUpload" >
  			<result name="success" type="json" />
  			<interceptor-ref name="defaultStack">

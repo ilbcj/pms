@@ -122,6 +122,26 @@ public class SystemAttrUserAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QueryOrgAttrs()
+	{
+		AttrDictionaryService ads = new AttrDictionaryService();
+		items = new ArrayList<AttrDictItem>();
+		try {
+			
+			AttrDefinition criteria = new AttrDefinition();
+			criteria.setName(attrName);
+			criteria.setCode(attrCode);
+
+			total = ads.QueryAttrDictionaryOfOrg( criteria, page, rows, items );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String SaveUserAttrs()
 	{
 		AttrDictionaryService ads = new AttrDictionaryService();

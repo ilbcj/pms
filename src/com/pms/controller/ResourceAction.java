@@ -471,30 +471,7 @@ public class ResourceAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
-
-	public String QueryRoleResourceTest()
-	{
-		System.out.println(resource_id);		
-		for (int i = 0; i < resource_status.size(); i++) {
-			System.out.println(resource_status.get(i));
-		}
-		for (int i = 0; i < delete_status.size(); i++) {
-			System.out.println(delete_status.get(i));
-		}
-//		ResourceManageService rms = new ResourceManageService();
-//		features = new ArrayList<ResFeature>();
-//		datas = new ArrayList<ResData>();
-		try {
-//			rms.QueryRoleResource( role.getId(), features, datas );		
-		} catch (Exception e) {
-			message = e.getMessage();
-			setResult(false);
-			return SUCCESS;
-		}
-		setResult(true);
-		return SUCCESS;
-	}
-
+	
 	public String FileUpload(){
 		
 		System.out.println("文件的名称："+fiFileName);
