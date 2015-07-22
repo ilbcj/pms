@@ -108,6 +108,7 @@
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 				    <form id="org_maintain_center_detail_form" method="post">
 				    <input id="org_data_version" name="orgNode.DATA_VERSION" type="hidden"/>
+				    <input id="org_insertflag" type="hidden"/>
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 机构名称</td>
@@ -250,6 +251,8 @@
        	$("#org_uid").textbox({editable:true});
        	$("#org_pid").textbox('setValue',"");
        	$("#org_level").textbox('setValue',"");
+       	$("#org_insertflag").val("");
+//        	$('#org_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
     }
     
     function openOrgSelectWin(){
@@ -275,7 +278,19 @@
     
     function addOrgSave(){
 		// submit the form
-		$('#org_maintain_center_detail_form').submit();
+		var orgUid = $("#org_uid").val();
+		var poststr = "orgUid=" + orgUid;
+		
+		var flag = $("#org_insertflag").val(); 
+		$.getJSON("../organization/checkUid.action",poststr,function(data){
+            if(data.checkresult == "ok" || flag == "updateDetail"){ 
+                $('#org_maintain_center_detail_form').submit();
+            }else{ 
+                $.messager.alert("提示","该编码已被占用！");
+            } 
+            
+        }); 
+		
     }
 	
 	function delOrg(){
@@ -364,17 +379,23 @@
 	function orgModDetail(){
 		if( orgPreMod() ) {
 			var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
-			$("#org_id").val(rows[0].id);
-			$("#org_data_version").val(rows[0].data_version);
-			$("#org_name").textbox('setValue',rows[0].name);
-			$("#org_uid").textbox('setValue',rows[0].id);
-			$("#org_uid").textbox({editable:false});
-			$("#org_pid").textbox('setValue',rows[0].pid);
-			$("#org_pid").textbox('setText',rows[0].pname);
-			$("#org_level").textbox('setValue',rows[0].orgLevel);
-
-			$("#org_maintain_center_main_wapper").panel('close');
-    		$("#org_maintain_center_detail_wapper").panel('open');
+			if(rows[0].orgParent_org != 0){
+				$("#org_id").val(rows[0].id);
+				$("#org_data_version").val(rows[0].data_version);
+				$("#org_name").textbox('setValue',rows[0].name);
+				$("#org_uid").textbox('setValue',rows[0].id);
+				$("#org_uid").textbox({editable:false});
+				$("#org_pid").textbox('setValue',rows[0].pid);
+				$("#org_pid").textbox('setText',rows[0].pname);
+				$("#org_level").textbox('setValue',rows[0].orgLevel);
+				
+				$("#org_insertflag").val("updateDetail");
+	
+				$("#org_maintain_center_main_wapper").panel('close');
+	    		$("#org_maintain_center_detail_wapper").panel('open');
+    		}else{
+    			$.messager.alert("提示","根节点只可以修改名称!");
+    		}
 		}
 		return;
 	}

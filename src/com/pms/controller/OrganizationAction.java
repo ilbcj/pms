@@ -23,10 +23,11 @@ public class OrganizationAction extends ActionSupport {
 	private List<String> delNodeIds;
 	private boolean queryAll;
 	private String orgName;
-	//private String orgUid;
+	private String orgUid;
 	private String orgLevel;
 	private boolean result;
 	private String message;
+	private String checkresult;
 	
 	public List<String> getDelNodeIds() {
 		return delNodeIds;
@@ -52,13 +53,13 @@ public class OrganizationAction extends ActionSupport {
 		this.orgName = orgName;
 	}
 
-//	public String getOrgUid() {
-//		return orgUid;
-//	}
-//
-//	public void setOrgUid(String orgUid) {
-//		this.orgUid = orgUid;
-//	}
+	public String getOrgUid() {
+		return orgUid;
+	}
+
+	public void setOrgUid(String orgUid) {
+		this.orgUid = orgUid;
+	}
 
 	public String getOrgLevel() {
 		return orgLevel;
@@ -156,12 +157,39 @@ public class OrganizationAction extends ActionSupport {
 		this.result = result;
 	}
 	
-//public actions
+	public String getCheckresult() {
+		return checkresult;
+	}
+
+	public void setCheckresult(String checkresult) {
+		this.checkresult = checkresult;
+	}
+
+	//public actions
 	public String QueryAllBureauNode()
 	{
 		OrgManageService oms = new OrgManageService();
 		try {
 			bureauNodes = oms.QueryAllBureauNode();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String CheckUid()
+	{
+		OrgManageService oms = new OrgManageService();
+		try {
+			orgNode = oms.CheckUid(orgUid);
+			if(null != orgNode){
+				this.checkresult = "err";
+			}else{
+				this.checkresult = "ok";
+			}
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

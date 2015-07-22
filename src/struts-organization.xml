@@ -39,5 +39,8 @@
  		<action name="modifyOrgNodeName" class="com.pms.controller.OrganizationAction" method="ModifyOrgNodeName" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="checkUid" class="com.pms.controller.OrganizationAction" method="CheckUid" >
+ 			<result name="success" type="json" />
+ 		</action>
 	</package>	
 </struts>    

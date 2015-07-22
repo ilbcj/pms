@@ -18,6 +18,12 @@ public class OrgManageService {
 		return QueryChildrenNodes( Organization.ROOTNODEID );
 	}
 	
+	public Organization CheckUid( String uid ) throws Exception
+	{
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		return dao.GetOrgNodeById( uid );
+	}
+	
 	public Organization SaveOrgNode( Organization org ) throws Exception
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
@@ -113,6 +119,7 @@ public class OrgManageService {
 		item.setPid(org.getPARENT_ORG());
 		item.setOrgLevel(org.getORG_LEVEL());
 		item.setData_version(org.getDATA_VERSION());
+		item.setOrgParent_org(org.getPARENT_ORG());
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		Organization parent = dao.GetOrgNodeById(org.getPARENT_ORG());
 		item.setPname(parent == null ? "" : parent.getUNIT());
