@@ -15,7 +15,6 @@ import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.dto.PrivUserListItem;
 import com.pms.dto.UserListItem;
-import com.pms.model.AttrDefinition;
 import com.pms.model.Organization;
 import com.pms.model.Privilege;
 import com.pms.model.User;

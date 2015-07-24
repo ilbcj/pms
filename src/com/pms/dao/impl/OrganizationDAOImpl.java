@@ -104,10 +104,11 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG ";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG and DELETE_STATUS =:DELETE_STATUS";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setString("PARENT_ORG", pid);
+			q.setInteger("DELETE_STATUS", Organization.DELSTATUSNO);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -134,10 +135,11 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG ";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG and DELETE_STATUS =:DELETE_STATUS";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setString("PARENT_ORG", pid);
+			q.setInteger("DELETE_STATUS", Organization.DELSTATUSNO);
 			q.setFirstResult((page-1) * rows);   
 			q.setMaxResults(rows);
 			rs = q.list();
@@ -160,7 +162,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG ";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG and DELETE_STATUS =:DELETE_STATUS";
 		if( condition != null ) {
 			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 				sqlString += " and UNIT like :UNIT ";
@@ -176,6 +178,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setString("PARENT_ORG", pid);
+			q.setInteger("DELETE_STATUS", Organization.DELSTATUSNO);
 			if( condition != null ) {
 				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
@@ -232,6 +235,29 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setString("GA_DEPARTMENT", id);
 			rs = (Organization) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Organization> GetOrgById(String id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Organization> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where GA_DEPARTMENT = :GA_DEPARTMENT ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			q.setString("GA_DEPARTMENT", id);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
