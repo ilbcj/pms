@@ -1,6 +1,8 @@
 package com.pms.controller;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.UserListItem;
 import com.pms.model.User;
@@ -34,6 +36,7 @@ public class UserAction extends ActionSupport {
 	private String userDept;
 	private String userTitle;
 	private String userPoliceNum;
+	private List<Integer> delNodeIds;
 	
 	public String getUserName() {
 		return userName;
@@ -195,6 +198,14 @@ public class UserAction extends ActionSupport {
 		this.message = message;
 	}
 
+	public List<Integer> getDelNodeIds() {
+		return delNodeIds;
+	}
+
+	public void setDelNodeIds(List<Integer> delNodeIds) {
+		this.delNodeIds = delNodeIds;
+	}
+
 	public String SaveUser()
 	{
 		UserManageService ums = new UserManageService();
@@ -234,6 +245,20 @@ public class UserAction extends ActionSupport {
 			} else {
 				total = ums.QueryUserItems( id, page, rows, items );
 			}
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String DeleteUserNode()
+	{
+		UserManageService ums = new UserManageService();
+		try {
+			ums.DeleteUserNodes(delNodeIds);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

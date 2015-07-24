@@ -33,7 +33,7 @@
  		<action name="queryChildrenItems" class="com.pms.controller.OrganizationAction" method="QueryChildrenItems" >
  			<result name="success" type="json" />
  		</action>
- 		<action name="deleteOrgNode" class="com.pms.controller.OrganizationAction" method="DeleteOrgNode" >
+ 		<action name="deleteUserNode" class="com.pms.controller.UserAction" method="DeleteUserNode" >
  			<result name="success" type="json" />
  		</action>
  		<action name="modifyOrgNodeName" class="com.pms.controller.OrganizationAction" method="ModifyOrgNodeName" >

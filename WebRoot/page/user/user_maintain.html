@@ -385,6 +385,7 @@
 		}
 		return true;
 	}
+	
 	function modUser(){
 		if( userPreMod() ) {
 			var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
@@ -408,6 +409,42 @@
     		$("#user_maintain_center_detail_wapper").panel('open');
 		}
 		return;
+	}
+	
+	function delUser(){
+		var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的机构');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录，是否删除？', function(r){
+                if (r){
+                	var poststr = "delNodeIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delNodeIds=" + rows[i].id;
+					}
+					
+                    $.getJSON("../user/deleteUserNode.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#user_maintain_tree').tree('reload');
+							$('#user_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+							successTip("删除机构","操作成功");
+						}
+						else
+						{
+							warningTip("提示", '删除机构操作失败：' + retObj.message);
+						}
+					});
+                }
+            });
+		}
 	}
 	
 $(document).ready(function () { 
