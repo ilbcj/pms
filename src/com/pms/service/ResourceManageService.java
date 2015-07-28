@@ -46,14 +46,41 @@ public class ResourceManageService {
 			return;
 		
 		ResFeature target;
-		ResourceDAO dao = new ResourceDAOImpl();
 		for(int i = 0; i< resourceIds.size(); i++) {
 			target = new ResFeature();
 			target.setId(resourceIds.get(i));
-			dao.FeatureDel(target);
+
+			DeleteResourceFeature(target);
 		}
 		
 		return ;
+	}
+
+	public ResFeature DeleteResourceFeature(ResFeature feature) throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResFeature> nodes=dao.GetFeatureById(feature.getId());
+	
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+
+		for(int i = 0; i< nodes.size(); i++) {
+			feature.setName(nodes.get(i).getName());
+			feature.setResource_id(nodes.get(i).getResource_id());
+			feature.setResource_status(nodes.get(i).getResource_status());
+			feature.setResource_describe(nodes.get(i).getResource_describe());
+			feature.setResource_remark(nodes.get(i).getResource_remark());
+			feature.setDelete_status(ResFeature.DELSTATUSYES);
+			feature.setApp_id(nodes.get(i).getApp_id());
+			feature.setParent_resource(nodes.get(i).getParent_resource());
+			feature.setResource_order(nodes.get(i).getResource_order());
+			feature.setSystem_type(nodes.get(i).getSystem_type());
+			feature.setLatest_mod_time(timenow);
+		
+			feature = dao.FeatureAdd(feature);
+		}
+		
+		return feature;
 	}
 	
 	public int QueryAllDataItems(List<String> resource_status, List<String> delete_status, List<String> resource_type,
@@ -130,20 +157,52 @@ public class ResourceManageService {
 		data = dao.DataAdd(data);
 		return data;
 	}
-
+	
 	public void DeleteResourceDatas(List<Integer> resourceIds) throws Exception {
 		if(resourceIds == null)
 			return;
 		
 		ResData target;
-		ResourceDAO dao = new ResourceDAOImpl();
 		for(int i = 0; i< resourceIds.size(); i++) {
 			target = new ResData();
 			target.setId(resourceIds.get(i));
-			dao.DataDel(target);
+
+			DeleteResourceData(target);
 		}
 		
 		return ;
+	}
+
+	public ResData DeleteResourceData(ResData data) throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResData> nodes=dao.GetDataById(data.getId());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		for(int i = 0; i< nodes.size(); i++) {
+			data.setName(nodes.get(i).getName());
+			data.setResource_type(nodes.get(i).getResource_type());
+			data.setRESOURCE_ID(nodes.get(i).getRESOURCE_ID());
+			data.setRESOURCE_STATUS(nodes.get(i).getRESOURCE_STATUS());
+			data.setRESOURCE_DESCRIBE(nodes.get(i).getRESOURCE_DESCRIBE());
+			data.setDATASET_SENSITIVE_LEVEL(nodes.get(i).getDATASET_SENSITIVE_LEVEL());
+			data.setDATA_SET(nodes.get(i).getDATA_SET());
+			data.setSECTION_CLASS(nodes.get(i).getSECTION_CLASS());
+			data.setELEMENT(nodes.get(i).getELEMENT());
+			data.setSECTION_RELATIOIN_CLASS(nodes.get(i).getSECTION_RELATIOIN_CLASS());
+			data.setOPERATE_SYMBOL(nodes.get(i).getOPERATE_SYMBOL());
+			data.setELEMENT_VALUE(nodes.get(i).getELEMENT_VALUE());
+			data.setDELETE_STATUS(ResData.DELSTATUSYES);
+			data.setDATA_VERSION(nodes.get(i).getDATA_VERSION());	
+			data.setLATEST_MOD_TIME(timenow);
+			data.setRESOURCE_REMARK(nodes.get(i).getRESOURCE_REMARK());
+		
+			data = dao.DataAdd(data);
+		}
+		
+		return data;
 	}
 
 	public int QueryAllRoleItems(ResRole criteria, int page, int rows,
@@ -166,6 +225,7 @@ public class ResourceManageService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
+		
 		role.setLATEST_MOD_TIME(timenow);
 		role.setDATA_VERSION(role.getDATA_VERSION()+1);
 		role = dao.RoleAdd(role);
@@ -180,16 +240,54 @@ public class ResourceManageService {
 			return;
 		
 		ResRole target;
-		ResourceDAO dao = new ResourceDAOImpl();
 		for(int i = 0; i< roleIds.size(); i++) {
 			target = new ResRole();
 			target.setId(roleIds.get(i));
-			dao.RoleDel(target);
+			
+			DeleteResourceRole(target);
 		}
 		
 		return ;
 	}
+	
+	public ResRole DeleteResourceRole(ResRole role) throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResRole> roleNodes=dao.GetRoleById(role.getId());
 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+
+		for(int i = 0; i< roleNodes.size(); i++) {
+			role.setBUSINESS_ROLE(roleNodes.get(i).getBUSINESS_ROLE());
+			role.setBUSINESS_ROLE_TYPE(roleNodes.get(i).getBUSINESS_ROLE_TYPE());
+			role.setBUSINESS_ROLE_NAME(roleNodes.get(i).getBUSINESS_ROLE_NAME());
+			role.setSYSTEM_TYPE(roleNodes.get(i).getSYSTEM_TYPE());
+			role.setCLUE_SRC_SYS(roleNodes.get(i).getCLUE_SRC_SYS());
+			role.setROLE_DESC(roleNodes.get(i).getROLE_DESC());
+			role.setDELETE_STATUS(ResRole.DELSTATUSYES);
+			role.setDATA_VERSION(roleNodes.get(i).getDATA_VERSION());
+			role.setLATEST_MOD_TIME(timenow);
+		
+			role = dao.RoleAdd(role);
+			
+			List<ResRoleResource> roleResNodes=dao.GetRoleResourcesByRoleid(roleNodes.get(i).getBUSINESS_ROLE());
+			for (int j = 0; j < roleResNodes.size(); j++) {
+				ResRoleResource resRole=new ResRoleResource();
+				resRole.setRESOURCE_ID(roleResNodes.get(j).getRESOURCE_ID());
+				resRole.setBUSINESS_ROLE(roleResNodes.get(j).getBUSINESS_ROLE());
+				resRole.setRestype(roleResNodes.get(j).getRestype());
+				resRole.setDELETE_STATUS(ResRoleResource.DELSTATUSYES);
+				resRole.setDATA_VERSION(roleResNodes.get(j).getDATA_VERSION());
+				resRole.setLATEST_MOD_TIME(timenow);
+				
+				resRole = dao.ResRoleResourceAdd(resRole);
+			}
+		}
+		
+		return role;
+	}
+	
 	public void QueryRoleResource(String id, List<ResFeature> features,
 			List<ResData> datas) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
@@ -197,11 +295,11 @@ public class ResourceManageService {
 		
 		for(int i=0; i<rrs.size(); i++) {
 			if ( rrs.get(i).getRestype() == ResRoleResource.RESTYPEFEATURE ) {
-				ResFeature feature = dao.GetFeatureById( rrs.get(i).getRESOURCE_ID() );
+				ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
 				features.add(feature);
 			}
 			else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
-				ResData data = dao.GetDataById( rrs.get(i).getRESOURCE_ID() );
+				ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
 				datas.add(data);
 			}
 		}

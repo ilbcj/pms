@@ -9,7 +9,7 @@ import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
 
 public interface ResourceDAO {
-
+	ResRoleResource ResRoleResourceAdd(ResRoleResource resRoleResource) throws Exception;
 	ResFeature FeatureAdd(ResFeature feature) throws Exception;
 	void FeatureDel(ResFeature feature) throws Exception;
 	List<ResFeature> GetFeatures(ResFeature criteria, int page, int rows) throws Exception;
@@ -32,8 +32,11 @@ public interface ResourceDAO {
 	void UpdateFeatureRoleResource(String roleId, List<String> featureIds) throws Exception;
 	void UpdateDataRoleResource(String roleId, List<String> dataIds) throws Exception;
 	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
-	ResFeature GetFeatureById(String id) throws Exception;
-	ResData GetDataById(String id) throws Exception;
+	List<ResRole> GetRoleById(int id) throws Exception;
+	ResFeature GetFeatureByResId(String id) throws Exception;
+	List<ResFeature> GetFeatureById(int id) throws Exception;
+	ResData GetDataByResId(String ResId) throws Exception;
+	List<ResData> GetDataById(int id) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
 	

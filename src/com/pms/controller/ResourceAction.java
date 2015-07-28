@@ -365,7 +365,9 @@ public class ResourceAction extends ActionSupport {
 		items = new ArrayList<ResDataListItem>();
 		try {
 			ResData criteria = new ResData();
-			criteria.setRESOURCE_ID(resource_id);
+			criteria.setName(resName);
+			criteria.setRESOURCE_ID(resCode);
+//			criteria.setRESOURCE_ID(resource_id);
 			criteria.setRESOURCE_DESCRIBE(resource_describe);
 			criteria.setRESOURCE_REMARK(resource_remark);
 			total = rms.QueryAllDataItems(resource_status, delete_status, resource_type, 
