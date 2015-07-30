@@ -198,4 +198,18 @@ public class SystemAttrUserAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String DataSyncResRole()
+	{
+		DataSyncService dss = new DataSyncService();
+		try {
+			dss.DownLoadResRole();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 }

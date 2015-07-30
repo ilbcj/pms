@@ -794,7 +794,30 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return;		
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResRoleResource> GetAllResRoles() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRoleResource> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE ";
 
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResRoleResource> GetRoleResourcesByRoleid(String id)

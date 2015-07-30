@@ -1,8 +1,8 @@
 package com.pms.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +20,7 @@ import com.pms.dao.impl.SystemConfigDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.model.Organization;
 import com.pms.model.ResData;
+import com.pms.model.ResRoleResource;
 import com.pms.model.SystemConfig;
 import com.pms.model.User;
 import com.pms.util.FileChooserUtil;
@@ -291,6 +292,7 @@ public class DataSyncService {
 
         Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
         Element FileStructures = childNodes_FileStructure.addElement("DATA");
+        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "B010001").addAttribute("eng", "name").addAttribute("val", "").addAttribute("chn", "姓名");
         FileStructures.addElement("ITEM").addAttribute("key", "J030014").addAttribute("eng", "CERTIFICATE_CODE_MD5").addAttribute("val", "").addAttribute("chn", "身份证哈希值");
@@ -318,6 +320,93 @@ public class DataSyncService {
         CreateIndexXmlAndZip(xmlIndex,rootPath);
 	}
 	
+	public void DownLoadResRole() throws Exception {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+        Date date = timeFormat.parse("1970-01-01 00:00:00");
+        long second = (System.currentTimeMillis() - date.getTime())/1000;
+        String rootPath = System.getProperty("java.io.tmpdir")+"/" + second + "/";
+        File DirFile = new File(rootPath);		
+        if(!DirFile.exists()){
+     	   DirFile.mkdir();
+        }	
+        
+        ResourceDAOImpl dao = new ResourceDAOImpl();
+		List<ResRoleResource> resRole = dao.GetAllResRoles();
+		
+		int num = 0;
+		int n = 5000;
+        int count = resRole.size()/n;
+        if(resRole.size()%n != 0){
+        	count = resRole.size()/n + 1;
+        }
+        
+        for (int j = 1; j <= count; j++) {
+            String str = "id" + "\t" + "RESOURCE_ID" + "\t" + "BUSINESS_ROLE" + "\t"
+            	 + "restype" + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
+            	 + "LATEST_MOD_TIME"  + "\n";
+            for (int i = num; i <resRole.size(); i++)  {
+            	str = str + resRole.get(i).getId() + "\t" + resRole.get(i).getRESOURCE_ID() + "\t" + resRole.get(i).getBUSINESS_ROLE() + "\t"
+            		 + resRole.get(i).getRestype() + "\t" + resRole.get(i).getDELETE_STATUS() + "\t" + resRole.get(i).getDATA_VERSION() + "\t"
+            		 + resRole.get(i).getLATEST_MOD_TIME() + "\n";
+            	num++;
+        		if(num >= n*j){
+                	break;
+                }
+            }
+            String filename = "wa_authority_resource_role_" + j + ".bcp";
+            File file = new File(rootPath + filename);
+            PrintWriter pw = new PrintWriter(file);
+            pw.write(str);  
+            pw.close();
+		}
+        
+        Document domIndex = DocumentHelper.createDocument();//创建IndexXml文件
+        Element root = domIndex.addElement("MESSAGE");//添加根元素
+        Element childNode = root.addElement("DATASET").addAttribute("name", "WA_COMMON_010017").addAttribute("ver", "1.0").addAttribute("rmk", "数据文件索引信息");
+        Element childNodes = childNode.addElement("DATA");
+        
+        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件格式信息");
+        Element FileFormats = childNodes_FileFormat.addElement("DATA");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_SOURCE_0002").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "1").addAttribute("rmk", "数据集编码（表控）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）"); 
+        
+        Element childNodes_DataFile = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010014").addAttribute("rmk", "BCP数据文件信息");
+        for (int j = 1; j <= count; j++) {
+        	
+        	int Record_number = 0;
+        	if(resRole.size() - n * (j - 1) < n){
+        		Record_number = resRole.size() - n * (j - 1);
+            }else{
+            	Record_number = n;
+            }
+        	Element DataFiles = childNodes_DataFile.addElement("DATA");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource_role_" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
+        }   
+
+        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
+        Element FileStructures = childNodes_FileStructure.addElement("DATA");
+        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
+
+        FileStructures.addElement("ITEM").addAttribute("key", "J030006").addAttribute("eng", "RESOURCE_ID").addAttribute("val", "").addAttribute("chn", "资源唯一标识");
+        FileStructures.addElement("ITEM").addAttribute("key", "I010026").addAttribute("eng", "BUSINESS_ROLE").addAttribute("val", "").addAttribute("chn", "角色编码");
+        
+        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "restype").addAttribute("val", "").addAttribute("chn", "");
+        
+        FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
+        FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");
+        FileStructures.addElement("ITEM").addAttribute("key", "I010005").addAttribute("eng", "LATEST_MOD_TIME").addAttribute("val", "").addAttribute("chn", "最新修改时间");
+        
+        String xmlIndex = domIndex.asXML();
+        
+        CreateIndexXmlAndZip(xmlIndex,rootPath);
+	}
+	
 	public void CreateIndexXmlAndZip(String xml,String rootPath) throws Exception {
 	     //xml格式化
         Document doc = DocumentHelper.parseText(xml);       
@@ -326,16 +415,12 @@ public class DataSyncService {
         format.setTrimText(true);
         format.setPadText(true);
         format.setEncoding("UTF-8");
-        StringWriter out = new StringWriter();
-        XMLWriter xmlWriter = new XMLWriter(out, format);   
+        String filenameIndex = "GAB_ZIP_INDEX.xml";
+        FileOutputStream out = new FileOutputStream(rootPath + filenameIndex);
+        XMLWriter xmlWriter = new XMLWriter(out, format);  
         xmlWriter.write(doc);   
         xmlWriter.flush();
-        
-        String filenameIndex = "GAB_ZIP_INDEX.xml";
-        File fileIndex = new File(rootPath + filenameIndex);
-        PrintWriter pwIndex = new PrintWriter(fileIndex);   
-        pwIndex.write(out.toString());
-        pwIndex.close();
+        out.close();
         
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");

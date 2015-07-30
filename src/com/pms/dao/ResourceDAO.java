@@ -31,6 +31,7 @@ public interface ResourceDAO {
 	
 	void UpdateFeatureRoleResource(String roleId, List<String> featureIds) throws Exception;
 	void UpdateDataRoleResource(String roleId, List<String> dataIds) throws Exception;
+	List<ResRoleResource> GetAllResRoles() throws Exception;
 	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
 	List<ResRole> GetRoleById(int id) throws Exception;
 	ResFeature GetFeatureByResId(String id) throws Exception;

@@ -31,7 +31,7 @@
  		</action>
  		 <action name="queryOrgAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryOrgAttrs" >
  			<result name="success" type="json" />
- 		</action> 	
+ 		</action>
 <!--  		<action name="queryUserItems" class="com.pms.controller.UserAction" method="QueryUserItems" > -->
 <!--  			<result name="success" type="json" /> -->
 <!--  		</action> -->
@@ -54,6 +54,9 @@
 			<result name="success" type="json" /> 
   		</action>
   		<action name="dataSyncUser" class="com.pms.controller.SystemAttrUserAction" method="DataSyncUser" > 
+			<result name="success" type="json" /> 
+  		</action>
+  		<action name="dataSyncResRole" class="com.pms.controller.SystemAttrUserAction" method="DataSyncResRole" > 
 			<result name="success" type="json" /> 
   		</action> 
 	</package>	
