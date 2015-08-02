@@ -255,24 +255,24 @@ public class SyncAuthenticateService extends SyncService {
 			itemSetAttribute(item010004, "val", "");
 			itemSetAttribute(item010004, "rmk", "备注");
 			
-			// 1- WA_COMMON_010038
-			Element dataset010038 = null;
-			dataset010038 = new Element("DATASET");
-			message.addContent(dataset010038);
-			dataset010038.setAttribute("name", "WA_COMMON_010038");
-			dataset010038.setAttribute("rmk", "可访问的字段关系，数据级别");
-			
-			Element data010038 = null;
-			data010038 = new Element("DATA");
-			dataset010038.addContent(data010038);
-			
-			Element item010038 = null;
-			item010038 = new Element("ITEM");
-			data010038.addContent(item010038);
-			itemSetAttribute(item010038, "key", "H010034");
-			itemSetAttribute(item010038, "eng", "SENSITIVE_LEVEL");
-			itemSetAttribute(item010038, "chn", "最高敏感级别");
-			itemSetAttribute(item010038, "val", this.getAc().getSensitiveLevel());			
+//			// 1- WA_COMMON_010038
+//			Element dataset010038 = null;
+//			dataset010038 = new Element("DATASET");
+//			message.addContent(dataset010038);
+//			dataset010038.setAttribute("name", "WA_COMMON_010038");
+//			dataset010038.setAttribute("rmk", "可访问的字段关系，数据级别");
+//			
+//			Element data010038 = null;
+//			data010038 = new Element("DATA");
+//			dataset010038.addContent(data010038);
+//			
+//			Element item010038 = null;
+//			item010038 = new Element("ITEM");
+//			data010038.addContent(item010038);
+//			itemSetAttribute(item010038, "key", "H010034");
+//			itemSetAttribute(item010038, "eng", "SENSITIVE_LEVEL");
+//			itemSetAttribute(item010038, "chn", "最高敏感级别");
+//			itemSetAttribute(item010038, "val", this.getAc().getSensitiveLevel());			
 			
 			// 1- WA_COMMON_010034
 			Element dataset010034 = null;
@@ -302,6 +302,25 @@ public class SyncAuthenticateService extends SyncService {
 				itemSetAttribute(itemSTC, "val", currentItem.getVal());
 			}
 			
+			// 2-- WA_COMMON_010034 --> data --> WA_COMMON_010038
+			Element dataset010038 = null;
+			dataset010038 = new Element("DATASET");
+			data010034.addContent(dataset010038);
+			dataset010038.setAttribute("name", "WA_COMMON_010038");
+			dataset010038.setAttribute("rmk", "可访问的字段关系，数据级别");
+			
+			Element data010038 = null;
+			data010038 = new Element("DATA");
+			dataset010038.addContent(data010038);
+			
+			Element item010038 = null;
+			item010038 = new Element("ITEM");
+			data010038.addContent(item010038);
+			itemSetAttribute(item010038, "key", "H010034");
+			itemSetAttribute(item010038, "eng", "SENSITIVE_LEVEL");
+			itemSetAttribute(item010038, "chn", "最高敏感级别");
+			itemSetAttribute(item010038, "val", this.getAc().getSensitiveLevel());			
+	
 			// 2-- WA_COMMON_010034 --> data --> WA_COMMON_010036
 			Element dataset010036 = null;
 			dataset010036 = new Element("DATASET");
@@ -356,26 +375,51 @@ public class SyncAuthenticateService extends SyncService {
 					//conditionParent.addContent(subCondition);
 					subCondition.setAttribute("rel", condition.getRel());
 					
-					for( int k = 0; k < subConditionItems.size(); k++ ) {
-						Item item = subConditionItems.get(k);
+					if("IN".equalsIgnoreCase(condition.getRel())) {
 						Element itemCondition = null;
 						itemCondition = new Element("ITEM");
+						String value = "";
+						for( int k = 0; k < subConditionItems.size(); k++ ) {
+							Item item = subConditionItems.get(k);
+							
+							itemSetAttribute(itemCondition, "key", item.getKey());
+							itemSetAttribute(itemCondition, "eng", item.getEng());
+												
+							if( item.isHasAccessAuth() ) {
+								isLink2Parent = true;
+								hasAuthCondition = true;
+								value += item.getVal() + ","; 
+							}
+						}
 						
-						itemSetAttribute(itemCondition, "key", item.getKey());
-						itemSetAttribute(itemCondition, "eng", item.getEng());
-						itemSetAttribute(itemCondition, "val", item.getVal());
-						
-						if( "H010014".equals(item.getKey()) ) {
-							isLink2Parent = true;
+						if(value.length()>0) {
+							value = value.substring(0, value.length()-1);//delete the last comma
+							itemSetAttribute(itemCondition, "val", value);
 							subCondition.addContent(itemCondition);
 						}
-						else if( item.isHasAccessAuth() ) {
-							isLink2Parent = true;
-							hasAuthCondition = true;
-							subCondition.addContent(itemCondition);
-						}
-						else {
-							//if not time, and don't have authenticated condition, then do nothing
+					}
+					else {
+						for( int k = 0; k < subConditionItems.size(); k++ ) {
+							Item item = subConditionItems.get(k);
+							Element itemCondition = null;
+							itemCondition = new Element("ITEM");
+							
+							itemSetAttribute(itemCondition, "key", item.getKey());
+							itemSetAttribute(itemCondition, "eng", item.getEng());
+							itemSetAttribute(itemCondition, "val", item.getVal());
+							
+							if( "H010014".equals(item.getKey()) ) {
+								isLink2Parent = true;
+								subCondition.addContent(itemCondition);
+							}
+							else if( item.isHasAccessAuth() ) {
+								isLink2Parent = true;
+								hasAuthCondition = true;
+								subCondition.addContent(itemCondition);
+							}
+							else {
+								//if not time, and don't have authenticated condition, then do nothing
+							}
 						}
 					}
 					
@@ -467,30 +511,55 @@ public class SyncAuthenticateService extends SyncService {
 					//conditionParent.addContent(subCondition);
 					subCondition.setAttribute("rel", condition.getRel());
 					
-					for( int k = 0; k < subConditionItems.size(); k++ ) {
-						Item item = subConditionItems.get(k);
+					if("in".equalsIgnoreCase(condition.getRel())) {
 						Element itemCondition = null;
 						itemCondition = new Element("ITEM");
-						
-						itemSetAttribute(itemCondition, "key", item.getKey());
-						itemSetAttribute(itemCondition, "eng", item.getEng());
-						itemSetAttribute(itemCondition, "val", item.getVal());
-						
-						if( "H010014".equals(item.getKey()) ) {
-							if( !hasAuthCondition ) {
+						String value = "";
+						for( int k = 0; k < subConditionItems.size(); k++ ) {
+							Item item = subConditionItems.get(k);
+							
+							itemSetAttribute(itemCondition, "key", item.getKey());
+							itemSetAttribute(itemCondition, "eng", item.getEng());
+							
+							if( !item.isHasAccessAuth() ) {
 								isLink2Parent = true;
-								subCondition.addContent(itemCondition);
+								hasUnauthCondition = true;
+								value += item.getVal() + ",";
 							}
 						}
-						else if( !item.isHasAccessAuth() ) {
-							isLink2Parent = true;
-							hasUnauthCondition = true;
+						
+						if(value.length()>0) {
+							value = value.substring(0, value.length()-1);//delete the last comma
+							itemSetAttribute(itemCondition, "val", value);
 							subCondition.addContent(itemCondition);
 						}
-						else {
-							//if not time, and have authenticated condition, then do nothing
+					}else {
+						for( int k = 0; k < subConditionItems.size(); k++ ) {
+							Item item = subConditionItems.get(k);
+							Element itemCondition = null;
+							itemCondition = new Element("ITEM");
+							
+							itemSetAttribute(itemCondition, "key", item.getKey());
+							itemSetAttribute(itemCondition, "eng", item.getEng());
+							itemSetAttribute(itemCondition, "val", item.getVal());
+							
+							if( "H010014".equals(item.getKey()) ) {
+								if( !hasAuthCondition ) {
+									isLink2Parent = true;
+									subCondition.addContent(itemCondition);
+								}
+							}
+							else if( !item.isHasAccessAuth() ) {
+								isLink2Parent = true;
+								hasUnauthCondition = true;
+								subCondition.addContent(itemCondition);
+							}
+							else {
+								//if not time, and have authenticated condition, then do nothing
+							}
 						}
 					}
+					
 					
 					if ( isLink2Parent ) {
 						if( !hasAuthCondition ) {

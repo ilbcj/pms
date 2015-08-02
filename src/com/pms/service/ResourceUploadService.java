@@ -113,6 +113,8 @@ public class ResourceUploadService {
 	private final String SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID = "字段分类关系编码";
 	private final String SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS = "所属节点编码";
 	
+	
+	private final String SHEET_ROLE_RESOURCE = "关系对照";
 	public void UploadResource(File inData) throws Exception {
 		InputStream in=new FileInputStream(inData);
         Workbook workbook = WorkbookFactory.create(in);
@@ -142,13 +144,15 @@ public class ResourceUploadService {
             	updateColumnRelation(sheet);
             } else if ( SHEET_CLASSIFY_RELATION.equals(sheetName) ) {
             	updateClassifyRelation(sheet);
+            } else if ( SHEET_ROLE_RESOURCE.equals(sheetName) ) {
+            	updateRoleResource(sheet);
             }
         }
         
         in.close();
         
         //update resource;
-        updateResources();
+       // updateResources();
         
         return;
 	}
@@ -678,6 +682,61 @@ public class ResourceUploadService {
 		            rc.setDELETE_STATUS(ResRelationClassify.DELSTATUSNO);
 		            dao.ResRelationClassifySave(rc);
             	}
+            }
+        }
+	}
+	
+	private void updateRoleResource(Sheet sheet) throws Exception {
+		int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数
+		Map<String, Integer> idx = new HashMap<String, Integer>();
+		// TODO implement 
+//		ResRelationClassify rc = null;
+//		ResClassifyRelationDAO dao = new ResClassifyRelationDAOImpl();
+		//遍历每一行  
+        for (int r = 0; r < rowCount; r++) {
+        	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
+        	if( r > 0 ) {
+//        		rc = new ResRelationClassify();
+        	}
+        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	//遍历每一列  
+            for (int c = 0; c < cellCount; c++) {
+            	Cell cell = row.getCell(c);
+            	String cellValue = getCellValue(cell);
+            	System.out.print(cellValue);
+            	System.out.print('\t');
+//            	if(r == 0) {
+//            		if ( SHEET_CLASSIFY_RELATION_COL_ID.equals(cellValue) ) {
+//            			idx.put(SHEET_CLASSIFY_RELATION_COL_ID, c);
+//            		} else if ( SHEET_CLASSIFY_RELATION_COL_DATA_SET.equals(cellValue) ) {
+//            			idx.put(SHEET_CLASSIFY_RELATION_COL_DATA_SET, c);
+//            		} else if ( SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID.equals(cellValue) ) {
+//            			idx.put(SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID, c);
+//            		} else if ( SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS.equals(cellValue) ) {
+//            			idx.put(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS, c);
+//            		}
+//            	} else {
+//            		if( c == idx.get(SHEET_CLASSIFY_RELATION_COL_ID) ) {
+//            			//rr.setId(cellValue);
+//            		} else if ( c == idx.get(SHEET_CLASSIFY_RELATION_COL_DATA_SET) ) {
+//            			rc.setDATA_SET(cellValue);
+//            		} else if ( c== idx.get(SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID) ) {
+//            			rc.setCOLUMN_CLASS_ID(cellValue);
+//            		} else if ( c== idx.get(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS) ) {
+//            			rc.setCLUE_SRC_SYS(cellValue);
+//            		}       		
+//            	}
+            }
+            System.out.println();
+            
+            if( r > 0 ) {
+//            	if( rc.isValid() ) {
+//		            rc.setDELETE_STATUS(ResRelationClassify.DELSTATUSNO);
+//		            dao.ResRelationClassifySave(rc);
+//            	}
             }
         }
 	}
