@@ -597,7 +597,14 @@ $(document).ready(function () {
  		var deptData='([' + dept.substring(0,dept.length-1) + '])';
  		var deptJSON = (new Function('return '+deptData +';'))(); 
  		var titleData='([' + title.substring(0,title.length-1) + '])';
- 		var titleJSON = (new Function('return '+titleData +';'))(); 
+ 		var titleJSON = (new Function('return '+titleData +';'))();
+ 		
+ 		sexJSON.unshift({ "id": "", "text": "请选择" });
+		police_typeJSON.unshift({ "id": "", "text": "请选择" });
+		police_numJSON.unshift({ "id": "", "text": "请选择" });
+		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
+		deptJSON.unshift({ "id": "", "text": "请选择" });
+		titleJSON.unshift({ "id": "", "text": "请选择" });
  		//查询部分
 		$('#user_query_sex').combobox({
 			data : sexJSON,
@@ -629,19 +636,6 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-
-		sexJSON.unshift({ "id": "", "text": "请选择" });
-		police_typeJSON.unshift({ "id": "", "text": "请选择" });
-		police_numJSON.unshift({ "id": "", "text": "请选择" });
-		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
-		deptJSON.unshift({ "id": "", "text": "请选择" });
-		titleJSON.unshift({ "id": "", "text": "请选择" });
-		$("#user_query_sex").combobox('loadData', sexJSON);
-		$("#user_query_police_type").combobox('loadData', police_typeJSON);
-		$("#user_query_police_num").combobox('loadData', police_numJSON);
-		$("#user_query_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
-		$("#user_query_dept").combobox('loadData', deptJSON);
-		$("#user_query_title").combobox('loadData', titleJSON);
 		
 		//添加部分
 		$('#user_sex').combobox({
@@ -674,13 +668,7 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-
-		$("#user_sex").combobox('loadData', sexJSON);
-		$("#user_police_type").combobox('loadData', police_typeJSON);
-		$("#user_police_num").combobox('loadData', police_numJSON);
-		$("#user_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
-		$("#user_dept").combobox('loadData', deptJSON);
-		$("#user_title").combobox('loadData', titleJSON);
+		
 	});	
 });
 </script>	

@@ -6,9 +6,11 @@ import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
+import com.pms.dto.RoleListItem;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
+import com.pms.model.ResRoleOrg;
 import com.pms.service.ResourceManageService;
 import com.pms.service.ResourceUploadService;
 
@@ -33,10 +35,12 @@ public class ResourceAction extends ActionSupport {
 	private ResData data;
 	private List<ResData> datas;
 	private ResRole role;
+	private ResRoleOrg resRoleOrg;
 	private List<ResRole> roles;
 	private List<String> addFeatureIds;
 	private List<String> addDataIds;
 	private List<ResDataListItem> items;
+	private List<RoleListItem> roleItems;
 	
 	private String resource_id;
 	private List<String> resource_status;
@@ -61,6 +65,14 @@ public class ResourceAction extends ActionSupport {
 
 	public void setItems(List<ResDataListItem> items) {
 		this.items = items;
+	}
+
+	public List<RoleListItem> getRoleItems() {
+		return roleItems;
+	}
+
+	public void setRoleItems(List<RoleListItem> roleItems) {
+		this.roleItems = roleItems;
 	}
 
 	public String getResource_id() {
@@ -181,6 +193,14 @@ public class ResourceAction extends ActionSupport {
 
 	public void setRole(ResRole role) {
 		this.role = role;
+	}
+
+	public ResRoleOrg getResRoleOrg() {
+		return resRoleOrg;
+	}
+
+	public void setResRoleOrg(ResRoleOrg resRoleOrg) {
+		this.resRoleOrg = resRoleOrg;
 	}
 
 	public List<ResRole> getRoles() {
@@ -414,13 +434,13 @@ public class ResourceAction extends ActionSupport {
 	public String QueryRoleItems()
 	{
 		ResourceManageService rms = new ResourceManageService();
-		roles = new ArrayList<ResRole>();
+		roleItems = new ArrayList<RoleListItem>();
 		try {
 
 			ResRole criteria = new ResRole();
 			criteria.setBUSINESS_ROLE_NAME(resName);
 			criteria.setBUSINESS_ROLE(resCode);
-			total = rms.QueryAllRoleItems( criteria, page, rows, roles );
+			total = rms.QueryAllRoleItems( criteria, page, rows, roleItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -434,7 +454,7 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		try {
-			role = rms.SaveResourceRole(role, this.addFeatureIds, this.addDataIds);
+			role = rms.SaveResourceRole(role, resRoleOrg, this.addFeatureIds, this.addDataIds);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

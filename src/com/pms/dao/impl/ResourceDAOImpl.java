@@ -13,11 +13,13 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.ResourceDAO;
+import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
+import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 
 
@@ -59,7 +61,43 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return feature;
 	}
-
+	
+	@Override
+	public ResRoleOrg ResRoleOrgAdd(ResRoleOrg resRoleOrg) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			resRoleOrg = (ResRoleOrg) session.merge(resRoleOrg);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名数据资源。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return resRoleOrg;
+	}
+	
 	@Override
 	public void FeatureDel(ResFeature res) throws Exception {
 		Session session = HibernateUtil.currentSession();
@@ -494,9 +532,37 @@ public class ResourceDAOImpl implements ResourceDAO {
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
 				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
-				" WHERE a.DELETE_STATUS=b.code AND b.attrid=c.id and a.id=:id ";
+				" WHERE a.DELETE_STATUS=b.code AND b.attrid=c.id and c.type =:type and a.id=:id ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("type", AttrDefinition.ATTRTYPERESOURCEDATA);
+			q.setInteger("id", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetRolesDictionarys(int id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_ROLE a,attrdict b,attrdef c " +
+				" WHERE a.DELETE_STATUS=b.code and b.attrid=c.id and c.type =:type and a.id=:id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("type", AttrDefinition.ATTRTYPEROLE);
 			q.setInteger("id", id);
 			rs = q.list();
 			tx.commit();
@@ -759,18 +825,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 					Locale.SIMPLIFIED_CHINESE);
 			String timenow = sdf.format(new Date());
-//			List<ResRoleResource> roleResNodes=GetRoleResourcesByRoleid(roleId);
-//			for (int j = 0; j < roleResNodes.size(); j++) {
-//				ResRoleResource resRole=new ResRoleResource();
-//				resRole.setRESOURCE_ID(roleResNodes.get(j).getRESOURCE_ID());
-//				resRole.setBUSINESS_ROLE(roleResNodes.get(j).getBUSINESS_ROLE());
-//				resRole.setRestype(roleResNodes.get(j).getRestype());
-//				resRole.setDELETE_STATUS(ResRoleResource.DELSTATUSYES);
-//				resRole.setDATA_VERSION(roleResNodes.get(j).getDATA_VERSION());
-//				resRole.setLATEST_MOD_TIME(timenow);
-//				
-//				resRole = ResRoleResourceAdd(resRole);
-//			}
+
 			ResRoleResource rr;
 			if( dataIds != null) {
 				for(int i = 0; i<dataIds.size(); i++) {
@@ -944,7 +999,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where id = :id and ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where id = :id";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
@@ -974,6 +1029,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("business_role", roleId);
 			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRoleOrg> GetResRoleOrgByRoleid(String id)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRoleOrg> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_BILATERAL_ROLE_ORG where BUSINESS_ROLE = :BUSINESS_ROLE and DELETE_STATUS =:DELETE_STATUS";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleOrg.class);
+			q.setString("BUSINESS_ROLE", id);
+			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

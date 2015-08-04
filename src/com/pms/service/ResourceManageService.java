@@ -9,10 +9,12 @@ import java.util.Locale;
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dto.ResDataListItem;
+import com.pms.dto.RoleListItem;
 import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
+import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 
 public class ResourceManageService {
@@ -206,21 +208,78 @@ public class ResourceManageService {
 	}
 
 	public int QueryAllRoleItems(ResRole criteria, int page, int rows,
-			List<ResRole> items) throws Exception {
+			List<RoleListItem> items) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResRole> res = dao.GetRoles( criteria, page, rows );
-		items.addAll(res);
+		RoleListItem roleItem = null;
+		for(int i=0; i<res.size(); i++) {
+			roleItem = ConvertRoleToListItem(res.get(i));
+			items.add(roleItem);
+		}
 		int total = QueryAllRolesCount( criteria );
 		return total;
 	}
+	
+	public RoleListItem ConvertRoleToListItem(ResRole resRole) throws Exception {
+		RoleListItem item = new RoleListItem();
+		item.setId(resRole.getId());
+		item.setBUSINESS_ROLE(resRole.getBUSINESS_ROLE());
+		item.setBUSINESS_ROLE_TYPE(resRole.getBUSINESS_ROLE_TYPE());
+		item.setBUSINESS_ROLE_NAME(resRole.getBUSINESS_ROLE_NAME());
+		item.setSYSTEM_TYPE(resRole.getSYSTEM_TYPE());
+		item.setCLUE_SRC_SYS(resRole.getCLUE_SRC_SYS());				
+		item.setROLE_DESC(resRole.getROLE_DESC());
+		item.setDELETE_STATUS(resRole.getDELETE_STATUS());
+		item.setDATA_VERSION(resRole.getDATA_VERSION());	
+		item.setLATEST_MOD_TIME(resRole.getLATEST_MOD_TIME());
+//		item.setCLUE_DST_SYS(attr.getCLUE_DST_SYS());
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResRoleOrg> nodes = dao.GetResRoleOrgByRoleid(resRole.getBUSINESS_ROLE());
+		
+		OrgManageService oms = new OrgManageService();
+		String path = null;
+		for (int i = 0; i < nodes.size(); i++) {
+			
+			path = oms.QueryNodePath(nodes.get(i).getCLUE_DST_SYS());
+			item.setPid(nodes.get(i).getCLUE_DST_SYS());
+		}
+		if(path != null && path.length() > 0){
+			int index = path.lastIndexOf('/');
+			String pname = "";
+			if( -1 == index ) {
+				pname = path;
+			}
+			else {
+				pname = path.substring(path.lastIndexOf('/')+1, path.length());
+			}
+			item.setPname(pname);
+		}
+		
+		List<AttrDictionary> attrDicts = dao.GetRolesDictionarys(resRole.getId());
+		List data = new ArrayList();
+		for(int i = 0; i < attrDicts.size(); i++) {
+			AttrDictionary attrDictionary=new AttrDictionary();
 
+//			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
+			attrDictionary.setValue(attrDicts.get(i).getValue());
+//			attrDictionary.setCode(attrDicts.get(i).getCode());
+//			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			data.add(attrDictionary);
+		}
+		
+		item.setValue(data);
+
+		return item;
+	}
+	
 	private int QueryAllRolesCount(ResRole criteria) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		int count = dao.GetRolesCount( criteria );
 		return count;
 	}
 	
-	public ResRole SaveResourceRole(ResRole role, List<String> featureIds, List<String> dataIds) throws Exception {
+	public ResRole SaveResourceRole(ResRole role, ResRoleOrg resRoleOrg, List<String> featureIds, List<String> dataIds) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
@@ -229,6 +288,18 @@ public class ResourceManageService {
 		role.setLATEST_MOD_TIME(timenow);
 		role.setDATA_VERSION(role.getDATA_VERSION()+1);
 		role = dao.RoleAdd(role);
+		
+		if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
+			List<ResRoleOrg> resRoleOrgNodes=dao.GetResRoleOrgByRoleid(role.getBUSINESS_ROLE());
+			for (int i = 0; i < resRoleOrgNodes.size(); i++) {	
+				resRoleOrg.setId(resRoleOrgNodes.get(i).getId());
+			}
+			resRoleOrg.setBUSINESS_ROLE(role.getBUSINESS_ROLE());
+			resRoleOrg.setCLUE_DST_SYS(resRoleOrg.getCLUE_DST_SYS());
+			resRoleOrg.setDATA_VERSION(resRoleOrg.getDATA_VERSION()+1);
+			resRoleOrg.setLATEST_MOD_TIME(timenow);
+			resRoleOrg = dao.ResRoleOrgAdd(resRoleOrg);
+		}
 		
 		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds);
 		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds);
@@ -282,6 +353,19 @@ public class ResourceManageService {
 				resRole.setLATEST_MOD_TIME(timenow);
 				
 				resRole = dao.ResRoleResourceAdd(resRole);
+			}
+			
+			List<ResRoleOrg> resRoleOrgNodes=dao.GetResRoleOrgByRoleid(roleNodes.get(i).getBUSINESS_ROLE());
+			for (int j = 0; j < resRoleOrgNodes.size(); j++) {
+				ResRoleOrg resRoleOrg=new ResRoleOrg();
+				resRoleOrg.setId(resRoleOrgNodes.get(j).getId());
+				resRoleOrg.setBUSINESS_ROLE(resRoleOrgNodes.get(j).getBUSINESS_ROLE());
+				resRoleOrg.setCLUE_DST_SYS(resRoleOrgNodes.get(j).getCLUE_DST_SYS());
+				resRoleOrg.setDELETE_STATUS(ResRoleOrg.DELSTATUSYES);
+				resRoleOrg.setDATA_VERSION(resRoleOrgNodes.get(j).getDATA_VERSION());
+				resRoleOrg.setLATEST_MOD_TIME(timenow);
+				
+				resRoleOrg = dao.ResRoleOrgAdd(resRoleOrg);
 			}
 		}
 		

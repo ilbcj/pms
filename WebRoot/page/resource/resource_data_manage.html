@@ -409,6 +409,15 @@ $(document).ready(function () {
  		var section_relation_classData='([' + section_relation_class.substring(0,section_relation_class.length-1) + '])';
  		var section_relation_classJSON = (new Function('return '+section_relation_classData +';'))(); 
  		
+ 		resource_statusJSON.unshift({"id":"","text":"请选择","selected":true});
+		delete_statusJSON.unshift({"id":"","text":"请选择","selected":true});
+		resource_typeJSON.unshift({"id":"","text":"请选择","selected":true});
+		dataset_sensitive_levelJSON.unshift({"id":"","text":"请选择","selected":true});
+		data_setJSON.unshift({"id":"","text":"请选择","selected":true});
+		section_classJSON.unshift({"id":"","text":"请选择","selected":true});
+		lementJSON.unshift({"id":"","text":"请选择","selected":true});
+		section_relation_classJSON.unshift({"id":"","text":"请选择","selected":true});
+		
  		//添加部分
 		$('#res_status').combobox({
 			data : resource_statusJSON,
@@ -467,24 +476,7 @@ $(document).ready(function () {
 			panelHeight:'auto'
 			
 		});
-
-		resource_statusJSON.unshift({"id":"","text":"请选择","selected":true});
-		delete_statusJSON.unshift({"id":"","text":"请选择","selected":true});
-		resource_typeJSON.unshift({"id":"","text":"请选择","selected":true});
-		dataset_sensitive_levelJSON.unshift({"id":"","text":"请选择","selected":true});
-		data_setJSON.unshift({"id":"","text":"请选择","selected":true});
-		section_classJSON.unshift({"id":"","text":"请选择","selected":true});
-		lementJSON.unshift({"id":"","text":"请选择","selected":true});
-		section_relation_classJSON.unshift({"id":"","text":"请选择","selected":true});
 		
-		$("#res_status").combobox('loadData', resource_statusJSON);
-		$("#res_delstatus").combobox('loadData', delete_statusJSON);
-		$("#res_type").combobox('loadData', resource_typeJSON);
-		$("#res_dsl").combobox('loadData', dataset_sensitive_levelJSON);
-		$("#res_dataset").combobox('loadData', data_setJSON);
-		$("#res_sectionclass").combobox('loadData', section_classJSON);
-		$("#res_element").combobox('loadData', lementJSON);
-		$("#res_secrelacls").combobox('loadData', section_relation_classJSON);
 	});	
 });
 </script>	
