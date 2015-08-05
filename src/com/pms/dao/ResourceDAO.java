@@ -29,6 +29,7 @@ public interface ResourceDAO {
 	
 	ResRole RoleAdd(ResRole role) throws Exception;
 	void RoleDel(ResRole role) throws Exception;
+	public List<ResRole> GetAllRoles() throws Exception;
 	List<ResRole> GetRoles(ResRole criteria, int page, int rows) throws Exception;
 	int GetRolesCount(ResRole criteria) throws Exception;
 	

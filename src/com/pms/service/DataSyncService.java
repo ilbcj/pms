@@ -20,6 +20,7 @@ import com.pms.dao.impl.SystemConfigDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.model.Organization;
 import com.pms.model.ResData;
+import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
 import com.pms.model.SystemConfig;
 import com.pms.model.User;
@@ -397,6 +398,97 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "I010026").addAttribute("eng", "BUSINESS_ROLE").addAttribute("val", "").addAttribute("chn", "角色编码");
         
         FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "restype").addAttribute("val", "").addAttribute("chn", "");
+        
+        FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
+        FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");
+        FileStructures.addElement("ITEM").addAttribute("key", "I010005").addAttribute("eng", "LATEST_MOD_TIME").addAttribute("val", "").addAttribute("chn", "最新修改时间");
+        
+        String xmlIndex = domIndex.asXML();
+        
+        CreateIndexXmlAndZip(xmlIndex,rootPath);
+	}
+	
+	public void DownLoadRole() throws Exception {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
+        Date date = timeFormat.parse("1970-01-01 00:00:00");
+        long second = (System.currentTimeMillis() - date.getTime())/1000;
+        String rootPath = System.getProperty("java.io.tmpdir")+"/" + second + "/";
+        File DirFile = new File(rootPath);		
+        if(!DirFile.exists()){
+     	   DirFile.mkdir();
+        }	
+        
+        ResourceDAOImpl dao = new ResourceDAOImpl();
+		List<ResRole> role = dao.GetAllRoles();
+		
+		int num = 0;
+		int n = 5000;
+        int count = role.size()/n;
+        if(role.size()%n != 0){
+        	count = role.size()/n + 1;
+        }
+        
+        for (int j = 1; j <= count; j++) {
+            String str = "id" + "\t" + "BUSINESS_ROLE" + "\t" + "BUSINESS_ROLE_TYPE" + "\t"
+            	 + "BUSINESS_ROLE_NAME" + "\t" + "SYSTEM_TYPE" + "\t" + "CLUE_SRC_SYS" + "\t"
+            	 + "ROLE_DESC"  + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
+            	 + "LATEST_MOD_TIME"+ "\n";
+            for (int i = num; i <role.size(); i++)  {
+            	str = str + role.get(i).getId() + "\t" + role.get(i).getBUSINESS_ROLE() + "\t" + role.get(i).getBUSINESS_ROLE_TYPE() + "\t"
+            		 + role.get(i).getBUSINESS_ROLE_NAME() + "\t" + role.get(i).getSYSTEM_TYPE() + "\t" + role.get(i).getCLUE_SRC_SYS() + "\t"
+            		 + role.get(i).getROLE_DESC() + "\t" + role.get(i).getDELETE_STATUS() + "\t" + role.get(i).getDATA_VERSION() + "\t"
+            		 + role.get(i).getLATEST_MOD_TIME() + "\n";
+            	num++;
+        		if(num >= n*j){
+                	break;
+                }
+            }
+            String filename = "wa_authority_role_" + j + ".bcp";
+            File file = new File(rootPath + filename);
+            PrintWriter pw = new PrintWriter(file);
+            pw.write(str);  
+            pw.close();
+		}
+        
+        Document domIndex = DocumentHelper.createDocument();//创建IndexXml文件
+        Element root = domIndex.addElement("MESSAGE");//添加根元素
+        Element childNode = root.addElement("DATASET").addAttribute("name", "WA_COMMON_010017").addAttribute("ver", "1.0").addAttribute("rmk", "数据文件索引信息");
+        Element childNodes = childNode.addElement("DATA");
+        
+        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件格式信息");
+        Element FileFormats = childNodes_FileFormat.addElement("DATA");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_SOURCE_0002").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "1").addAttribute("rmk", "数据集编码（表控）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）"); 
+        
+        Element childNodes_DataFile = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010014").addAttribute("rmk", "BCP数据文件信息");
+        for (int j = 1; j <= count; j++) {
+        	
+        	int Record_number = 0;
+        	if(role.size() - n * (j - 1) < n){
+        		Record_number = role.size() - n * (j - 1);
+            }else{
+            	Record_number = n;
+            }
+        	Element DataFiles = childNodes_DataFile.addElement("DATA");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_role_" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
+        }    
+
+        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
+        Element FileStructures = childNodes_FileStructure.addElement("DATA");
+        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
+
+        FileStructures.addElement("ITEM").addAttribute("key", "I010026").addAttribute("eng", "BUSINESS_ROLE").addAttribute("val", "").addAttribute("chn", "角色编码");
+        FileStructures.addElement("ITEM").addAttribute("key", "I010025").addAttribute("eng", "BUSINESS _ROLE_TYPE").addAttribute("val", "").addAttribute("chn", "角色类型");
+        FileStructures.addElement("ITEM").addAttribute("key", "I010054").addAttribute("eng", "BUSINESS _ROLE_NAME").addAttribute("val", "").addAttribute("chn", "角色名称");
+        FileStructures.addElement("ITEM").addAttribute("key", "B050016").addAttribute("eng", "SYSTEM_TYPE").addAttribute("val", "").addAttribute("chn", "系统类型");
+        
+        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "ROLE_DESC").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
         FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");

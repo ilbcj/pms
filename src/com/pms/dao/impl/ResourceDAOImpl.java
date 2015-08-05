@@ -505,11 +505,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where 1=1 and resource_type =:resource_type ";
 
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
-			
+			q.setInteger("resource_type", ResData.RESTYPEPUBLIC);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -643,7 +643,30 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResRole> GetAllRoles() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRole> rs = null;
+		String sqlString = "SELECT * FROM wa_authority_role WHERE 1=1 AND business_role_type =:business_role_type ";
 
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
+			q.setInteger("business_role_type", ResRole.RESROLETYPEPUBLIC);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResRole> GetRoles(ResRole criteria, int page, int rows)
@@ -855,11 +878,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRoleResource> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE ";
+		String sqlString = "SELECT a.* FROM wa_authority_resource_role a, wa_authority_role b WHERE a.business_role=b.business_role AND b.business_role_type =:business_role_type ";
 
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
-			
+			q.setInteger("business_role_type", ResRole.RESROLETYPEPUBLIC);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

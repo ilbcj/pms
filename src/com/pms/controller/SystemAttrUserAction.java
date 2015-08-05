@@ -231,5 +231,19 @@ public class SystemAttrUserAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
+
+	public String DataSyncRole()
+	{
+		DataSyncService dss = new DataSyncService();
+		try {
+			dss.DownLoadRole();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
 	
 }

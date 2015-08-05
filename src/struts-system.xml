@@ -61,6 +61,9 @@
   		</action>
   		<action name="dataSyncResRole" class="com.pms.controller.SystemAttrUserAction" method="DataSyncResRole" > 
 			<result name="success" type="json" /> 
+  		</action>
+  		<action name="dataSyncRole" class="com.pms.controller.SystemAttrUserAction" method="DataSyncRole" > 
+			<result name="success" type="json" /> 
   		</action> 
 	</package>	
 </struts>    
