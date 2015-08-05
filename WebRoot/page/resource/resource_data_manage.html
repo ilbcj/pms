@@ -246,19 +246,10 @@
 		};
 // 		$("#res_dest").textbox('setValue',rows[0].CLUE_DST_SYS);
 		$("#res_dsl").textbox('setValue',rows[0].DATASET_SENSITIVE_LEVEL);
-		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid==10){//数据集敏感度编码attrid==10
-				$("#res_dsl").textbox('setText',rows[0].value[i].value);	
-			}
-		};
 		$("#res_dataset").textbox('setValue',rows[0].DATA_SET);
 		$("#res_sectionclass").textbox('setValue',rows[0].SECTION_CLASS);
 		$("#res_element").textbox('setValue',rows[0].ELEMENT);
 		$("#res_secrelacls").textbox('setValue',rows[0].SECTION_RELATIOIN_CLASS);
-
-//		for(var i=0;i<rows[0].value.length;i++){
-//			alert(rows[0].value[i].value);
-//		};
 		
 		$("#resource_data_manage_center_main_wapper").panel('close');
    		$("#resource_data_manage_center_detail_wapper").panel('open');
@@ -377,7 +368,7 @@ $(document).ready(function () {
 			resource_type+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[3].dictionary.length;i++){
-			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
+			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].value+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
 			data_set+= "{id:'"+data.items[4].dictionary[i].value+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
