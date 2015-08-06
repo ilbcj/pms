@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>system_resource_data_dictionary.html</title>
+    <title>system_role_dictionary.html</title>
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
@@ -14,12 +14,12 @@
   <body>
 	<div class="easyui-layout" data-options="fit:true,border:false">
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
-			<b>当前位置：<span style="color:blue">数据资源属性字典维护</span></b>
+			<b>当前位置：<span style="color:blue">角色属性字典维护</span></b>
 		</div>
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
-			<div id="attr_dict_resource_data_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
-		    	<div id="attr_dict_resource_data_maintain_center_main" class="easyui-layout" data-options="fit:true" >
-		    		<div id="attr_dict_resource_data_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+			<div id="attr_dict_role_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+		    	<div id="attr_dict_role_maintain_center_main" class="easyui-layout" data-options="fit:true" >
+		    		<div id="attr_dict_role_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 		    			<table class="nodt" style="width:100%">
 			                <tr>
 			                    <td class="query_name_small text_right">名称</td>
@@ -32,10 +32,10 @@
 			                    </td>
 			                </tr>
 			            </table>
-		    		</div><!-- end of attr_dict_resource_data_maintain_center_query -->
+		    		</div><!-- end of attr_dict_role_maintain_center_query -->
 		    		
-		    		<div id="attr_dict_resource_data_maintain_center_list" region="center" data-options="border:false,noheader:true" >
-		    			<table class="nodt" id="attr_dict_resource_data_maintain_center_list_dg"  
+		    		<div id="attr_dict_role_maintain_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="attr_dict_role_maintain_center_list_dg"  
 					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
 					        <thead>
 					            <tr>
@@ -51,17 +51,17 @@
 <!-- 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="">删除</a> -->
 
 					    </div><!-- end of toolbar -->
-		    		</div><!-- end of attr_dict_resource_data_maintain_center_list -->
+		    		</div><!-- end of attr_dict_role_maintain_center_list -->
 		    		
-		    	</div><!-- end of attr_dict_resource_data_maintain_center_main -->
+		    	</div><!-- end of attr_dict_role_maintain_center_main -->
 
-			</div><!-- attr_dict_resource_data_maintain_center_main_wapper -->
+			</div><!-- attr_dict_role_maintain_center_main_wapper -->
 		
-			<div id="attr_dict_resource_data_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
-				<div id="attr_dict_resource_data_maintain_center_detail" class="easyui-panel" 
-								data-options="fit:true,border:false,title:'应用信息',footer:'#attr_dict_resource_data_maintain_center_detail_ft'" >
+			<div id="attr_dict_role_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="attr_dict_role_maintain_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'应用信息',footer:'#attr_dict_role_maintain_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
-<!-- 				    <form id="attr_resource_data_disc_maintain_center_detail_form" method="post"> -->
+<!-- 				    <form id="attr_role_disc_maintain_center_detail_form" method="post"> -->
 				    	<input id="attr_id" type="hidden"/> 
 				        <table class="nodt" style="width:100%">
 				            <tr>
@@ -73,7 +73,7 @@
 				                <td><input id="attr_code" class="form_value_mid easyui-textbox" data-options="prompt:'请输入应用标识'"></input></td>
 				            </tr>
 				        </table>
-				        <table class="nodt" id="attr_dict_resource_data_maintain_center_detail_value_dg" >
+				        <table class="nodt" id="attr_dict_role_maintain_center_detail_value_dg" >
 					    </table>
 					    <div id="valueToolbar" style="background-color:#E7F0FF">
 					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="insert()">添加</a>
@@ -82,12 +82,12 @@
 					    </div><!-- end of toolbar -->
 <!-- 				    </form> -->
 				    
-				</div><!-- end of attr_dict_resource_data_maintain_center_detail -->
-				<div id="attr_dict_resource_data_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+				</div><!-- end of attr_dict_role_maintain_center_detail -->
+				<div id="attr_dict_role_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="attrDictResourceDataValueSave();">保存</a>
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="attrDictResourceDataReturn();">返回</a>
-				</div><!-- end of attr_dict_resource_data_maintain_center_detail_ft -->
-	    	</div><!-- end of attr_dict_resource_data_maintain_center_detail_wapper -->
+				</div><!-- end of attr_dict_role_maintain_center_detail_ft -->
+	    	</div><!-- end of attr_dict_role_maintain_center_detail_wapper -->
 	    	
 		</div><!-- end of content -->
 	</div><!-- end of layout -->
@@ -96,7 +96,7 @@
     	var name = $("#attr_query_name").val();
     	var code = $("#attr_query_code").val();
 
-    	$("#attr_dict_resource_data_maintain_center_list_dg").datagrid('load',{
+    	$("#attr_dict_role_maintain_center_list_dg").datagrid('load',{
     		queryAll: true,
 			attrName: name,
 			attrCode: code
@@ -114,7 +114,7 @@
 	}
 
 	function modAttrDictResourceDataValue() {
-		var rows = $("#attr_dict_resource_data_maintain_center_list_dg").datagrid('getSelections');
+		var rows = $("#attr_dict_role_maintain_center_list_dg").datagrid('getSelections');
 		if(rows.length == 0) {
 			warningTip("提示", '请选择要修改的属性');
 			return false;
@@ -133,17 +133,17 @@
 			dataArray.push(rowdata);
 		}
 
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid({data: dataArray });
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid({data: dataArray });
 			
-		$("#attr_dict_resource_data_maintain_center_main_wapper").panel('close');
-		$("#attr_dict_resource_data_maintain_center_detail_wapper").panel('open');
+		$("#attr_dict_role_maintain_center_main_wapper").panel('close');
+		$("#attr_dict_role_maintain_center_detail_wapper").panel('open');
 	}
 	
 	function attrDictResourceDataReturn() {
-		$("#attr_dict_resource_data_maintain_center_main_wapper").panel('open');
-	   	$("#attr_dict_resource_data_maintain_center_main_wapper").panel('resize');
-	   	$("#attr_dict_resource_data_maintain_center_detail_wapper").panel('close');
-	   	$("#attr_dict_resource_data_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
+		$("#attr_dict_role_maintain_center_main_wapper").panel('open');
+	   	$("#attr_dict_role_maintain_center_main_wapper").panel('resize');
+	   	$("#attr_dict_role_maintain_center_detail_wapper").panel('close');
+	   	$("#attr_dict_role_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
 	   	//refreshDetailPage();
 	}
 	
@@ -156,7 +156,7 @@
 		var attrId = $("#attr_id").val();
     	var poststr = "attrItem.id=" + attrId;
     	
-    	var rows = $("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('getRows');
+    	var rows = $("#attr_dict_role_maintain_center_detail_value_dg").datagrid('getRows');
     	var convertArray = new Array();
     	
     	for(var index=0; index < rows.length; index++) {
@@ -183,7 +183,7 @@
 	
 	//------------------for value edit datagrid-------
 	function updateActions(index){
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('updateRow',{
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('updateRow',{
 			index: index,
 			row:{}
 		});
@@ -193,43 +193,43 @@
 		return parseInt(tr.attr('datagrid-row-index'));
 	}
 	function editrow(target){
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('beginEdit', getRowIndex(target));
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('beginEdit', getRowIndex(target));
 	}
 	function deleterow(target){
 		$.messager.confirm('Confirm','Are you sure?',function(r){
 			if (r){
-				$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('deleteRow', getRowIndex(target));
+				$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('deleteRow', getRowIndex(target));
 			}
 		});
 	}
 	function saverow(target){
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('endEdit', getRowIndex(target));
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('endEdit', getRowIndex(target));
 	}
 	function cancelrow(target){
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('cancelEdit', getRowIndex(target));
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('cancelEdit', getRowIndex(target));
 	}
 
 	function insert(){
-		var row = $("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('getSelected');
+		var row = $("#attr_dict_role_maintain_center_detail_value_dg").datagrid('getSelected');
 		var index = 0;
 		if (row){
-			index = $("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('getRowIndex', row) + 1;
+			index = $("#attr_dict_role_maintain_center_detail_value_dg").datagrid('getRowIndex', row) + 1;
 		} else {
-			var rows = $("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('getRows');
+			var rows = $("#attr_dict_role_maintain_center_detail_value_dg").datagrid('getRows');
 			//alert(rows);
 			index = rows.length;
 		}
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('insertRow', {
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('insertRow', {
 			index: index,
 			row:{}
 		});
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('selectRow',index);
-		$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid('beginEdit',index);
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('selectRow',index);
+		$("#attr_dict_role_maintain_center_detail_value_dg").datagrid('beginEdit',index);
 	}
 $(document).ready(function () { 
 
-	$("#attr_dict_resource_data_maintain_center_list_dg").datagrid({
-		url:'../system/queryResourceDataAttrs.action',
+	$("#attr_dict_role_maintain_center_list_dg").datagrid({
+		url:'../system/queryRoleAttrs.action',
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
@@ -250,7 +250,7 @@ $(document).ready(function () {
 // 					                <th data-options="field:'value', editor:'text'" style="width:80%;">属性可选值</th>
 // 					                <th data-options="field:'value', editor:'text'" style="width:20%;">操作</th>
 					        
-	$("#attr_dict_resource_data_maintain_center_detail_value_dg").datagrid({
+	$("#attr_dict_role_maintain_center_detail_value_dg").datagrid({
 		title:'编辑属性值',
 		iconCls:'icon-edit',
 		nowrap:true,

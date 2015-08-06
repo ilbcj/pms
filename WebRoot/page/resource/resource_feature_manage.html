@@ -206,9 +206,9 @@
 			});
 			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选资源？', function(r){
                 if (r){
-                	var poststr = "delResourceIds=" + rows[0].id;
+                	var poststr = "delIds=" + rows[0].id;
                 	for(var i=1; i<rows.length; i++){
-					    poststr += "&delResourceIds=" + rows[i].id;
+					    poststr += "&delIds=" + rows[i].id;
 					}
 
                     $.getJSON("../resource/deleteResourceFeatures.action", poststr, function(retObj) {

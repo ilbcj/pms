@@ -74,11 +74,32 @@
 								        <div onclick="orgModName();" >修改名码</div>
 								        <div onclick="orgModDetail();" >修改详细</div>
 								    </div>
-
+									<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="importFile()">导入</a>
 							    </div><!-- end of toolbar -->
 				    		</div><!-- end of org_maintain_center_list -->
 				    		
 				    	</div><!-- end of org_maintain_center_main -->
+				    	
+				    	<div id="import_file_win" class="easyui-window" title="导入文件" style="width:70%;height:200px;"
+							data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false">
+						<div id="import_file_win_main" class="easyui-layout" data-options="fit:true">
+							<div class="easyui-panel" data-options="fit:true,border:false" >
+								<form id="import_file_form" method="post" enctype="multipart/form-data">
+									<table class="nodt" style="width:100%">
+							            <tr>
+							                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
+							                <td><input id="fi" name="fi" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择资源文件(50M以内)'"/></td>
+							            </tr>
+							        </table>
+							    </form>
+							    <div class="text_center" style="margin-top:15px;">
+							    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importFileSave()">导入文件</a>
+								</div>
+		
+							</div>
+						</div><!-- end of import_file_win_main -->
+					</div><!-- end of import_file_win -->
+			
 				    </div><!-- end of center -->
 		    	</div>
 		    	<div id="org_mod_name_win" class="easyui-window" title="修改名码" style="width:30%;height:150px;"
@@ -108,6 +129,7 @@
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 				    <form id="org_maintain_center_detail_form" method="post">
 				    <input id="org_data_version" name="orgNode.DATA_VERSION" type="hidden"/>
+				    <input id="org_insertflag" type="hidden"/>
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 机构名称</td>
@@ -250,6 +272,8 @@
        	$("#org_uid").textbox({editable:true});
        	$("#org_pid").textbox('setValue',"");
        	$("#org_level").textbox('setValue',"");
+       	$("#org_insertflag").val("");
+//        	$('#org_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
     }
     
     function openOrgSelectWin(){
@@ -275,7 +299,19 @@
     
     function addOrgSave(){
 		// submit the form
-		$('#org_maintain_center_detail_form').submit();
+		var orgUid = $("#org_uid").val();
+		var poststr = "orgUid=" + orgUid;
+		
+		var flag = $("#org_insertflag").val(); 
+		$.getJSON("../organization/checkUid.action",poststr,function(data){
+            if(data.checkresult == "ok" || flag == "updateDetail"){ 
+                $('#org_maintain_center_detail_form').submit();
+            }else{ 
+                $.messager.alert("提示","该编码已被占用！");
+            } 
+            
+        }); 
+		
     }
 	
 	function delOrg(){
@@ -364,20 +400,51 @@
 	function orgModDetail(){
 		if( orgPreMod() ) {
 			var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
-			$("#org_id").val(rows[0].id);
-			$("#org_data_version").val(rows[0].data_version);
-			$("#org_name").textbox('setValue',rows[0].name);
-			$("#org_uid").textbox('setValue',rows[0].id);
-			$("#org_uid").textbox({editable:false});
-			$("#org_pid").textbox('setValue',rows[0].pid);
-			$("#org_pid").textbox('setText',rows[0].pname);
-			$("#org_level").textbox('setValue',rows[0].orgLevel);
-
-			$("#org_maintain_center_main_wapper").panel('close');
-    		$("#org_maintain_center_detail_wapper").panel('open');
+			if(rows[0].orgParent_org != 0){
+				$("#org_id").val(rows[0].id);
+				$("#org_data_version").val(rows[0].data_version);
+				$("#org_name").textbox('setValue',rows[0].name);
+				$("#org_uid").textbox('setValue',rows[0].id);
+				$("#org_uid").textbox({editable:false});
+				$("#org_pid").textbox('setValue',rows[0].pid);
+				$("#org_pid").textbox('setText',rows[0].pname);
+				$("#org_level").textbox('setValue',rows[0].orgLevel);
+				
+				$("#org_insertflag").val("updateDetail");
+	
+				$("#org_maintain_center_main_wapper").panel('close');
+	    		$("#org_maintain_center_detail_wapper").panel('open');
+    		}else{
+    			$.messager.alert("提示","根节点只可以修改名称!");
+    		}
 		}
 		return;
 	}
+	
+    function importFile(){
+	   	$("#import_file_win").window({title:'文件导入'}).window('open').window('center');
+    }
+    
+    function importFileSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../organization/fileUploadOrg.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传数据资源信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			     $('#user_maintain_center_list_dg').datagrid('reload');
+			}
+		});
+  	}
+  	
 $(document).ready(function () { 
 	$('#org_maintain_tree').tree({
 	    loadFilter: function(data){
@@ -479,6 +546,26 @@ $(document).ready(function () {
 	    }
 	});
 	
+	$.getJSON("../system/queryOrgAttrs.action", function(data) {
+		var org_level="";				//公安组织机构级别
+		
+		for(var i=0;i<data.items[0].dictionary.length;i++){
+			org_level+= "{id:'"+data.items[0].dictionary[i].value+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
+		};
+		
+		var org_levelData='([' + org_level.substring(0,org_level.length-1) + '])';
+		var org_levelJSON = (new Function('return '+org_levelData +';'))();
+		
+		org_levelJSON.unshift({"id":"","text":"请选择","selected":true});
+		
+ 		//添加部分
+		$('#org_level').combobox({
+			data : org_levelJSON,
+			valueField:'id',
+			textField:'text'
+		});
+	});
+		
 });
     </script>
   </body>

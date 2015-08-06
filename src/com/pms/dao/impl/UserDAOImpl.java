@@ -155,7 +155,7 @@ public class UserDAOImpl implements UserDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<User> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT ";
+		String sqlString = "select * from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT and DELETE_STATUS =:DELETE_STATUS";
 		if( criteria != null ) {
 			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 				sqlString += " and NAME like :NAME ";
@@ -231,6 +231,7 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
 				}
 			}
+			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -249,7 +250,7 @@ public class UserDAOImpl implements UserDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT ";
+		String sqlString = "select count(*) from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT and DELETE_STATUS =:DELETE_STATUS";
 		if( criteria != null ) {
 			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 				sqlString += " and NAME like :NAME ";
@@ -325,6 +326,7 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
 				}
 			}
+			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
 			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();
 		} catch (Exception e) {
@@ -368,7 +370,29 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return rs.get(0);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> GetUserById(int id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<User> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE where id = :id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
+			q.setInteger("id", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 //	@SuppressWarnings("unchecked")
 //	@Override
 //	public List<Organization> GetOrgNodeByParentId(int pid) throws Exception {

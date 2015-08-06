@@ -6,9 +6,12 @@ import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
+import com.pms.dto.RoleListItem;
 import com.pms.model.ResData;
+import com.pms.model.ResDataOrg;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
+import com.pms.model.ResRoleOrg;
 import com.pms.service.ResourceManageService;
 import com.pms.service.ResourceUploadService;
 
@@ -31,12 +34,15 @@ public class ResourceAction extends ActionSupport {
 	private List<Integer> delIds;
 	private List<ResFeature> features;
 	private ResData data;
+	private ResDataOrg resDataOrg;
 	private List<ResData> datas;
 	private ResRole role;
+	private ResRoleOrg resRoleOrg;
 	private List<ResRole> roles;
 	private List<String> addFeatureIds;
 	private List<String> addDataIds;
 	private List<ResDataListItem> items;
+	private List<RoleListItem> roleItems;
 	
 	private String resource_id;
 	private List<String> resource_status;
@@ -48,8 +54,8 @@ public class ResourceAction extends ActionSupport {
 	private List<String> dataset_sensitive_level;
 	private List<String> data_set;
 	private List<String> section_class;
-	private List<String> lement;
-	private List<String> section_relation_class;
+	private List<String> element;
+	private List<String> section_relatioin_class;
 	
 	private File fi;
 	private String fiFileName;
@@ -61,6 +67,14 @@ public class ResourceAction extends ActionSupport {
 
 	public void setItems(List<ResDataListItem> items) {
 		this.items = items;
+	}
+
+	public List<RoleListItem> getRoleItems() {
+		return roleItems;
+	}
+
+	public void setRoleItems(List<RoleListItem> roleItems) {
+		this.roleItems = roleItems;
 	}
 
 	public String getResource_id() {
@@ -143,20 +157,20 @@ public class ResourceAction extends ActionSupport {
 		section_class = sectionClass;
 	}
 
-	public List<String> getLement() {
-		return lement;
+	public List<String> getElement() {
+		return element;
 	}
 
-	public void setLement(List<String> lement) {
-		this.lement = lement;
+	public void setElement(List<String> element) {
+		this.element = element;
 	}
 
-	public List<String> getSection_relation_class() {
-		return section_relation_class;
+	public List<String> getSection_relatioin_class() {
+		return section_relatioin_class;
 	}
 
-	public void setSection_relation_class(List<String> sectionRelationClass) {
-		section_relation_class = sectionRelationClass;
+	public void setSection_relatioin_class(List<String> sectionRelatioinClass) {
+		section_relatioin_class = sectionRelatioinClass;
 	}
 
 	public List<String> getAddFeatureIds() {
@@ -183,6 +197,14 @@ public class ResourceAction extends ActionSupport {
 		this.role = role;
 	}
 
+	public ResRoleOrg getResRoleOrg() {
+		return resRoleOrg;
+	}
+
+	public void setResRoleOrg(ResRoleOrg resRoleOrg) {
+		this.resRoleOrg = resRoleOrg;
+	}
+
 	public List<ResRole> getRoles() {
 		return roles;
 	}
@@ -197,6 +219,14 @@ public class ResourceAction extends ActionSupport {
 
 	public void setData(ResData data) {
 		this.data = data;
+	}
+
+	public ResDataOrg getResDataOrg() {
+		return resDataOrg;
+	}
+
+	public void setResDataOrg(ResDataOrg resDataOrg) {
+		this.resDataOrg = resDataOrg;
 	}
 
 	public List<ResData> getDatas() {
@@ -367,7 +397,13 @@ public class ResourceAction extends ActionSupport {
 			ResData criteria = new ResData();
 			criteria.setName(resName);
 			criteria.setRESOURCE_ID(resCode);
-			total = rms.QueryAllDataItems( criteria, page, rows, items );
+//			criteria.setRESOURCE_ID(resource_id);
+			criteria.setRESOURCE_DESCRIBE(resource_describe);
+			criteria.setRESOURCE_REMARK(resource_remark);
+			total = rms.QueryAllDataItems(resource_status, delete_status, resource_type, 
+					dataset_sensitive_level, data_set, section_class, 
+					element,section_relatioin_class, 
+					criteria, page, rows, items );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -381,7 +417,7 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		try {
-			data = rms.SaveResourceData(data);
+			data = rms.SaveResourceData(data, resDataOrg);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -408,13 +444,13 @@ public class ResourceAction extends ActionSupport {
 	public String QueryRoleItems()
 	{
 		ResourceManageService rms = new ResourceManageService();
-		roles = new ArrayList<ResRole>();
+		roleItems = new ArrayList<RoleListItem>();
 		try {
 
 			ResRole criteria = new ResRole();
 			criteria.setBUSINESS_ROLE_NAME(resName);
 			criteria.setBUSINESS_ROLE(resCode);
-			total = rms.QueryAllRoleItems( criteria, page, rows, roles );
+			total = rms.QueryAllRoleItems( criteria, page, rows, roleItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -428,7 +464,7 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		try {
-			role = rms.SaveResourceRole(role, this.addFeatureIds, this.addDataIds);
+			role = rms.SaveResourceRole(role, resRoleOrg, this.addFeatureIds, this.addDataIds);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -467,30 +503,7 @@ public class ResourceAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
-
-	public String QueryRoleResourceTest()
-	{
-		System.out.println(resource_id);		
-		for (int i = 0; i < resource_status.size(); i++) {
-			System.out.println(resource_status.get(i));
-		}
-		for (int i = 0; i < delete_status.size(); i++) {
-			System.out.println(delete_status.get(i));
-		}
-//		ResourceManageService rms = new ResourceManageService();
-//		features = new ArrayList<ResFeature>();
-//		datas = new ArrayList<ResData>();
-		try {
-//			rms.QueryRoleResource( role.getId(), features, datas );		
-		} catch (Exception e) {
-			message = e.getMessage();
-			setResult(false);
-			return SUCCESS;
-		}
-		setResult(true);
-		return SUCCESS;
-	}
-
+	
 	public String FileUpload(){
 		
 		System.out.println("文件的名称："+fiFileName);

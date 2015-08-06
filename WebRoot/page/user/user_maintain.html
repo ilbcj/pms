@@ -92,14 +92,15 @@
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addUser();">添加</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modUser();">修改</a>
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delUser()">删除</a>
-			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm5',iconCls:'icon-edit'" >导出</a>
-								    <div id="mm5" style="width:100px;">
-								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
-								        <div class="menu-sep"></div>
-								        <div onclick="orgModDetail();" >导出所选记录</div>
-								        <div onclick="orgModName();" >导出本页记录</div>
-								        <div onclick="orgModDetail();" >导出全部记录</div>
-								    </div>
+			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="importFile()">导入</a>
+<!-- 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm5',iconCls:'icon-edit'" >导出</a> -->
+<!-- 								    <div id="mm5" style="width:100px;"> -->
+<!-- 								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div> -->
+<!-- 								        <div class="menu-sep"></div> -->
+<!-- 								        <div onclick="orgModDetail();" >导出所选记录</div> -->
+<!-- 								        <div onclick="orgModName();" >导出本页记录</div> -->
+<!-- 								        <div onclick="orgModDetail();" >导出全部记录</div> -->
+<!-- 								    </div> -->
 
 							    </div><!-- end of toolbar -->
 				    		</div><!-- end of user_maintain_center_list -->
@@ -108,6 +109,26 @@
 				    </div><!-- end of center -->
 				</div>
 			</div><!-- user_maintain_center_main_wapper -->
+			
+			<div id="import_file_win" class="easyui-window" title="导入文件" style="width:70%;height:200px;"
+					data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false">
+				<div id="import_file_win_main" class="easyui-layout" data-options="fit:true">
+					<div class="easyui-panel" data-options="fit:true,border:false" >
+						<form id="import_file_form" method="post" enctype="multipart/form-data">
+							<table class="nodt" style="width:100%">
+					            <tr>
+					                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
+					                <td><input id="fi" name="fi" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择资源文件(50M以内)'"/></td>
+					            </tr>
+					        </table>
+					    </form>
+					    <div class="text_center" style="margin-top:15px;">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importFileSave()">导入文件</a>
+						</div>
+
+					</div>
+				</div><!-- end of import_file_win_main -->
+			</div><!-- end of import_file_win -->
 			
 			<div id="user_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
 				<div id="user_maintain_center_detail" class="easyui-panel" 
@@ -385,6 +406,7 @@
 		}
 		return true;
 	}
+	
 	function modUser(){
 		if( userPreMod() ) {
 			var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
@@ -410,6 +432,66 @@
 		return;
 	}
 	
+	function delUser(){
+		var rows = $('#user_maintain_center_list_dg').datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的机构');
+			return;
+		}
+		else {
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录，是否删除？', function(r){
+                if (r){
+                	var poststr = "delNodeIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delNodeIds=" + rows[i].id;
+					}
+					
+                    $.getJSON("../user/deleteUserNode.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$('#user_maintain_tree').tree('reload');
+							$('#user_maintain_center_list_dg').datagrid('reload').datagrid('clearSelections');
+							successTip("删除机构","操作成功");
+						}
+						else
+						{
+							warningTip("提示", '删除机构操作失败：' + retObj.message);
+						}
+					});
+                }
+            });
+		}
+	}
+	
+    function importFile(){
+	   	$("#import_file_win").window({title:'文件导入'}).window('open').window('center');
+    }
+    
+    function importFileSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../user/fileUploadUser.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传数据资源信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			     $('#user_maintain_center_list_dg').datagrid('reload');
+			}
+		});
+  	}
+  		
 $(document).ready(function () { 
 	
 	$('#user_maintain_tree').tree({
@@ -560,7 +642,14 @@ $(document).ready(function () {
  		var deptData='([' + dept.substring(0,dept.length-1) + '])';
  		var deptJSON = (new Function('return '+deptData +';'))(); 
  		var titleData='([' + title.substring(0,title.length-1) + '])';
- 		var titleJSON = (new Function('return '+titleData +';'))(); 
+ 		var titleJSON = (new Function('return '+titleData +';'))();
+ 		
+ 		sexJSON.unshift({ "id": "", "text": "请选择" });
+		police_typeJSON.unshift({ "id": "", "text": "请选择" });
+		police_numJSON.unshift({ "id": "", "text": "请选择" });
+		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
+		deptJSON.unshift({ "id": "", "text": "请选择" });
+		titleJSON.unshift({ "id": "", "text": "请选择" });
  		//查询部分
 		$('#user_query_sex').combobox({
 			data : sexJSON,
@@ -592,19 +681,6 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-
-		sexJSON.unshift({ "id": "", "text": "请选择" });
-		police_typeJSON.unshift({ "id": "", "text": "请选择" });
-		police_numJSON.unshift({ "id": "", "text": "请选择" });
-		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
-		deptJSON.unshift({ "id": "", "text": "请选择" });
-		titleJSON.unshift({ "id": "", "text": "请选择" });
-		$("#user_query_sex").combobox('loadData', sexJSON);
-		$("#user_query_police_type").combobox('loadData', police_typeJSON);
-		$("#user_query_police_num").combobox('loadData', police_numJSON);
-		$("#user_query_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
-		$("#user_query_dept").combobox('loadData', deptJSON);
-		$("#user_query_title").combobox('loadData', titleJSON);
 		
 		//添加部分
 		$('#user_sex').combobox({
@@ -637,13 +713,7 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-
-		$("#user_sex").combobox('loadData', sexJSON);
-		$("#user_police_type").combobox('loadData', police_typeJSON);
-		$("#user_police_num").combobox('loadData', police_numJSON);
-		$("#user_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
-		$("#user_dept").combobox('loadData', deptJSON);
-		$("#user_title").combobox('loadData', titleJSON)
+		
 	});	
 });
 </script>	
