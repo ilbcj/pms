@@ -27,7 +27,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 		rd.setDATA_VERSION(1);
 		
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE is null ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE is null ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("DATA_SET", rd.getDATA_SET());
@@ -104,7 +104,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 		Transaction tx = session.beginTransaction();
 				
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE is null ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE is null ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("DATA_SET", rd.getDATA_SET());
@@ -170,7 +170,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 		rd.setDATA_VERSION(1);
 		
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE =:ELEMENT_VALUE ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE =:ELEMENT_VALUE ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("DATA_SET", rd.getDATA_SET());
@@ -250,7 +250,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 		rd.setDATA_VERSION(1);
 		
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE where DATA_SET = :DATA_SET and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where DATA_SET = :DATA_SET and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("DATA_SET", rd.getDATA_SET());

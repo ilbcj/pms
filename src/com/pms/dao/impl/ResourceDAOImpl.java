@@ -562,6 +562,116 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public ResData GetDataByColumn(String dataSet, String element) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		ResData result = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where data_set =:data_set and element = :element and element_value is null";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("data_set", dataSet);
+			q.setString("element", element);
+			rs = q.list();
+			tx.commit();
+			if(rs.size() == 0) {
+				result = null;
+			}
+			else if(rs.size() == 1) {
+				result = rs.get(0);
+			}
+			else {
+				throw new Exception("字段资源不唯一[dataset:" + dataSet + ", element:" + element + "]");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ResData GetDataByRelationRow(String dataSet, String element, String elemnetValue) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		ResData result = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where data_set =:data_set and element = :element and element_value = :element_value";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("data_set", dataSet);
+			q.setString("element", element);
+			q.setString("element_value", elemnetValue);
+			rs = q.list();
+			tx.commit();
+			if(rs.size() == 0) {
+				result = null;
+			}
+			else if(rs.size() == 1) {
+				result = rs.get(0);
+			}
+			else {
+				throw new Exception("数据集-字段-字段值数据资源不唯一[dataset:" + dataSet + ", element:" + element + ", elementValue:" + elemnetValue + "]");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ResData GetDataByRelationColumn(String dataSet, String sectionClass, String element) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		ResData result = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where data_set =:data_set and element = :element and section_class = :section_class";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("data_set", dataSet);
+			q.setString("element", element);
+			q.setString("section_class", sectionClass);
+			rs = q.list();
+			tx.commit();
+			if(rs.size() == 0) {
+				result = null;
+			}
+			else if(rs.size() == 1) {
+				result = rs.get(0);
+			}
+			else {
+				throw new Exception("字段资源不唯一[dataset:" + dataSet + ", element:" + element + "]");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<AttrDictionary> GetDatasDictionarys(int id) throws Exception
 	{
@@ -626,6 +736,66 @@ public class ResourceDAOImpl implements ResourceDAO {
 			role = (ResRole) session.merge(role);
 			role.setBUSINESS_ROLE(new Integer(role.getId()).toString());
 			role = (ResRole) session.merge(role);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名角色。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return role;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ResRole RoleImport(ResRole role) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		String sqlString = "SELECT * FROM wa_authority_role WHERE business_role =:business_role ";
+		List<ResRole> rs = null;
+		try
+		{
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
+			q.setString("business_role", role.getBUSINESS_ROLE());
+			rs = q.list();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			role.setLATEST_MOD_TIME(timenow);
+			if( rs.size() == 0 ) {
+				role = (ResRole) session.merge(role);
+			}
+			else if ( rs.size() == 1 ) {
+				if(!rs.get(0).getBUSINESS_ROLE_NAME().equals(role.getBUSINESS_ROLE_NAME())
+						|| rs.get(0).getDELETE_STATUS() != ResRole.DELSTATUSNO) {
+					role.setId(rs.get(0).getId());
+					role.setDATA_VERSION(rs.get(0).getDATA_VERSION() + 1);
+					role.setDELETE_STATUS(ResRole.DELSTATUSNO);
+					role = (ResRole) session.merge(role);
+				}
+			}
+			else if ( rs.size() > 1 ) {
+				throw new Exception("存在" + rs.size() + "条记录的角色代码为" + role.getBUSINESS_ROLE() );
+			}
+			
 			tx.commit();
 		}
 		catch(ConstraintViolationException cne){
@@ -793,21 +963,43 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public ResRoleResource ResRoleResourceAdd(ResRoleResource resRoleResource) throws Exception {
-		//打开线程安全的session对象
 		Session session = HibernateUtil.currentSession();
-		//打开事务
 		Transaction tx = session.beginTransaction();
-		try
-		{
-			resRoleResource = (ResRoleResource) session.merge(resRoleResource);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		List<ResRoleResource> rs = null;
+		String sqlString = "SELECT * FROM wa_authority_resource_role WHERE business_role=:business_role AND resource_id =:resource_id ";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
+			q.setString("business_role", resRoleResource.getBUSINESS_ROLE());
+			q.setString("resource_id", resRoleResource.getRESOURCE_ID());
+			rs = q.list();
+
+			resRoleResource.setLATEST_MOD_TIME(timenow);
+			if(rs.size() == 0) {
+				resRoleResource = (ResRoleResource) session.merge(resRoleResource);
+			}
+			else if(rs.size() == 1) {
+				if(rs.get(0).getDELETE_STATUS() != ResRoleResource.DELSTATUSNO) {
+					resRoleResource.setId(rs.get(0).getId());
+					resRoleResource.setDATA_VERSION(rs.get(0).getDATA_VERSION() + 1);
+				}
+			}
+			else {
+				throw new Exception("存在" + rs.size() + "条相同的角色资源对应关系记录[resId:" + resRoleResource.getRESOURCE_ID() + ", roleId:" + resRoleResource.getBUSINESS_ROLE() + "]" );
+			}
 			tx.commit();
 		}
 		catch(ConstraintViolationException cne){
 			tx.rollback();
 			System.out.println(cne.getSQLException().getMessage());
-			throw new Exception("存在重名用户。");
+			throw new Exception("存在重名的角色资源对应关系。");
 		}
 		catch(org.hibernate.exception.SQLGrammarException e)
 		{
@@ -1161,6 +1353,10 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Transaction tx = session.beginTransaction();
 		try
 		{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			rrri.setLATEST_MOD_TIME(timenow);
 			rrri = (ResRoleResourceImport) session.merge(rrri);
 			tx.commit();
 		}
@@ -1227,6 +1423,51 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setString("RESOURCE_ID", id);
 			q.setInteger("DELETE_STATUS", ResDataOrg.DELSTATUSNO);
 			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public int ResRoleResourceImportClear() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs = 0;
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE_IMPORT ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			rs = q.executeUpdate();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public int ClearPublicRoleAndDataResourceRelationship() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs = 0;
+		//SET SQL_SAFE_UPDATES = 0; 
+		String sqlString = "DELETE from WA_AUTHORITY_RESOURCE_ROLE where restype = :restype and BUSINESS_ROLE in (SELECT x.y FROM ( SELECT a.BUSINESS_ROLE as y FROM WA_AUTHORITY_RESOURCE_ROLE a, WA_AUTHORITY_ROLE b where a.BUSINESS_ROLE = b.BUSINESS_ROLE and b.BUSINESS_ROLE_TYPE = 0) x); ";
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
+			rs = q.executeUpdate();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

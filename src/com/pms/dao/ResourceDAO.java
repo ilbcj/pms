@@ -29,8 +29,12 @@ public interface ResourceDAO {
 	int GetDatasCount(ResData criteria) throws Exception;
 	List<AttrDictionary> GetDatasDictionarys(int id) throws Exception;
 	List<AttrDictionary> GetRolesDictionarys(int id) throws Exception;
-	
+	ResData GetDataByColumn(String dataSet, String element) throws Exception;
+	ResData GetDataByRelationRow(String dataSet, String element, String elemnetValue) throws Exception;
+	ResData GetDataByRelationColumn(String dataSet, String sectionClass, String element) throws Exception;
+		
 	ResRole RoleAdd(ResRole role) throws Exception;
+	ResRole RoleImport(ResRole role) throws Exception;
 	void RoleDel(ResRole role) throws Exception;
 	public List<ResRole> GetAllRoles() throws Exception;
 	List<ResRole> GetRoles(ResRole criteria, int page, int rows) throws Exception;
@@ -51,6 +55,8 @@ public interface ResourceDAO {
 	
 	ResRoleResourceImport ResRoleResourceImportAdd(ResRoleResourceImport rrri) throws Exception; 
 	List<ResRoleResourceImport> GetResRoleResourceImport() throws Exception;
+	int ResRoleResourceImportClear() throws Exception;
+	int ClearPublicRoleAndDataResourceRelationship() throws Exception;
 
 	List<ResRoleOrg> GetResRoleOrgByRoleid(String id) throws Exception;
 	List<ResDataOrg> GetResDataOrgByResId(String id) throws Exception;	
