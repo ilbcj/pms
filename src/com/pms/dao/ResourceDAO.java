@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
+import com.pms.model.ResDataOrg;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -13,6 +14,7 @@ public interface ResourceDAO {
 	ResRoleResource ResRoleResourceAdd(ResRoleResource resRoleResource) throws Exception;
 	ResFeature FeatureAdd(ResFeature feature) throws Exception;
 	ResRoleOrg ResRoleOrgAdd(ResRoleOrg resRoleOrg) throws Exception;
+	ResDataOrg ResDataOrgAdd(ResDataOrg resDataOrg) throws Exception;
 	void FeatureDel(ResFeature feature) throws Exception;
 	List<ResFeature> GetFeatures(ResFeature criteria, int page, int rows) throws Exception;
 	int GetFeaturesCount(ResFeature criteria) throws Exception;
@@ -44,5 +46,6 @@ public interface ResourceDAO {
 	List<ResData> GetDataById(int id) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
-	List<ResRoleOrg> GetResRoleOrgByRoleid(String id) throws Exception;	
+	List<ResRoleOrg> GetResRoleOrgByRoleid(String id) throws Exception;
+	List<ResDataOrg> GetResDataOrgByResId(String id) throws Exception;	
 }

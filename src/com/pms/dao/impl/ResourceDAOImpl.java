@@ -17,6 +17,7 @@ import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
+import com.pms.model.ResDataOrg;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -96,6 +97,42 @@ public class ResourceDAOImpl implements ResourceDAO {
 			HibernateUtil.closeSession();
 		}
 		return resRoleOrg;
+	}
+	
+	@Override
+	public ResDataOrg ResDataOrgAdd(ResDataOrg resDataOrg) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			resDataOrg = (ResDataOrg) session.merge(resDataOrg);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名数据资源。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return resDataOrg;
 	}
 	
 	@Override
@@ -1090,4 +1127,31 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return rs;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataOrg> GetResDataOrgByResId(String id)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResDataOrg> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ORG where RESOURCE_ID = :RESOURCE_ID and DELETE_STATUS =:DELETE_STATUS";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataOrg.class);
+			q.setString("RESOURCE_ID", id);
+			q.setInteger("DELETE_STATUS", ResDataOrg.DELSTATUSNO);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 }

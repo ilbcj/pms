@@ -80,7 +80,7 @@
 			            <tr>
 			                <td class="form_name_small text_right"> 目标地市</td>
 			                <td>
-			                	<input id="resOrg_destcity" class="form_value_mid easyui-textbox" data-options="prompt:'请选择目标地市',editable:false"></input>
+			                	<input id="roleOrg_destcity" class="form_value_mid easyui-textbox" data-options="prompt:'请选择目标地市',editable:false"></input>
 			                	<a href="javascript:void(0)" id="openOrgSelectWin_linkbutton" class="easyui-linkbutton" data-options="iconCls:'icon-save',disabled: true" onclick="openOrgSelectWin()">选择</a>
 			                </td>
 			            </tr>
@@ -443,7 +443,7 @@
     	var roleType = $("#role_type").textbox('getValue');
     	poststr += "&role.BUSINESS_ROLE_TYPE=" + encodeURIComponent(roleType);
     	
-    	var roleDestcity = $("#resOrg_destcity").textbox('getValue');
+    	var roleDestcity = $("#roleOrg_destcity").textbox('getValue');
     	poststr += "&resRoleOrg.CLUE_DST_SYS=" + encodeURIComponent(roleDestcity);
     	
     	var roleSystype = $("#role_systype").textbox('getValue');
@@ -496,7 +496,7 @@
      	$("#role_name").textbox('setValue',"");
      	$("#role_code").textbox('setValue',"");
      	$("#role_type").textbox('setValue',"");
-     	$("#resOrg_destcity").textbox('setValue',"");
+     	$("#roleOrg_destcity").textbox('setValue',"");
      	$("#role_systype").textbox('setValue',"");
      	$("#role_srccity").textbox('setValue',"");
      	$("#role_delstatus").textbox('setValue',"");
@@ -528,9 +528,9 @@
 				$("#role_type").textbox('setText',rows[0].value[i].value);
 			}
 		};	
-// 		$("#resOrg_destcity").textbox('setValue',rows[0].CLUE_DST_SYS);
-		$("#resOrg_destcity").textbox('setValue',rows[0].pid);
-		$("#resOrg_destcity").textbox('setText',rows[0].pname);
+// 		$("#roleOrg_destcity").textbox('setValue',rows[0].CLUE_DST_SYS);
+		$("#roleOrg_destcity").textbox('setValue',rows[0].pid);
+		$("#roleOrg_destcity").textbox('setText',rows[0].pname);
 		$("#role_systype").textbox('setValue',rows[0].SYSTEM_TYPE);
 		$("#role_srccity").textbox('setValue',rows[0].CLUE_SRC_SYS);
 		$("#role_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
@@ -842,8 +842,8 @@ $(document).ready(function () {
 	    },
 	    onClick: function(node){
 	    	//alert(node.id);
-			$("#resOrg_destcity").textbox('setValue',node.id);
-			$("#resOrg_destcity").textbox('setText',node.text);
+			$("#roleOrg_destcity").textbox('setValue',node.id);
+			$("#roleOrg_destcity").textbox('setText',node.text);
 			$('#org_query_win').window('close');
 	    }
 	});
@@ -863,8 +863,8 @@ $(document).ready(function () {
 			return res;
 		},
 		onSelect: function(index,row) {
-			$("#resOrg_destcity").textbox('setValue',row.id);
-			$("#resOrg_destcity").textbox('setText',row.name);
+			$("#roleOrg_destcity").textbox('setValue',row.id);
+			$("#roleOrg_destcity").textbox('setText',row.name);
 			$('#org_query_win').window('close');
 		},
 //		onLoadSuccess: function() {alert("success");},
@@ -1021,7 +1021,7 @@ $(document).ready(function () {
 			onChange:function(){  
 		    	var roleType = $("#role_type").combobox("getValue");
 		    	if(roleType != 2){
-		    		$("#resOrg_destcity").textbox({value:""});
+		    		$("#roleOrg_destcity").textbox({value:""});
 					$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
     			}else{
     				$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: false});

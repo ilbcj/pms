@@ -8,6 +8,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.RoleListItem;
 import com.pms.model.ResData;
+import com.pms.model.ResDataOrg;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -33,6 +34,7 @@ public class ResourceAction extends ActionSupport {
 	private List<Integer> delIds;
 	private List<ResFeature> features;
 	private ResData data;
+	private ResDataOrg resDataOrg;
 	private List<ResData> datas;
 	private ResRole role;
 	private ResRoleOrg resRoleOrg;
@@ -217,6 +219,14 @@ public class ResourceAction extends ActionSupport {
 
 	public void setData(ResData data) {
 		this.data = data;
+	}
+
+	public ResDataOrg getResDataOrg() {
+		return resDataOrg;
+	}
+
+	public void setResDataOrg(ResDataOrg resDataOrg) {
+		this.resDataOrg = resDataOrg;
 	}
 
 	public List<ResData> getDatas() {
@@ -407,7 +417,7 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		try {
-			data = rms.SaveResourceData(data);
+			data = rms.SaveResourceData(data, resDataOrg);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

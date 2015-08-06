@@ -12,6 +12,7 @@ import com.pms.dto.ResDataListItem;
 import com.pms.dto.RoleListItem;
 import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
+import com.pms.model.ResDataOrg;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -123,8 +124,29 @@ public class ResourceManageService {
 		item.setELEMENT(attr.getELEMENT());
 		item.setSECTION_RELATIOIN_CLASS(attr.getSECTION_RELATIOIN_CLASS());
 		item.setDATA_VERSION(attr.getDATA_VERSION());
-
+		
 		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResDataOrg> nodes = dao.GetResDataOrgByResId(attr.getRESOURCE_ID());
+		
+		OrgManageService oms = new OrgManageService();
+		String path = null;
+		for (int i = 0; i < nodes.size(); i++) {
+			
+			path = oms.QueryNodePath(nodes.get(i).getCLUE_DST_SYS());
+			item.setPid(nodes.get(i).getCLUE_DST_SYS());
+		}
+		if(path != null && path.length() > 0){
+			int index = path.lastIndexOf('/');
+			String pname = "";
+			if( -1 == index ) {
+				pname = path;
+			}
+			else {
+				pname = path.substring(path.lastIndexOf('/')+1, path.length());
+			}
+			item.setPname(pname);
+		}
+		
 		List<AttrDictionary> attrDicts = dao.GetDatasDictionarys(attr.getId());
 		List data = new ArrayList();
 		for(int i = 0; i < attrDicts.size(); i++) {
@@ -149,7 +171,7 @@ public class ResourceManageService {
 		return count;
 	}
 
-	public ResData SaveResourceData(ResData data) throws Exception {
+	public ResData SaveResourceData(ResData data, ResDataOrg resDataOrg) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
@@ -157,6 +179,18 @@ public class ResourceManageService {
 		data.setLATEST_MOD_TIME(timenow);
 		data.setDATA_VERSION(data.getDATA_VERSION()+1);
 		data = dao.DataAdd(data);
+		
+		if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
+			List<ResDataOrg> resDataOrgNodes=dao.GetResDataOrgByResId(data.getRESOURCE_ID());
+			for (int i = 0; i < resDataOrgNodes.size(); i++) {	
+				resDataOrg.setId(resDataOrgNodes.get(i).getId());
+			}
+			resDataOrg.setRESOURCE_ID(data.getRESOURCE_ID());
+			resDataOrg.setCLUE_DST_SYS(resDataOrg.getCLUE_DST_SYS());
+			resDataOrg.setDATA_VERSION(resDataOrg.getDATA_VERSION()+1);
+			resDataOrg.setLATEST_MOD_TIME(timenow);
+			resDataOrg = dao.ResDataOrgAdd(resDataOrg);
+		}
 		return data;
 	}
 	
@@ -202,6 +236,19 @@ public class ResourceManageService {
 			data.setRESOURCE_REMARK(nodes.get(i).getRESOURCE_REMARK());
 		
 			data = dao.DataAdd(data);
+			
+			List<ResDataOrg> resDataOrgNodes=dao.GetResDataOrgByResId(data.getRESOURCE_ID());
+			for (int j = 0; j < resDataOrgNodes.size(); j++) {
+				ResDataOrg resDataOrg=new ResDataOrg();
+				resDataOrg.setId(resDataOrgNodes.get(j).getId());
+				resDataOrg.setRESOURCE_ID(resDataOrgNodes.get(j).getRESOURCE_ID());
+				resDataOrg.setCLUE_DST_SYS(resDataOrgNodes.get(j).getCLUE_DST_SYS());
+				resDataOrg.setDELETE_STATUS(ResDataOrg.DELSTATUSYES);
+				resDataOrg.setDATA_VERSION(resDataOrgNodes.get(j).getDATA_VERSION());
+				resDataOrg.setLATEST_MOD_TIME(timenow);
+				
+				resDataOrg = dao.ResDataOrgAdd(resDataOrg);
+			}
 		}
 		
 		return data;
