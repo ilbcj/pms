@@ -18,6 +18,12 @@ public class OrgManageService {
 		return QueryChildrenNodes( Organization.ROOTNODEID );
 	}
 	
+	public Organization CheckUid( String uid ) throws Exception
+	{
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		return dao.GetOrgNodeById( uid );
+	}
+	
 	public Organization SaveOrgNode( Organization org ) throws Exception
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
@@ -43,18 +49,27 @@ public class OrgManageService {
 		return total;
 	}
 	
-	public void DeleteOrgNode(Organization target) throws Exception
+	public Organization DeleteOrgNode(Organization target) throws Exception
 	{
-		List<Organization> nodes = new ArrayList<Organization>();
-		getAllChildrenNodesById(target.getGA_DEPARTMENT(), nodes);
-		nodes.add(target);
-		
 		OrganizationDAO dao = new OrganizationDAOImpl();
+		List<Organization> nodes = dao.GetOrgById(target.getGA_DEPARTMENT());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+
 		for(int i = 0; i< nodes.size(); i++) {
-			dao.OrgNodeDel(nodes.get(i));
+			target.setUNIT(nodes.get(i).getUNIT());
+			target.setORG_LEVEL(nodes.get(i).getORG_LEVEL());
+			target.setPARENT_ORG(nodes.get(i).getPARENT_ORG());
+			target.setDELETE_STATUS(Organization.DELSTATUSYES);
+			target.setDATA_VERSION(nodes.get(i).getDATA_VERSION());
+			target.setLATEST_MOD_TIME(timenow);
+			
+			target = dao.OrgNodeAdd(target);
 		}
 		
-		return;
+		return target;
 	}
 	
 	public void DeleteOrgNodes(List<String> nodeIds) throws Exception
@@ -72,23 +87,23 @@ public class OrgManageService {
 		return ;
 	}
 	
-	private void getAllChildrenNodesById(String pid, List<Organization> children) throws Exception
-	{
-		OrganizationDAO dao = new OrganizationDAOImpl();
-		List<Organization> res = dao.GetOrgNodeByParentId( pid );
-		if(res == null || res.size() == 0) {
-			return;
-		}
-		else {
-			children.addAll(res);
-		}
-			
-		for(int i=0; i<res.size(); i++)
-		{
-			getAllChildrenNodesById(res.get(i).getGA_DEPARTMENT(), children);
-		}
-		return;
-	}
+//	private void getAllChildrenNodesById(String pid, List<Organization> children) throws Exception
+//	{
+//		OrganizationDAO dao = new OrganizationDAOImpl();
+//		List<Organization> res = dao.GetOrgNodeByParentId( pid );
+//		if(res == null || res.size() == 0) {
+//			return;
+//		}
+//		else {
+//			children.addAll(res);
+//		}
+//			
+//		for(int i=0; i<res.size(); i++)
+//		{
+//			getAllChildrenNodesById(res.get(i).getGA_DEPARTMENT(), children);
+//		}
+//		return;
+//	}
 
 	public TreeNode ConvertOrgToTreeNode(Organization org) throws Exception {
 		TreeNode node = new TreeNode();
@@ -113,6 +128,7 @@ public class OrgManageService {
 		item.setPid(org.getPARENT_ORG());
 		item.setOrgLevel(org.getORG_LEVEL());
 		item.setData_version(org.getDATA_VERSION());
+		item.setOrgParent_org(org.getPARENT_ORG());
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		Organization parent = dao.GetOrgNodeById(org.getPARENT_ORG());
 		item.setPname(parent == null ? "" : parent.getUNIT());

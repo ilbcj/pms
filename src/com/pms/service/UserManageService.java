@@ -1,10 +1,13 @@
 package com.pms.service;
 
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import sun.misc.BASE64Encoder;
 
 import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.UserDAO;
@@ -52,6 +55,7 @@ public class UserManageService {
 	}
 	
 	public int QueryChildrenUsersCount(String pid, User criteria) throws Exception {
+		criteria.setDELETE_STATUS(User.DELSTATUSNO);
 		UserDAO dao = new UserDAOImpl();
 		int count = dao.GetUsersCountByParentId( pid, criteria );
 		return count;
@@ -99,6 +103,7 @@ public class UserManageService {
 	public int QueryAllUserItems(String pid, User criteria, int page, int rows,
 			List<UserListItem> items) throws Exception {
 		//get all orgs;
+		criteria.setDELETE_STATUS(User.DELSTATUSNO);
 		List<Organization> nodes = new ArrayList<Organization>();
 		OrgManageService oms = new OrgManageService();
 		oms.queryAllChildrenNodesById(pid, null, nodes);
@@ -154,6 +159,7 @@ public class UserManageService {
 
 	public int QueryAllPrivUserItems(String pid, int privStatus, User criteria, int page, int rows,
 			List<PrivUserListItem> items) throws Exception {
+		criteria.setDELETE_STATUS(User.DELSTATUSNO);
 		List<UserListItem> ulItems = new ArrayList<UserListItem>();
 		int total = QueryAllUserItems(pid, criteria, page, rows, ulItems);
 		
@@ -208,11 +214,67 @@ public class UserManageService {
 		return total;
 	}
 	
+	public void DeleteUserNodes(List<Integer> nodeIds) throws Exception
+	{
+		if(nodeIds == null)
+			return;
+		User user;
+		for(int i = 0; i< nodeIds.size(); i++) {
+			user = new User();
+			user.setId(nodeIds.get(i));
+			
+			DeleteUserNode(user);
+		}
+		
+		return ;
+	}
+	public User DeleteUserNode(User user) throws Exception
+	{
+		UserDAO dao = new UserDAOImpl();
+		List<User> nodes = dao.GetUserById(user.getId());
+	
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		for(int i = 0; i< nodes.size(); i++) {
+			user.setNAME(nodes.get(i).getNAME());
+			user.setCERTIFICATE_CODE_MD5(nodes.get(i).getCERTIFICATE_CODE_MD5());
+			user.setCERTIFICATE_CODE_SUFFIX(nodes.get(i).getCERTIFICATE_CODE_SUFFIX());
+			user.setSEXCODE(nodes.get(i).getSEXCODE());
+			user.setGA_DEPARTMENT(nodes.get(i).getGA_DEPARTMENT());
+			user.setUNIT(nodes.get(i).getUNIT());
+			user.setORG_LEVEL(nodes.get(i).getORG_LEVEL());
+			user.setPOLICE_SORT(nodes.get(i).getPOLICE_SORT());
+			user.setPOLICE_NO(nodes.get(i).getPOLICE_NO());
+			user.setSENSITIVE_LEVEL(nodes.get(i).getSENSITIVE_LEVEL());
+			user.setBUSINESS_TYPE(nodes.get(i).getBUSINESS_TYPE());
+			user.setTAKE_OFFICE(nodes.get(i).getTAKE_OFFICE());
+			user.setUSER_STATUS(nodes.get(i).getUSER_STATUS());
+			user.setPosition(nodes.get(i).getPosition());
+			user.setDept(nodes.get(i).getDept());
+			user.setDELETE_STATUS(User.DELSTATUSYES);
+			user.setDATA_VERSION(nodes.get(i).getDATA_VERSION());
+			user.setLATEST_MOD_TIME(timenow);
+			
+			user = dao.UserAdd(user);
+		}
+		
+		return user;
+	}
+	
 	private String generateHash(String idNum) throws Exception {
 		
-		String value = idNum.substring( 0, idNum.length()-6 );
-		
-		return value;
+		MessageDigest digest = MessageDigest.getInstance("MD5");
+
+		if(digest == null)
+		{
+			throw new Exception("generate hash operator fail.");
+		}
+		byte[] hash = digest.digest(idNum.getBytes());
+
+		String result =  new BASE64Encoder().encode(hash);
+		return result;
 	}
 	
 	private String generateSuffix(String idNum) throws Exception {

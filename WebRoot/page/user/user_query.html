@@ -90,14 +90,14 @@
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="userDetail();">查看</a>
-			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm6',iconCls:'icon-edit'" >导出</a>
-								    <div id="mm6" style="width:100px;">
-								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div>
-								        <div class="menu-sep"></div>
-								        <div onclick="orgModDetail();" >导出所选记录</div>
-								        <div onclick="orgModName();" >导出本页记录</div>
-								        <div onclick="orgModDetail();" >导出全部记录</div>
-								    </div>
+<!-- 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm6',iconCls:'icon-edit'" >导出</a> -->
+<!-- 								    <div id="mm6" style="width:100px;"> -->
+<!-- 								        <div data-options="iconCls:'icon-mini-refresh'">Excel</div> -->
+<!-- 								        <div class="menu-sep"></div> -->
+<!-- 								        <div onclick="orgModDetail();" >导出所选记录</div> -->
+<!-- 								        <div onclick="orgModName();" >导出本页记录</div> -->
+<!-- 								        <div onclick="orgModDetail();" >导出全部记录</div> -->
+<!-- 								    </div> -->
 
 							    </div><!-- end of toolbar -->
 				    		</div><!-- end of user_query_center_list -->
@@ -392,6 +392,14 @@ $(document).ready(function () {
  		var deptJSON = (new Function('return '+deptData +';'))(); 
  		var titleData='([' + title.substring(0,title.length-1) + '])';
  		var titleJSON = (new Function('return '+titleData +';'))(); 
+ 		
+ 		sexJSON.unshift({ "id": "", "text": "请选择" });
+		police_typeJSON.unshift({ "id": "", "text": "请选择" });
+		police_numJSON.unshift({ "id": "", "text": "请选择" });
+		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
+		deptJSON.unshift({ "id": "", "text": "请选择" });
+		titleJSON.unshift({ "id": "", "text": "请选择" });
+		
  		//查询部分
 		$('#user_query_sex').combobox({
 			data : sexJSON,
@@ -423,19 +431,7 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-
-		sexJSON.unshift({ "id": "", "text": "请选择" });
-		police_typeJSON.unshift({ "id": "", "text": "请选择" });
-		police_numJSON.unshift({ "id": "", "text": "请选择" });
-		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
-		deptJSON.unshift({ "id": "", "text": "请选择" });
-		titleJSON.unshift({ "id": "", "text": "请选择" });
-		$("#user_query_sex").combobox('loadData', sexJSON);
-		$("#user_query_police_type").combobox('loadData', police_typeJSON);
-		$("#user_query_police_num").combobox('loadData', police_numJSON);
-		$("#user_query_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
-		$("#user_query_dept").combobox('loadData', deptJSON);
-		$("#user_query_title").combobox('loadData', titleJSON);
+		
 	});	
 });
 </script>	

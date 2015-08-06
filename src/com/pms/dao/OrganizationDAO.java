@@ -13,5 +13,6 @@ public interface OrganizationDAO {
 	public List<Organization> GetOrgNodeByParentId(String pid, int page, int rows) throws Exception;
 	public int GetOrgNodeCountByParentId(String pid)throws Exception;
 	List<Organization> GetOrgNodeByParentId(String pid, Organization condition) throws Exception;
-	public Organization GetOrgNodeById(String id) throws Exception;;
+	public Organization GetOrgNodeById(String id) throws Exception;
+	List<Organization> GetOrgById(String id) throws Exception;
 }

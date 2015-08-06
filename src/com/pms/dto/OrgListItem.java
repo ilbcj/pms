@@ -7,6 +7,7 @@ public class OrgListItem {
 	private String pid;
 	private String pname;
 	private String orgLevel;
+	private String orgParent_org;
 	private int data_version;
 	
 	public String getPname() {
@@ -44,6 +45,12 @@ public class OrgListItem {
 	}
 	public void setOrgLevel(String orgLevel) {
 		this.orgLevel = orgLevel;
+	}
+	public String getOrgParent_org() {
+		return orgParent_org;
+	}
+	public void setOrgParent_org(String orgParent_org) {
+		this.orgParent_org = orgParent_org;
 	}
 	public int getData_version() {
 		return data_version;

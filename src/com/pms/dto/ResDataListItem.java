@@ -19,6 +19,8 @@ public class ResDataListItem {
 	private String ELEMENT;
 	private String SECTION_RELATIOIN_CLASS;
 	private int DATA_VERSION;
+	private String pid;
+	private String pname;
 	
 	private List<String> value;
 
@@ -140,6 +142,22 @@ public class ResDataListItem {
 
 	public void setDATA_VERSION(int dATAVERSION) {
 		DATA_VERSION = dATAVERSION;
+	}
+
+	public String getPid() {
+		return pid;
+	}
+
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 
 	public List<String> getValue() {

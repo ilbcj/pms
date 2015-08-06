@@ -220,6 +220,9 @@ public class PrivilegeUserAction extends ActionSupport {
 	{
 		UserManageService ums = new UserManageService();
 		items = new ArrayList<PrivUserListItem>();
+		if( orgId == null || orgId.length() == 0) {
+			orgId = "0";
+		}
 		try {
 			if( queryAll ) {
 				User criteria = new User();

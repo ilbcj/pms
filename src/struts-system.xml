@@ -28,7 +28,13 @@
  		</action>
  		<action name="queryResourceDataAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryResourceDataAttrs" >
  			<result name="success" type="json" />
- 		</action> 		
+ 		</action>
+ 		 <action name="queryOrgAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryOrgAttrs" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryRoleAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryRoleAttrs" >
+ 			<result name="success" type="json" />
+ 		</action> 
 <!--  		<action name="queryUserItems" class="com.pms.controller.UserAction" method="QueryUserItems" > -->
 <!--  			<result name="success" type="json" /> -->
 <!--  		</action> -->
@@ -51,6 +57,12 @@
 			<result name="success" type="json" /> 
   		</action>
   		<action name="dataSyncUser" class="com.pms.controller.SystemAttrUserAction" method="DataSyncUser" > 
+			<result name="success" type="json" /> 
+  		</action>
+  		<action name="dataSyncResRole" class="com.pms.controller.SystemAttrUserAction" method="DataSyncResRole" > 
+			<result name="success" type="json" /> 
+  		</action>
+  		<action name="dataSyncRole" class="com.pms.controller.SystemAttrUserAction" method="DataSyncRole" > 
 			<result name="success" type="json" /> 
   		</action> 
 	</package>	
