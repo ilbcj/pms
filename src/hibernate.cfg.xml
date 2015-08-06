@@ -65,6 +65,7 @@
 	<mapping resource="com/pms/model/ResRelationColumn.hbm.xml" />
 	<mapping resource="com/pms/model/ResRelationClassify.hbm.xml" />
 	<mapping resource="com/pms/model/SystemConfig.hbm.xml" />
+	<mapping resource="com/pms/model/ResRoleResourceImport.hbm.xml" />
 
 </session-factory>
 

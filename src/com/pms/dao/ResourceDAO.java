@@ -7,6 +7,7 @@ import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
+import com.pms.model.ResRoleResourceImport;
 
 public interface ResourceDAO {
 
@@ -35,4 +36,6 @@ public interface ResourceDAO {
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
 	List<ResData> GetColumnDatasByDataSet(String dataSet) throws Exception;
 	
+	ResRoleResourceImport ResRoleResourceImportAdd(ResRoleResourceImport rrri) throws Exception; 
+	List<ResRoleResourceImport> GetResRoleResourceImport() throws Exception;
 }

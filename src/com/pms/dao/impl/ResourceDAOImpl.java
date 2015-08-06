@@ -18,6 +18,7 @@ import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
+import com.pms.model.ResRoleResourceImport;
 
 
 public class ResourceDAOImpl implements ResourceDAO {
@@ -702,6 +703,65 @@ public class ResourceDAOImpl implements ResourceDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("DATA_SET", dataSet);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public ResRoleResourceImport ResRoleResourceImportAdd(
+			ResRoleResourceImport rrri) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			rrri = (ResRoleResourceImport) session.merge(rrri);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名待导入的角色资源对应关系。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rrri;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRoleResourceImport> GetResRoleResourceImport()
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRoleResourceImport> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE_IMPORT ";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResourceImport.class);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

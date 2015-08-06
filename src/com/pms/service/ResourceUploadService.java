@@ -26,6 +26,7 @@ import com.pms.dao.ResDatasetSensitiveDAO;
 import com.pms.dao.ResRowRelationDAO;
 import com.pms.dao.ResValueDAO;
 import com.pms.dao.ResValueSensitiveDAO;
+import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.ResClassifyRelationDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyRelationDAOImpl;
@@ -37,6 +38,7 @@ import com.pms.dao.impl.ResDatasetSensitiveDAOImpl;
 import com.pms.dao.impl.ResRowRelationDAOImpl;
 import com.pms.dao.impl.ResValueDAOImpl;
 import com.pms.dao.impl.ResValueSensitiveDAOImpl;
+import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.model.ResColumn;
 import com.pms.model.ResColumnClassify;
 import com.pms.model.ResData;
@@ -46,6 +48,7 @@ import com.pms.model.ResRelationClassify;
 import com.pms.model.ResRelationColumn;
 import com.pms.model.ResRelationColumnClassify;
 import com.pms.model.ResRelationRow;
+import com.pms.model.ResRoleResourceImport;
 import com.pms.model.ResValue;
 import com.pms.model.ResValueSensitive;
 
@@ -689,7 +692,9 @@ public class ResourceUploadService {
 	private void updateRoleResource(Sheet sheet) throws Exception {
 		int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数
 		Map<String, Integer> idx = new HashMap<String, Integer>();
-		// TODO implement 
+
+		ResRoleResourceImport rrri = null;
+		ResourceDAO dao = new ResourceDAOImpl();
 //		ResRelationClassify rc = null;
 //		ResClassifyRelationDAO dao = new ResClassifyRelationDAOImpl();
 		//遍历每一行  
