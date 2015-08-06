@@ -1,5 +1,6 @@
 package com.pms.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +38,10 @@ public class UserAction extends ActionSupport {
 	private String userTitle;
 	private String userPoliceNum;
 	private List<Integer> delNodeIds;
+	
+	private File fi;
+	private String fiFileName;
+	private String fiContentType;
 	
 	public String getUserName() {
 		return userName;
@@ -206,6 +211,30 @@ public class UserAction extends ActionSupport {
 		this.delNodeIds = delNodeIds;
 	}
 
+	public File getFi() {
+		return fi;
+	}
+
+	public void setFi(File fi) {
+		this.fi = fi;
+	}
+
+	public String getFiFileName() {
+		return fiFileName;
+	}
+
+	public void setFiFileName(String fiFileName) {
+		this.fiFileName = fiFileName;
+	}
+
+	public String getFiContentType() {
+		return fiContentType;
+	}
+
+	public void setFiContentType(String fiContentType) {
+		this.fiContentType = fiContentType;
+	}
+
 	public String SaveUser()
 	{
 		UserManageService ums = new UserManageService();
@@ -266,5 +295,30 @@ public class UserAction extends ActionSupport {
 		}
 		setResult(true);
 		return SUCCESS;
+	}
+	
+	public String FileUploadUser(){
+		
+		System.out.println("文件的名称："+fiFileName);
+		System.out.println("文件的类型："+fiContentType);
+		if(fi.length()==0){
+			System.out.println("上传文件长度为0");
+			setResult(true);
+			return SUCCESS;
+		}
+		
+		try {
+			
+//			ResourceUploadService rus = new ResourceUploadService();
+//			rus.UploadResource(fi);
+		} catch (Exception e) {
+			setResult(false);
+			this.setMessage("导入文件失败。" + e.getMessage());
+			return SUCCESS;
+		}
+
+		setResult(true);
+		return SUCCESS;
+		
 	}
 }

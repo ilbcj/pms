@@ -75,5 +75,14 @@
 <!--			<result type="redirect">jump.action</result>-->
 <!--			<result name="error">/jsp/login/login.jsp?error=-1</result>-->
 <!--		</action>-->
+ 		<action name="fileUploadUser" class="com.pms.controller.UserAction" method="FileUploadUser" >
+ 			<result name="success" type="json" />
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action> 
 	</package>	
 </struts>    
