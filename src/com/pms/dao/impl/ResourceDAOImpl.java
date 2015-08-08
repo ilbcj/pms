@@ -1350,15 +1350,21 @@ public class ResourceDAOImpl implements ResourceDAO {
 	public ResRoleResourceImport ResRoleResourceImportAdd(
 			ResRoleResourceImport rrri) throws Exception {
 		Session session = HibernateUtil.currentSession();
+//		System.out.println("session:" + session);
 		Transaction tx = session.beginTransaction();
+//		System.out.println("tx:" + tx);
 		try
 		{
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 					Locale.SIMPLIFIED_CHINESE);
 			String timenow = sdf.format(new Date());
+//			System.out.println("timenow:" + timenow);
 			rrri.setLATEST_MOD_TIME(timenow);
+//			System.out.println("before merge:" + rrri);
 			rrri = (ResRoleResourceImport) session.merge(rrri);
+//			System.out.println("after merge:" + rrri);
 			tx.commit();
+//			System.out.println("tx commit:" + tx);
 		}
 		catch(ConstraintViolationException cne){
 			tx.rollback();

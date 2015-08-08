@@ -731,6 +731,19 @@ public class ResourceUploadService {
             	Cell cell = row.getCell(c);
             	String cellValue = getCellValue(cell);
 
+//            	if(cellValue.equals("111053000004")) {
+//            		System.out.print(cellValue);
+//            	}
+//            	if(cellValue.equals("111053000006")) {
+//            		System.out.print(cellValue);
+//            	}
+//            	if(cellValue.equals("111053000007")) {
+//            		System.out.print(cellValue);
+//            	}
+//            	if(r == 3585) {
+//            		System.out.println(r);
+//            	}
+            	
             	if(r == 0) {
             		if ( SHEET_ROLE_RESOURCE_ROLE_TYPE.equals(cellValue) ) {
             			idx.put(SHEET_ROLE_RESOURCE_ROLE_TYPE, c);

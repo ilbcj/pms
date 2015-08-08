@@ -61,7 +61,7 @@ public class DataSyncService {
             		 + res.get(i).getDATASET_SENSITIVE_LEVEL() + "\t" + res.get(i).getDATA_SET() + "\t" + res.get(i).getSECTION_CLASS() + "\t"
             		 + res.get(i).getELEMENT() + "\t" + res.get(i).getSECTION_RELATIOIN_CLASS() + "\t" + res.get(i).getOPERATE_SYMBOL() + "\t"
             		 + res.get(i).getELEMENT_VALUE() + "\t" + res.get(i).getDELETE_STATUS() + "\t" + res.get(i).getDATA_VERSION() + "\t"
-            		 + res.get(i).getLATEST_MOD_TIME() + "\t" + res.get(i).getRESOURCE_REMARK() + "\n";
+            		 + getLongTime(res.get(i).getLATEST_MOD_TIME()) + "\t" + res.get(i).getRESOURCE_REMARK() + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
@@ -157,7 +157,7 @@ public class DataSyncService {
             for (int i = num; i < org.size(); i++)  {
             	str = str + org.get(i).getGA_DEPARTMENT() + "\t" + org.get(i).getUNIT() + "\t" + org.get(i).getORG_LEVEL() + "\t"
             		 + org.get(i).getPARENT_ORG() + "\t" + org.get(i).getDELETE_STATUS() + "\t" + org.get(i).getDATA_VERSION() + "\t"
-            		 + org.get(i).getLATEST_MOD_TIME() + "\n";
+            		 + getLongTime(org.get(i).getLATEST_MOD_TIME()) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
@@ -249,7 +249,7 @@ public class DataSyncService {
             		 + user.get(i).getPOLICE_NO() + "\t" + user.get(i).getSENSITIVE_LEVEL() + "\t" + user.get(i).getBUSINESS_TYPE() + "\t"
             		 + user.get(i).getTAKE_OFFICE() + "\t" + user.get(i).getUSER_STATUS() + "\t" + user.get(i).getPosition() + "\t"
             		 + user.get(i).getDept() + "\t" + user.get(i).getDELETE_STATUS() + "\t" + user.get(i).getDATA_VERSION() + "\t"
-            		 + user.get(i).getLATEST_MOD_TIME() + "\n";
+            		 + getLongTime(user.get(i).getLATEST_MOD_TIME()) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
@@ -348,7 +348,7 @@ public class DataSyncService {
             for (int i = num; i <resRole.size(); i++)  {
             	str = str + resRole.get(i).getId() + "\t" + resRole.get(i).getRESOURCE_ID() + "\t" + resRole.get(i).getBUSINESS_ROLE() + "\t"
             		 + resRole.get(i).getRestype() + "\t" + resRole.get(i).getDELETE_STATUS() + "\t" + resRole.get(i).getDATA_VERSION() + "\t"
-            		 + resRole.get(i).getLATEST_MOD_TIME() + "\n";
+            		 + getLongTime(resRole.get(i).getLATEST_MOD_TIME()) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
@@ -437,7 +437,7 @@ public class DataSyncService {
             	str = str + role.get(i).getId() + "\t" + role.get(i).getBUSINESS_ROLE() + "\t" + role.get(i).getBUSINESS_ROLE_TYPE() + "\t"
             		 + role.get(i).getBUSINESS_ROLE_NAME() + "\t" + role.get(i).getSYSTEM_TYPE() + "\t" + role.get(i).getCLUE_SRC_SYS() + "\t"
             		 + role.get(i).getROLE_DESC() + "\t" + role.get(i).getDELETE_STATUS() + "\t" + role.get(i).getDATA_VERSION() + "\t"
-            		 + role.get(i).getLATEST_MOD_TIME() + "\n";
+            		 + getLongTime(role.get(i).getLATEST_MOD_TIME()) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
@@ -570,4 +570,24 @@ public class DataSyncService {
 		return value;
 	}
 	
+	private long getLongTime(String time) {
+		long longtime = 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+        try {
+            // 
+            // The get the date object from the string just called the 
+            // parse method and pass the time string to it. The method 
+            // throws ParseException if the time string is in an 
+            // invalid format. But remember as we don't pass the date 
+            // information this date object will represent the 1st of
+            // january 1970.
+            Date date = sdf.parse(time);        
+            System.out.println("Date and Time: " + date);
+            longtime = date.getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return longtime;
+	}
 }
