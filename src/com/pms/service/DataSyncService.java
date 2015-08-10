@@ -126,8 +126,9 @@ public class DataSyncService {
 
             
         String xmlIndex = domIndex.asXML();
+        String name = "DataRes";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath);
+        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
 	}
 	
 	public void DownLoadOrg() throws Exception {
@@ -211,7 +212,9 @@ public class DataSyncService {
         
         String xmlIndex = domIndex.asXML();
             
-        CreateIndexXmlAndZip(xmlIndex,rootPath);
+        String name = "Org";
+        
+        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
 	}
 
 	public void DownLoadUser() throws Exception {
@@ -317,8 +320,9 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "I010005").addAttribute("eng", "LATEST_MOD_TIME").addAttribute("val", "").addAttribute("chn", "最新修改时间");
         
         String xmlIndex = domIndex.asXML();
+        String name = "User";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath);
+        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
 	}
 	
 	public void DownLoadResRole() throws Exception {
@@ -404,8 +408,9 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "I010005").addAttribute("eng", "LATEST_MOD_TIME").addAttribute("val", "").addAttribute("chn", "最新修改时间");
         
         String xmlIndex = domIndex.asXML();
+        String name = "ResInRole";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath);
+        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
 	}
 	
 	public void DownLoadRole() throws Exception {
@@ -495,11 +500,12 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "I010005").addAttribute("eng", "LATEST_MOD_TIME").addAttribute("val", "").addAttribute("chn", "最新修改时间");
         
         String xmlIndex = domIndex.asXML();
+        String name = "Role";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath);
+        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
 	}
 	
-	public void CreateIndexXmlAndZip(String xml,String rootPath) throws Exception {
+	public void CreateIndexXmlAndZip(String xml,String rootPath,String name) throws Exception {
 	     //xml格式化
         Document doc = DocumentHelper.parseText(xml);       
         OutputFormat format = OutputFormat.createPrettyPrint();
@@ -524,11 +530,13 @@ public class DataSyncService {
         String businessType = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_BUSINESSTYPE, SystemConfigList);//"5416";
         String dataSource = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_DATASOURCE, SystemConfigList);//"010000";
         String sn = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_SN, SystemConfigList);//"00001";
-        sn = String.format("%05d", Integer.parseInt(sn));  
-
-        String zipNnme = businessType + "-" + dataSource + "-All-" + second + "-" + sn + ".zip";
+        sn = String.format("%05d", Integer.parseInt(sn));
+        String exportPath = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_EXPORTPATH, SystemConfigList);
         
-        ZipUtil zs = new  ZipUtil(new FileChooserUtil().fileChooser() + zipNnme);
+        String zipNnme = businessType + "-" + dataSource + "-" + name + "-All-" + second + "-" + sn + ".zip";
+        
+//        ZipUtil zs = new  ZipUtil(new FileChooserUtil().fileChooser() + zipNnme);
+        ZipUtil zs = new  ZipUtil(exportPath +"/"+ zipNnme);
 	    zs.compress(rootPath);
 
 	    UpdateConfig(SystemConfigList);
@@ -538,22 +546,26 @@ public class DataSyncService {
 	public SystemConfig UpdateConfig( List<SystemConfig> scList ) throws Exception
 	{
 	    SystemConfig systemConfig=new SystemConfig();
+	    SystemConfigDAOImpl dao = new SystemConfigDAOImpl();
+	    
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
 	    for (int i = 0; i < scList.size(); i++) {
 	    	systemConfig.setId( scList.get(i).getId() );
 	    	systemConfig.setItem( scList.get(i).getItem() );
-	    	if(scList.get(i).getItem().equals( SystemConfig.SYSTEMCONFIG_ITEM_SN )){		
-	    		systemConfig.setValue( String.valueOf( Integer.parseInt( scList.get(i).getValue() ) + 1 ));
+	    	if( scList.get(i).getItem().equals(SystemConfig.SYSTEMCONFIG_ITEM_SN) ){		
+	    		systemConfig.setValue( String.valueOf( Integer.parseInt( scList.get(i).getValue() ) + 1 ) );
+	    	}else{
+	    		systemConfig.setValue( scList.get(i).getValue() );
 	    	}
 	    	systemConfig.setRmk( scList.get(i).getRmk() );
 	    	systemConfig.setType( scList.get(i).getType() );
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
 			systemConfig.setLATEST_MOD_TIME( timenow );
-		}
-	    
-	    SystemConfigDAOImpl dao = new SystemConfigDAOImpl();
-	    dao.UpdateConfig(systemConfig);
+			
+			systemConfig = dao.UpdateConfig(systemConfig);
+		} 
 	    
 		return systemConfig;
 	}

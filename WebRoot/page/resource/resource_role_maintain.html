@@ -63,7 +63,8 @@
 								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_role_manage_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 					<input id="role_id" type="hidden"/>
-					<input id="role_data_version" type="hidden"/> 
+					<input id="role_data_version" type="hidden"/>
+					<input id="roleOrg_data_version" type="hidden"/>
 			        <table class="nodt" style="width:100%">
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 角色名称</td>
@@ -434,6 +435,9 @@
     	var roleDataVersion = $("#role_data_version").val();
     	poststr += "&role.DATA_VERSION=" + roleDataVersion;
     	
+    	var roleOrgDataVersion = $("#roleOrg_data_version").val();
+    	poststr += "&resRoleOrg.DATA_VERSION=" + roleOrgDataVersion;
+    	
     	var roleName = $("#role_name").textbox('getValue');
     	poststr += "&role.BUSINESS_ROLE_NAME=" + encodeURIComponent(roleName);
     	
@@ -493,6 +497,7 @@
     function refreshDetailPage() {
 		$("#role_id").val("");
 		$("#role_data_version").val("");
+		$("#roleOrg_data_version").val("");
      	$("#role_name").textbox('setValue',"");
      	$("#role_code").textbox('setValue',"");
      	$("#role_type").textbox('setValue',"");
@@ -520,14 +525,17 @@
 		
 		$("#role_id").val(rows[0].id);
 		$("#role_data_version").val(rows[0].DATA_VERSION);
+		$("#roleOrg_data_version").val(rows[0].dest_data_version);
 		$("#role_name").textbox('setValue',rows[0].BUSINESS_ROLE_NAME);
 		$("#role_code").textbox('setValue',rows[0].BUSINESS_ROLE);
 		$("#role_type").textbox('setValue',rows[0].BUSINESS_ROLE_TYPE);
 		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid==16){//角色类型BUSINESS_ROLE_TYPE==16
+			if(rows[0].value[i].attrid == 16 && rows[0].value[i].code == rows[0].BUSINESS_ROLE_TYPE){//角色类型BUSINESS_ROLE_TYPE==16
 				$("#role_type").textbox('setText',rows[0].value[i].value);
 			}
-		};	
+		};
+		$("#role_type").textbox({ disabled: true});
+		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
 // 		$("#roleOrg_destcity").textbox('setValue',rows[0].CLUE_DST_SYS);
 		$("#roleOrg_destcity").textbox('setValue',rows[0].pid);
 		$("#roleOrg_destcity").textbox('setText',rows[0].pname);

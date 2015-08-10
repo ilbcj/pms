@@ -15,6 +15,7 @@ public class RoleListItem {
 	private String LATEST_MOD_TIME;
 	private String pid;
 	private String pname;
+	private int dest_data_version;
 	
 	private List<String> value;
 	
@@ -95,6 +96,12 @@ public class RoleListItem {
 	}
 	public void setValue(List<String> value) {
 		this.value = value;
+	}
+	public int getDest_data_version() {
+		return dest_data_version;
+	}
+	public void setDest_data_version(int dest_data_version) {
+		this.dest_data_version = dest_data_version;
 	}
 	
 }

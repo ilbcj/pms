@@ -680,7 +680,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
 				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
-				" WHERE a.DELETE_STATUS=b.code AND b.attrid=c.id and c.type =:type and a.id=:id ";
+				" WHERE c.type =:type and a.id=:id ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
 			q.setInteger("type", AttrDefinition.ATTRTYPERESOURCEDATA);
@@ -707,7 +707,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
 				" FROM WA_AUTHORITY_ROLE a,attrdict b,attrdef c " +
-				" WHERE a.DELETE_STATUS=b.code and b.attrid=c.id and c.type =:type and a.id=:id ";
+				" WHERE c.type =:type and a.id=:id ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
 			q.setInteger("type", AttrDefinition.ATTRTYPEROLE);
