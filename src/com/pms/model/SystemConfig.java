@@ -10,6 +10,7 @@ public class SystemConfig {
 	public final static String SYSTEMCONFIG_ITEM_BUSINESSTYPE = "sync_businesstype";
 	public final static String SYSTEMCONFIG_ITEM_DATASOURCE = "sync_datasource";
 	public final static String SYSTEMCONFIG_ITEM_SN = "sync_sn";
+	public final static String SYSTEMCONFIG_ITEM_EXPORTPATH = "sync_exportpath";
 	
 	private int id;
 	private String item;

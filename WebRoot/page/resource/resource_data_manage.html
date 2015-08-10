@@ -91,6 +91,7 @@
 				    <form id="resource_data_manage_center_detail_form" method="post">
 				    	<input id="res_id" name="data.id" type="hidden"/>
 				    	<input id="res_data_version" name="data.DATA_VERSION" type="hidden"/>
+				    	<input id="resDataOrg_data_version" name="resDataOrg.DATA_VERSION" type="hidden"/>
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 名称</td>
@@ -257,6 +258,7 @@
     function refreshDetailPage() {
 		$("#res_id").val("");
 		$("#res_data_version").val("");
+		$("#resDataOrg_data_version").val("");
      	$("#res_name").textbox('setValue',"");
      	$("#res_resid").textbox('setValue',"");
      	$("#res_status").textbox('setValue',"");
@@ -285,11 +287,12 @@
 		
 		$("#res_id").val(rows[0].id);
 		$("#res_data_version").val(rows[0].DATA_VERSION);
+		$("#resDataOrg_data_version").val(rows[0].dest_data_version);
 		$("#res_name").textbox('setValue',rows[0].name);
 		$("#res_resid").textbox('setValue',rows[0].RESOURCE_ID);
 		$("#res_status").textbox('setValue',rows[0].RESOURCE_STATUS);
 		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid==7){//资源状态attrid==7
+			if(rows[0].value[i].attrid == 7 && rows[0].value[i].code == rows[0].RESOURCE_STATUS){//资源状态attrid==7
 				$("#res_status").textbox('setText',rows[0].value[i].value);	
 			}
 		};
@@ -297,16 +300,18 @@
 		$("#res_memo").textbox('setValue',rows[0].RESOURCE_REMARK);
 		$("#res_delstatus").textbox('setValue',''+rows[0].DELETE_STATUS);
 		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid==8){//删除状态attrid==8
+			if(rows[0].value[i].attrid == 8 && rows[0].value[i].code == rows[0].DELETE_STATUS){//删除状态attrid==8
 				$("#res_delstatus").textbox('setText',rows[0].value[i].value);	
 			}
 		};
 		$("#res_type").textbox('setValue',rows[0].resource_type);
 		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid==9){//资源类型attrid==9
+			if(rows[0].value[i].attrid == 9 && rows[0].value[i].code == rows[0].resource_type){//资源类型attrid==9
 				$("#res_type").textbox('setText',rows[0].value[i].value);
 			}
 		};
+		$("#res_type").textbox({ disabled: true});
+		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
 // 		$("#resOrg_dest").textbox('setValue',rows[0].CLUE_DST_SYS);
 		$("#resOrg_dest").textbox('setValue',rows[0].pid);
 		$("#resOrg_dest").textbox('setText',rows[0].pname);

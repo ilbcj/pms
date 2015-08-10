@@ -116,7 +116,7 @@ public class ResourceManageService {
 		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
 		item.setRESOURCE_REMARK(attr.getRESOURCE_REMARK());				
 		item.setDELETE_STATUS(attr.getDELETE_STATUS());
-		item.setResource_type(attr.getResource_type());	
+		item.setResource_type(attr.getResource_type());
 //		item.setCLUE_DST_SYS(attr.getCLUE_DST_SYS());
 		item.setDATASET_SENSITIVE_LEVEL(attr.getDATASET_SENSITIVE_LEVEL());	
 		item.setDATA_SET(attr.getDATA_SET());
@@ -134,6 +134,7 @@ public class ResourceManageService {
 			
 			path = oms.QueryNodePath(nodes.get(i).getCLUE_DST_SYS());
 			item.setPid(nodes.get(i).getCLUE_DST_SYS());
+			item.setDest_data_version(nodes.get(i).getDATA_VERSION());
 		}
 		if(path != null && path.length() > 0){
 			int index = path.lastIndexOf('/');
@@ -152,11 +153,11 @@ public class ResourceManageService {
 		for(int i = 0; i < attrDicts.size(); i++) {
 			AttrDictionary attrDictionary=new AttrDictionary();
 
-//			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setId(attrDicts.get(i).getId());
 			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
 			attrDictionary.setValue(attrDicts.get(i).getValue());
-//			attrDictionary.setCode(attrDicts.get(i).getCode());
-//			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			attrDictionary.setCode(attrDicts.get(i).getCode());
+			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
 			data.add(attrDictionary);
 		}
 		
@@ -289,6 +290,7 @@ public class ResourceManageService {
 			
 			path = oms.QueryNodePath(nodes.get(i).getCLUE_DST_SYS());
 			item.setPid(nodes.get(i).getCLUE_DST_SYS());
+			item.setDest_data_version(nodes.get(i).getDATA_VERSION());
 		}
 		if(path != null && path.length() > 0){
 			int index = path.lastIndexOf('/');
@@ -307,11 +309,11 @@ public class ResourceManageService {
 		for(int i = 0; i < attrDicts.size(); i++) {
 			AttrDictionary attrDictionary=new AttrDictionary();
 
-//			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setId(attrDicts.get(i).getId());
 			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
 			attrDictionary.setValue(attrDicts.get(i).getValue());
-//			attrDictionary.setCode(attrDicts.get(i).getCode());
-//			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			attrDictionary.setCode(attrDicts.get(i).getCode());
+			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
 			data.add(attrDictionary);
 		}
 		
