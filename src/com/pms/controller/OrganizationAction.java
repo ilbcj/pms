@@ -9,6 +9,7 @@ import com.pms.dto.OrgListItem;
 import com.pms.dto.TreeNode;
 import com.pms.model.Organization;
 import com.pms.service.OrgManageService;
+import com.pms.service.OrgUploadService;
 
 @SuppressWarnings("serial")
 public class OrganizationAction extends ActionSupport {
@@ -327,9 +328,6 @@ public class OrganizationAction extends ActionSupport {
 		return SUCCESS;
 	}
 	public String FileUploadOrg(){
-		
-		System.out.println("文件的名称："+fiFileName);
-		System.out.println("文件的类型："+fiContentType);
 		if(fi.length()==0){
 			System.out.println("上传文件长度为0");
 			setResult(true);
@@ -337,9 +335,8 @@ public class OrganizationAction extends ActionSupport {
 		}
 		
 		try {
-			
-//			ResourceUploadService rus = new ResourceUploadService();
-//			rus.UploadResource(fi);
+			OrgUploadService ous = new OrgUploadService();
+			ous.UploadOrg(fi);
 		} catch (Exception e) {
 			setResult(false);
 			this.setMessage("导入文件失败。" + e.getMessage());

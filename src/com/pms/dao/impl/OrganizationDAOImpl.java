@@ -1,7 +1,10 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,6 +14,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.OrganizationDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.Organization;
+import com.pms.model.OrganizationImport;
 
 public class OrganizationDAOImpl implements OrganizationDAO {
 
@@ -291,5 +295,121 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			HibernateUtil.closeSession();
 		}
 		return rs;
+	}
+
+	@Override
+	public OrganizationImport OrganizationImportSave(OrganizationImport oi)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			oi = (OrganizationImport) session.merge(oi);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名待导入机构。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return oi;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrganizationImport> GetOrgImports() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<OrganizationImport> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION_IMPORT order by GA_DEPARTMENT";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(OrganizationImport.class);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void OrgImport(OrganizationImport oi) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Organization> rs = null;
+		Organization node = null;
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where GA_DEPARTMENT = :GA_DEPARTMENT ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			q.setString("GA_DEPARTMENT", oi.getGA_DEPARTMENT());
+			rs = q.list();
+			
+			if(rs == null || rs.size() == 0) {
+				node = new Organization();
+			} 
+			else if (rs.size() == 1) {
+				node = rs.get(0);
+				if(oi.getUNIT().equals(node.getUNIT()) && oi.getORG_LEVEL().equals(node.getORG_LEVEL())
+						&& oi.getPARENT_ORG().equals(node.getPARENT_ORG())) {
+					return;
+				}
+			}
+			else {
+				throw new Exception("存在重名[" + oi.getGA_DEPARTMENT() + "]机构。");
+			}
+			
+			node.setUNIT(oi.getUNIT());
+			if(Organization.ROOTNODEID.equals(oi.getGA_DEPARTMENT())) {
+				node.setPARENT_ORG("0");
+			}
+			else {
+				node.setPARENT_ORG(oi.getPARENT_ORG());
+			}
+			node.setORG_LEVEL(oi.getORG_LEVEL());
+			node.setGA_DEPARTMENT(oi.getGA_DEPARTMENT());
+			node.setDATA_VERSION(node.getDATA_VERSION() + 1);
+			node.setDELETE_STATUS(Organization.DELSTATUSNO);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			node.setLATEST_MOD_TIME(timenow);
+			
+			session.merge(node);
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return ;		
 	}
 }

@@ -1,7 +1,10 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -10,7 +13,9 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.UserDAO;
 import com.pms.model.HibernateUtil;
+import com.pms.model.Organization;
 import com.pms.model.User;
+import com.pms.model.UserImport;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -393,6 +398,144 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return rs;
 	}
+	
+	@Override
+	public void UserImportSave(UserImport ui) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			ui = (UserImport) session.merge(ui);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名待导入用户。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return ;
+	}
+
+	@Override
+	public int UserImportClear() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs = 0;
+		String sqlString = "delete from WA_AUTHORITY_POLICE_IMPORT ";
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			rs = q.executeUpdate();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserImport> GetUserImports() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<UserImport> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE_IMPORT ";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(UserImport.class);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public void UserImport(UserImport ui, Organization org) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		User user = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE where CERTIFICATE_CODE_MD5 = :CERTIFICATE_CODE_MD5 ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
+			q.setString("CERTIFICATE_CODE_MD5", ui.getCERTIFICATE_CODE_MD5());
+			user = (User)q.uniqueResult();
+			
+			if(user == null){
+				user = new User();
+			} 
+			
+			if(ui.getCERTIFICATE_CODE_SUFFIX().equals(user.getCERTIFICATE_CODE_SUFFIX())
+					&& ui.getGA_DEPARTMENT().equals(user.getGA_DEPARTMENT())
+					&& org.getUNIT().equals(user.getUNIT())
+					&& org.getORG_LEVEL().equals(user.getORG_LEVEL())
+					&& ui.getNAME().equals(user.getNAME())
+					&& ui.getPOLICE_SORT().equals(user.getPOLICE_SORT())
+					&& ( ui.getSEXCODE().length() > 0 ? ui.getSEXCODE().equals(user.getSEXCODE()) : true )
+					&& ui.getTAKE_OFFICE().equals(user.getTAKE_OFFICE()) ) {
+				return;
+			}
+			
+			
+			user.setUNIT(org.getUNIT());
+			user.setORG_LEVEL(org.getORG_LEVEL());
+			user.setGA_DEPARTMENT(ui.getGA_DEPARTMENT());
+			user.setCERTIFICATE_CODE_SUFFIX(ui.getCERTIFICATE_CODE_SUFFIX());
+			user.setCERTIFICATE_CODE_MD5(ui.getCERTIFICATE_CODE_MD5());
+			user.setNAME(ui.getNAME());
+			user.setPOLICE_SORT(ui.getPOLICE_SORT());
+			user.setTAKE_OFFICE(ui.getTAKE_OFFICE());
+			if(ui.getSEXCODE().length() > 0) {
+				user.setSEXCODE(ui.getSEXCODE());
+			}
+			user.setDATA_VERSION(user.getDATA_VERSION() + 1);
+			user.setDELETE_STATUS(User.DELSTATUSNO);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			user.setLATEST_MOD_TIME(timenow);
+			
+			session.merge(user);
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+	}
+	
 //	@SuppressWarnings("unchecked")
 //	@Override
 //	public List<Organization> GetOrgNodeByParentId(int pid) throws Exception {
