@@ -16,29 +16,38 @@ public class ZipUtil {
     public ZipUtil(String pathName) {  
         zipFile = new File(pathName);  
     } 
-   public void compress(String srcPathName) {    
-        File file = new File(srcPathName);    
-        if (!file.exists())    
-            throw new RuntimeException(srcPathName + "不存在！");    
+   public void compress(String srcPathName) {
+	   if(!srcPathName.endsWith("/")){  
+		   srcPathName+="/";  
+	   }
+	   
+       File file = new File(srcPathName);
+       File[] files = file.listFiles();
+       if (!file.exists())    
+           throw new RuntimeException(srcPathName + "不存在！");         
+        
         try {    
             FileOutputStream fileOutputStream = new FileOutputStream(zipFile);    
             CheckedOutputStream cos = new CheckedOutputStream(fileOutputStream,    
                     new CRC32());    
             ZipOutputStream out = new ZipOutputStream(cos);    
             String basedir = "";    
-            compress(file, out, basedir);    
+            for (int i=0;i<files.length;i++){ 
+            	compress(files[i], out, basedir); 
+            }
             out.close();    
         } catch (Exception e) {    
             throw new RuntimeException(e);    
         }    
     }    
+   
     private void compress(File file, ZipOutputStream out, String basedir) {    
         /* 判断是目录还是文件 */   
         if (file.isDirectory()) {    
-            System.out.println("压缩：" + basedir + file.getName());    
+            System.out.println("压缩目录：" + basedir + file.getName());    
             this.compressDirectory(file, out, basedir);    
         } else {    
-            System.out.println("压缩：" + basedir + file.getName());    
+            System.out.println("压缩文件：" + basedir + file.getName());    
             this.compressFile(file, out, basedir);    
         }    
     } 
