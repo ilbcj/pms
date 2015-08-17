@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.AttrDictItem;
 import com.pms.model.AttrDefinition;
+import com.pms.model.SyncConfig;
 import com.pms.service.AttrDictionaryService;
 import com.pms.service.DataSyncService;
+import com.pms.service.SyncConfigService;
 
 public class SystemAttrUserAction extends ActionSupport {
 
@@ -25,7 +27,11 @@ public class SystemAttrUserAction extends ActionSupport {
 	private AttrDictItem attrItem;
 	private String attrName;
 	private String attrCode;
+	private int syncId;
+	private String syncDest;
 	private ArrayList<AttrDictItem> items;
+	private SyncConfig syncConfig;
+	private ArrayList<SyncConfig> syncConfigs;
 	
 	public AttrDictItem getAttrItem() {
 		return attrItem;
@@ -75,13 +81,37 @@ public class SystemAttrUserAction extends ActionSupport {
 	public void setAttrCode(String attrCode) {
 		this.attrCode = attrCode;
 	}
+	public int getSyncId() {
+		return syncId;
+	}
+	public void setSyncId(int syncId) {
+		this.syncId = syncId;
+	}
+	public String getSyncDest() {
+		return syncDest;
+	}
+	public void setSyncDest(String syncDest) {
+		this.syncDest = syncDest;
+	}
 	public ArrayList<AttrDictItem> getItems() {
 		return items;
 	}
 	public void setItems(ArrayList<AttrDictItem> items) {
 		this.items = items;
 	}
-
+	public SyncConfig getSyncConfig() {
+		return syncConfig;
+	}
+	public void setSyncConfig(SyncConfig syncConfig) {
+		this.syncConfig = syncConfig;
+	}
+	public ArrayList<SyncConfig> getSyncConfigs() {
+		return syncConfigs;
+	}
+	public void setSyncConfigs(ArrayList<SyncConfig> syncConfigs) {
+		this.syncConfigs = syncConfigs;
+	}
+	
 	public String QueryUserAttrs()
 	{
 		AttrDictionaryService ads = new AttrDictionaryService();
@@ -237,6 +267,39 @@ public class SystemAttrUserAction extends ActionSupport {
 		DataSyncService dss = new DataSyncService();
 		try {
 			dss.DownLoadRole();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QuerySyncConfigItems()
+	{
+		SyncConfigService sss = new SyncConfigService();
+		 syncConfigs = new ArrayList<SyncConfig>();
+		try {
+			System.out.println(syncId);
+			SyncConfig criteria = new SyncConfig();
+			criteria.setId(syncId);
+			criteria.setCLUE_DST_SYS(syncDest);
+			total = sss.QueryAllSyncConfigItems( criteria, page, rows, syncConfigs );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String SaveSyncConfigItems()
+	{
+		SyncConfigService sss = new SyncConfigService();
+		try {
+			sss.SaveSyncConfig(syncConfig);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
