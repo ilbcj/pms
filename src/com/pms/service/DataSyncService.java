@@ -49,25 +49,34 @@ public class DataSyncService {
         }
         
         for (int j = 1; j <= count; j++) {
-            String str = "id" + "\t" + "name" + "\t" + "resource_type" + "\t"  + 
+            String str = "resource_type" + "\t"  + 
 	    		"RESOURCE_ID" + "\t" + "RESOURCE_STATUS" + "\t" + "RESOURCE_DESCRIBE" + "\t"  + 
 				"DATASET_SENSITIVE_LEVEL" + "\t" + "DATA_SET" + "\t" + "SECTION_CLASS" + "\t"  + 
 				"ELEMENT" + "\t" + "SECTION_RELATIOIN_CLASS" + "\t" + "OPERATE_SYMBOL" + "\t"  + 
 				"ELEMENT_VALUE" + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"  + 
 				"LATEST_MOD_TIME" + "\t" + "RESOURCE_REMARK" + "\n";
             for (int i = num; i < res.size(); i++)  {
-            	str = str + res.get(i).getId() + "\t" + res.get(i).getName() + "\t" + res.get(i).getResource_type() + "\t"
-        			 + res.get(i).getRESOURCE_ID() + "\t" + res.get(i).getRESOURCE_STATUS() + "\t" + res.get(i).getRESOURCE_DESCRIBE() + "\t"
-            		 + res.get(i).getDATASET_SENSITIVE_LEVEL() + "\t" + res.get(i).getDATA_SET() + "\t" + res.get(i).getSECTION_CLASS() + "\t"
-            		 + res.get(i).getELEMENT() + "\t" + res.get(i).getSECTION_RELATIOIN_CLASS() + "\t" + res.get(i).getOPERATE_SYMBOL() + "\t"
-            		 + res.get(i).getELEMENT_VALUE() + "\t" + res.get(i).getDELETE_STATUS() + "\t" + res.get(i).getDATA_VERSION() + "\t"
-            		 + getLongTime(res.get(i).getLATEST_MOD_TIME()) + "\t" + res.get(i).getRESOURCE_REMARK() + "\n";
+            	str = str + res.get(i).getResource_type() + "\t"
+        			 + nullConvertEmptyStr( res.get(i).getRESOURCE_ID() ) + "\t" 
+        			 + res.get(i).getRESOURCE_STATUS() + "\t" 
+        			 + nullConvertEmptyStr( res.get(i).getRESOURCE_DESCRIBE() ) + "\t"
+            		 + nullConvertEmptyStr( res.get(i).getDATASET_SENSITIVE_LEVEL() ) + "\t" 
+        			 + nullConvertEmptyStr( res.get(i).getDATA_SET() ) + "\t" 
+            		 + nullConvertEmptyStr( res.get(i).getSECTION_CLASS() ) + "\t"
+            		 + nullConvertEmptyStr( res.get(i).getELEMENT() ) + "\t" 
+            		 + nullConvertEmptyStr( res.get(i).getSECTION_RELATIOIN_CLASS() ) + "\t" 
+            		 + nullConvertEmptyStr( res.get(i).getOPERATE_SYMBOL() ) + "\t"
+            		 + nullConvertEmptyStr( res.get(i).getELEMENT_VALUE() ) + "\t" 
+            		 + res.get(i).getDELETE_STATUS() + "\t" 
+            		 + res.get(i).getDATA_VERSION() + "\t"
+            		 + getLongTime(res.get(i).getLATEST_MOD_TIME()) + "\t" 
+            		 + nullConvertEmptyStr( res.get(i).getRESOURCE_REMARK() ) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
                 }
             }
-            String filename = "wa_authority_resource_" + j + ".bcp";
+            String filename = "wa_authority_resource-" + j + ".bcp";
             File file = new File(rootPath + filename);  
             PrintWriter pw = new PrintWriter(file);
             pw.write(str);  
@@ -79,13 +88,13 @@ public class DataSyncService {
         Element childNode = root.addElement("DATASET").addAttribute("name", "WA_COMMON_010017").addAttribute("ver", "1.0").addAttribute("rmk", "数据文件索引信息");
         Element childNodes = childNode.addElement("DATA");
         
-        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件格式信息");
+        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件描述信息");
         Element FileFormats = childNodes_FileFormat.addElement("DATA");
         FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
         FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
-        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_SOURCE_0002").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_RESOURCE").addAttribute("rmk", "数据集代码");
         FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
-        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "1").addAttribute("rmk", "数据集编码（表控）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "2").addAttribute("rmk", "数据起始行，可选项，不填写默认为第１行");
         FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）");
 
         Element childNodes_DataFile = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010014").addAttribute("rmk", "BCP数据文件信息");
@@ -98,15 +107,15 @@ public class DataSyncService {
             	Record_number = n;
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource_" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "").addAttribute("rmk", "文件路径");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource-" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
         
-        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
+        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件数据结构");
         Element FileStructures = childNodes_FileStructure.addElement("DATA");
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "name").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "name").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "J030029").addAttribute("eng", "resource_type").addAttribute("val", "").addAttribute("chn", "资源类型");
         FileStructures.addElement("ITEM").addAttribute("key", "J030006").addAttribute("eng", "RESOURCE_ID").addAttribute("val", "").addAttribute("chn", "资源唯一标识");
@@ -156,15 +165,19 @@ public class DataSyncService {
 	    		"PARENT_ORG" + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"  + 
 				"LATEST_MOD_TIME" + "\n";
             for (int i = num; i < org.size(); i++)  {
-            	str = str + org.get(i).getGA_DEPARTMENT() + "\t" + org.get(i).getUNIT() + "\t" + org.get(i).getORG_LEVEL() + "\t"
-            		 + org.get(i).getPARENT_ORG() + "\t" + org.get(i).getDELETE_STATUS() + "\t" + org.get(i).getDATA_VERSION() + "\t"
-            		 + getLongTime(org.get(i).getLATEST_MOD_TIME()) + "\n";
+            	str = str + nullConvertEmptyStr( org.get(i).getGA_DEPARTMENT() ) + "\t" 
+            			+ nullConvertEmptyStr( org.get(i).getUNIT() ) + "\t" 
+            			+ nullConvertEmptyStr( org.get(i).getORG_LEVEL() ) + "\t"
+            			+ nullConvertEmptyStr( org.get(i).getPARENT_ORG() ) + "\t" 
+            			+ org.get(i).getDELETE_STATUS() + "\t" 
+            			+ org.get(i).getDATA_VERSION() + "\t"
+            			+ getLongTime(org.get(i).getLATEST_MOD_TIME()) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
                 }
             }
-            String filename = "wa_authority_orgnization_" + j + ".bcp";
+            String filename = "wa_authority_orgnization-" + j + ".bcp";
             File file = new File(rootPath + filename); 
             PrintWriter pw = new PrintWriter(file);
             pw.write(str);  
@@ -176,13 +189,13 @@ public class DataSyncService {
         Element childNode = root.addElement("DATASET").addAttribute("name", "WA_COMMON_010017").addAttribute("ver", "1.0").addAttribute("rmk", "数据文件索引信息");
         Element childNodes = childNode.addElement("DATA");
         
-        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件格式信息");
+        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件描述信息");
         Element FileFormats = childNodes_FileFormat.addElement("DATA");
         FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
         FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
-        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_SOURCE_0002").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_ORGNIZATION").addAttribute("rmk", "数据集代码");
         FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
-        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "1").addAttribute("rmk", "数据集编码（表控）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "2").addAttribute("rmk", "数据起始行，可选项，不填写默认为第１行");
         FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）");
 
         Element childNodes_DataFile = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010014").addAttribute("rmk", "BCP数据文件信息");
@@ -195,12 +208,12 @@ public class DataSyncService {
             	Record_number = n;
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_orgnization_" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "").addAttribute("rmk", "文件路径");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_orgnization-" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
 
-        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
+        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件数据结构");
         Element FileStructures = childNodes_FileStructure.addElement("DATA");
         FileStructures.addElement("ITEM").addAttribute("key", "A010001").addAttribute("eng", "GA_DEPARTMENT").addAttribute("chn", "公安组织机构代码");
         FileStructures.addElement("ITEM").addAttribute("key", "E010002").addAttribute("eng", "UNIT").addAttribute("chn", "公安组织机构名称");
@@ -238,27 +251,36 @@ public class DataSyncService {
         }
 
         for (int j = 1; j <= count; j++) {
-            String str = "id" + "\t" + "NAME" + "\t" + "CERTIFICATE_CODE_MD5" + "\t"
+            String str = "NAME" + "\t" + "CERTIFICATE_CODE_MD5" + "\t"
             	 + "CERTIFICATE_CODE_SUFFIX" + "\t" + "SEXCODE" + "\t" + "GA_DEPARTMENT" + "\t"
             	 + "UNIT" + "\t"+ "ORG_LEVEL" + "\t" + "POLICE_SORT" + "\t"
             	 + "POLICE_NO" + "\t" + "SENSITIVE_LEVEL" + "\t" + "BUSINESS_TYPE" + "\t"
-            	 + "TAKE_OFFICE" + "\t" + "USER_STATUS" + "\t" + "position" + "\t"
-            	 + "dept" + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
+            	 + "TAKE_OFFICE" + "\t" + "USER_STATUS" + "\t" 
+            	 + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
             	 + "LATEST_MOD_TIME" + "\t"  + "\n";
             for (int i = num; i <user.size(); i++)  {
-            	str = str + user.get(i).getId() + "\t" + user.get(i).getNAME() + "\t" + user.get(i).getCERTIFICATE_CODE_MD5() + "\t"
-            		 + user.get(i).getCERTIFICATE_CODE_SUFFIX() + "\t" + user.get(i).getSEXCODE() + "\t" + user.get(i).getGA_DEPARTMENT() + "\t"
-            		 + user.get(i).getUNIT() + "\t" + user.get(i).getORG_LEVEL() + "\t" + user.get(i).getPOLICE_SORT() + "\t"
-            		 + user.get(i).getPOLICE_NO() + "\t" + user.get(i).getSENSITIVE_LEVEL() + "\t" + user.get(i).getBUSINESS_TYPE() + "\t"
-            		 + user.get(i).getTAKE_OFFICE() + "\t" + user.get(i).getUSER_STATUS() + "\t" + user.get(i).getPosition() + "\t"
-            		 + user.get(i).getDept() + "\t" + user.get(i).getDELETE_STATUS() + "\t" + user.get(i).getDATA_VERSION() + "\t"
-            		 + getLongTime(user.get(i).getLATEST_MOD_TIME()) + "\n";
+            	str = str + nullConvertEmptyStr( user.get(i).getNAME() ) + "\t" 
+            			+ nullConvertEmptyStr( user.get(i).getCERTIFICATE_CODE_MD5() ) + "\t"
+	            		+ nullConvertEmptyStr( user.get(i).getCERTIFICATE_CODE_SUFFIX() ) + "\t" 
+	            		+ nullConvertEmptyStr( user.get(i).getSEXCODE() ) + "\t" 
+	            		+ nullConvertEmptyStr( user.get(i).getGA_DEPARTMENT() ) + "\t"
+	            		+ nullConvertEmptyStr( user.get(i).getUNIT() ) + "\t" 
+	            		+ nullConvertEmptyStr( user.get(i).getORG_LEVEL() ) + "\t" 
+	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_SORT() ) + "\t"
+	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_NO() ) + "\t" 
+	            		+ nullConvertEmptyStr( user.get(i).getSENSITIVE_LEVEL() ) + "\t" 
+	            		+ nullConvertEmptyStr( user.get(i).getBUSINESS_TYPE() ) + "\t"
+	            		+ nullConvertEmptyStr( user.get(i).getTAKE_OFFICE() ) + "\t" 
+	            		+ user.get(i).getUSER_STATUS() + "\t" 
+	            		+ user.get(i).getDELETE_STATUS() + "\t" 
+	            		+ user.get(i).getDATA_VERSION() + "\t"
+	            		+ getLongTime(user.get(i).getLATEST_MOD_TIME()) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
                 }
             }
-            String filename = "wa_authority_police_" + j + ".bcp";
+            String filename = "wa_authority_police-" + j + ".bcp";
             File file = new File(rootPath + filename);
             PrintWriter pw = new PrintWriter(file);
             pw.write(str);  
@@ -270,13 +292,13 @@ public class DataSyncService {
         Element childNode = root.addElement("DATASET").addAttribute("name", "WA_COMMON_010017").addAttribute("ver", "1.0").addAttribute("rmk", "数据文件索引信息");
         Element childNodes = childNode.addElement("DATA");
         
-        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件格式信息");
+        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件描述信息");
         Element FileFormats = childNodes_FileFormat.addElement("DATA");
         FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
         FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
-        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_SOURCE_0002").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_POLICE").addAttribute("rmk", "数据集代码");
         FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
-        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "1").addAttribute("rmk", "数据集编码（表控）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "2").addAttribute("rmk", "数据起始行，可选项，不填写默认为第１行");
         FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）"); 
         
         Element childNodes_DataFile = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010014").addAttribute("rmk", "BCP数据文件信息");
@@ -289,14 +311,14 @@ public class DataSyncService {
             	Record_number = n;
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_police_" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "").addAttribute("rmk", "文件路径");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_police-" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
 
-        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
+        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件数据结构");
         Element FileStructures = childNodes_FileStructure.addElement("DATA");
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "B010001").addAttribute("eng", "name").addAttribute("val", "").addAttribute("chn", "姓名");
         FileStructures.addElement("ITEM").addAttribute("key", "J030014").addAttribute("eng", "CERTIFICATE_CODE_MD5").addAttribute("val", "").addAttribute("chn", "身份证哈希值");
@@ -312,8 +334,8 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "B030026").addAttribute("eng", "TAKE_OFFICE").addAttribute("val", "").addAttribute("chn", "职务/职称");
         FileStructures.addElement("ITEM").addAttribute("key", "J030016").addAttribute("eng", "USER_STATUS").addAttribute("val", "").addAttribute("chn", "用户状态");
         
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "position").addAttribute("val", "").addAttribute("chn", "");
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "dept").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "position").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "dept").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
         FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");	
@@ -346,19 +368,21 @@ public class DataSyncService {
         }
         
         for (int j = 1; j <= count; j++) {
-            String str = "id" + "\t" + "RESOURCE_ID" + "\t" + "BUSINESS_ROLE" + "\t"
-            	 + "restype" + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
+            String str = "RESOURCE_ID" + "\t" + "BUSINESS_ROLE" + "\t"
+            	 + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
             	 + "LATEST_MOD_TIME"  + "\n";
             for (int i = num; i <resRole.size(); i++)  {
-            	str = str + resRole.get(i).getId() + "\t" + resRole.get(i).getRESOURCE_ID() + "\t" + resRole.get(i).getBUSINESS_ROLE() + "\t"
-            		 + resRole.get(i).getRestype() + "\t" + resRole.get(i).getDELETE_STATUS() + "\t" + resRole.get(i).getDATA_VERSION() + "\t"
-            		 + getLongTime(resRole.get(i).getLATEST_MOD_TIME()) + "\n";
+            	str = str + nullConvertEmptyStr( resRole.get(i).getRESOURCE_ID() ) + "\t" 
+            			+ nullConvertEmptyStr( resRole.get(i).getBUSINESS_ROLE() ) + "\t"
+            			+ resRole.get(i).getDELETE_STATUS() + "\t" 
+            			+ resRole.get(i).getDATA_VERSION() + "\t" 
+            			+ getLongTime(resRole.get(i).getLATEST_MOD_TIME()) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
                 }
             }
-            String filename = "wa_authority_resource_role_" + j + ".bcp";
+            String filename = "wa_authority_resource_role-" + j + ".bcp";
             File file = new File(rootPath + filename);
             PrintWriter pw = new PrintWriter(file);
             pw.write(str);  
@@ -370,13 +394,13 @@ public class DataSyncService {
         Element childNode = root.addElement("DATASET").addAttribute("name", "WA_COMMON_010017").addAttribute("ver", "1.0").addAttribute("rmk", "数据文件索引信息");
         Element childNodes = childNode.addElement("DATA");
         
-        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件格式信息");
+        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件描述信息");
         Element FileFormats = childNodes_FileFormat.addElement("DATA");
         FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
         FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
-        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_SOURCE_0002").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_RESOURCE_ROLE").addAttribute("rmk", "数据集代码");
         FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
-        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "1").addAttribute("rmk", "数据集编码（表控）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "2").addAttribute("rmk", "数据起始行，可选项，不填写默认为第１行");
         FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）"); 
         
         Element childNodes_DataFile = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010014").addAttribute("rmk", "BCP数据文件信息");
@@ -389,19 +413,19 @@ public class DataSyncService {
             	Record_number = n;
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource_role_" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "").addAttribute("rmk", "文件路径");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource_role-" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
 
-        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
+        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件数据结构");
         Element FileStructures = childNodes_FileStructure.addElement("DATA");
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
 
         FileStructures.addElement("ITEM").addAttribute("key", "J030006").addAttribute("eng", "RESOURCE_ID").addAttribute("val", "").addAttribute("chn", "资源唯一标识");
         FileStructures.addElement("ITEM").addAttribute("key", "I010026").addAttribute("eng", "BUSINESS_ROLE").addAttribute("val", "").addAttribute("chn", "角色编码");
         
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "restype").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "restype").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
         FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");
@@ -434,21 +458,27 @@ public class DataSyncService {
         }
         
         for (int j = 1; j <= count; j++) {
-            String str = "id" + "\t" + "BUSINESS_ROLE" + "\t" + "BUSINESS_ROLE_TYPE" + "\t"
+            String str = "BUSINESS_ROLE" + "\t" + "BUSINESS_ROLE_TYPE" + "\t"
             	 + "BUSINESS_ROLE_NAME" + "\t" + "SYSTEM_TYPE" + "\t" + "CLUE_SRC_SYS" + "\t"
-            	 + "ROLE_DESC"  + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
+            	 + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
             	 + "LATEST_MOD_TIME"+ "\n";
+            
             for (int i = num; i <role.size(); i++)  {
-            	str = str + role.get(i).getId() + "\t" + role.get(i).getBUSINESS_ROLE() + "\t" + role.get(i).getBUSINESS_ROLE_TYPE() + "\t"
-            		 + role.get(i).getBUSINESS_ROLE_NAME() + "\t" + role.get(i).getSYSTEM_TYPE() + "\t" + role.get(i).getCLUE_SRC_SYS() + "\t"
-            		 + role.get(i).getROLE_DESC() + "\t" + role.get(i).getDELETE_STATUS() + "\t" + role.get(i).getDATA_VERSION() + "\t"
-            		 + getLongTime(role.get(i).getLATEST_MOD_TIME()) + "\n";
+            	str = str + nullConvertEmptyStr( role.get(i).getBUSINESS_ROLE() ) + "\t" 
+            			+ role.get(i).getBUSINESS_ROLE_TYPE() + "\t"
+            			+ nullConvertEmptyStr( role.get(i).getBUSINESS_ROLE_NAME() ) + "\t" 
+            			+ nullConvertEmptyStr( role.get(i).getSYSTEM_TYPE() ) + "\t" 
+	            		+ nullConvertEmptyStr( role.get(i).getCLUE_SRC_SYS() ) + "\t"
+	            		+ role.get(i).getDELETE_STATUS() + "\t" 
+	            		+ role.get(i).getDATA_VERSION() + "\t"
+	            		+ getLongTime(role.get(i).getLATEST_MOD_TIME()) + "\n";
+            	
             	num++;
         		if(num >= n*j){
                 	break;
                 }
             }
-            String filename = "wa_authority_role_" + j + ".bcp";
+            String filename = "wa_authority_role-" + j + ".bcp";
             File file = new File(rootPath + filename);
             PrintWriter pw = new PrintWriter(file);
             pw.write(str);  
@@ -460,13 +490,13 @@ public class DataSyncService {
         Element childNode = root.addElement("DATASET").addAttribute("name", "WA_COMMON_010017").addAttribute("ver", "1.0").addAttribute("rmk", "数据文件索引信息");
         Element childNodes = childNode.addElement("DATA");
         
-        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件格式信息");
+        Element childNodes_FileFormat = childNodes.addElement("DATASET").addAttribute("name", "WA_COMMON_010013").addAttribute("rmk", "BCP文件描述信息");
         Element FileFormats = childNodes_FileFormat.addElement("DATA");
         FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
         FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
-        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_SOURCE_0002").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_ROLE").addAttribute("rmk", "数据集代码");
         FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
-        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "1").addAttribute("rmk", "数据集编码（表控）");
+        FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "2").addAttribute("rmk", "数据起始行，可选项，不填写默认为第１行");
         FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）"); 
         
         Element childNodes_DataFile = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010014").addAttribute("rmk", "BCP数据文件信息");
@@ -479,21 +509,21 @@ public class DataSyncService {
             	Record_number = n;
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "attach").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_role_" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "").addAttribute("rmk", "文件路径");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_role-" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }    
 
-        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件结构信息");
+        Element childNodes_FileStructure = FileFormats.addElement("DATASET").addAttribute("name", "WA_COMMON_010015").addAttribute("rmk", "BCP文件数据结构");
         Element FileStructures = childNodes_FileStructure.addElement("DATA");
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "id").addAttribute("val", "").addAttribute("chn", "");
 
         FileStructures.addElement("ITEM").addAttribute("key", "I010026").addAttribute("eng", "BUSINESS_ROLE").addAttribute("val", "").addAttribute("chn", "角色编码");
         FileStructures.addElement("ITEM").addAttribute("key", "I010025").addAttribute("eng", "BUSINESS _ROLE_TYPE").addAttribute("val", "").addAttribute("chn", "角色类型");
         FileStructures.addElement("ITEM").addAttribute("key", "I010054").addAttribute("eng", "BUSINESS _ROLE_NAME").addAttribute("val", "").addAttribute("chn", "角色名称");
         FileStructures.addElement("ITEM").addAttribute("key", "B050016").addAttribute("eng", "SYSTEM_TYPE").addAttribute("val", "").addAttribute("chn", "系统类型");
         
-        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "ROLE_DESC").addAttribute("val", "").addAttribute("chn", "");
+//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "ROLE_DESC").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
         FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");
@@ -602,4 +632,9 @@ public class DataSyncService {
         }
         return longtime;
 	}
+	
+	private String nullConvertEmptyStr(String value){
+		 return value == null ? "" : value;
+	}
+	
 }
