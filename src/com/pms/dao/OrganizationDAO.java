@@ -3,6 +3,7 @@ package com.pms.dao;
 import java.util.List;
 
 import com.pms.model.Organization;
+import com.pms.model.OrganizationImport;
 
 public interface OrganizationDAO {
 	public Organization OrgNodeAdd(Organization node) throws Exception;
@@ -15,4 +16,8 @@ public interface OrganizationDAO {
 	List<Organization> GetOrgNodeByParentId(String pid, Organization condition) throws Exception;
 	public Organization GetOrgNodeById(String id) throws Exception;
 	List<Organization> GetOrgById(String id) throws Exception;
+	
+	OrganizationImport OrganizationImportSave(OrganizationImport oi) throws Exception;
+	public List<OrganizationImport> GetOrgImports() throws Exception;
+	public void OrgImport(OrganizationImport oi) throws Exception;
 }

@@ -8,6 +8,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.UserListItem;
 import com.pms.model.User;
 import com.pms.service.UserManageService;
+import com.pms.service.UserUploadService;
 
 public class UserAction extends ActionSupport {
 
@@ -298,19 +299,14 @@ public class UserAction extends ActionSupport {
 	}
 	
 	public String FileUploadUser(){
-		
-		System.out.println("文件的名称："+fiFileName);
-		System.out.println("文件的类型："+fiContentType);
-		if(fi.length()==0){
-			System.out.println("上传文件长度为0");
-			setResult(true);
-			return SUCCESS;
-		}
-		
+		UserUploadService uus = new UserUploadService();
 		try {
-			
-//			ResourceUploadService rus = new ResourceUploadService();
-//			rus.UploadResource(fi);
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			}
+			else {
+				uus.UploadUser(fi);
+			}
 		} catch (Exception e) {
 			setResult(false);
 			this.setMessage("导入文件失败。" + e.getMessage());
