@@ -2,6 +2,7 @@ package com.pms.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,9 +77,9 @@ public class DataSyncService {
                 	break;
                 }
             }
-            String filename = "wa_authority_resource-" + j + ".bcp";
+            String filename = "wa_authority_data_resource-" + j + ".bcp";
             File file = new File(rootPath + filename);  
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -92,7 +93,7 @@ public class DataSyncService {
         Element FileFormats = childNodes_FileFormat.addElement("DATA");
         FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
         FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
-        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_RESOURCE").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_DATA_RESOURCE").addAttribute("rmk", "数据集代码");
         FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
         FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "2").addAttribute("rmk", "数据起始行，可选项，不填写默认为第１行");
         FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）");
@@ -108,7 +109,7 @@ public class DataSyncService {
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
         	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource-" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_data_resource-" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
         
@@ -179,7 +180,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_orgnization-" + j + ".bcp";
             File file = new File(rootPath + filename); 
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -282,7 +283,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_police-" + j + ".bcp";
             File file = new File(rootPath + filename);
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -384,7 +385,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_resource_role-" + j + ".bcp";
             File file = new File(rootPath + filename);
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -480,7 +481,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_role-" + j + ".bcp";
             File file = new File(rootPath + filename);
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -624,8 +625,7 @@ public class DataSyncService {
             // invalid format. But remember as we don't pass the date 
             // information this date object will represent the 1st of
             // january 1970.
-            Date date = sdf.parse(time);        
-            System.out.println("Date and Time: " + date);
+            Date date = sdf.parse(time);
             longtime = date.getTime();
         } catch (Exception e) {
             e.printStackTrace();
