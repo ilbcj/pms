@@ -16,6 +16,9 @@ public interface OrganizationDAO {
 	List<Organization> GetOrgNodeByParentId(String pid, Organization condition) throws Exception;
 	public Organization GetOrgNodeById(String id) throws Exception;
 	List<Organization> GetOrgById(String id) throws Exception;
+	List<Organization> GetOrgNodeByParentIdAndIdNotIn(String pid, List<String> id) throws Exception;
+	List<Organization> GetOrgByIdNotIn(List<String> id, Organization condition, int page, int rows) throws Exception;
+	int GetSyncConfigOrgCount(List<String> id, Organization condition) throws Exception;
 	
 	OrganizationImport OrganizationImportSave(OrganizationImport oi) throws Exception;
 	public List<OrganizationImport> GetOrgImports() throws Exception;

@@ -3,8 +3,6 @@ package com.pms.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -17,14 +15,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import sun.misc.BASE64Encoder;
 
 import com.pms.dao.OrganizationDAO;
 import com.pms.dao.UserDAO;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.model.Organization;
-import com.pms.model.OrganizationImport;
 import com.pms.model.UserImport;
 
 public class UserUploadService {

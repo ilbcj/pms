@@ -478,11 +478,11 @@ $(document).ready(function () {
 //		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#org_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
-	$("#org_maintain_center_list_dg").datagrid('getPager').pagination({	// change options and refresh pager bar information
-			beforePageText: '第',    	
-			afterPageText:'页，共 {pages}页',
-			displayMsg:'显示 {from}到 {to} 条记录，共 {total}记录'
-	});
+// 	$("#org_maintain_center_list_dg").datagrid('getPager').pagination({	// change options and refresh pager bar information
+// 			beforePageText: '第',    	
+// 			afterPageText:'页，共 {pages}页',
+// 			displayMsg:'显示 {from}到 {to} 条记录，共 {total}记录'
+// 	});
 	
 	$('#org_query_tree').tree({
 	    loadFilter: function(data){
@@ -557,6 +557,13 @@ $(document).ready(function () {
 		var org_levelJSON = (new Function('return '+org_levelData +';'))();
 		
 		org_levelJSON.unshift({"id":"","text":"请选择","selected":true});
+		
+		//查询部分
+		$('#org_query_level').combobox({
+			data : org_levelJSON,
+			valueField:'id',
+			textField:'text'
+		});
 		
  		//添加部分
 		$('#org_level').combobox({

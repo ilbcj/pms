@@ -71,5 +71,11 @@
   		<action name="saveSyncConfigItems" class="com.pms.controller.SystemAttrUserAction" method="SaveSyncConfigItems" > 
 			<result name="success" type="json" /> 
   		</action> 
+  		<action name="querySyncConfigOrg" class="com.pms.controller.SystemAttrUserAction" method="QuerySyncConfigOrg" > 
+			<result name="success" type="json" /> 
+  		</action>
+  		<action name="querySyncConfigOrgNodes" class="com.pms.controller.SystemAttrUserAction" method="QuerySyncConfigOrgNodes" > 
+			<result name="success" type="json" /> 
+  		</action>
 	</package>	
 </struts>    

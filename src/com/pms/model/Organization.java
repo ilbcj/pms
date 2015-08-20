@@ -2,6 +2,11 @@ package com.pms.model;
 
 public class Organization {
 	public final static String ROOTNODEID = "010000000000";
+	public final static String ORG_LEVEL_DEPT = "部";
+	public final static String ORG_LEVEL_PROVINCE = "省";
+	public final static String ORG_LEVEL_CITY = "市";
+	public final static String ORG_LEVEL_COUNTY = "县";
+	public final static String ORG_LEVEL_GRASSROOTS = "基层所队";
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
 	

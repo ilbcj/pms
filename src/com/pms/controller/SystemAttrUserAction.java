@@ -1,13 +1,18 @@
 package com.pms.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.AttrDictItem;
+import com.pms.dto.OrgListItem;
+import com.pms.dto.TreeNode;
 import com.pms.model.AttrDefinition;
+import com.pms.model.Organization;
 import com.pms.model.SyncConfig;
 import com.pms.service.AttrDictionaryService;
 import com.pms.service.DataSyncService;
+import com.pms.service.OrgManageService;
 import com.pms.service.SyncConfigService;
 
 public class SystemAttrUserAction extends ActionSupport {
@@ -27,11 +32,17 @@ public class SystemAttrUserAction extends ActionSupport {
 	private AttrDictItem attrItem;
 	private String attrName;
 	private String attrCode;
+	private String orgName;
+	private String orgUid;
+	private String id;
 	private int syncId;
 	private String syncDest;
 	private ArrayList<AttrDictItem> items;
 	private SyncConfig syncConfig;
 	private ArrayList<SyncConfig> syncConfigs;
+	private List<Organization> orgNode;
+	private List<OrgListItem> orgItems;
+	private List<TreeNode> treeNodes;
 	
 	public AttrDictItem getAttrItem() {
 		return attrItem;
@@ -81,6 +92,24 @@ public class SystemAttrUserAction extends ActionSupport {
 	public void setAttrCode(String attrCode) {
 		this.attrCode = attrCode;
 	}
+	public String getOrgName() {
+		return orgName;
+	}
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	public String getOrgUid() {
+		return orgUid;
+	}
+	public void setOrgUid(String orgUid) {
+		this.orgUid = orgUid;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public int getSyncId() {
 		return syncId;
 	}
@@ -110,6 +139,24 @@ public class SystemAttrUserAction extends ActionSupport {
 	}
 	public void setSyncConfigs(ArrayList<SyncConfig> syncConfigs) {
 		this.syncConfigs = syncConfigs;
+	}
+	public List<Organization> getOrgNode() {
+		return orgNode;
+	}
+	public void setOrgNode(List<Organization> orgNode) {
+		this.orgNode = orgNode;
+	}
+	public List<OrgListItem> getOrgItems() {
+		return orgItems;
+	}
+	public void setOrgItems(List<OrgListItem> orgItems) {
+		this.orgItems = orgItems;
+	}
+	public List<TreeNode> getTreeNodes() {
+		return treeNodes;
+	}
+	public void setTreeNodes(List<TreeNode> treeNodes) {
+		this.treeNodes = treeNodes;
 	}
 	
 	public String QueryUserAttrs()
@@ -281,7 +328,6 @@ public class SystemAttrUserAction extends ActionSupport {
 		SyncConfigService sss = new SyncConfigService();
 		 syncConfigs = new ArrayList<SyncConfig>();
 		try {
-			System.out.println(syncId);
 			SyncConfig criteria = new SyncConfig();
 			criteria.setId(syncId);
 			criteria.setCLUE_DST_SYS(syncDest);
@@ -309,4 +355,44 @@ public class SystemAttrUserAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QuerySyncConfigOrg()
+	{
+		SyncConfigService sss = new SyncConfigService();
+		orgItems = new ArrayList<OrgListItem>();
+		try {
+			Organization criteria = new Organization();
+			criteria.setUNIT(orgName);
+			total = sss.QuerySyncConfigOrg( criteria, page, rows, orgItems );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QuerySyncConfigOrgNodes()
+	{
+		OrgManageService oms = new OrgManageService();
+		SyncConfigService sss = new SyncConfigService();
+		try {
+			treeNodes = new ArrayList<TreeNode>();
+			if( id == null || id.length() == 0) {
+				id = "0";
+			}
+			orgNode = sss.QuerySyncConfigOrg( id );
+			TreeNode node = null;
+			for(int i=0; i<orgNode.size(); i++) {
+				node = oms.ConvertOrgToTreeNode(orgNode.get(i));
+				this.treeNodes.add(node);
+			}
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
 }

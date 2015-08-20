@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -262,6 +263,131 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setString("GA_DEPARTMENT", id);
 			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Organization> GetOrgNodeByParentIdAndIdNotIn(String pid, List<String> id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Organization> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG and DELETE_STATUS =:DELETE_STATUS AND ORG_LEVEL IN (:ORG_LEVEL)";
+		if( id != null && id.size() > 0){
+			sqlString += " and GA_DEPARTMENT not in (:GA_DEPARTMENT) ";
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			q.setString("PARENT_ORG", pid);
+			q.setInteger("DELETE_STATUS", Organization.DELSTATUSNO);
+			List<String> ORG_LEVEL =new ArrayList<String>();
+			ORG_LEVEL.add(Organization.ORG_LEVEL_DEPT);
+			ORG_LEVEL.add(Organization.ORG_LEVEL_PROVINCE);
+			ORG_LEVEL.add(Organization.ORG_LEVEL_CITY);
+			q.setParameterList("ORG_LEVEL", ORG_LEVEL);
+			if( id != null && id.size() > 0){
+				q.setParameterList("GA_DEPARTMENT", id);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Organization> GetOrgByIdNotIn(List<String> id, Organization condition, int page, int rows) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Organization> rs = null;
+		String sqlString =" SELECT * FROM WA_AUTHORITY_ORGNIZATION WHERE DELETE_STATUS =:DELETE_STATUS AND ORG_LEVEL IN (:ORG_LEVEL)";
+		if( id != null && id.size() > 0){
+			sqlString += " and GA_DEPARTMENT not in (:GA_DEPARTMENT) ";
+		}
+		if( condition != null ) {
+			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+				sqlString += " and UNIT like :UNIT ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			q.setInteger("DELETE_STATUS", Organization.DELSTATUSNO);
+			List<String> ORG_LEVEL =new ArrayList<String>();
+			ORG_LEVEL.add(Organization.ORG_LEVEL_PROVINCE);
+			ORG_LEVEL.add(Organization.ORG_LEVEL_CITY);
+			q.setParameterList("ORG_LEVEL", ORG_LEVEL);
+			if( id != null && id.size() > 0){
+				q.setParameterList("GA_DEPARTMENT", id);
+			}
+			if( condition != null ) {
+				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
+				}
+			}
+			q.setFirstResult((page-1) * rows);   
+			q.setMaxResults(rows);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetSyncConfigOrgCount(List<String> id, Organization condition) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString =" SELECT count(*) FROM WA_AUTHORITY_ORGNIZATION WHERE DELETE_STATUS =:DELETE_STATUS AND ORG_LEVEL IN (:ORG_LEVEL)";
+		if( id != null && id.size() > 0){
+			sqlString += " and GA_DEPARTMENT not in (:GA_DEPARTMENT) ";
+		}
+		if( condition != null ) {
+			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+				sqlString += " and UNIT like :UNIT ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setInteger("DELETE_STATUS", Organization.DELSTATUSNO);
+			List<String> ORG_LEVEL =new ArrayList<String>();
+			ORG_LEVEL.add(Organization.ORG_LEVEL_PROVINCE);
+			ORG_LEVEL.add(Organization.ORG_LEVEL_CITY);
+			q.setParameterList("ORG_LEVEL", ORG_LEVEL);
+			if( id != null && id.size() > 0){
+				q.setParameterList("GA_DEPARTMENT", id);
+			}
+			if( condition != null ) {
+				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
+				}
+			}
+			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
