@@ -34,8 +34,8 @@ public class UserUploadService {
 	private final String SHEET_USER_SEX = "性别";
 	private final String SHEET_USER_POSITION = "岗位";
 	private final String SHEET_USER_POLICESORT = "警种";
-	private final String SHEET_USER_TAKE_OFFICE = "任职";
-	private final String SHEET_USER_OFFICELEVEL = "职级";
+	private final String SHEET_USER_TAKE_OFFICE = "职级";
+	private final String SHEET_USER_OFFICELEVEL = "任职";
 	
 	public void UploadUser(File inData) throws Exception {
 		InputStream in=new FileInputStream(inData);
@@ -93,6 +93,7 @@ public class UserUploadService {
         		ui = new UserImport();
         	}
         	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	cellCount = row.getLastCellNum();
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);

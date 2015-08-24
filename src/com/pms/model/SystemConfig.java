@@ -11,6 +11,11 @@ public class SystemConfig {
 	public final static String SYSTEMCONFIG_ITEM_DATASOURCE = "sync_datasource";
 	public final static String SYSTEMCONFIG_ITEM_SN = "sync_sn";
 	public final static String SYSTEMCONFIG_ITEM_EXPORTPATH = "sync_exportpath";
+	public final static String SYSTEMCONFIG_ITEM_DATARES = "sync_DataRes";
+	public final static String SYSTEMCONFIG_ITEM_ORG = "sync_Org";
+	public final static String SYSTEMCONFIG_ITEM_USER = "sync_User";
+	public final static String SYSTEMCONFIG_ITEM_Role = "sync_Role";
+	public final static String SYSTEMCONFIG_ITEM_RESINROLE = "sync_ResInRole";
 	
 	private int id;
 	private String item;

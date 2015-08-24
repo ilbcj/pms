@@ -102,7 +102,30 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		return;
 
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Organization> GetOrgsByTime(String time) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Organization> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where LATEST_MOD_TIME > :LATEST_MOD_TIME";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			q.setString( "LATEST_MOD_TIME", time);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Organization> GetOrgNodeByParentId(String pid) throws Exception {

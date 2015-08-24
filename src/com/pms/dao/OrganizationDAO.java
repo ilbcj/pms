@@ -9,6 +9,7 @@ public interface OrganizationDAO {
 	public Organization OrgNodeAdd(Organization node) throws Exception;
 	public void OrgNodeMod(Organization node) throws Exception;
 	public void OrgNodeDel(Organization node) throws Exception;
+	List<Organization> GetOrgsByTime(String time) throws Exception;
 	public List<Organization> GetOrgNodeByParentId(String pid) throws Exception;
 	public boolean OrgHasChild(String pid) throws Exception;
 	public List<Organization> GetOrgNodeByParentId(String pid, int page, int rows) throws Exception;

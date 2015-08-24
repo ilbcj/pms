@@ -43,6 +43,7 @@ public class SystemAttrUserAction extends ActionSupport {
 	private List<Organization> orgNode;
 	private List<OrgListItem> orgItems;
 	private List<TreeNode> treeNodes;
+	private String amount;
 	
 	public AttrDictItem getAttrItem() {
 		return attrItem;
@@ -158,6 +159,12 @@ public class SystemAttrUserAction extends ActionSupport {
 	public void setTreeNodes(List<TreeNode> treeNodes) {
 		this.treeNodes = treeNodes;
 	}
+	public String getAmount() {
+		return amount;
+	}
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
 	
 	public String QueryUserAttrs()
 	{
@@ -257,7 +264,7 @@ public class SystemAttrUserAction extends ActionSupport {
 	{
 		DataSyncService dss = new DataSyncService();
 		try {
-			dss.DownLoadRes();
+			dss.DownLoadRes( amount );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -271,7 +278,7 @@ public class SystemAttrUserAction extends ActionSupport {
 	{
 		DataSyncService dss = new DataSyncService();
 		try {
-			dss.DownLoadOrg();
+			dss.DownLoadOrg( amount );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -285,7 +292,7 @@ public class SystemAttrUserAction extends ActionSupport {
 	{
 		DataSyncService dss = new DataSyncService();
 		try {
-			dss.DownLoadUser();
+			dss.DownLoadUser( amount );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -299,7 +306,7 @@ public class SystemAttrUserAction extends ActionSupport {
 	{
 		DataSyncService dss = new DataSyncService();
 		try {
-			dss.DownLoadResRole();
+			dss.DownLoadResRole( amount );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -313,7 +320,7 @@ public class SystemAttrUserAction extends ActionSupport {
 	{
 		DataSyncService dss = new DataSyncService();
 		try {
-			dss.DownLoadRole();
+			dss.DownLoadRole( amount );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

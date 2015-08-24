@@ -15,6 +15,7 @@ public interface UserDAO {
 	public List<User> GetUsersByParentIdWithNoPage(String pid, User criteria) throws Exception;
 	public int GetUsersCountByParentId(String pid, User criteria) throws Exception;
 	public User GetUserByUserName(String name) throws Exception;
+	List<User> GetUsersByTime(String time) throws Exception;
 	List<User> GetUserById(int id) throws Exception;
 	
 	public void UserImportSave(UserImport ui) throws Exception;
