@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.JOptionPane;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -28,7 +30,7 @@ import com.pms.model.User;
 import com.pms.util.ZipUtil;
 
 public class DataSyncService {
-	public void DownLoadRes(String amount) throws Exception {
+	public void DownLoadRes(String amount, List<ResData> items) throws Exception {
 		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -50,7 +52,8 @@ public class DataSyncService {
 	        res = dao.GetDatasByTime( LatestModTime );
 		}
 		
-		if( res==null )
+		items.addAll(res);
+		if( items.size() == 0 )
 			return;
 		
 		int num = 0;
@@ -152,7 +155,7 @@ public class DataSyncService {
         CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadOrg(String amount) throws Exception {
+	public void DownLoadOrg(String amount, List<Organization> items) throws Exception {
        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
        Date date = timeFormat.parse("1970-01-01 00:00:00");
        long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -174,6 +177,10 @@ public class DataSyncService {
 			org = dao.GetOrgsByTime( LatestModTime );
 		}	
 		
+		items.addAll(org);
+		if( items.size() == 0 )
+			return;
+		
 		int num = 0;
 		int n = 5000;
         int count = org.size()/n;
@@ -188,7 +195,7 @@ public class DataSyncService {
             for (int i = num; i < org.size(); i++)  {
             	str = str + nullConvertEmptyStr( org.get(i).getGA_DEPARTMENT() ) + "\t" 
             			+ nullConvertEmptyStr( org.get(i).getUNIT() ) + "\t" 
-            			+ nullConvertEmptyStr( ConvertOrgLevel( org.get(i).getORG_LEVEL() ) ) + "\t"
+            			+ ConvertOrgLevel( nullConvertEmptyStr( org.get(i).getORG_LEVEL() ) ) + "\t"
             			+ nullConvertEmptyStr( org.get(i).getPARENT_ORG() ) + "\t" 
             			+ org.get(i).getDELETE_STATUS() + "\t" 
             			+ org.get(i).getDATA_VERSION() + "\t"
@@ -266,7 +273,7 @@ public class DataSyncService {
 		return res;
 				
 	}
-	public void DownLoadUser(String amount) throws Exception {
+	public void DownLoadUser(String amount, List<User> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -287,6 +294,10 @@ public class DataSyncService {
 	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_USER, SystemConfigList);
 	        user = dao.GetUsersByTime( LatestModTime );
 		}
+		
+		items.addAll(user);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -310,7 +321,7 @@ public class DataSyncService {
 	            		+ nullConvertEmptyStr( user.get(i).getSEXCODE() ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getGA_DEPARTMENT() ) + "\t"
 	            		+ nullConvertEmptyStr( user.get(i).getUNIT() ) + "\t" 
-	            		+ nullConvertEmptyStr( ConvertOrgLevel( user.get(i).getORG_LEVEL()) ) + "\t" 
+	            		+ ConvertOrgLevel( nullConvertEmptyStr( user.get(i).getORG_LEVEL() ) ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_SORT() ) + "\t"
 	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_NO() ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getSENSITIVE_LEVEL() ) + "\t" 
@@ -392,7 +403,7 @@ public class DataSyncService {
         CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadResRole(String amount) throws Exception {
+	public void DownLoadResRole(String amount, List<ResRoleResource> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -413,6 +424,10 @@ public class DataSyncService {
 	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_RESINROLE, SystemConfigList);
 	        resRole = dao.GetResRolesByTime( LatestModTime );
 		}
+		
+		items.addAll(resRole);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -491,7 +506,7 @@ public class DataSyncService {
         CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadRole(String amount) throws Exception {
+	public void DownLoadRole(String amount, List<ResRole> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -512,6 +527,10 @@ public class DataSyncService {
 	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_Role, SystemConfigList);
 	        role = dao.GetRolesByTime( LatestModTime );
 		}
+		
+		items.addAll(role);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -633,7 +652,7 @@ public class DataSyncService {
 	    zs.compress(rootPath);
 
 	    UpdateConfig(SystemConfigList, name);
-	    
+	    JOptionPane.showMessageDialog(null, "导出数据的存放位置及名称："+exportPath +"/"+ zipNnme);   
 	}
 	
 	public SystemConfig UpdateConfig( List<SystemConfig> scList, String name ) throws Exception

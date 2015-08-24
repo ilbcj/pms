@@ -1156,7 +1156,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRoleResource> rs = null;
-		String sqlString = "SELECT a.* FROM wa_authority_resource_role a, wa_authority_role b WHERE a.business_role=b.business_role AND b.business_role_type =:business_role_type and LATEST_MOD_TIME > :LATEST_MOD_TIME";
+		String sqlString = "SELECT a.* FROM wa_authority_resource_role a, wa_authority_role b WHERE a.business_role=b.business_role AND b.business_role_type =:business_role_type and a.LATEST_MOD_TIME > :LATEST_MOD_TIME";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
 			q.setInteger("business_role_type", ResRole.RESROLETYPEPUBLIC);

@@ -9,7 +9,11 @@ import com.pms.dto.OrgListItem;
 import com.pms.dto.TreeNode;
 import com.pms.model.AttrDefinition;
 import com.pms.model.Organization;
+import com.pms.model.ResData;
+import com.pms.model.ResRole;
+import com.pms.model.ResRoleResource;
 import com.pms.model.SyncConfig;
+import com.pms.model.User;
 import com.pms.service.AttrDictionaryService;
 import com.pms.service.DataSyncService;
 import com.pms.service.OrgManageService;
@@ -44,6 +48,10 @@ public class SystemAttrUserAction extends ActionSupport {
 	private List<OrgListItem> orgItems;
 	private List<TreeNode> treeNodes;
 	private String amount;
+	private List<ResData> resDatas;
+	private List<User> users;
+	private List<ResRole> roles;
+	private List<ResRoleResource> resRoleResources;
 	
 	public AttrDictItem getAttrItem() {
 		return attrItem;
@@ -165,6 +173,30 @@ public class SystemAttrUserAction extends ActionSupport {
 	public void setAmount(String amount) {
 		this.amount = amount;
 	}
+	public List<ResData> getResDatas() {
+		return resDatas;
+	}
+	public void setResDatas(List<ResData> resDatas) {
+		this.resDatas = resDatas;
+	}
+	public List<User> getUsers() {
+		return users;
+	}
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+	public List<ResRole> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<ResRole> roles) {
+		this.roles = roles;
+	}
+	public List<ResRoleResource> getResRoleResources() {
+		return resRoleResources;
+	}
+	public void setResRoleResources(List<ResRoleResource> resRoleResources) {
+		this.resRoleResources = resRoleResources;
+	}
 	
 	public String QueryUserAttrs()
 	{
@@ -263,8 +295,9 @@ public class SystemAttrUserAction extends ActionSupport {
 	public String DataSyncRes()
 	{
 		DataSyncService dss = new DataSyncService();
+		resDatas = new ArrayList<ResData>();
 		try {
-			dss.DownLoadRes( amount );
+			dss.DownLoadRes( amount, resDatas );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -277,8 +310,9 @@ public class SystemAttrUserAction extends ActionSupport {
 	public String DataSyncOrg()
 	{
 		DataSyncService dss = new DataSyncService();
+		orgNode = new ArrayList<Organization>();
 		try {
-			dss.DownLoadOrg( amount );
+			dss.DownLoadOrg( amount, orgNode );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -291,8 +325,9 @@ public class SystemAttrUserAction extends ActionSupport {
 	public String DataSyncUser()
 	{
 		DataSyncService dss = new DataSyncService();
+		users = new ArrayList<User>();
 		try {
-			dss.DownLoadUser( amount );
+			dss.DownLoadUser( amount, users );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -305,8 +340,9 @@ public class SystemAttrUserAction extends ActionSupport {
 	public String DataSyncResRole()
 	{
 		DataSyncService dss = new DataSyncService();
+		resRoleResources = new ArrayList<ResRoleResource>();
 		try {
-			dss.DownLoadResRole( amount );
+			dss.DownLoadResRole( amount, resRoleResources );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -319,8 +355,9 @@ public class SystemAttrUserAction extends ActionSupport {
 	public String DataSyncRole()
 	{
 		DataSyncService dss = new DataSyncService();
+		roles = new ArrayList<ResRole>();
 		try {
-			dss.DownLoadRole( amount );
+			dss.DownLoadRole( amount, roles );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
