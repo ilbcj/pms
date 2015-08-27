@@ -37,12 +37,14 @@ public interface ResourceDAO {
 	ResRole RoleImport(ResRole role) throws Exception;
 	void RoleDel(ResRole role) throws Exception;
 	public List<ResRole> GetAllRoles() throws Exception;
+	List<ResRole> GetRolesByTime(String time) throws Exception;	
 	List<ResRole> GetRoles(ResRole criteria, int page, int rows) throws Exception;
 	int GetRolesCount(ResRole criteria) throws Exception;
 	
 	void UpdateFeatureRoleResource(String roleId, List<String> featureIds) throws Exception;
 	void UpdateDataRoleResource(String roleId, List<String> dataIds) throws Exception;
 	List<ResRoleResource> GetAllResRoles() throws Exception;
+	List<ResRoleResource> GetResRolesByTime(String time) throws Exception;
 	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
 	List<ResRole> GetRoleById(int id) throws Exception;
 	ResFeature GetFeatureByResId(String id) throws Exception;
@@ -51,6 +53,7 @@ public interface ResourceDAO {
 	List<ResData> GetDataById(int id) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
+	List<ResData> GetDatasByTime(String time) throws Exception;
 	List<ResData> GetColumnDatasByDataSet(String dataSet) throws Exception;
 	
 	ResRoleResourceImport ResRoleResourceImportAdd(ResRoleResourceImport rrri) throws Exception; 

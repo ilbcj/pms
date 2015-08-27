@@ -2,11 +2,14 @@ package com.pms.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import javax.swing.JOptionPane;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -24,11 +27,10 @@ import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
 import com.pms.model.SystemConfig;
 import com.pms.model.User;
-import com.pms.util.FileChooserUtil;
 import com.pms.util.ZipUtil;
 
 public class DataSyncService {
-	public void DownLoadRes() throws Exception {
+	public void DownLoadRes(String amount, List<ResData> items) throws Exception {
 		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -39,7 +41,20 @@ public class DataSyncService {
         }
     	  
 		ResourceDAOImpl dao=new ResourceDAOImpl();
-		List<ResData> res =dao.GetAllDatas();
+		List<ResData> res = null;
+		if( amount == "All" || amount.equals("All") ){
+			res = dao.GetAllDatas();
+		}else{
+			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
+			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
+			
+			String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_DATARES, SystemConfigList);
+	        res = dao.GetDatasByTime( LatestModTime );
+		}
+		
+		items.addAll(res);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -76,9 +91,9 @@ public class DataSyncService {
                 	break;
                 }
             }
-            String filename = "wa_authority_resource-" + j + ".bcp";
+            String filename = "wa_authority_data_resource-" + j + ".bcp";
             File file = new File(rootPath + filename);  
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -92,7 +107,7 @@ public class DataSyncService {
         Element FileFormats = childNodes_FileFormat.addElement("DATA");
         FileFormats.addElement("ITEM").addAttribute("key", "I010032").addAttribute("val", "").addAttribute("rmk", "列分隔符（缺少值时默认为制表符\t）");
         FileFormats.addElement("ITEM").addAttribute("key", "I010033").addAttribute("val", "").addAttribute("rmk", "行分隔符（缺少值时默认为换行符\n）");
-        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_RESOURCE").addAttribute("rmk", "数据集代码");
+        FileFormats.addElement("ITEM").addAttribute("key", "A010004").addAttribute("val", "WA_AUTHORITY_DATA_RESOURCE").addAttribute("rmk", "数据集代码");
         FileFormats.addElement("ITEM").addAttribute("key", "F010008").addAttribute("val", "300200").addAttribute("rmk", "数据采集地");
         FileFormats.addElement("ITEM").addAttribute("key", "I010038").addAttribute("val", "2").addAttribute("rmk", "数据起始行，可选项，不填写默认为第１行");
         FileFormats.addElement("ITEM").addAttribute("key", "I010039").addAttribute("val", "UTF-8").addAttribute("rmk", "可选项，默认为UTF-８，BCP文件编码格式（采用不带格式的编码方式，如：UTF-８无BOM）");
@@ -108,7 +123,7 @@ public class DataSyncService {
             }
         	Element DataFiles = childNodes_DataFile.addElement("DATA");
         	DataFiles.addElement("ITEM").addAttribute("key", "H040003").addAttribute("val", "").addAttribute("rmk", "文件路径");
-        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_resource-" + j+".bcp").addAttribute("rmk", "文件名");
+        	DataFiles.addElement("ITEM").addAttribute("key", "H010020").addAttribute("val", "wa_authority_data_resource-" + j+".bcp").addAttribute("rmk", "文件名");
         	DataFiles.addElement("ITEM").addAttribute("key", "I010034").addAttribute("val", String.valueOf( Record_number ) ).addAttribute("rmk", "记录行数");
         }   
         
@@ -137,10 +152,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "DataRes";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
+        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadOrg() throws Exception {
+	public void DownLoadOrg(String amount, List<Organization> items) throws Exception {
        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
        Date date = timeFormat.parse("1970-01-01 00:00:00");
        long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -151,7 +166,20 @@ public class DataSyncService {
        }
        
 		OrganizationDAOImpl dao = new OrganizationDAOImpl();
-		List<Organization> org = dao.GetAllOrgs();
+		List<Organization> org = null;
+		if( amount == "All" || amount.equals("All") ){
+			org = dao.GetAllOrgs();
+		}else{
+			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
+			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
+			
+	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_ORG, SystemConfigList);
+			org = dao.GetOrgsByTime( LatestModTime );
+		}	
+		
+		items.addAll(org);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -167,7 +195,7 @@ public class DataSyncService {
             for (int i = num; i < org.size(); i++)  {
             	str = str + nullConvertEmptyStr( org.get(i).getGA_DEPARTMENT() ) + "\t" 
             			+ nullConvertEmptyStr( org.get(i).getUNIT() ) + "\t" 
-            			+ nullConvertEmptyStr( org.get(i).getORG_LEVEL() ) + "\t"
+            			+ ConvertOrgLevel( nullConvertEmptyStr( org.get(i).getORG_LEVEL() ) ) + "\t"
             			+ nullConvertEmptyStr( org.get(i).getPARENT_ORG() ) + "\t" 
             			+ org.get(i).getDELETE_STATUS() + "\t" 
             			+ org.get(i).getDATA_VERSION() + "\t"
@@ -179,7 +207,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_orgnization-" + j + ".bcp";
             File file = new File(rootPath + filename); 
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -227,10 +255,25 @@ public class DataSyncService {
             
         String name = "Org";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
+        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
-
-	public void DownLoadUser() throws Exception {
+	private String ConvertOrgLevel(String level){
+		String res=null;
+		if("部".endsWith(level)){
+			res="1";
+		}else if("省".endsWith(level)){
+			res="2";
+		}else if("市".endsWith(level)){
+			res="3";
+		}else if("县".endsWith(level)){
+			res="4";
+		}else if("基层所队".endsWith(level)){
+			res="9";
+		}
+		return res;
+				
+	}
+	public void DownLoadUser(String amount, List<User> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -241,7 +284,20 @@ public class DataSyncService {
         }	
         
 		UserDAOImpl dao = new UserDAOImpl();
-		List<User> user = dao.GetAllUsers();
+		List<User> user = null;
+		if( amount == "All" || amount.equals("All") ){
+			user = dao.GetAllUsers();
+		}else{
+			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
+			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
+			
+	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_USER, SystemConfigList);
+	        user = dao.GetUsersByTime( LatestModTime );
+		}
+		
+		items.addAll(user);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -265,7 +321,7 @@ public class DataSyncService {
 	            		+ nullConvertEmptyStr( user.get(i).getSEXCODE() ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getGA_DEPARTMENT() ) + "\t"
 	            		+ nullConvertEmptyStr( user.get(i).getUNIT() ) + "\t" 
-	            		+ nullConvertEmptyStr( user.get(i).getORG_LEVEL() ) + "\t" 
+	            		+ ConvertOrgLevel( nullConvertEmptyStr( user.get(i).getORG_LEVEL() ) ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_SORT() ) + "\t"
 	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_NO() ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getSENSITIVE_LEVEL() ) + "\t" 
@@ -282,7 +338,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_police-" + j + ".bcp";
             File file = new File(rootPath + filename);
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -344,10 +400,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "User";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
+        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadResRole() throws Exception {
+	public void DownLoadResRole(String amount, List<ResRoleResource> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -358,7 +414,20 @@ public class DataSyncService {
         }	
         
         ResourceDAOImpl dao = new ResourceDAOImpl();
-		List<ResRoleResource> resRole = dao.GetAllResRoles();
+		List<ResRoleResource> resRole = null;
+		if( amount == "All" || amount.equals("All") ){
+			resRole = dao.GetAllResRoles();
+		}else{
+			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
+			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
+			
+	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_RESINROLE, SystemConfigList);
+	        resRole = dao.GetResRolesByTime( LatestModTime );
+		}
+		
+		items.addAll(resRole);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -384,7 +453,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_resource_role-" + j + ".bcp";
             File file = new File(rootPath + filename);
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -434,10 +503,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "ResInRole";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
+        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadRole() throws Exception {
+	public void DownLoadRole(String amount, List<ResRole> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -448,7 +517,20 @@ public class DataSyncService {
         }	
         
         ResourceDAOImpl dao = new ResourceDAOImpl();
-		List<ResRole> role = dao.GetAllRoles();
+		List<ResRole> role = null;
+		if( amount == "All" || amount.equals("All") ){
+			role = dao.GetAllRoles();
+		}else{
+			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
+			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
+			
+	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_Role, SystemConfigList);
+	        role = dao.GetRolesByTime( LatestModTime );
+		}
+		
+		items.addAll(role);
+		if( items.size() == 0 )
+			return;
 		
 		int num = 0;
 		int n = 5000;
@@ -480,7 +562,7 @@ public class DataSyncService {
             }
             String filename = "wa_authority_role-" + j + ".bcp";
             File file = new File(rootPath + filename);
-            PrintWriter pw = new PrintWriter(file);
+            PrintWriter pw = new PrintWriter( new OutputStreamWriter( new FileOutputStream( file ), "utf-8" ) );
             pw.write(str);  
             pw.close();
 		}
@@ -532,10 +614,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "Role";
         
-        CreateIndexXmlAndZip(xmlIndex,rootPath,name);
+        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void CreateIndexXmlAndZip(String xml,String rootPath,String name) throws Exception {
+	public void CreateIndexXmlAndZip(String xml, String rootPath, String name, String amount) throws Exception {
 	     //xml格式化
         Document doc = DocumentHelper.parseText(xml);       
         OutputFormat format = OutputFormat.createPrettyPrint();
@@ -563,17 +645,17 @@ public class DataSyncService {
         sn = String.format("%05d", Integer.parseInt(sn));
         String exportPath = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_EXPORTPATH, SystemConfigList);
         
-        String zipNnme = businessType + "-" + dataSource + "-" + name + "-All-" + second + "-" + sn + ".zip";
+        String zipNnme = businessType + "-" + dataSource + "-" + name + "-" + amount + "-" + second + "-" + sn + ".zip";
         
 //        ZipUtil zs = new  ZipUtil(new FileChooserUtil().fileChooser() + zipNnme);
         ZipUtil zs = new  ZipUtil(exportPath +"/"+ zipNnme);
 	    zs.compress(rootPath);
 
-	    UpdateConfig(SystemConfigList);
-	    
+	    UpdateConfig(SystemConfigList, name);
+	    JOptionPane.showMessageDialog(null, "导出数据的存放位置及名称："+exportPath +"/"+ zipNnme);   
 	}
 	
-	public SystemConfig UpdateConfig( List<SystemConfig> scList ) throws Exception
+	public SystemConfig UpdateConfig( List<SystemConfig> scList, String name ) throws Exception
 	{
 	    SystemConfig systemConfig=new SystemConfig();
 	    SystemConfigDAOImpl dao = new SystemConfigDAOImpl();
@@ -585,8 +667,12 @@ public class DataSyncService {
 	    for (int i = 0; i < scList.size(); i++) {
 	    	systemConfig.setId( scList.get(i).getId() );
 	    	systemConfig.setItem( scList.get(i).getItem() );
-	    	if( scList.get(i).getItem().equals(SystemConfig.SYSTEMCONFIG_ITEM_SN) ){		
+	    	if( scList.get(i).getItem().equals( SystemConfig.SYSTEMCONFIG_ITEM_SN ) ){		
 	    		systemConfig.setValue( String.valueOf( Integer.parseInt( scList.get(i).getValue() ) + 1 ) );
+	    	}else if( scList.get(i).getItem().equals( "sync_" + name ) )
+	    	{
+	    		systemConfig.setValue( timenow );
+	    		
 	    	}else{
 	    		systemConfig.setValue( scList.get(i).getValue() );
 	    	}
@@ -624,8 +710,7 @@ public class DataSyncService {
             // invalid format. But remember as we don't pass the date 
             // information this date object will represent the 1st of
             // january 1970.
-            Date date = sdf.parse(time);        
-            System.out.println("Date and Time: " + date);
+            Date date = sdf.parse(time);
             longtime = date.getTime();
         } catch (Exception e) {
             e.printStackTrace();
