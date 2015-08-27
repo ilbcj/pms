@@ -85,6 +85,9 @@
 	         <li iconCls="icon-leaf" id="menu_system_data_export">
 	            <span>数据导出</span>
 	         </li>
+	         <li iconCls="icon-leaf" id="menu_system_sync_config">
+	            <span>同步设置</span>
+	         </li>
         </ul>
 
 <script>
@@ -111,6 +114,9 @@ $(document).ready(function () {
  			}
  			else if (node.id == 'menu_system_data_export') {
  				$('body').layout('panel','center').panel('refresh','system/system_data_export.html');
+ 			}
+ 			else if (node.id == 'menu_system_sync_config') {
+ 				$('body').layout('panel','center').panel('refresh','system/system_sync_config.html');
  			}
 
 		}

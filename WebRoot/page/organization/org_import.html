@@ -20,23 +20,61 @@
 		</div>
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
 			<div class="easyui-panel" data-options="fit:true,border:false" >
-				<form id="ff" action="form1_proc.php" method="post" enctype="multipart/form-data">
+<!-- 				<form id="ff" action="form1_proc.php" method="post" enctype="multipart/form-data"> -->
+<!-- 					<table class="nodt" style="width:100%"> -->
+<!-- 			            <tr> -->
+<!-- 			                <td class="form_name_small text_right">导入策略</td> -->
+<!-- 			                <td><input type="checkbox" checked="checked"><span> 覆盖已存在项</span></td> -->
+<!-- 			            </tr> -->
+<!-- 			            <tr> -->
+<!-- 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td> -->
+<!-- 			                <td><input id="org_file" name="org_file" class="form_value_mid easyui-filebox" data-options="buttonAlign:'left',buttonText:'选择文件',prompt:'请选择组织机构文件(1.5M以内)'"></input></td> -->
+<!-- 			            </tr> -->
+<!-- 			        </table> -->
+<!-- 			    </form> -->
+<!-- 			    <div class="text_center" style="margin-top:15px;"> -->
+<!-- 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="">预览</a> -->
+<!-- 				</div> -->
+				
+				<form id="import_file_form" method="post" enctype="multipart/form-data">
 					<table class="nodt" style="width:100%">
 			            <tr>
-			                <td class="form_name_small text_right">导入策略</td>
-			                <td><input type="checkbox" checked="checked"><span> 覆盖已存在项</span></td>
-			            </tr>
-			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
-			                <td><input id="org_file" name="org_file" class="form_value_mid easyui-filebox" data-options="buttonAlign:'left',buttonText:'选择文件',prompt:'请选择组织机构文件(1.5M以内)'"></input></td>
+			                <td><input id="fi" name="fi" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择资源文件(50M以内)'"/></td>
 			            </tr>
 			        </table>
 			    </form>
 			    <div class="text_center" style="margin-top:15px;">
-					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="">预览</a>
+			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importFileSave()">导入文件</a>
 				</div>
+					
 			</div>
 		</div><!-- end of content -->
 	</div><!-- end of layout -->
+	
+	
+	<script type="text/javascript">
+	
+	function importFileSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../organization/fileUploadOrg.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传数据资源信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			}
+		});
+  	}
+  	
+	</script>
+	
   </body>
 </html>

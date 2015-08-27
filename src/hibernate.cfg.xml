@@ -66,6 +66,7 @@
 	<mapping resource="com/pms/model/ResRelationClassify.hbm.xml" />
 	<mapping resource="com/pms/model/SystemConfig.hbm.xml" />
 	<mapping resource="com/pms/model/ResRoleResourceImport.hbm.xml" />
+	<mapping resource="com/pms/model/SyncConfig.hbm.xml" />
 	<mapping resource="com/pms/model/OrganizationImport.hbm.xml" />
 	<mapping resource="com/pms/model/UserImport.hbm.xml" />
 
