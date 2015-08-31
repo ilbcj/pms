@@ -42,13 +42,13 @@ public class OrganizationImport {
 		if( GABID.equals(GA_DEPARTMENT) ) {
 			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_BU );
 		} 
-		else if (Integer.parseInt(GA_DEPARTMENT.substring(6)) > 0) {
+		else if (Long.parseLong(GA_DEPARTMENT.substring(6)) > 0) {
 			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_JICENGSUODUI );
 		}
-		else if (Integer.parseInt(GA_DEPARTMENT.substring(4)) > 0) {
+		else if (Long.parseLong(GA_DEPARTMENT.substring(4)) > 0) {
 			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_XIAN );
 		}
-		else if (Integer.parseInt(GA_DEPARTMENT.substring(2)) > 0) {
+		else if (Long.parseLong(GA_DEPARTMENT.substring(2)) > 0) {
 			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_SHI );
 		}
 		else {

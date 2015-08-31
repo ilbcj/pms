@@ -149,6 +149,7 @@ public class OrgManageService {
 
 	public int QueryAllChildrenNodes(String id, Organization condition, int page, int rows,
 			List<OrgListItem> items) throws Exception {
+		condition.setDELETE_STATUS(Organization.DELSTATUSNO);
 		//get all items;
 		List<Organization> nodes = new ArrayList<Organization>();
 		queryAllChildrenNodesById(id, condition, nodes);
@@ -165,18 +166,31 @@ public class OrgManageService {
 	
 	public void queryAllChildrenNodesById(String pid, Organization condition, List<Organization> children) throws Exception
 	{
+		condition.setDELETE_STATUS(Organization.DELSTATUSNO);
 		OrganizationDAO dao = new OrganizationDAOImpl();
-		List<Organization> res = dao.GetOrgNodeByParentId( pid, condition );
-		if(res == null || res.size() == 0) {
+		List<Organization> res = null; 
+		if( pid.equals("0") ){	
+			res = dao.GetAllOrgs(condition);
+			if(res == null || res.size() == 0) {
+				return;
+			}
+			else {
+				children.addAll(res);
+			}
 			return;
-		}
-		else {
-			children.addAll(res);
-		}
-			
-		for(int i=0; i<res.size(); i++)
-		{
-			queryAllChildrenNodesById(res.get(i).getGA_DEPARTMENT(), condition, children);
+		}else{
+			res = dao.GetOrgNodeByParentId( pid, condition );
+			if(res == null || res.size() == 0) {
+				return;
+			}
+			else {
+				children.addAll(res);
+			}
+				
+			for(int i=0; i<res.size(); i++)
+			{
+				queryAllChildrenNodesById(res.get(i).getGA_DEPARTMENT(), condition, children);
+			}
 		}
 		return;
 	}

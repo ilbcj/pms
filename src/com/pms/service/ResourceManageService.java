@@ -21,6 +21,7 @@ import com.pms.model.ResRoleResource;
 public class ResourceManageService {
 
 	public int QueryAllFeatureItems(ResFeature criteria, int page, int rows, List<ResFeature> items) throws Exception {
+		criteria.setDelete_status(ResFeature.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResFeature> res = dao.GetFeatures( criteria, page, rows );
 		items.addAll(res);
@@ -29,6 +30,7 @@ public class ResourceManageService {
 	}
 	
 	private int QueryAllFeaturesCount(ResFeature criteria) throws Exception {
+		criteria.setDelete_status(ResFeature.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		int count = dao.GetFeaturesCount( criteria );
 		return count;
@@ -91,7 +93,7 @@ public class ResourceManageService {
 			List<String> lement, List<String> section_relatioin_class, 
 			ResData criteria, int page, int rows, List<ResDataListItem> items) 
 					throws Exception {
-		
+		criteria.setDELETE_STATUS(ResData.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResData> res = dao.GetDatas( resource_status, delete_status, resource_type, 
 				dataset_sensitive_level, data_set, section_class, 
@@ -167,6 +169,7 @@ public class ResourceManageService {
 	}	
 	
 	private int QueryAllDatasCount(ResData criteria) throws Exception {
+		criteria.setDELETE_STATUS(ResData.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		int count = dao.GetDatasCount( criteria );
 		return count;
@@ -257,6 +260,7 @@ public class ResourceManageService {
 
 	public int QueryAllRoleItems(ResRole criteria, int page, int rows,
 			List<RoleListItem> items) throws Exception {
+		criteria.setDELETE_STATUS(ResRole.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResRole> res = dao.GetRoles( criteria, page, rows );
 		RoleListItem roleItem = null;
@@ -323,6 +327,7 @@ public class ResourceManageService {
 	}
 	
 	private int QueryAllRolesCount(ResRole criteria) throws Exception {
+		criteria.setDELETE_STATUS(ResRole.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		int count = dao.GetRolesCount( criteria );
 		return count;
