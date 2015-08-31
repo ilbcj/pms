@@ -55,7 +55,6 @@ public class UserManageService {
 	}
 	
 	public int QueryChildrenUsersCount(String pid, User criteria) throws Exception {
-		criteria.setDELETE_STATUS(User.DELSTATUSNO);
 		UserDAO dao = new UserDAOImpl();
 		int count = dao.GetUsersCountByParentId( pid, criteria );
 		return count;
@@ -102,64 +101,72 @@ public class UserManageService {
 
 	public int QueryAllUserItems(String pid, User criteria, int page, int rows,
 			List<UserListItem> items) throws Exception {
-		//get all orgs;
-		criteria.setDELETE_STATUS(User.DELSTATUSNO);
-		List<Organization> nodes = new ArrayList<Organization>();
-		OrgManageService oms = new OrgManageService();
-		oms.queryAllChildrenNodesById(pid, null, nodes);
-		Organization first = new Organization();
-		first.setGA_DEPARTMENT(pid);
-		nodes.add(0, first);
-		
-		//calculate all items' count and get users;
 		UserDAO dao = new UserDAOImpl();
 		int total = 0;
 		List<User> res = new ArrayList<User>();
-		int pre_count = 0;
-		for(int i = 0; i< nodes.size(); i++) {
-			total += QueryChildrenUsersCount( nodes.get(i).getGA_DEPARTMENT(), criteria );
-			if( total <= ((page-1) * rows) ) {
-				pre_count = total;
-			}
-			else if ( total <= (page * rows) ) {
-				List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getGA_DEPARTMENT(), criteria );
-				if( tmp != null && tmp.size() > 0) {
-					if( pre_count < ((page-1) * rows) ) {
-						int fromIndex = rows - (pre_count%rows);
-						int toIndex = tmp.size() - fromIndex >= rows ? fromIndex+rows : tmp.size();
-						res.addAll(tmp.subList( fromIndex, toIndex));
-					}
-					else {
-						int toIndex = rows - (pre_count%rows) >= tmp.size() ? tmp.size() : rows - (pre_count%rows);
-						res.addAll(tmp.subList(0, toIndex));
-					}
-				}
-				pre_count = total;
-			} 
-			else {//total > page * rows
-				if( pre_count < (page * rows) ) {
-					List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getGA_DEPARTMENT(), criteria );
-					if( tmp != null && tmp.size() > 0 ) {
-						int toIndex =  rows - (pre_count%rows);
-						res.addAll(tmp.subList( 0, toIndex));
-					}
-				}
-				pre_count = total;
-			}
-		}
-		
-		//convert to datagrid's item
 		UserListItem userItem = null;
-		for(int i=0; i<res.size(); i++) {
-			userItem = ConvertUserToListItem(res.get(i));
-			items.add(userItem);
+		
+		if (pid.equals("0")) {
+			res=dao.GetAllUsers(criteria, page, rows);
+			for(int i=0; i<res.size(); i++) {
+				userItem = ConvertUserToListItem(res.get(i));
+				items.add(userItem);
+			}
+			total=dao.GetAllUsersCount(criteria);
+		}else{
+			//get all orgs;
+			List<Organization> nodes = new ArrayList<Organization>();
+			OrgManageService oms = new OrgManageService();
+			oms.queryAllChildrenNodesById(pid, null, nodes);
+			Organization first = new Organization();
+			first.setGA_DEPARTMENT(pid);
+			nodes.add(0, first);
+		
+			//calculate all items' count and get users;
+			int pre_count = 0;
+			for(int i = 0; i< nodes.size(); i++) {
+				total += QueryChildrenUsersCount( nodes.get(i).getGA_DEPARTMENT(), criteria );
+				if( total <= ((page-1) * rows) ) {
+					pre_count = total;
+				}
+				else if ( total <= (page * rows) ) {
+					List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getGA_DEPARTMENT(), criteria );
+					if( tmp != null && tmp.size() > 0) {
+						if( pre_count < ((page-1) * rows) ) {
+							int fromIndex = rows - (pre_count%rows);
+							int toIndex = tmp.size() - fromIndex >= rows ? fromIndex+rows : tmp.size();
+							res.addAll(tmp.subList( fromIndex, toIndex));
+						}
+						else {
+							int toIndex = rows - (pre_count%rows) >= tmp.size() ? tmp.size() : rows - (pre_count%rows);
+							res.addAll(tmp.subList(0, toIndex));
+						}
+					}
+					pre_count = total;
+				} 
+				else {//total > page * rows
+					if( pre_count < (page * rows) ) {
+						List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getGA_DEPARTMENT(), criteria );
+						if( tmp != null && tmp.size() > 0 ) {
+							int toIndex =  rows - (pre_count%rows);
+							res.addAll(tmp.subList( 0, toIndex));
+						}
+					}
+					pre_count = total;
+				}
+			}
+			
+			//convert to datagrid's item
+			for(int i=0; i<res.size(); i++) {
+				userItem = ConvertUserToListItem(res.get(i));
+				items.add(userItem);
+			}
 		}
 		return total;
 	}
 
 	public int QueryAllPrivUserItems(String pid, int privStatus, User criteria, int page, int rows,
 			List<PrivUserListItem> items) throws Exception {
-		criteria.setDELETE_STATUS(User.DELSTATUSNO);
 		List<UserListItem> ulItems = new ArrayList<UserListItem>();
 		int total = QueryAllUserItems(pid, criteria, page, rows, ulItems);
 		

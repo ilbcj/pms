@@ -445,6 +445,52 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		}
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Organization> GetAllOrgs(Organization condition) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Organization> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where DELETE_STATUS =:DELETE_STATUS ";
+		if( condition != null ) {
+			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+				sqlString += " and UNIT like :UNIT ";
+			}
+//			if(condition.getUid() != null && condition.getUid().length() > 0) {
+//				sqlString += " and uid = :uid ";
+//			}
+			if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+				sqlString += " and ORG_LEVEL = :ORG_LEVEL ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
+			q.setInteger("DELETE_STATUS", Organization.DELSTATUSNO);
+			if( condition != null ) {
+				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
+				}
+//				if(condition.getUid() != null && condition.getUid().length() > 0) {
+//					q.setString( "uid", condition.getUid() );
+//				}
+				if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+					q.setString( "ORG_LEVEL", condition.getORG_LEVEL() );
+				}
+			}
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 
 	@Override
 	public OrganizationImport OrganizationImportSave(OrganizationImport oi)

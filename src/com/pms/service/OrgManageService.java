@@ -166,17 +166,29 @@ public class OrgManageService {
 	public void queryAllChildrenNodesById(String pid, Organization condition, List<Organization> children) throws Exception
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
-		List<Organization> res = dao.GetOrgNodeByParentId( pid, condition );
-		if(res == null || res.size() == 0) {
+		List<Organization> res = null; 
+		if( pid.equals("0") ){	
+			res = dao.GetAllOrgs(condition);
+			if(res == null || res.size() == 0) {
+				return;
+			}
+			else {
+				children.addAll(res);
+			}
 			return;
-		}
-		else {
-			children.addAll(res);
-		}
-			
-		for(int i=0; i<res.size(); i++)
-		{
-			queryAllChildrenNodesById(res.get(i).getGA_DEPARTMENT(), condition, children);
+		}else{
+			res = dao.GetOrgNodeByParentId( pid, condition );
+			if(res == null || res.size() == 0) {
+				return;
+			}
+			else {
+				children.addAll(res);
+			}
+				
+			for(int i=0; i<res.size(); i++)
+			{
+				queryAllChildrenNodesById(res.get(i).getGA_DEPARTMENT(), condition, children);
+			}
 		}
 		return;
 	}
