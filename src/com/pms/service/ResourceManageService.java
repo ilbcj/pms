@@ -10,6 +10,7 @@ import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.RoleListItem;
+import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
@@ -114,11 +115,11 @@ public class ResourceManageService {
 		item.setId(attr.getId());
 		item.setName(attr.getName());
 		item.setRESOURCE_ID(attr.getRESOURCE_ID());
-		item.setRESOURCE_STATUS(attr.getRESOURCE_STATUS());
+//		item.setRESOURCE_STATUS(attr.getRESOURCE_STATUS());
 		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
 		item.setRESOURCE_REMARK(attr.getRESOURCE_REMARK());				
-		item.setDELETE_STATUS(attr.getDELETE_STATUS());
-		item.setResource_type(attr.getResource_type());
+//		item.setDELETE_STATUS(attr.getDELETE_STATUS());
+//		item.setResource_type(attr.getResource_type());
 //		item.setCLUE_DST_SYS(attr.getCLUE_DST_SYS());
 		item.setDATASET_SENSITIVE_LEVEL(attr.getDATASET_SENSITIVE_LEVEL());	
 		item.setDATA_SET(attr.getDATA_SET());
@@ -128,6 +129,22 @@ public class ResourceManageService {
 		item.setDATA_VERSION(attr.getDATA_VERSION());
 		
 		ResourceDAO dao = new ResourceDAOImpl();
+		List<AttrDictionary> resStatNode = dao.GetDictionarysNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_STATUS, attr.getRESOURCE_STATUS(), attr.getId());
+		for (int i = 0; i < resStatNode.size(); i++) {
+			item.setRESOURCE_STATUS(resStatNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> delStatNode = dao.GetDictionarysNode(AttrDefinition.ATTR_RESOURCEDATA_DELETE_STATUS, attr.getDELETE_STATUS(), attr.getId());
+		for (int i = 0; i < delStatNode.size(); i++) {
+			item.setDELETE_STATUS(delStatNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> resTypeNode = dao.GetDictionarysNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_TYPE, attr.getResource_type(), attr.getId());
+		for (int i = 0; i < resTypeNode.size(); i++) {
+			item.setResource_type(resTypeNode.get(i).getValue());
+		}
+		
+		
 		List<ResDataOrg> nodes = dao.GetResDataOrgByResId(attr.getRESOURCE_ID());
 		
 		OrgManageService oms = new OrgManageService();
@@ -215,7 +232,7 @@ public class ResourceManageService {
 
 	public ResData DeleteResourceData(ResData data) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		List<ResData> nodes=dao.GetDataById(data.getId());
+		List<ResData> nodes=dao.GetDataById(data.getRESOURCE_ID());
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
@@ -427,7 +444,7 @@ public class ResourceManageService {
 	}
 	
 	public void QueryRoleResource(String id, List<ResFeature> features,
-			List<ResData> datas) throws Exception {
+			List<ResDataListItem> items) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(id);
 		
@@ -437,8 +454,13 @@ public class ResourceManageService {
 				features.add(feature);
 			}
 			else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
-				ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
-				datas.add(data);
+				List<ResData> data = dao.GetDataById( rrs.get(i).getRESOURCE_ID() );
+				ResDataListItem resDataListItem = null;System.out.println(data.size());
+				for(int j=0; j<data.size(); j++) {
+					resDataListItem = ConvertDatasDefinitonToResDataListItem( data.get(j) );
+				}
+				items.add(resDataListItem);
+				
 			}
 		}
 		

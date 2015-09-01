@@ -5,6 +5,10 @@ public class AttrDefinition {
 	public final static int ATTRTYPERESOURCEDATA = 2;
 	public final static int ATTRTYPEORG = 3;
 	public final static int ATTRTYPEROLE = 4;
+	
+	public final static String ATTR_RESOURCEDATA_RESOURCE_TYPE = "资源类型";
+	public final static String ATTR_RESOURCEDATA_RESOURCE_STATUS = "资源状态";
+	public final static String ATTR_RESOURCEDATA_DELETE_STATUS = "删除状态";
 
 	private int id;
 	private String name="";
