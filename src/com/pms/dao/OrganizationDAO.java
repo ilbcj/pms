@@ -21,6 +21,8 @@ public interface OrganizationDAO {
 	List<Organization> GetOrgByIdNotIn(List<String> id, Organization condition, int page, int rows) throws Exception;
 	int GetSyncConfigOrgCount(List<String> id, Organization condition) throws Exception;
 	
+	List<Organization> GetAllOrgs() throws Exception;
+	List<Organization> GetAllOrgs(Organization condition) throws Exception;
 	OrganizationImport OrganizationImportSave(OrganizationImport oi) throws Exception;
 	public List<OrganizationImport> GetOrgImports() throws Exception;
 	public void OrgImport(OrganizationImport oi) throws Exception;

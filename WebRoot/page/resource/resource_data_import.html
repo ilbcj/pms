@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>resource_data_import.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">数据资源导入</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div class="easyui-panel" data-options="fit:true,border:false" >
+				<form id="import_file_form" method="post" enctype="multipart/form-data">
+					<table class="nodt" style="width:100%">
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 导入文件</td>
+			                <td><input id="fi" name="fi" class="form_value_mid easyui-filebox" data-options="buttonAlign:'right',buttonText:'浏览...',prompt:'请选择资源文件(50M以内)'"/></td>
+			            </tr>
+			        </table>
+			    </form>
+			    <div class="text_center" style="margin-top:15px;">
+			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importFileSave()">导入文件</a>
+				</div>
+				
+			</div>
+		</div><!-- end of content -->
+	
+	</div><!-- end of layout -->
+	
+	<script type="text/javascript">
+	
+	function importFileSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../resource/fileUpload.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传数据资源信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			}
+		});
+  	}
+  	  	
+	</script>
+	
+  </body>
+</html>
