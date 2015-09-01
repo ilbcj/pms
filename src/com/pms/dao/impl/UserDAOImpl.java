@@ -127,6 +127,197 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<User> GetAllUsers(User criteria, int page, int rows) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<User> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE where DELETE_STATUS =:DELETE_STATUS";
+
+		if( criteria != null ) {
+			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+				sqlString += " and NAME like :NAME ";
+			}
+//			if(criteria.getUSER_STATUS() != User.STATUSNONE) {
+//				sqlString += " and status = :status ";
+//			}
+			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
+			}
+			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+				sqlString += " and POLICE_SORT like :POLICE_SORT ";
+			}
+			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+				sqlString += " and SEXCODE like :SEXCODE ";
+			}
+			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
+			}
+			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
+			}
+			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
+				sqlString += " and position like :position ";
+			}
+			if(criteria.getDept() != null && criteria.getDept().length() > 0) {
+				sqlString += " and dept like :dept ";
+			}
+			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
+			}
+			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+				sqlString += " and POLICE_NO like :POLICE_NO ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
+			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
+			if( criteria != null ) {
+				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
+				}
+//				if(criteria.getStatus() != User.STATUSNONE) {
+//					q.setInteger( "status", criteria.getStatus() );
+//				}
+	
+				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
+				}
+				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
+				}
+				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
+				}
+				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
+				}
+				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
+				}
+				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
+					q.setString( "position", "%" + criteria.getPosition() + "%" );
+				}
+				if(criteria.getDept() != null && criteria.getDept().length() > 0) {
+					q.setString( "dept", "%" + criteria.getDept() + "%" );
+				}
+				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
+				}
+				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
+				}
+			}
+			q.setFirstResult((page-1) * rows);   
+			q.setMaxResults(rows);  
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetAllUsersCount(User criteria) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) from WA_AUTHORITY_POLICE where DELETE_STATUS =:DELETE_STATUS";
+		if( criteria != null ) {
+			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+				sqlString += " and NAME like :NAME ";
+			}
+//			if(criteria.getUSER_STATUS() != User.STATUSNONE) {
+//				sqlString += " and status = :status ";
+//			}
+			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
+			}
+			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+				sqlString += " and POLICE_SORT like :POLICE_SORT ";
+			}
+			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+				sqlString += " and SEXCODE like :SEXCODE ";
+			}
+			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
+			}
+			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
+			}
+			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
+				sqlString += " and position like :position ";
+			}
+			if(criteria.getDept() != null && criteria.getDept().length() > 0) {
+				sqlString += " and dept like :dept ";
+			}
+			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
+			}
+			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+				sqlString += " and POLICE_NO like :POLICE_NO ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
+			if( criteria != null ) {
+				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
+				}
+//				if(criteria.getStatus() != User.STATUSNONE) {
+//					q.setInteger( "status", criteria.getStatus() );
+//				}
+	
+				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
+				}
+				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
+				}
+				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
+				}
+				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
+				}
+				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
+				}
+				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
+					q.setString( "position", "%" + criteria.getPosition() + "%" );
+				}
+				if(criteria.getDept() != null && criteria.getDept().length() > 0) {
+					q.setString( "dept", "%" + criteria.getDept() + "%" );
+				}
+				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
+				}
+				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
+				}
+			}
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> GetUsersByParentId(String pid, int page, int rows)
 			throws Exception {
@@ -200,6 +391,7 @@ public class UserDAOImpl implements UserDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
 			q.setString("GA_DEPARTMENT", pid);
+			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
 			if( criteria != null ) {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
@@ -236,7 +428,6 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
 				}
 			}
-			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -295,6 +486,7 @@ public class UserDAOImpl implements UserDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("GA_DEPARTMENT", pid);
+			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
 			if( criteria != null ) {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
@@ -331,7 +523,6 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
 				}
 			}
-			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
 			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();
 		} catch (Exception e) {

@@ -10,6 +10,9 @@ public interface UserDAO {
 	public User UserAdd(User user) throws Exception;
 	public void UserMod(User user) throws Exception;
 	public void UserDel(User user) throws Exception;
+	List<User> GetAllUsers() throws Exception;
+	List<User> GetAllUsers(User criteria, int page, int rows) throws Exception;
+	int GetAllUsersCount(User criteria) throws Exception;
 
 	public List<User> GetUsersByParentId(String pid, int page, int rows) throws Exception;
 	public List<User> GetUsersByParentIdWithNoPage(String pid, User criteria) throws Exception;

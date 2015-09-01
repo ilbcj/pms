@@ -25,6 +25,9 @@
 	            <li iconCls="icon-leaf" id="menu_resource_data_manage">
 	                <span>数据资源</span>
 	            </li>
+	            <li iconCls="icon-leaf" id="menu_resource_data_import">
+					<span>数据资源导入</span>
+	        	</li>
 			</ul>
         </li>
     </ul>
@@ -40,6 +43,9 @@ $(document).ready(function () {
 			}	
 			else if (node.id == 'menu_resource_data_manage') {
 				$('body').layout('panel','center').panel('refresh','resource/resource_data_manage.html');
+			}	
+			else if (node.id == 'menu_resource_data_import') {
+				$('body').layout('panel','center').panel('refresh','resource/resource_data_import.html');
 			}			
 		}
 	});

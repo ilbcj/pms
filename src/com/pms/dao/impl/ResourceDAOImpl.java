@@ -178,7 +178,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
-			q.setInteger("delete_status", ResFeature.DELSTATUSNO);
+			q.setInteger("delete_status", criteria.getDelete_status());
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
 					q.setString( "name", "%" + criteria.getName() + "%" );
@@ -221,7 +221,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("delete_status", ResFeature.DELSTATUSNO);
+			q.setInteger("delete_status", criteria.getDelete_status());
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
 					q.setString( "name", "%" + criteria.getName() + "%" );
@@ -396,7 +396,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
-			q.setInteger("DELETE_STATUS", ResData.DELSTATUSNO);
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
 					q.setString( "name", "%" + criteria.getName() + "%" );
@@ -514,7 +514,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("DELETE_STATUS", ResData.DELSTATUSNO);
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
 			if( criteria != null ) {
 				if( criteria != null ) {
 					if(criteria.getName() != null && criteria.getName().length() > 0) {
@@ -680,7 +680,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
 				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
-				" WHERE c.type =:type and a.id=:id ";
+				" WHERE b.attrid=c.id and c.type =:type and a.id=:id ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
 			q.setInteger("type", AttrDefinition.ATTRTYPERESOURCEDATA);
@@ -707,10 +707,38 @@ public class ResourceDAOImpl implements ResourceDAO {
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
 				" FROM WA_AUTHORITY_ROLE a,attrdict b,attrdef c " +
-				" WHERE c.type =:type and a.id=:id ";
+				" WHERE b.attrid=c.id and c.type =:type and a.id=:id ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
 			q.setInteger("type", AttrDefinition.ATTRTYPEROLE);
+			q.setInteger("id", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetDictionarysNode(String name, int code, int id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_ROLE a,attrdict b,attrdef c " +
+				" WHERE b.attrid=c.id and c.name=:name and b.code=:code and a.id=:id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setString("name", name);
+			q.setInteger("code", code);
 			q.setInteger("id", id);
 			rs = q.list();
 			tx.commit();
@@ -918,7 +946,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
-			q.setInteger("DELETE_STATUS", ResRole.DELSTATUSNO);
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
 			if( criteria != null ) {
 				if(criteria.getBUSINESS_ROLE_NAME() != null && criteria.getBUSINESS_ROLE_NAME().length() > 0) {
 					q.setString( "BUSINESS_ROLE_NAME", "%" + criteria.getBUSINESS_ROLE_NAME() + "%" );
@@ -963,7 +991,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("DELETE_STATUS", ResRole.DELSTATUSNO);
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
 			if( criteria != null ) {
 				if( criteria != null ) {
 					if(criteria.getBUSINESS_ROLE_NAME() != null && criteria.getBUSINESS_ROLE_NAME().length() > 0) {
@@ -1181,12 +1209,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRoleResource> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and DELETE_STATUS =:DELETE_STATUS";
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
 			q.setString("BUSINESS_ROLE", id);
-			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -1296,15 +1323,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResData> GetDataById(int id) throws Exception {
+	public List<ResData> GetDataById(String resId) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where id = :id";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
-			q.setInteger("id", id);
+			q.setString("RESOURCE_ID", resId);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -1399,12 +1426,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRoleOrg> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_BILATERAL_ROLE_ORG where BUSINESS_ROLE = :BUSINESS_ROLE and DELETE_STATUS =:DELETE_STATUS";
+		String sqlString = "select * from WA_AUTHORITY_BILATERAL_ROLE_ORG where BUSINESS_ROLE = :BUSINESS_ROLE";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleOrg.class);
 			q.setString("BUSINESS_ROLE", id);
-			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -1494,12 +1520,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResDataOrg> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ORG where RESOURCE_ID = :RESOURCE_ID and DELETE_STATUS =:DELETE_STATUS";
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ORG where RESOURCE_ID = :RESOURCE_ID";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResDataOrg.class);
 			q.setString("RESOURCE_ID", id);
-			q.setInteger("DELETE_STATUS", ResDataOrg.DELSTATUSNO);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

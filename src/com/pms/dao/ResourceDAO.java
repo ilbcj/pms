@@ -50,7 +50,7 @@ public interface ResourceDAO {
 	ResFeature GetFeatureByResId(String id) throws Exception;
 	List<ResFeature> GetFeatureById(int id) throws Exception;
 	ResData GetDataByResId(String ResId) throws Exception;
-	List<ResData> GetDataById(int id) throws Exception;
+	List<ResData> GetDataById(String resId) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
 	List<ResData> GetDatasByTime(String time) throws Exception;
@@ -62,6 +62,7 @@ public interface ResourceDAO {
 	int ClearPublicRoleAndDataResourceRelationship() throws Exception;
 
 	List<ResRoleOrg> GetResRoleOrgByRoleid(String id) throws Exception;
-	List<ResDataOrg> GetResDataOrgByResId(String id) throws Exception;	
+	List<ResDataOrg> GetResDataOrgByResId(String id) throws Exception;
+	List<AttrDictionary> GetDictionarysNode(String name, int code, int id) throws Exception;	
 
 }
