@@ -455,7 +455,7 @@ public class ResourceManageService {
 			}
 			else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
 				List<ResData> data = dao.GetDataById( rrs.get(i).getRESOURCE_ID() );
-				ResDataListItem resDataListItem = null;System.out.println(data.size());
+				ResDataListItem resDataListItem = null;
 				for(int j=0; j<data.size(); j++) {
 					resDataListItem = ConvertDatasDefinitonToResDataListItem( data.get(j) );
 				}
