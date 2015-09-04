@@ -35,7 +35,7 @@ import com.pms.webservice.WSExecuteController;
                 	 if( -1 != start && -1 != end ) {
                 		 temp = xmldata.substring(start, end+3);
                 	 }
-                	 xmldata = xmldata.replace(temp, "");
+                	 xmldata = xmldata.replace(temp, "").trim();
                 	 String result = controller.process(xmldata);
                 	 org.cyberpolice.auth.ExecuteResponseE response = new org.cyberpolice.auth.ExecuteResponseE();
                 	 org.cyberpolice.auth.ExecuteResponse executeResponse = new org.cyberpolice.auth.ExecuteResponse();

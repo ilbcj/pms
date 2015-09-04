@@ -21,6 +21,8 @@ import com.pms.webservice.model.SubSearchCondition;
 import com.pms.webservice.model.UserAuth;
 import com.pms.webservice.model.auth.AuthCondition;
 import com.pms.webservice.model.auth.Common010032;
+import com.pms.webservice.model.exchange.Common010131;
+import com.pms.webservice.model.exchange.ExchangeCondition;
 
 public abstract class SyncService {
 	private static Log logger = LogFactory.getLog(SyncService.class);
@@ -29,7 +31,16 @@ public abstract class SyncService {
 	private SearchCondition sc;
 	private SubSearchCondition ssc;
 	private AuthCondition ac;
+	private ExchangeCondition ec;
 	
+	public ExchangeCondition getEc() {
+		return ec;
+	}
+
+	public void setEc(ExchangeCondition ec) {
+		this.ec = ec;
+	}
+
 	public AuthCondition getAc() {
 		return ac;
 	}
@@ -77,6 +88,7 @@ public abstract class SyncService {
 		SearchCondition sc = null;
 		SubSearchCondition ssc = null;
 		AuthCondition ac = null;
+		ExchangeCondition ec = null;
 		
 		List<Element> datasetList = root.getChildren();//getElementsByTagName("DATASET");
 		for(int i=0;i<datasetList.size();i++) {
@@ -87,6 +99,8 @@ public abstract class SyncService {
 					result = new SyncSearchService();
 				} else if ("WA_COMMON_010031".equals(name) ) {
 					result = new SyncAuthenticateService();
+				} else if ("WA_COMMON_010130".equals(name) ) {
+					result = new SyncDataexchangeService();
 				}
 			}
 		}
@@ -111,11 +125,64 @@ public abstract class SyncService {
 					} else if("WA_COMMON_010031".equals(name) ) {
 						ac = parseAuthCondition( element );
 						result.setAc(ac);
+					} else if("WA_COMMON_010130".equals(name) ) {
+						ec = parseExchangeCondition( element );
+						result.setEc(ec);
 					}
 				}
 			}
 		}
 		
+		return result;
+	}
+	
+	private static ExchangeCondition parseExchangeCondition( Element root ) throws Exception {
+		ExchangeCondition result = null;
+		String name = root.getChildren().get(0).getName();
+		if( "DATA".equals(name) ) {
+			result = new ExchangeCondition();
+			List<Element> elementList = root.getChildren().get(0).getChildren();
+			for(int i=0; i<elementList.size(); i++) {
+				Element element = elementList.get(i);
+				if ( "CONDITION".equals(element.getName()) ) {
+					Condition condition = new Condition();
+					condition.setRel(element.getAttributeValue("rel"));
+					List<Item> items = new ArrayList<Item>();
+					List<Element> itemList = element.getChildren();
+					for(int j=0; j<itemList.size(); j++) {
+						Element current = itemList.get(j);
+						Item item = new Item();
+						item.setKey( current.getAttributeValue("key") );
+						item.setEng( convertKeyToEngName( current.getAttributeValue("key") ) );
+						item.setVal( current.getAttributeValue("val") );
+						if(item.getEng() == null || item.getEng().length() == 0) {
+							throw new Exception("unsupport item key:" + item.getKey());
+						}
+						items.add(item);
+					}
+					condition.setItems(items);
+					result.setCondition(condition);
+				} else if ( "DATASET".equals(element.getName()) ) {
+					if( "WA_COMMON_010131".equals( element.getAttributeValue("name")) ) {
+						
+						Common010131 common010131 = parse010131(element);
+						result.setCommon010131(common010131);
+					}
+				} else if("ITEM".equals(element.getName())) {
+				    if( "J010002".equals(element.getAttributeValue("key")) ) {
+				    	result.setTable( element.getAttributeValue("val") );
+				    } else if( "I010018".equals(element.getAttributeValue("key")) ) {
+						result.setAsync( "YES".equalsIgnoreCase(element.getAttributeValue("val") ) );
+					} else if( "H010005".equals(element.getAttributeValue("key")) ) {
+						result.setSyncKey( element.getAttributeValue("val") );
+					} else if( "I010017".equals(element.getAttributeValue("key")) ) {
+						result.setAllReturnCount( Integer.parseInt( element.getAttributeValue("val") ) );
+					} else if( "I010019".equals(element.getAttributeValue("key")) ) {
+						result.setCurrentReturnCount( Integer.parseInt(element.getAttributeValue("val") ) );
+					} 
+				}
+			}
+		}
 		return result;
 	}
 	
@@ -127,7 +194,7 @@ public abstract class SyncService {
 			List<Element> elementList = root.getChildren().get(0).getChildren();
 			for(int i=0; i<elementList.size(); i++) {
 				Element element = elementList.get(i);
-				if ( "CONDITION".equals(element.getName()) || "STC".equalsIgnoreCase( element.getAttributeValue("rel") ) ) {
+				if ( "CONDITION".equals(element.getName()) && "STC".equalsIgnoreCase( element.getAttributeValue("rel") ) ) {
 					Condition stc = new Condition();
 					stc.setRel("STC");
 					List<Item> items = new ArrayList<Item>();
@@ -272,6 +339,35 @@ public abstract class SyncService {
 		return result;
 	}
 
+//<DATASET rmk="要更新的字段信息" name="WA_COMMON_010131">
+//    <DATA>
+//        <ITEM val="刘霞" key="B010001" chn=""/>
+//        <ITEM val="0" key="B010011" chn=""/>
+//    </DATA>
+//</DATASET>	
+	private static Common010131 parse010131(Element root) throws Exception {
+		Common010131 result = new Common010131();
+		Element child = root.getChildren().get(0);
+		String name = child.getName();
+		if( "DATA".equals(name) ) {
+			List<Element> xmlItems = child.getChildren();
+			List<Item> items = new ArrayList<Item>();
+			for(int i = 0; i < xmlItems.size(); i++) {
+				Element xmlCurrentItem = xmlItems.get(i);
+				Item item = new Item();
+				item.setKey( xmlCurrentItem.getAttributeValue("key") );
+				item.setEng( convertKeyToEngName( xmlCurrentItem.getAttributeValue("key") ) );
+				item.setVal( xmlCurrentItem.getAttributeValue("val") );
+				if(item.getEng() == null || item.getEng().length() == 0) {
+					throw new Exception("unsupport value column key:" + item.getKey());
+				}
+				items.add(item);
+			}
+			result.setItems(items);
+		}
+		return result;
+	}
+	
 	private static SubSearchCondition parseSubSearchCondition(Element element) throws Exception {
 		SubSearchCondition result = null;
 		String name = element.getChildren().get(0).getName();
@@ -494,6 +590,7 @@ public abstract class SyncService {
 /////////////////////////////////////////////////////////////////////////////		
 		keyColumnMap.put("220040B", "AUTH_ACCOUNT");
 		keyColumnMap.put("B010001", "NAME");
+		keyColumnMap.put("B010011", "SEXCODE");
 		keyColumnMap.put("B020001", "ISP_ID");
 		keyColumnMap.put("B020005", "BUYPHONE");
 		keyColumnMap.put("B020007", "IMSI");
