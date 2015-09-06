@@ -574,10 +574,13 @@
    		$("#resource_role_manage_center_detail_wapper").panel('open');
     }
     
+    var arr = [];
     function roleCopyResourceData(){
 	    var BUSINESS_ROLE= $("#role_code").textbox('getValue');
 	    var poststr = "role.BUSINESS_ROLE=" + BUSINESS_ROLE;
+	    
     	$.getJSON("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+			arr.push(retObj);
 			if( retObj.dataItems.length ==0 ){
 				warningTip("提示", '没有可复制的资源！');
 				return;
@@ -585,11 +588,11 @@
 			
 			if(retObj.result == true)
 			{
-				$("#rolePasteResourceDataButton").click( function(){ rolePasteResourceData(retObj); });
+				$("#rolePasteResourceDataButton").click( function(){ rolePasteResourceData( arr[arr.length-1] ); });
 			}
 			else
 			{
-				warningTip("提示", '获取角色的资源信息失败');	
+				warningTip("提示", '复制角色的资源信息失败');	
 				refreshDetailPage();
 				return;
 				}
