@@ -1,8 +1,17 @@
 package com.pms.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
@@ -504,15 +513,18 @@ public class ResourceAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String FileUpload(){
+	public String FileUpload() throws IOException{
 		
-		System.out.println("文件的名称："+fiFileName);
-		System.out.println("文件的类型："+fiContentType);
-		if(fi.length()==0){
-			System.out.println("上传文件长度为0");
-			setResult(true);
-			return SUCCESS;
-		}
+//		System.out.println("文件的名称："+fiFileName);
+//		System.out.println("文件的类型："+fiContentType);
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
 		
 		try {
 //			String path=ServletActionContext.getServletContext().getRealPath("")+"/upload/"+fiFileName;
@@ -528,15 +540,24 @@ public class ResourceAction extends ActionSupport {
 //			out.close();
 			
 			ResourceUploadService rus = new ResourceUploadService();
-			rus.UploadResource(fi);
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+				rus.UploadResource(fi);
+			}
+			setResult(true);
+			return null;
 		} catch (Exception e) {
 			setResult(false);
 			this.setMessage("导入文件失败。" + e.getMessage());
-			return SUCCESS;
-		}
-
-		setResult(true);
-		return SUCCESS;
-		
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
+		}		
 	}
 }

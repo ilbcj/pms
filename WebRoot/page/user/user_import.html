@@ -49,7 +49,7 @@
 			     	$.messager.alert("温馨提示","文件上传成功！");
 			     }else{
 			     	$.messager.progress('close');
-			     	errorTip("上传数据资源信息失败："+retObj.message);
+			     	warningTip("上传数据资源信息失败："+retObj.message);
 			     }
 			     $("#import_file_win").window('close');
 			}

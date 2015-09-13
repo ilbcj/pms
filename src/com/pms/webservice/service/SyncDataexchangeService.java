@@ -18,7 +18,6 @@ import com.pms.webservice.model.exchange.ExchangeCondition;
 
 public class SyncDataexchangeService extends SyncService {
 
-	@SuppressWarnings("unused")
 	private Log logger = LogFactory.getLog(SyncDataexchangeService.class);
 	
 	@Override

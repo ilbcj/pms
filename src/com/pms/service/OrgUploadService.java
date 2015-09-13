@@ -90,6 +90,9 @@ public class OrgUploadService {
             			idx.put(SHEET_ORG_PARENT_ID, c);
             		}
             	} else if(r > 2) {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_ORG_NAME) ) {
             			oi.setUNIT(cellValue);
             		} else if ( c == idx.get(SHEET_ORG_ID) ) {

@@ -43,7 +43,6 @@
  			<result name="success" type="json" />
  		</action>
  		<action name="fileUploadOrg" class="com.pms.controller.OrganizationAction" method="FileUploadOrg" >
- 			<result name="success" type="json" />
  			<interceptor-ref name="defaultStack">
 				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
 				<param name="fileUpload.maximumSize">52428800</param>

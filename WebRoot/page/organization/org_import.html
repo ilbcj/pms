@@ -61,13 +61,13 @@
 			url:'../organization/fileUploadOrg.action',
 			success: function(message){
 				var retObj = $.parseJSON(message);
-				
 				if(retObj.result == true){
 					$.messager.progress('close');	// 隐藏进度条
 			     	$.messager.alert("温馨提示","文件上传成功！");
 			     }else{
 			     	$.messager.progress('close');
-			     	errorTip("上传数据资源信息失败："+retObj.message);
+			     	//errorTip("上传数据资源信息失败："+retObj.message);
+			     	warningTip("提示", '上传数据资源信息失败：' + retObj.message);
 			     }
 			     $("#import_file_win").window('close');
 			}

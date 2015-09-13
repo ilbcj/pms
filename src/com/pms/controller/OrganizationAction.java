@@ -1,8 +1,17 @@
 package com.pms.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.OrgListItem;
@@ -327,25 +336,37 @@ public class OrganizationAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
-	public String FileUploadOrg(){
-		if(fi.length()==0){
-			System.out.println("上传文件长度为0");
-			setResult(true);
-			return SUCCESS;
-		}
+	public String FileUploadOrg() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
 		
 		try {
 			OrgUploadService ous = new OrgUploadService();
-			ous.UploadOrg(fi);
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+				ous.UploadOrg(fi);
+			}
+			setResult(true);
+			return null;
 		} catch (Exception e) {
 			setResult(false);
 			this.setMessage("导入文件失败。" + e.getMessage());
-			return SUCCESS;
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
 		}
-
-		setResult(true);
-		return SUCCESS;
-		
 	}
 	
 }

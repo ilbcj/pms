@@ -203,6 +203,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_DATASET_SENSITIVE_COL_DATASET_SENSITIVE_NAME, c);
             		}
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_DATASET_SENSITIVE_COL_DATASET_SENSITIVE_LEVEL) ) {
             			dss.setDATASET_SENSITIVE_LEVEL(cellValue);
             		} else if ( c == idx.get(SHEET_DATASET_SENSITIVE_COL_CLUE_SRC_SYS) ) {
@@ -254,6 +257,9 @@ public class ResourceUploadService {
             		}
             		
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_DATASET_COL_DATA_SET) ) {
             			ds.setDATA_SET(cellValue);
             		} else if ( c == idx.get(SHEET_DATASET_COL_CLUE_SRC_SYS) ) {
@@ -305,6 +311,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_CLASSIFY_COL_CLASSIFY_NAME, c);
             		}             		
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_COLUMN_CLASSIFY_COL_SECTION_CLASS) ) {
             			cc.setSECTION_CLASS(cellValue);
             		} else if ( c == idx.get(SHEET_COLUMN_CLASSIFY_COL_CLUE_SRC_SYS) ) {
@@ -358,6 +367,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_COL_COLUMN_RMK, c);
             		}            		
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_COLUMN_COL_COLUMN_ID) ) {
             			col.setCOLUMN_ID(cellValue);
             		} else if ( c == idx.get(SHEET_COLUMN_COL_CLUE_SRC_SYS) ) {
@@ -412,6 +424,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_NAME, c);
             		}          		
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITTIVE_ID) ) {
             			vs.setVALUE_SENSITTIVE_ID(cellValue);
             		} else if ( c == idx.get(SHEET_VALUE_SENSITIVE_COL_CLUE_SRC_SYS) ) {
@@ -464,6 +479,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_VALUE_COL_COLUMN_ID, c);
             		}
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_VALUE_COL_VALUE_ID) ) {
             			val.setVALUE_ID(cellValue);
             		} else if ( c == idx.get(SHEET_VALUE_COL_CLUE_SRC_SYS) ) {
@@ -518,6 +536,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_ClASSIFY_REALTION_COL_DST_CLASS_CODE, c);
             		}
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_COLUMN_ClASSIFY_REALTION_COL_SECTION_RELATIOIN_CLASS) ) {
             			rcc.setSECTION_RELATIOIN_CLASS(cellValue);
             		} else if ( c == idx.get(SHEET_COLUMN_ClASSIFY_REALTION_COL_CLUE_SRC_SYS) ) {
@@ -572,6 +593,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_ROW_RELATION_COL_VALUE_ID, c);
             		}
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_ROW_RELATION_COL_ID) ) {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_ROW_RELATION_COL_DATA_SET) ) {
@@ -628,6 +652,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_RELATION_COL_COLUMN_ID, c);
             		}
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_COLUMN_RELATION_COL_ID) ) {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_COLUMN_RELATION_COL_DATA_SET) ) {
@@ -682,6 +709,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS, c);
             		}
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_CLASSIFY_RELATION_COL_ID) ) {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_CLASSIFY_RELATION_COL_DATA_SET) ) {
@@ -759,6 +789,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_ROLE_RESOURCE_SECTION_CLASS, c);
             		}            		
             	} else {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_ROLE_RESOURCE_ROLE_TYPE) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
             				roleName = cellValue;

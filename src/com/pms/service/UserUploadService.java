@@ -120,6 +120,9 @@ public class UserUploadService {
             			idx.put(SHEET_USER_OFFICELEVEL, c);
             		}
             	} else if(r > 2) {
+            		if(idx.size() == 0) {
+            			throw new Exception("导入数据文件格式不正确!");
+            		}
             		if( c == idx.get(SHEET_USER_NAME) ) {
             			ui.setNAME(cellValue);
             		} else if ( c == idx.get(SHEET_USER_ORGID) ) {

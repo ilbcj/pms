@@ -378,7 +378,7 @@
 			     	$.messager.alert("温馨提示","文件上传成功！");
 			     }else{
 			     	$.messager.progress('close');
-			     	errorTip("上传数据资源信息失败："+retObj.message);
+			     	warningTip("上传数据资源信息失败："+retObj.message);
 					//$.messager.alert("温馨提示","上传失败，此处只可上传小于50M的Excel文件");
 			     }
 			     $("#import_file_win").window('close');
