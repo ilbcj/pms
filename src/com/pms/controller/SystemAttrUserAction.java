@@ -52,6 +52,7 @@ public class SystemAttrUserAction extends ActionSupport {
 	private List<User> users;
 	private List<ResRole> roles;
 	private List<ResRoleResource> resRoleResources;
+	private String filePath;
 	
 	public AttrDictItem getAttrItem() {
 		return attrItem;
@@ -197,6 +198,12 @@ public class SystemAttrUserAction extends ActionSupport {
 	public void setResRoleResources(List<ResRoleResource> resRoleResources) {
 		this.resRoleResources = resRoleResources;
 	}
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 	
 	public String QueryUserAttrs()
 	{
@@ -297,7 +304,7 @@ public class SystemAttrUserAction extends ActionSupport {
 		DataSyncService dss = new DataSyncService();
 		resDatas = new ArrayList<ResData>();
 		try {
-			dss.DownLoadRes( amount, resDatas );
+			filePath = dss.DownLoadRes( amount, resDatas);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -312,7 +319,7 @@ public class SystemAttrUserAction extends ActionSupport {
 		DataSyncService dss = new DataSyncService();
 		orgNode = new ArrayList<Organization>();
 		try {
-			dss.DownLoadOrg( amount, orgNode );
+			filePath = dss.DownLoadOrg( amount, orgNode );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -327,7 +334,7 @@ public class SystemAttrUserAction extends ActionSupport {
 		DataSyncService dss = new DataSyncService();
 		users = new ArrayList<User>();
 		try {
-			dss.DownLoadUser( amount, users );
+			filePath = dss.DownLoadUser( amount, users );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -342,7 +349,7 @@ public class SystemAttrUserAction extends ActionSupport {
 		DataSyncService dss = new DataSyncService();
 		resRoleResources = new ArrayList<ResRoleResource>();
 		try {
-			dss.DownLoadResRole( amount, resRoleResources );
+			filePath = dss.DownLoadResRole( amount, resRoleResources );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -357,7 +364,7 @@ public class SystemAttrUserAction extends ActionSupport {
 		DataSyncService dss = new DataSyncService();
 		roles = new ArrayList<ResRole>();
 		try {
-			dss.DownLoadRole( amount, roles );
+			filePath = dss.DownLoadRole( amount, roles );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

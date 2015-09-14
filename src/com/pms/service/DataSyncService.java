@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.swing.JOptionPane;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -30,7 +29,7 @@ import com.pms.model.User;
 import com.pms.util.ZipUtil;
 
 public class DataSyncService {
-	public void DownLoadRes(String amount, List<ResData> items) throws Exception {
+	public String DownLoadRes(String amount, List<ResData> items) throws Exception {
 		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -54,7 +53,7 @@ public class DataSyncService {
 		
 		items.addAll(res);
 		if( items.size() == 0 )
-			return;
+			return null;
 		
 		int num = 0;
 		int n = 5000;
@@ -152,10 +151,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "DataRes";
         
-        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+		return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadOrg(String amount, List<Organization> items) throws Exception {
+	public String DownLoadOrg(String amount, List<Organization> items) throws Exception {
        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
        Date date = timeFormat.parse("1970-01-01 00:00:00");
        long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -179,7 +178,7 @@ public class DataSyncService {
 		
 		items.addAll(org);
 		if( items.size() == 0 )
-			return;
+			return null;
 		
 		int num = 0;
 		int n = 5000;
@@ -255,7 +254,7 @@ public class DataSyncService {
             
         String name = "Org";
         
-        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	private String ConvertOrgLevel(String level){
 		String res=null;
@@ -273,7 +272,7 @@ public class DataSyncService {
 		return res;
 				
 	}
-	public void DownLoadUser(String amount, List<User> items) throws Exception {
+	public String DownLoadUser(String amount, List<User> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -297,7 +296,7 @@ public class DataSyncService {
 		
 		items.addAll(user);
 		if( items.size() == 0 )
-			return;
+			return null;
 		
 		int num = 0;
 		int n = 5000;
@@ -400,10 +399,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "User";
         
-        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadResRole(String amount, List<ResRoleResource> items) throws Exception {
+	public String DownLoadResRole(String amount, List<ResRoleResource> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -427,7 +426,7 @@ public class DataSyncService {
 		
 		items.addAll(resRole);
 		if( items.size() == 0 )
-			return;
+			return null;
 		
 		int num = 0;
 		int n = 5000;
@@ -503,10 +502,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "ResInRole";
         
-        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void DownLoadRole(String amount, List<ResRole> items) throws Exception {
+	public String DownLoadRole(String amount, List<ResRole> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
         long second = (System.currentTimeMillis() - date.getTime())/1000;
@@ -530,7 +529,7 @@ public class DataSyncService {
 		
 		items.addAll(role);
 		if( items.size() == 0 )
-			return;
+			return null;
 		
 		int num = 0;
 		int n = 5000;
@@ -614,10 +613,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "Role";
         
-        CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
 	
-	public void CreateIndexXmlAndZip(String xml, String rootPath, String name, String amount) throws Exception {
+	public String CreateIndexXmlAndZip(String xml, String rootPath, String name, String amount) throws Exception {
 	     //xml格式化
         Document doc = DocumentHelper.parseText(xml);       
         OutputFormat format = OutputFormat.createPrettyPrint();
@@ -652,7 +651,9 @@ public class DataSyncService {
 	    zs.compress(rootPath);
 
 	    UpdateConfig(SystemConfigList, name);
-	    JOptionPane.showMessageDialog(null, "导出数据的存放位置及名称："+exportPath +"/"+ zipNnme);   
+	    
+		return exportPath +"/"+ zipNnme;
+	    
 	}
 	
 	public SystemConfig UpdateConfig( List<SystemConfig> scList, String name ) throws Exception
