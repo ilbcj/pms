@@ -171,7 +171,11 @@ public class UserDAOImpl implements UserDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
+<<<<<<< HEAD
+			q.setInteger("DELETE_STATUS", User.DELSTATUSNO );
+=======
 			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
+>>>>>>> master
 			if( criteria != null ) {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
@@ -267,7 +271,11 @@ public class UserDAOImpl implements UserDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
+<<<<<<< HEAD
+			q.setInteger("DELETE_STATUS", User.DELSTATUSNO );
+=======
 			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
+>>>>>>> master
 			if( criteria != null ) {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
@@ -392,7 +400,11 @@ public class UserDAOImpl implements UserDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
 			q.setString("GA_DEPARTMENT", pid);
+<<<<<<< HEAD
+			q.setInteger("DELETE_STATUS", User.DELSTATUSNO );
+=======
 			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
+>>>>>>> master
 			if( criteria != null ) {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );

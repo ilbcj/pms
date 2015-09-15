@@ -474,6 +474,10 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 					q.setString( "ORG_LEVEL", condition.getORG_LEVEL() );
 				}
 			}
+<<<<<<< HEAD
+			
+=======
+>>>>>>> master
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

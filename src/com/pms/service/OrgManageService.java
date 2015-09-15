@@ -149,6 +149,7 @@ public class OrgManageService {
 
 	public int QueryAllChildrenNodes(String id, Organization condition, int page, int rows,
 			List<OrgListItem> items) throws Exception {
+		condition.setDELETE_STATUS(Organization.DELSTATUSNO);
 		//get all items;
 		List<Organization> nodes = new ArrayList<Organization>();
 		queryAllChildrenNodesById(id, condition, nodes);

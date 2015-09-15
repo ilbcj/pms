@@ -50,7 +50,7 @@ public class ResourceAction extends ActionSupport {
 	private List<ResRole> roles;
 	private List<String> addFeatureIds;
 	private List<String> addDataIds;
-	private List<ResDataListItem> items;
+	private List<ResDataListItem> dataItems;
 	private List<RoleListItem> roleItems;
 	
 	private String resource_id;
@@ -70,12 +70,13 @@ public class ResourceAction extends ActionSupport {
 	private String fiFileName;
 	private String fiContentType;
 	
-	public List<ResDataListItem> getItems() {
-		return items;
+
+	public List<ResDataListItem> getDataItems() {
+		return dataItems;
 	}
 
-	public void setItems(List<ResDataListItem> items) {
-		this.items = items;
+	public void setDataItems(List<ResDataListItem> dataItems) {
+		this.dataItems = dataItems;
 	}
 
 	public List<RoleListItem> getRoleItems() {
@@ -401,7 +402,7 @@ public class ResourceAction extends ActionSupport {
 	public String QueryDataItems()
 	{
 		ResourceManageService rms = new ResourceManageService();
-		items = new ArrayList<ResDataListItem>();
+		dataItems = new ArrayList<ResDataListItem>();
 		try {
 			ResData criteria = new ResData();
 			criteria.setName(resName);
@@ -412,7 +413,7 @@ public class ResourceAction extends ActionSupport {
 			total = rms.QueryAllDataItems(resource_status, delete_status, resource_type, 
 					dataset_sensitive_level, data_set, section_class, 
 					element,section_relatioin_class, 
-					criteria, page, rows, items );
+					criteria, page, rows, dataItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -501,9 +502,10 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		features = new ArrayList<ResFeature>();
-		datas = new ArrayList<ResData>();
+//		datas = new ArrayList<ResData>();
+		dataItems = new ArrayList<ResDataListItem>();
 		try {
-			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, datas );
+			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, dataItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

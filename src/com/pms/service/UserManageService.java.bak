@@ -101,7 +101,10 @@ public class UserManageService {
 
 	public int QueryAllUserItems(String pid, User criteria, int page, int rows,
 			List<UserListItem> items) throws Exception {
+<<<<<<< HEAD
+=======
 		criteria.setDELETE_STATUS(User.DELSTATUSNO);
+>>>>>>> master
 		UserDAO dao = new UserDAOImpl();
 		int total = 0;
 		List<User> res = new ArrayList<User>();
@@ -142,6 +145,7 @@ public class UserManageService {
 							int toIndex = rows - (pre_count%rows) >= tmp.size() ? tmp.size() : rows - (pre_count%rows);
 							res.addAll(tmp.subList(0, toIndex));
 						}
+<<<<<<< HEAD
 					}
 					pre_count = total;
 				} 
@@ -154,6 +158,20 @@ public class UserManageService {
 						}
 					}
 					pre_count = total;
+=======
+					}
+					pre_count = total;
+				} 
+				else {//total > page * rows
+					if( pre_count < (page * rows) ) {
+						List<User> tmp = dao.GetUsersByParentIdWithNoPage( nodes.get(i).getGA_DEPARTMENT(), criteria );
+						if( tmp != null && tmp.size() > 0 ) {
+							int toIndex =  rows - (pre_count%rows);
+							res.addAll(tmp.subList( 0, toIndex));
+						}
+					}
+					pre_count = total;
+>>>>>>> master
 				}
 			}
 			

@@ -7,11 +7,11 @@ public class ResDataListItem {
 	private int id;
 	private String name;
 	private String RESOURCE_ID;
-	private int RESOURCE_STATUS;
+	private String RESOURCE_STATUS;
 	private String RESOURCE_DESCRIBE;
 	private String RESOURCE_REMARK;
-	private int DELETE_STATUS;
-	private int resource_type;
+	private String DELETE_STATUS;
+	private String resource_type;
 	private String CLUE_DST_SYS;
 	private String DATASET_SENSITIVE_LEVEL;
 	private String DATA_SET;
@@ -49,11 +49,11 @@ public class ResDataListItem {
 		RESOURCE_ID = rESOURCEID;
 	}
 
-	public int getRESOURCE_STATUS() {
+	public String getRESOURCE_STATUS() {
 		return RESOURCE_STATUS;
 	}
 
-	public void setRESOURCE_STATUS(int rESOURCESTATUS) {
+	public void setRESOURCE_STATUS(String rESOURCESTATUS) {
 		RESOURCE_STATUS = rESOURCESTATUS;
 	}
 
@@ -73,19 +73,19 @@ public class ResDataListItem {
 		RESOURCE_REMARK = rESOURCEREMARK;
 	}
 
-	public int getDELETE_STATUS() {
+	public String getDELETE_STATUS() {
 		return DELETE_STATUS;
 	}
 
-	public void setDELETE_STATUS(int dELETESTATUS) {
+	public void setDELETE_STATUS(String dELETESTATUS) {
 		DELETE_STATUS = dELETESTATUS;
 	}
 
-	public int getResource_type() {
+	public String getResource_type() {
 		return resource_type;
 	}
 
-	public void setResource_type(int resourceType) {
+	public void setResource_type(String resourceType) {
 		resource_type = resourceType;
 	}
 

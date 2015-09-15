@@ -113,6 +113,8 @@
 				    </table>
 				    <div id="dataToolbar" style="background-color:#E7F0FF">
 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData()">添加</a>
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleCopyResourceData()">复制资源</a>
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" id="rolePasteResourceDataButton">粘贴资源</a>
 				    </div><!-- end of featureToolbar -->
 				    
 				    <div id="org_query_win" class="easyui-window" title="组织机构" style="width:80%;height:80%;"
@@ -271,8 +273,7 @@
 	</div><!-- end of layout -->
 <script>
 	function queryResourceData(){
-		var resource_data_query_resource_id = $("#resource_data_query_resource_id").textbox('getValue');
-		var resId=resource_data_query_resource_id;
+		var resId = $("#resource_data_query_resource_id").textbox('getValue');
 
 		var resource_data_query_resource_status = $('#resource_data_query_resource_status').combobox('getValues');
 		var resStatus = "";
@@ -283,17 +284,9 @@
 				}
 			}
 		
-		var resource_data_query_resource_describe = $("#resource_data_query_resource_describe").textbox('getValue');
-		var resDescribe = "";
-	        for(var i = 0; i < resource_data_query_resource_describe.length; i++){
-				resDescribe += resource_data_query_resource_describe[i].toString();
-				if( i < resource_data_query_resource_describe.length - 1 ){
-					resDescribe += ',';
-				}
-			}
-
-		var resource_data_query_resource_remark = $("#resource_data_query_resource_remark").textbox('getValue');
-		var resRemark=resource_data_query_resource_remark;
+		var resDescribe = $("#resource_data_query_resource_describe").textbox('getValue');
+		
+		var resRemark = $("#resource_data_query_resource_remark").textbox('getValue');
 		
 		var resource_data_query_delete_status = $('#resource_data_query_delete_status').combobox('getValues');
 		var deleteStatus = "";
@@ -362,8 +355,8 @@
 			}
 
 		if (resStatus.substr(0,1)==',') resStatus=resStatus.substr(1);
-		if (resRemark.substr(0,1)==',') resRemark=resRemark.substr(1);
-		if (deleteStatus.substr(0,1)==',') deleteStatus=deleteStatus.substr(1);	
+		if (deleteStatus.substr(0,1)==',') deleteStatus=deleteStatus.substr(1);
+		if (resTtype.substr(0,1)==',') resTtype=resTtype.substr(1);
 		if (datasetSensitiveLevel.substr(0,1)==',') datasetSensitiveLevel=datasetSensitiveLevel.substr(1);
 		if (dataSet.substr(0,1)==',') dataSet=dataSet.substr(1);
 		if (sectionClass.substr(0,1)==',') sectionClass=resDescribe.substr(1);
@@ -444,7 +437,7 @@
     	var roleCode = $("#role_code").textbox('getValue');
     	poststr += "&role.BUSINESS_ROLE=" + encodeURIComponent(roleCode);
     	
-    	var roleType = $("#role_type").textbox('getValue');
+    	var roleType = $("#role_type").combobox('getValue');
     	poststr += "&role.BUSINESS_ROLE_TYPE=" + encodeURIComponent(roleType);
     	
     	var roleDestcity = $("#roleOrg_destcity").textbox('getValue');
@@ -456,7 +449,7 @@
     	var roleSrccity = $("#role_srccity").textbox('getValue');
     	poststr += "&role.CLUE_SRC_SYS=" + encodeURIComponent(roleSrccity);
     	
-    	var roleDelstatus = $("#role_delstatus").textbox('getValue');
+    	var roleDelstatus = $("#role_delstatus").combobox('getValue');
     	poststr += "&role.DELETE_STATUS=" + encodeURIComponent(roleDelstatus);
     	
     	var roleDescrib = $("#role_describe").textbox('getValue');
@@ -530,20 +523,25 @@
 		$("#roleOrg_data_version").val(rows[0].dest_data_version);
 		$("#role_name").textbox('setValue',rows[0].BUSINESS_ROLE_NAME);
 		$("#role_code").textbox('setValue',rows[0].BUSINESS_ROLE);
+		$("#role_type").textbox({ disabled: true});
+		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
 		$("#role_type").textbox('setValue',rows[0].BUSINESS_ROLE_TYPE);
 		for(var i=0;i<rows[0].value.length;i++){
 			if(rows[0].value[i].attrid == 16 && rows[0].value[i].code == rows[0].BUSINESS_ROLE_TYPE){//角色类型BUSINESS_ROLE_TYPE==16
 				$("#role_type").textbox('setText',rows[0].value[i].value);
 			}
 		};
-		$("#role_type").textbox({ disabled: true});
-		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
 // 		$("#roleOrg_destcity").textbox('setValue',rows[0].CLUE_DST_SYS);
 		$("#roleOrg_destcity").textbox('setValue',rows[0].pid);
 		$("#roleOrg_destcity").textbox('setText',rows[0].pname);
 		$("#role_systype").textbox('setValue',rows[0].SYSTEM_TYPE);
 		$("#role_srccity").textbox('setValue',rows[0].CLUE_SRC_SYS);
 		$("#role_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
+		for(var i=0;i<rows[0].value.length;i++){
+			if(rows[0].value[i].attrid == 17 && rows[0].value[i].code == rows[0].DELETE_STATUS){//删除状态DELETE_STATUS==17
+				$("#role_delstatus").textbox('setText',rows[0].value[i].value);
+			}
+		};
 		$("#role_describe").textbox('setValue',rows[0].ROLE_DESC);
 		
 		//load datagrid's data
@@ -556,9 +554,8 @@
  				for( index=0; index < retObj.features.length; index++) {
  					insertFeature( retObj.features[index]);
  				}
- 				
- 				for( index=0; index < retObj.datas.length; index++) {
- 					insertData( retObj.datas[index]);
+ 				for( index=0; index < retObj.dataItems.length; index++) {
+ 					insertData( retObj.dataItems[index]);
  				}
 		    	
 //  		    	for( index=0; index < retObj。datas.length; index++ ) {
@@ -575,6 +572,43 @@
 		
 		$("#resource_role_manage_center_main_wapper").panel('close');
    		$("#resource_role_manage_center_detail_wapper").panel('open');
+    }
+    
+    var arr = [];
+    function roleCopyResourceData(){
+	    var BUSINESS_ROLE= $("#role_code").textbox('getValue');
+	    var poststr = "role.BUSINESS_ROLE=" + BUSINESS_ROLE;
+	    
+    	$.getJSON("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+			arr.push(retObj);
+			if( retObj.dataItems.length ==0 ){
+				warningTip("提示", '没有可复制的资源！');
+				return;
+			}
+			
+			if(retObj.result == true)
+			{
+				$("#rolePasteResourceDataButton").click( function(){ rolePasteResourceData( arr[arr.length-1] ); });
+			}
+			else
+			{
+				warningTip("提示", '复制角色的资源信息失败');	
+				refreshDetailPage();
+				return;
+				}
+		});
+		
+    }
+    
+    function rolePasteResourceData(data){
+		if( data.dataItems.length ==0 ){
+			warningTip("提示", '请先选择要粘贴的资源！');
+			return;
+		}
+		var index;
+	    for( index=0; index < data.dataItems.length; index++) {
+	    	insertData( data.dataItems[index]);
+	    }
     }
     
     function delResourceRole(){
@@ -685,7 +719,7 @@
     function insertData(data){
     	var rows = $("#role_resource_data_dg").datagrid('getRows');
 		var index = rows.length;
-
+		
 		if( isExist( rows, data.id ) )
 			return;
 			
@@ -736,7 +770,7 @@
 				var res = new Object();
 				if (data.result == true){
 					res.total = data.total;
-					res.rows = data.items;
+					res.rows = data.dataItems;
 				} else {
 					res.total=0;
 					res.rows = [];
@@ -747,7 +781,6 @@
 	   	$("#resource_role_query_resource_data_win").window({title:'可用值'}).window('open').window('center');
 	   	//insertFlag = 'data';
     }
-    
     
     function getRowIndex(target){
 		var tr = $(target).closest('tr.datagrid-row');
@@ -1013,15 +1046,22 @@ $(document).ready(function () {
 	
 	$.getJSON("../system/queryRoleAttrs.action", function(data) {
 		var business_role_type="";				//角色类型
+		var delete_status="";					//删除状态
 		
 		for(var i=0;i<data.items[0].dictionary.length;i++){
 			business_role_type+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
 		};
+		for(var i=0;i<data.items[1].dictionary.length;i++){
+			delete_status+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
+		};
 		
 		var business_role_typeData='([' + business_role_type.substring(0,business_role_type.length-1) + '])';
 		var business_role_typeJSON = (new Function('return '+business_role_typeData +';'))();
-		
+ 		var delete_statusData='([' + delete_status.substring(0,delete_status.length-1) + '])';
+ 		var delete_statusJSON = (new Function('return '+delete_statusData +';'))();
+ 		
 		business_role_typeJSON.unshift({"id":"","text":"请选择","selected":true});
+		delete_statusJSON.unshift({"id":"","text":"请选择","selected":true});
 		
  		//添加部分
 		$('#role_type').combobox({
@@ -1038,6 +1078,11 @@ $(document).ready(function () {
     			}
     			
     		}
+		});
+		$('#role_delstatus').combobox({
+			data : delete_statusJSON,
+			valueField:'id',
+			textField:'text'
 		});
 
 
