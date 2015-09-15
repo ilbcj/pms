@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quartz>
+<job>
+    <job-detail>
+      <name>job1</name>
+      <group>jGroup1</group>
+      <job-class>com.pms.util.AllExport</job-class>
+    </job-detail>
+    
+    <trigger>
+      <cron>
+        <name>trigger1</name>
+        <group>tGroup1</group>
+        <job-name>job1</job-name>
+        <job-group>jGroup1</job-group>
+        <cron-expression>0 0 23 ? * FRI</cron-expression>
+     </cron>
+    </trigger>
+</job>
+
+<job>
+    <job-detail>
+      <name>job2</name>
+      <group>jGroup2</group>
+      <job-class>com.pms.util.AddExport</job-class>
+    </job-detail>
+    
+    <trigger>
+      <cron>
+        <name>trigger2</name>
+        <group>tGroup2</group>
+        <job-name>job2</job-name>
+        <job-group>jGroup2</job-group>
+        <cron-expression>0 0 23 ? * SUN-THUR</cron-expression>
+     </cron>
+    </trigger>
+</job>
+
+</quartz>

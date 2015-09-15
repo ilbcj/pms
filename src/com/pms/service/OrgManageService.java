@@ -166,7 +166,6 @@ public class OrgManageService {
 	
 	public void queryAllChildrenNodesById(String pid, Organization condition, List<Organization> children) throws Exception
 	{
-		condition.setDELETE_STATUS(Organization.DELSTATUSNO);
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		List<Organization> res = null; 
 		if( pid.equals("0") ){	

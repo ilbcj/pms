@@ -55,7 +55,6 @@ public class UserManageService {
 	}
 	
 	public int QueryChildrenUsersCount(String pid, User criteria) throws Exception {
-		criteria.setDELETE_STATUS(User.DELSTATUSNO);
 		UserDAO dao = new UserDAOImpl();
 		int count = dao.GetUsersCountByParentId( pid, criteria );
 		return count;
