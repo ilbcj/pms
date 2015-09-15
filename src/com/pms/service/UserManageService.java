@@ -55,7 +55,6 @@ public class UserManageService {
 	}
 	
 	public int QueryChildrenUsersCount(String pid, User criteria) throws Exception {
-		criteria.setDELETE_STATUS(User.DELSTATUSNO);
 		UserDAO dao = new UserDAOImpl();
 		int count = dao.GetUsersCountByParentId( pid, criteria );
 		return count;
@@ -123,7 +122,7 @@ public class UserManageService {
 			Organization first = new Organization();
 			first.setGA_DEPARTMENT(pid);
 			nodes.add(0, first);
-		
+			
 			//calculate all items' count and get users;
 			int pre_count = 0;
 			for(int i = 0; i< nodes.size(); i++) {

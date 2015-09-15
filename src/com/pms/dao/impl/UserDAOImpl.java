@@ -446,7 +446,7 @@ public class UserDAOImpl implements UserDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT and DELETE_STATUS =:DELETE_STATUS";
+		String sqlString = "select count(*) from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT";
 		if( criteria != null ) {
 			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 				sqlString += " and NAME like :NAME ";
@@ -486,7 +486,6 @@ public class UserDAOImpl implements UserDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("GA_DEPARTMENT", pid);
-			q.setInteger( "DELETE_STATUS", criteria.getDELETE_STATUS() );
 			if( criteria != null ) {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );

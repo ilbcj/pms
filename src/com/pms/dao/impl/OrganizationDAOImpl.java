@@ -188,7 +188,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Organization> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG and DELETE_STATUS =:DELETE_STATUS";
+		String sqlString = "select * from WA_AUTHORITY_ORGNIZATION where PARENT_ORG = :PARENT_ORG";
 		if( condition != null ) {
 			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 				sqlString += " and UNIT like :UNIT ";
@@ -204,7 +204,6 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setString("PARENT_ORG", pid);
-			q.setInteger("DELETE_STATUS", condition.getDELETE_STATUS());
 			if( condition != null ) {
 				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
