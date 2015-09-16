@@ -203,7 +203,7 @@
     	var tmp = $.toJSON(convertArray);
     	poststr += '&rules='+ tmp;
 
-    	$.getJSON("../group/saveGroupRule.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../group/saveGroupRule.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -215,13 +215,13 @@
 				warningTip("提示", '保存规则群体信息失败');	
 			}
 			addGroupRuleReturn();
-		});
+		}, "json");
     }
     
     var attrValues;
     function openGroupDetailEditRuleWin( data ){
     	
-   		$.getJSON("../system/queryUserAttrs.action?rand=" + Math.random(), {}, function(retObj) {
+   		$.post("../system/queryUserAttrs.action?rand=" + Math.random(), {}, function(retObj) {
 			if(retObj.result == true)
 			{
 				attrValues = retObj.items;
@@ -285,7 +285,7 @@
 			{
 				warningTip("提示", '获取用户属性信息失败');	
 			}
-		});
+		}, "json");
     }
     
     function groupRuleEditRuleWinReturn() {
@@ -384,7 +384,7 @@
 		
 		//load datagrid's data
 		var poststr = "group.id=" + rows[0].id;
-		$.getJSON("../group/queryGroupRules.action?rand=" + Math.random(), poststr, function(retObj) {
+		$.post("../group/queryGroupRules.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -399,7 +399,7 @@
 				refreshDetailPage();
 				return;
 			}
-		});
+		}, "json");
 		
    		$("#group_rule_maintain_center_main_wapper").panel('close');
     	$("#group_rule_maintain_center_detail_wapper").panel('open');
@@ -423,7 +423,7 @@
 					    poststr += "&delIds=" + rows[i].id;
 					}
 
-                    $.getJSON("../group/deleteGroupRules.action", poststr, function(retObj) {
+                    $.post("../group/deleteGroupRules.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -434,7 +434,7 @@
 						{
 							warningTip("提示", "删除群体操作失败：" + retObj.message);
 						}
-					});
+					}, "json");
                 }
             });
 		}

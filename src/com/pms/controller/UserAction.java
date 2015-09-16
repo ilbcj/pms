@@ -245,18 +245,35 @@ public class UserAction extends ActionSupport {
 		this.fiContentType = fiContentType;
 	}
 
-	public String SaveUser()
+	public String SaveUser() throws IOException
 	{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
 		UserManageService ums = new UserManageService();
 		try {
 			user = ums.SaveUser(user);
+			setResult(true);
+			return null;
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
-			return SUCCESS;
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
 		}
-		setResult(true);
-		return SUCCESS;
+		
 	}
 	
 	public String QueryUserItems()

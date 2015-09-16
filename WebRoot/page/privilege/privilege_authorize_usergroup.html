@@ -169,7 +169,7 @@
 			}
 		}
     	//alert(poststr);
-    	$.getJSON("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -181,7 +181,7 @@
 				warningTip("提示", '群体授权失败');	
 			}
 			privAuthGroupDetailWinReturn();
-		});
+		}, "json");
     }
     
     function modGroupAuth(){
@@ -200,7 +200,7 @@
 		
 		var poststr = "ownerIds=" + groupids;
     	poststr += "&ownerType=3";//usergroup type
-		$.getJSON("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {
+		$.post("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -224,7 +224,7 @@
 			{
 				warningTip("提示", '获取群体已授权信息失败');	
 			}
-		});
+		}, "json");
 		return;
     }
     
@@ -252,7 +252,7 @@ $(document).ready(function () {
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.roles;
+				res.rows = data.roleItems;
 			} else {
 				res.total=0;
 				res.rows = [];

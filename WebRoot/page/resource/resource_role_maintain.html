@@ -546,7 +546,7 @@
 		
 		//load datagrid's data
 		var poststr = "role.BUSINESS_ROLE=" + rows[0].BUSINESS_ROLE;
-		$.getJSON("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+		$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -568,7 +568,7 @@
 				refreshDetailPage();
 				return;
 			}
-		});
+		}, "json");
 		
 		$("#resource_role_manage_center_main_wapper").panel('close');
    		$("#resource_role_manage_center_detail_wapper").panel('open');
@@ -579,7 +579,7 @@
 	    var BUSINESS_ROLE= $("#role_code").textbox('getValue');
 	    var poststr = "role.BUSINESS_ROLE=" + BUSINESS_ROLE;
 	    
-    	$.getJSON("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
 			arr.push(retObj);
 			if( retObj.dataItems.length ==0 ){
 				warningTip("提示", '没有可复制的资源！');
@@ -596,7 +596,7 @@
 				refreshDetailPage();
 				return;
 				}
-		});
+		}, "json");
 		
     }
     
@@ -629,7 +629,7 @@
 					    poststr += "&delIds=" + rows[i].id;
 					}
 
-                    $.getJSON("../resource/deleteResourceRole.action", poststr, function(retObj) {
+                    $.post("../resource/deleteResourceRole.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -640,7 +640,7 @@
 						{
 							warningTip("提示", "删除角色操作失败：" + retObj.message);
 						}
-					});
+					}, "json");
                 }
             });
 		}
@@ -914,7 +914,7 @@ $(document).ready(function () {
 		onLoadError: function() { $("#org_query_list_dg").layout('resize',{width:'100%',height:'100%'}); }
 	});
 	
-	$.getJSON("../system/queryResourceDataAttrs.action", function(data) {
+	$.post("../system/queryResourceDataAttrs.action", function(data) {
 		var resource_status="";				//资源状态
 		var delete_status="";				//删除状态
 		var resource_type="";				//资源类型
@@ -1042,9 +1042,9 @@ $(document).ready(function () {
 			
 		});
 
-	});	
+	}, "json");	
 	
-	$.getJSON("../system/queryRoleAttrs.action", function(data) {
+	$.post("../system/queryRoleAttrs.action", function(data) {
 		var business_role_type="";				//角色类型
 		var delete_status="";					//删除状态
 		
@@ -1086,7 +1086,7 @@ $(document).ready(function () {
 		});
 
 
-	});	
+	}, "json");	
 });
 </script>	
   </body>

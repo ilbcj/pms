@@ -331,7 +331,7 @@
 	 		poststr += '&addUserIds=' + rows[index].id;
     	}
 		
-    	$.getJSON("../group/saveGroupUser.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../group/saveGroupUser.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -343,7 +343,7 @@
 				warningTip("提示", '保存离散群体信息失败');	
 			}
 			addGroupUserReturn();
-		});
+		}, "json");
     }
     
     function openGroupDetailQueryUserWin(){
@@ -441,7 +441,7 @@
 		
 		//load datagrid's data
 		var poststr = "group.id=" + rows[0].id;
-		$.getJSON("../group/queryGroupUsers.action?rand=" + Math.random(), poststr, function(retObj) {
+		$.post("../group/queryGroupUsers.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -456,7 +456,7 @@
 				refreshDetailPage();
 				return;
 			}
-		});
+		}, "json");
 		
    		$("#group_user_maintain_center_main_wapper").panel('close');
     	$("#group_user_maintain_center_detail_wapper").panel('open');
@@ -480,7 +480,7 @@
 					    poststr += "&delIds=" + rows[i].id;
 					}
 
-                    $.getJSON("../group/deleteGroupUsers.action", poststr, function(retObj) {
+                    $.post("../group/deleteGroupUsers.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -491,7 +491,7 @@
 						{
 							warningTip("提示", "删除群体操作失败：" + retObj.message);
 						}
-					});
+					}, "json");
                 }
             });
 		}
@@ -592,7 +592,7 @@ $(document).ready(function () {
 			}
 		]]
 	});
-	$.getJSON("../system/queryUserAttrs.action", function(data) {
+	$.post("../system/queryUserAttrs.action", function(data) {
 		var sex="";						//性别
 		var police_type="";				//警种
 		var police_num="";				//警号
@@ -675,7 +675,7 @@ $(document).ready(function () {
 		$("#group_user_query_user_win_query_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
 		$("#group_user_query_user_win_query_dept").combobox('loadData', deptJSON);
 		$("#group_user_query_user_win_query_title").combobox('loadData', titleJSON);
-	});	
+	}, "json");	
 });
 </script>	
   </body>

@@ -282,14 +282,14 @@
 		var poststr = "orgUid=" + orgUid;
 		
 		var flag = $("#org_insertflag").val(); 
-		$.getJSON("../organization/checkUid.action",poststr,function(data){
+		$.post("../organization/checkUid.action",poststr,function(data){
             if(data.checkresult == "ok" || flag == "updateDetail"){ 
                 $('#org_maintain_center_detail_form').submit();
             }else{ 
                 $.messager.alert("提示","该编码已被占用！");
             } 
             
-        }); 
+        }, "json"); 
 		
     }
 	
@@ -311,7 +311,7 @@
 					    poststr += "&delNodeIds=" + rows[i].id;
 					}
 
-                    $.getJSON("../organization/deleteOrgNode.action", poststr, function(retObj) {
+                    $.post("../organization/deleteOrgNode.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -323,7 +323,7 @@
 						{
 							warningTip("提示", '删除机构操作失败：' + retObj.message);
 						}
-					});
+					}, "json");
                 }
             });
 		}
@@ -361,7 +361,7 @@
 			
 		var poststr = "id=" + rows[0].id + "&orgName=" + name + "&orgUid=" + uid;
       	
-        $.getJSON("../organization/modifyOrgNodeName.action", poststr, function(retObj) {
+        $.post("../organization/modifyOrgNodeName.action", poststr, function(retObj) {
 
 			if(retObj.result == true)
 			{
@@ -374,7 +374,7 @@
 				warningTip("提示", '保存机构信息失败：' + retObj.message);
 			}
 			$('#org_mod_name_win').window('close');
-		});
+		}, "json");
 	}
 	function orgModDetail(){
 		if( orgPreMod() ) {
@@ -501,7 +501,7 @@ $(document).ready(function () {
 	    }
 	});
 	
-	$.getJSON("../system/queryOrgAttrs.action", function(data) {
+	$.post("../system/queryOrgAttrs.action", function(data) {
 		var org_level="";				//公安组织机构级别
 		
 		for(var i=0;i<data.items[0].dictionary.length;i++){
@@ -526,7 +526,7 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-	});
+	}, "json");
 		
 });
     </script>

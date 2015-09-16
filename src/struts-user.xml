@@ -22,7 +22,6 @@
 		//数据同步			method="dataSync"
 	 -->
  		<action name="saveUser" class="com.pms.controller.UserAction" method="SaveUser" >
- 			<result name="success" type="json" />
  		</action>
  		<action name="queryUserItems" class="com.pms.controller.UserAction" method="QueryUserItems" >
  			<result name="success" type="json" />

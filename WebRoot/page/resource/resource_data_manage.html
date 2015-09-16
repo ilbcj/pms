@@ -319,7 +319,7 @@
 					    poststr += "&delIds=" + rows[i].id;
 					}
 
-                    $.getJSON("../resource/deleteResourceDatas.action", poststr, function(retObj) {
+                    $.post("../resource/deleteResourceDatas.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -330,7 +330,7 @@
 						{
 							warningTip("提示", '删除数据资源操作失败：' + retObj.message);
 						}
-					});
+					}, "json");
                 }
             });
 		}
@@ -344,7 +344,7 @@ $(document).ready(function () {
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.items;
+				res.rows = data.dataItems;
 			} else {
 				res.total=0;
 				res.rows = [];
@@ -399,16 +399,16 @@ $(document).ready(function () {
 		    var recive = $.parseJSON(data);
 			
 	        if(recive.result == false) {
-	        	errorTip("保存数据资源信息失败："+recive.message);
+	        	warningTip("保存数据资源信息失败："+recive.message);
 	        } else {
-	        	successTip('保存数据资源信息','保存成功',1000);
+	        	successTip("保存数据资源信息","保存成功");
 
 	        	addDataReturn();
 	        }
 	    }
 	});
 
-	$.getJSON("../system/queryResourceDataAttrs.action", function(data) {
+	$.post("../system/queryResourceDataAttrs.action", function(data) {
 		var resource_status="";				//资源状态
 		var delete_status="";				//删除状态
 		var resource_type="";				//资源类型
@@ -537,7 +537,7 @@ $(document).ready(function () {
 			
 		});
 		
-	});	
+	}, "json");	
 });
 </script>	
   </body>

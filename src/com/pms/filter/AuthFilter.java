@@ -34,6 +34,9 @@ public class AuthFilter implements Filter {
 		 * 无法得到的方法，就要把此request对象构造成HttpServletRequest
 		 */
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		request.setCharacterEncoding("utf-8");
+		response.setCharacterEncoding("utf-8");
+		
 		String currentURL = request.getRequestURI(); // 取得根目录所对应的绝对路径:
 		String targetURL = currentURL.substring(currentURL.indexOf("/", 1),
 				currentURL.length()); // 截取到当前文件名用于比较
