@@ -9,12 +9,15 @@ import java.util.Locale;
 
 import sun.misc.BASE64Encoder;
 
+import com.pms.dao.AuditLogDAO;
 import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.UserDAO;
+import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.dto.PrivUserListItem;
 import com.pms.dto.UserListItem;
+import com.pms.model.AuditLog;
 import com.pms.model.Organization;
 import com.pms.model.Privilege;
 import com.pms.model.User;
@@ -29,6 +32,23 @@ public class UserManageService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
+		
+		AuditLog auditLog = new AuditLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditLog.setAdminId(als.adminLogin());
+		auditLog.setIpAddr("");
+		auditLog.setType(AuditLog.LOGTYPEUSER);System.out.println(user.getId() == 0);
+		if(user.getId() == 0){
+			auditLog.setFlag(AuditLog.LOGFLAGADD);
+		}else{
+			auditLog.setFlag(AuditLog.LOGFLAGUPDATE);
+		}
+		auditLog.setDescrib(AuditLog.LOGDESCRIBSUCCESS);
+		auditLog.setLATEST_MOD_TIME(timenow);
+		auditLog = logdao.AuditLogAdd(auditLog);
+		
 		user.setLATEST_MOD_TIME(timenow);
 		user.setDATA_VERSION(user.getDATA_VERSION()+1);
 		String idNum = user.getCERTIFICATE_CODE_SUFFIX();
@@ -38,6 +58,7 @@ public class UserManageService {
 		}
 		
 		user = dao.UserAdd(user);
+		
 		return user;
 	}
 	
@@ -224,6 +245,26 @@ public class UserManageService {
 	
 	public void DeleteUserNodes(List<Integer> nodeIds) throws Exception
 	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditLog auditLog = new AuditLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditLog.setAdminId(als.adminLogin());
+		auditLog.setIpAddr("");
+		auditLog.setType(AuditLog.LOGTYPEUSER);
+		auditLog.setFlag(AuditLog.LOGFLAGDELETE);
+		if(nodeIds == null){
+			auditLog.setDescrib(AuditLog.LOGDESCRIBFAIL);
+		}else{
+			auditLog.setDescrib(AuditLog.LOGDESCRIBSUCCESS);
+		}
+		auditLog.setLATEST_MOD_TIME(timenow);
+		auditLog = logdao.AuditLogAdd(auditLog);	
+		
 		if(nodeIds == null)
 			return;
 		User user;

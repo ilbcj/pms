@@ -97,6 +97,12 @@ $(document).ready(function () {
 		selected: false
 	});
 	
+	$('#mm').accordion('add', {
+		title: '日志审计',
+		href:'menu/log.html',
+		selected: false
+	});
+	
 	$('#mm').accordion('select', 4);
 });
 
