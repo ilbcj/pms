@@ -206,8 +206,8 @@
 					                    <td class="detail_query_value"><input id="resource_data_query_resource_remark" class="easyui-textbox"></input></td>	
 					                </tr>
 					                <tr>
-					                    <td class="detail_query_name text_right">删除状态</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_delete_status" class="easyui-textbox query_value_mid"></input></td>
+					                     <td class="detail_query_name text_right">字段编码</td>
+					                    <td class="detail_query_value"><input id="resource_data_query_element" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">资源类型</td>
 					                    <td class="detail_query_value"><input id="resource_data_query_resource_type" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
@@ -223,15 +223,14 @@
 					                    <td class="detail_query_name text_right">字段分类编码</td>
 					                    <td class="detail_query_value"><input id="resource_data_query_section_class" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
-					                <tr>
-					                    <td class="detail_query_name text_right">字段编码</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_element" class="easyui-textbox query_value_mid"></input></td>
+<!-- 					                <tr> -->
 <!-- 					                    <td class="detail_query_name text_right">目标地市</td> -->
 <!-- 					                    <td class="detail_query_value"><input id="resource_data_query_clue_dst_sys" class="easyui-textbox"></input></td> -->
-					                </tr>
+<!-- 					                </tr> -->
 					                <tr>
 					                	<td class="text_center noborder" style="border:0;" colspan="4">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceData()">查询</a>
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryResourceCondition()">重置</a>
 					                    </td>
 					                </tr>					                
 					            </table>
@@ -288,15 +287,6 @@
 		
 		var resRemark = $("#resource_data_query_resource_remark").textbox('getValue');
 		
-		var resource_data_query_delete_status = $('#resource_data_query_delete_status').combobox('getValues');
-		var deleteStatus = "";
-	        for(var i = 0; i < resource_data_query_delete_status.length; i++){
-				deleteStatus += resource_data_query_delete_status[i].toString();
-				if( i < resource_data_query_delete_status.length - 1 ){
-					deleteStatus += ',';
-				}
-			}
-		
 		var resource_data_query_resource_type = $('#resource_data_query_resource_type').combobox('getValues');
 		var resTtype = "";
 	        for(var i = 0; i < resource_data_query_resource_type.length; i++){
@@ -326,7 +316,7 @@
 					dataSet += ',';
 				}
 			}
-
+		
 		var resource_data_query_section_class = $('#resource_data_query_section_class').combobox('getValues');
 		var sectionClass = "";
 	        for(var i = 0; i < resource_data_query_section_class.length; i++){
@@ -355,20 +345,18 @@
 			}
 
 		if (resStatus.substr(0,1)==',') resStatus=resStatus.substr(1);
-		if (deleteStatus.substr(0,1)==',') deleteStatus=deleteStatus.substr(1);
 		if (resTtype.substr(0,1)==',') resTtype=resTtype.substr(1);
 		if (datasetSensitiveLevel.substr(0,1)==',') datasetSensitiveLevel=datasetSensitiveLevel.substr(1);
 		if (dataSet.substr(0,1)==',') dataSet=dataSet.substr(1);
-		if (sectionClass.substr(0,1)==',') sectionClass=resDescribe.substr(1);
+		if (sectionClass.substr(0,1)==',') sectionClass=sectionClass.substr(1);
 		if (element.substr(0,1)==',') element=element.substr(1);
 		if (sectionRelatioinClass.substr(0,1)==',') sectionRelatioinClass=sectionRelatioinClass.substr(1);
-
+		
 		$("#resource_role_query_resource_data_win_list_dg").datagrid('load',{
 			resCode: resId,
 			resource_status: resStatus,
 			resource_describe: resDescribe,
 			resource_remark: resRemark,
-			delete_status: deleteStatus,
 			resource_type: resTtype,
 // 			clue_dst_sys: clueDstSys,
 			dataset_sensitive_level: datasetSensitiveLevel,
@@ -379,6 +367,20 @@
 		});
 	}
 	
+    function clearQueryResourceCondition(){
+    	$("#resource_data_query_resource_id").textbox({value:""});
+    	$("#resource_data_query_resource_status").textbox({value:""});
+    	$("#resource_data_query_resource_describe").textbox({value:""});
+    	$("#resource_data_query_resource_remark").textbox({value:""});
+    	$("#resource_data_query_delete_status").textbox({value:""});
+    	$("#resource_data_query_resource_type").textbox({value:""});
+    	$("#resource_data_query_dataset_sensitive_level").textbox({value:""});
+    	$("#resource_data_query_data_set").textbox({value:""});
+    	$("#resource_data_query_section_class").textbox({value:""});
+    	$("#resource_data_query_element").textbox({value:""});
+    	$("#resource_data_query_section_relatioin_class").textbox({value:""});
+    }
+    	
     function queryResourceRole(){
     	var name = $("#resource_role_query_name").val();
     	var code = $("#resource_role_query_code").val();
@@ -526,9 +528,9 @@
 		$("#role_type").textbox({ disabled: true});
 		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
 		$("#role_type").textbox('setValue',rows[0].BUSINESS_ROLE_TYPE);
-		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid == 16 && rows[0].value[i].code == rows[0].BUSINESS_ROLE_TYPE){//角色类型BUSINESS_ROLE_TYPE==16
-				$("#role_type").textbox('setText',rows[0].value[i].value);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 16 && rows[0].dictionary[i].code == rows[0].BUSINESS_ROLE_TYPE){//角色类型BUSINESS_ROLE_TYPE==16
+				$("#role_type").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
 // 		$("#roleOrg_destcity").textbox('setValue',rows[0].CLUE_DST_SYS);
@@ -537,9 +539,9 @@
 		$("#role_systype").textbox('setValue',rows[0].SYSTEM_TYPE);
 		$("#role_srccity").textbox('setValue',rows[0].CLUE_SRC_SYS);
 		$("#role_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
-		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid == 17 && rows[0].value[i].code == rows[0].DELETE_STATUS){//删除状态DELETE_STATUS==17
-				$("#role_delstatus").textbox('setText',rows[0].value[i].value);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 17 && rows[0].dictionary[i].code == rows[0].DELETE_STATUS){//删除状态DELETE_STATUS==17
+				$("#role_delstatus").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
 		$("#role_describe").textbox('setValue',rows[0].ROLE_DESC);
@@ -934,19 +936,19 @@ $(document).ready(function () {
 			resource_type+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[3].dictionary.length;i++){
-			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].value+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
+			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
-			data_set+= "{id:'"+data.items[4].dictionary[i].value+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
+			data_set+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[5].dictionary.length;i++){
-			section_class+= "{id:'"+data.items[5].dictionary[i].value+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
+			section_class+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[6].dictionary.length;i++){
-			element+= "{id:'"+data.items[6].dictionary[i].value+"',text:'"+data.items[6].dictionary[i].value+"'},"; 
+			element+= "{id:'"+data.items[6].dictionary[i].code+"',text:'"+data.items[6].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[7].dictionary.length;i++){
-			section_relatioin_class+= "{id:'"+data.items[7].dictionary[i].value+"',text:'"+data.items[7].dictionary[i].value+"'},"; 
+			section_relatioin_class+= "{id:'"+data.items[7].dictionary[i].code+"',text:'"+data.items[7].dictionary[i].value+"'},"; 
 		};
 
 		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';

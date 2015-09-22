@@ -1,5 +1,9 @@
 package com.pms.dto;
 
+import java.util.List;
+
+import com.pms.model.AttrDictionary;
+
 public class UserListItem {
 	private int id;
 	private String name;
@@ -8,6 +12,7 @@ public class UserListItem {
 	private String pname;
 	private String gname;
 	private String unit;
+	private String orgLevel;
 	private String police_type;
 	private String sex;
 	private String idnum;
@@ -16,8 +21,11 @@ public class UserListItem {
 	private String dept;
 	private String title;
 	private String police_num;
+	private String business_type;
 	private int data_version;
 	private String certificate_code_md5;
+	
+	private List<AttrDictionary> dictionary;
 
 	public int getId() {
 		return id;
@@ -61,6 +69,12 @@ public class UserListItem {
 	}
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+	public String getOrgLevel() {
+		return orgLevel;
+	}
+	public void setOrgLevel(String orgLevel) {
+		this.orgLevel = orgLevel;
 	}
 	public String getPolice_type() {
 		return police_type;
@@ -110,6 +124,12 @@ public class UserListItem {
 	public void setPolice_num(String police_num) {
 		this.police_num = police_num;
 	}
+	public String getBusiness_type() {
+		return business_type;
+	}
+	public void setBusiness_type(String business_type) {
+		this.business_type = business_type;
+	}
 	public int getData_version() {
 		return data_version;
 	}
@@ -121,6 +141,12 @@ public class UserListItem {
 	}
 	public void setCertificate_code_md5(String certificateCodeMd5) {
 		certificate_code_md5 = certificateCodeMd5;
+	}
+	public List<AttrDictionary> getDictionary() {
+		return dictionary;
+	}
+	public void setDictionary(List<AttrDictionary> dictionary) {
+		this.dictionary = dictionary;
 	}
 	
 }

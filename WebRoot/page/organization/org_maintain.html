@@ -210,7 +210,7 @@
     	var uid = $("#org_query_uid").val();
     	var level = "";
     	if( isDetailQuery ) {
-    		level = $("#org_query_level").val();
+    		level = $("#org_query_level").combobox("getValue");
     	}
     	$("#org_maintain_center_list_dg").datagrid('load',{
     		queryAll: true,
@@ -388,6 +388,11 @@
 				$("#org_pid").textbox('setValue',rows[0].pid);
 				$("#org_pid").textbox('setText',rows[0].pname);
 				$("#org_level").textbox('setValue',rows[0].orgLevel);
+				for(var i=0;i<rows[0].dictionary.length;i++){
+					if(rows[0].dictionary[i].attrid == 15 && rows[0].dictionary[i].code == rows[0].orgLevel){//公安组织机构级别attrid==15
+						$("#org_level").textbox('setText',rows[0].dictionary[i].value);
+					}
+				};
 				
 				$("#org_insertflag").val("updateDetail");
 	
@@ -505,7 +510,7 @@ $(document).ready(function () {
 		var org_level="";				//公安组织机构级别
 		
 		for(var i=0;i<data.items[0].dictionary.length;i++){
-			org_level+= "{id:'"+data.items[0].dictionary[i].value+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
+			org_level+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
 		};
 		
 		var org_levelData='([' + org_level.substring(0,org_level.length-1) + '])';

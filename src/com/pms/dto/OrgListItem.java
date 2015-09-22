@@ -1,5 +1,9 @@
 package com.pms.dto;
 
+import java.util.List;
+
+import com.pms.model.AttrDictionary;
+
 public class OrgListItem {
 	private String id;
 	private String name;
@@ -9,6 +13,8 @@ public class OrgListItem {
 	private String orgLevel;
 	private String orgParent_org;
 	private int data_version;
+	
+	private List<AttrDictionary> dictionary;
 	
 	public String getPname() {
 		return pname;
@@ -57,6 +63,12 @@ public class OrgListItem {
 	}
 	public void setData_version(int dataVersion) {
 		data_version = dataVersion;
+	}
+	public List<AttrDictionary> getDictionary() {
+		return dictionary;
+	}
+	public void setDictionary(List<AttrDictionary> dictionary) {
+		this.dictionary = dictionary;
 	}
 	
 }

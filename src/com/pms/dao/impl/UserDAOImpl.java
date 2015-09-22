@@ -141,19 +141,19 @@ public class UserDAOImpl implements UserDAO {
 //				sqlString += " and status = :status ";
 //			}
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
+				sqlString += " and BUSINESS_TYPE = :BUSINESS_TYPE ";
 			}
 			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-				sqlString += " and POLICE_SORT like :POLICE_SORT ";
+				sqlString += " and POLICE_SORT = :POLICE_SORT ";
 			}
 			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-				sqlString += " and SEXCODE like :SEXCODE ";
+				sqlString += " and SEXCODE = :SEXCODE ";
 			}
 			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
 			}
 			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
+				sqlString += " and SENSITIVE_LEVEL = :SENSITIVE_LEVEL ";
 			}
 			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 				sqlString += " and position like :position ";
@@ -162,10 +162,10 @@ public class UserDAOImpl implements UserDAO {
 				sqlString += " and dept like :dept ";
 			}
 			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
+				sqlString += " and TAKE_OFFICE = :TAKE_OFFICE ";
 			}
 			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-				sqlString += " and POLICE_NO like :POLICE_NO ";
+				sqlString += " and POLICE_NO = :POLICE_NO ";
 			}
 		}
 		
@@ -181,19 +181,19 @@ public class UserDAOImpl implements UserDAO {
 //				}
 	
 				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
+					q.setString( "BUSINESS_TYPE", criteria.getBUSINESS_TYPE() );
 				}
 				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
+					q.setString( "POLICE_SORT", criteria.getPOLICE_SORT() );
 				}
 				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
+					q.setString( "SEXCODE", criteria.getSEXCODE() );
 				}
 				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
 				}
 				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
+					q.setString( "SENSITIVE_LEVEL", criteria.getSENSITIVE_LEVEL() );
 				}
 				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 					q.setString( "position", "%" + criteria.getPosition() + "%" );
@@ -202,10 +202,10 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "dept", "%" + criteria.getDept() + "%" );
 				}
 				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
+					q.setString( "TAKE_OFFICE", criteria.getTAKE_OFFICE() );
 				}
 				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
+					q.setString( "POLICE_NO", criteria.getPOLICE_NO() );
 				}
 			}
 			q.setFirstResult((page-1) * rows);   
@@ -237,19 +237,19 @@ public class UserDAOImpl implements UserDAO {
 //				sqlString += " and status = :status ";
 //			}
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
+				sqlString += " and BUSINESS_TYPE = :BUSINESS_TYPE ";
 			}
 			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-				sqlString += " and POLICE_SORT like :POLICE_SORT ";
+				sqlString += " and POLICE_SORT = :POLICE_SORT ";
 			}
 			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-				sqlString += " and SEXCODE like :SEXCODE ";
+				sqlString += " and SEXCODE = :SEXCODE ";
 			}
 			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
 			}
 			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
+				sqlString += " and SENSITIVE_LEVEL = :SENSITIVE_LEVEL ";
 			}
 			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 				sqlString += " and position like :position ";
@@ -258,10 +258,10 @@ public class UserDAOImpl implements UserDAO {
 				sqlString += " and dept like :dept ";
 			}
 			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
+				sqlString += " and TAKE_OFFICE = :TAKE_OFFICE ";
 			}
 			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-				sqlString += " and POLICE_NO like :POLICE_NO ";
+				sqlString += " and POLICE_NO = :POLICE_NO ";
 			}
 		}
 		
@@ -277,19 +277,19 @@ public class UserDAOImpl implements UserDAO {
 //				}
 	
 				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
+					q.setString( "BUSINESS_TYPE", criteria.getBUSINESS_TYPE() );
 				}
 				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
+					q.setString( "POLICE_SORT", criteria.getPOLICE_SORT() );
 				}
 				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
+					q.setString( "SEXCODE", criteria.getSEXCODE() );
 				}
 				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
 				}
 				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
+					q.setString( "SENSITIVE_LEVEL", criteria.getSENSITIVE_LEVEL() );
 				}
 				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 					q.setString( "position", "%" + criteria.getPosition() + "%" );
@@ -298,10 +298,10 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "dept", "%" + criteria.getDept() + "%" );
 				}
 				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
+					q.setString( "TAKE_OFFICE", criteria.getTAKE_OFFICE() );
 				}
 				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
+					q.setString( "POLICE_NO", criteria.getPOLICE_NO()  );
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
@@ -361,19 +361,19 @@ public class UserDAOImpl implements UserDAO {
 //				sqlString += " and status = :status ";
 //			}
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
+				sqlString += " and BUSINESS_TYPE = :BUSINESS_TYPE ";
 			}
 			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-				sqlString += " and POLICE_SORT like :POLICE_SORT ";
+				sqlString += " and POLICE_SORT = :POLICE_SORT ";
 			}
 			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-				sqlString += " and SEXCODE like :SEXCODE ";
+				sqlString += " and SEXCODE = :SEXCODE ";
 			}
 			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
 			}
 			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
+				sqlString += " and SENSITIVE_LEVEL = :SENSITIVE_LEVEL ";
 			}
 			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 				sqlString += " and position like :position ";
@@ -382,10 +382,10 @@ public class UserDAOImpl implements UserDAO {
 				sqlString += " and dept like :dept ";
 			}
 			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
+				sqlString += " and TAKE_OFFICE = :TAKE_OFFICE ";
 			}
 			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-				sqlString += " and POLICE_NO like :POLICE_NO ";
+				sqlString += " and POLICE_NO = :POLICE_NO ";
 			}
 		}
 		
@@ -402,19 +402,19 @@ public class UserDAOImpl implements UserDAO {
 //				}
 	
 				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
+					q.setString( "BUSINESS_TYPE", criteria.getBUSINESS_TYPE() );
 				}
 				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
+					q.setString( "POLICE_SORT", criteria.getPOLICE_SORT() );
 				}
 				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
+					q.setString( "SEXCODE", criteria.getSEXCODE() );
 				}
 				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
 				}
 				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
+					q.setString( "SENSITIVE_LEVEL", criteria.getSENSITIVE_LEVEL() );
 				}
 				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 					q.setString( "position", "%" + criteria.getPosition() + "%" );
@@ -423,10 +423,10 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "dept", "%" + criteria.getDept() + "%" );
 				}
 				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
+					q.setString( "TAKE_OFFICE", criteria.getTAKE_OFFICE() );
 				}
 				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
+					q.setString( "POLICE_NO", criteria.getPOLICE_NO() );
 				}
 			}
 			rs = q.list();
@@ -456,19 +456,19 @@ public class UserDAOImpl implements UserDAO {
 //				sqlString += " and status = :status ";
 //			}
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-				sqlString += " and BUSINESS_TYPE like :BUSINESS_TYPE ";
+				sqlString += " and BUSINESS_TYPE = :BUSINESS_TYPE ";
 			}
 			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-				sqlString += " and POLICE_SORT like :POLICE_SORT ";
+				sqlString += " and POLICE_SORT = :POLICE_SORT ";
 			}
 			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-				sqlString += " and SEXCODE like :SEXCODE ";
+				sqlString += " and SEXCODE = :SEXCODE ";
 			}
 			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 				sqlString += " and CERTIFICATE_CODE_SUFFIX like :CERTIFICATE_CODE_SUFFIX ";
 			}
 			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-				sqlString += " and SENSITIVE_LEVEL like :SENSITIVE_LEVEL ";
+				sqlString += " and SENSITIVE_LEVEL = :SENSITIVE_LEVEL ";
 			}
 			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 				sqlString += " and position like :position ";
@@ -477,10 +477,10 @@ public class UserDAOImpl implements UserDAO {
 				sqlString += " and dept like :dept ";
 			}
 			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-				sqlString += " and TAKE_OFFICE like :TAKE_OFFICE ";
+				sqlString += " and TAKE_OFFICE = :TAKE_OFFICE ";
 			}
 			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-				sqlString += " and POLICE_NO like :POLICE_NO ";
+				sqlString += " and POLICE_NO = :POLICE_NO ";
 			}
 		}
 		
@@ -497,19 +497,19 @@ public class UserDAOImpl implements UserDAO {
 //				}
 	
 				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-					q.setString( "BUSINESS_TYPE", "%" + criteria.getBUSINESS_TYPE() + "%" );
+					q.setString( "BUSINESS_TYPE", criteria.getBUSINESS_TYPE() );
 				}
 				if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-					q.setString( "POLICE_SORT", "%" + criteria.getPOLICE_SORT() + "%" );
+					q.setString( "POLICE_SORT", criteria.getPOLICE_SORT() );
 				}
 				if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-					q.setString( "SEXCODE", "%" + criteria.getSEXCODE() + "%" );
+					q.setString( "SEXCODE", criteria.getSEXCODE() );
 				}
 				if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
 					q.setString( "CERTIFICATE_CODE_SUFFIX", "%" + criteria.getCERTIFICATE_CODE_SUFFIX() + "%" );
 				}
 				if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-					q.setString( "SENSITIVE_LEVEL", "%" + criteria.getSENSITIVE_LEVEL() + "%" );
+					q.setString( "SENSITIVE_LEVEL",  criteria.getSENSITIVE_LEVEL() );
 				}
 				if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
 					q.setString( "position", "%" + criteria.getPosition() + "%" );
@@ -518,10 +518,10 @@ public class UserDAOImpl implements UserDAO {
 					q.setString( "dept", "%" + criteria.getDept() + "%" );
 				}
 				if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-					q.setString( "TAKE_OFFICE", "%" + criteria.getTAKE_OFFICE() + "%" );
+					q.setString( "TAKE_OFFICE", criteria.getTAKE_OFFICE() );
 				}
 				if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-					q.setString( "POLICE_NO", "%" + criteria.getPOLICE_NO() + "%" );
+					q.setString( "POLICE_NO", criteria.getPOLICE_NO() );
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();

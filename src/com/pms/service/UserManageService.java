@@ -9,14 +9,17 @@ import java.util.Locale;
 
 import sun.misc.BASE64Encoder;
 
+import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.UserDAO;
+import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.dto.PrivUserListItem;
 import com.pms.dto.UserListItem;
+import com.pms.model.AttrDictionary;
 import com.pms.model.AuditLog;
 import com.pms.model.Organization;
 import com.pms.model.Privilege;
@@ -39,7 +42,7 @@ public class UserManageService {
 		
 		auditLog.setAdminId(als.adminLogin());
 		auditLog.setIpAddr("");
-		auditLog.setType(AuditLog.LOGTYPEUSER);System.out.println(user.getId() == 0);
+		auditLog.setType(AuditLog.LOGTYPEUSER);
 		if(user.getId() == 0){
 			auditLog.setFlag(AuditLog.LOGFLAGADD);
 		}else{
@@ -86,19 +89,20 @@ public class UserManageService {
 		item.setId(user.getId());
 		item.setName(user.getNAME());
 		item.setParent_id(user.getGA_DEPARTMENT());
+		item.setOrgLevel(user.getORG_LEVEL());
 		item.setDept(user.getDept());
 		item.setIdnum(user.getCERTIFICATE_CODE_SUFFIX());
 		item.setMax_sensitive_level(user.getSENSITIVE_LEVEL());
+		item.setBusiness_type(user.getBUSINESS_TYPE());
 		item.setPolice_num(user.getPOLICE_NO());
 		item.setPolice_type(user.getPOLICE_SORT());
 		item.setPosition(user.getPosition());
 		item.setSex(user.getSEXCODE());
 		item.setStatus(user.getUSER_STATUS());
 		item.setTitle(user.getTAKE_OFFICE());
-		item.setUnit(user.getBUSINESS_TYPE());
 		item.setData_version(user.getDATA_VERSION());
 		item.setCertificate_code_md5(user.getCERTIFICATE_CODE_MD5());
-
+		
 		OrgManageService oms = new OrgManageService();
 		String path = oms.QueryNodePath(user.getGA_DEPARTMENT());
 		if(path != null && path.length() > 0){
@@ -116,6 +120,22 @@ public class UserManageService {
 			item.setPname(pname);
 			item.setGname(gname);
 		}
+		
+		AttributeDAO attrdao = new AttributeDAOImpl();
+		List<AttrDictionary> attrDicts = attrdao.GetUsersDictionarys(user.getId());
+		List<AttrDictionary> data = new ArrayList<AttrDictionary>();
+		for(int i = 0; i < attrDicts.size(); i++) {
+			AttrDictionary attrDictionary=new AttrDictionary();
+
+			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
+			attrDictionary.setValue(attrDicts.get(i).getValue());
+			attrDictionary.setCode(attrDicts.get(i).getCode());
+			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			data.add(attrDictionary);
+		}
+		
+		item.setDictionary(data);
 		
 		return item;
 	}
