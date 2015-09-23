@@ -414,9 +414,9 @@ $(document).ready(function () {
 			{field:'pname',title:'组织机构', width:'25%'},
 			{field:'status',title:'状态', width:'25%',
 				formatter: function(value,row,index){
-					if (value == 1){
+					if (value == 0){
 						return "使用中";
-					} else if (value == 2){
+					} else if (value == 1){
 						return "挂起";
 					} else {
 						return "未知用户状态";
@@ -445,7 +445,7 @@ $(document).ready(function () {
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.roles;
+				res.rows = data.roleItems;
 			} else {
 				res.total=0;
 				res.rows = [];
