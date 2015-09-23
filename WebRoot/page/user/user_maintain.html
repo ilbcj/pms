@@ -129,7 +129,7 @@
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 状态</td>
 				                <td><input id="user_status" name="user.USER_STATUS" class="form_value_mid easyui-combobox" 
-				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '0',selected:true}]" /></td>
+				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '正常',value: '0',selected:true}]" /></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 性别</td>
@@ -368,7 +368,7 @@
     
     function formatStatus(val,row){
 		if (val == 0){
-			return "使用中";
+			return "正常";
 		} else if (val == 1) {
 			return "注销";
 		}
@@ -510,9 +510,9 @@ $(document).ready(function () {
 		textField: 'label',
 		data:[{
 			label: '请选择',
-			value: '-1',
+			value: '',
 		},{
-			label: '使用中',
+			label: '正常',
 			value: '0'
 		},{
 			label: '注销',
@@ -607,7 +607,7 @@ $(document).ready(function () {
 		var police_type="";				//警种
 		var police_num="";				//警号
 		var max_sensitive_level="";		//最高敏感级别
-		var dept="";					//业务部门类别
+		var businesstype="";			//业务部门类别
 		var title="";					//职务/职称
 		
 		for(var i=0;i<data.items[0].dictionary.length;i++){
@@ -623,7 +623,7 @@ $(document).ready(function () {
 			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
-			dept+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
+			businesstype+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[5].dictionary.length;i++){
 			title+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
@@ -637,8 +637,8 @@ $(document).ready(function () {
  		var police_numJSON = (new Function('return '+police_numData +';'))(); 
  		var max_sensitive_levelData='([' + max_sensitive_level.substring(0,max_sensitive_level.length-1) + '])';
  		var max_sensitive_levelJSON = (new Function('return '+max_sensitive_levelData +';'))(); 
- 		var deptData='([' + dept.substring(0,dept.length-1) + '])';
- 		var deptJSON = (new Function('return '+deptData +';'))(); 
+ 		var businesstypeData='([' + businesstype.substring(0,businesstype.length-1) + '])';
+ 		var businesstypeJSON = (new Function('return '+businesstypeData +';'))(); 
  		var titleData='([' + title.substring(0,title.length-1) + '])';
  		var titleJSON = (new Function('return '+titleData +';'))();
  		
@@ -646,7 +646,7 @@ $(document).ready(function () {
 		police_typeJSON.unshift({ "id": "", "text": "请选择" });
 		police_numJSON.unshift({ "id": "", "text": "请选择" });
 		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
-		deptJSON.unshift({ "id": "", "text": "请选择" });
+		businesstypeJSON.unshift({ "id": "", "text": "请选择" });
 		titleJSON.unshift({ "id": "", "text": "请选择" });
  		//查询部分
 		$('#user_query_sex').combobox({
@@ -670,7 +670,7 @@ $(document).ready(function () {
 			textField:'text'
 		});
 		$('#user_query_businesstype').combobox({
-			data : deptJSON,
+			data : businesstypeJSON,
 			valueField:'id',
 			textField:'text'
 		});
@@ -702,7 +702,7 @@ $(document).ready(function () {
 			textField:'text'
 		});
 		$('#user_businesstype').combobox({
-			data : deptJSON,
+			data : businesstypeJSON,
 			valueField:'id',
 			textField:'text'
 		});

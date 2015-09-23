@@ -125,7 +125,7 @@
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 状态</td>
 				                <td><input id="user_status" name="user.status" class="form_value_mid easyui-combobox" 
-				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '1',selected:true}]" /></td>
+				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '正常',value: '0',selected:true}]" /></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 性别</td>
@@ -198,7 +198,7 @@
     
     function formatStatus(val,row){
 		if (val == 0){
-			return "使用中";
+			return "正常";
 		} else if (val == 1) {
 			return "注销";
 		}
@@ -355,13 +355,13 @@ $(document).ready(function () {
 		textField: 'label',
 		data:[{
 			label: '请选择',
-			value: '0',
+			value: '',
 		},{
-			label: '使用中',
+			label: '正常',
+			value: '0'
+		},{
+			label: '注销',
 			value: '1'
-		},{
-			label: '挂起',
-			value: '2'
 		}]
 	});
 	

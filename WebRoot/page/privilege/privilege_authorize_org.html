@@ -161,7 +161,7 @@
     	var uid = $("#org_query_uid").val();
     	var level = "";
     	if( isDetailQuery ) {
-    		level = $("#org_query_level").val();
+    		level = $("#org_query_level").combobox("getValue");
     	}
     	$("#privilege_authorize_org_center_list_dg").datagrid('load',{
     		queryAll: true,
@@ -363,7 +363,28 @@ $(document).ready(function () {
 //		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#privilege_authorize_org_detail_win_list_dg").layout('resize',{width:'100%',height:'100%'}); }
 	});
-
+	
+	$.getJSON("../system/queryOrgAttrs.action", function(data) {
+		var org_level="";				//公安组织机构级别
+		
+		for(var i=0;i<data.items[0].dictionary.length;i++){
+			org_level+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
+		};
+		
+		var org_levelData='([' + org_level.substring(0,org_level.length-1) + '])';
+		var org_levelJSON = (new Function('return '+org_levelData +';'))();
+		
+		org_levelJSON.unshift({"id":"","text":"请选择","selected":true});
+		
+		//查询部分
+		$('#org_query_level').combobox({
+			data : org_levelJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		
+	});
+	
 });
     </script>
   </body>
