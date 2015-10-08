@@ -19,7 +19,7 @@
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
 			<div id="privilege_authorize_user_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
 				<div class="easyui-layout" data-options="fit:true,border:false">
-					<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
+					<div region="west" data-options="title:'机构组织',split:true,border:true" style="width:200px;padding:3px">
 			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
 				        <ul id="privilege_authorize_user_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
 				        </ul><!-- end of privilege_authorize_user_tree -->
@@ -30,16 +30,16 @@
 				    		<div id="privilege_authorize_user_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 				    			<table class="nodt" style="width:100%">
 					                <tr>
-					                    <td class="query_name_mini text_right">姓名</td>
-					                    <td class="query_value_mini"><input id="priv_user_query_name" class="easyui-textbox"></input></td>
-					                    <td class="query_name_mini text_right">状态</td>
-					                    <td class="query_value_mini"><input id="priv_user_query_status" value="0" style="width:150px;"></input></td>
-					                    <td class="query_name_mini text_right">授权状态</td>
-					                    <td class="query_value_mini"><input id="priv_user_query_privilege_status" value="0" style="width:150px;"></input></td>
-					                    <td class="query_name_small noborder" style="border:0;" style="border:0;">
+					                    <td class="query_name_small text_right" style="width:5%;">姓名</td>
+					                    <td class="detail_query_value" style="width:10%;"><input id="priv_user_query_name" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small text_right" style="width:5%;">状态</td>
+					                    <td class="detail_query_value" style="width:10%;"><input id="priv_user_query_status" value="0" style="width:150px;"></input></td>
+					                    <td class="query_name_small text_right" style="width:8%;">授权状态</td>
+					                    <td class="detail_query_value" style="width:10%;"><input id="priv_user_query_privilege_status" value="0" style="width:145px;"></input></td>
+					                    <td class="query_name_small noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
 					                    </td>
-					                    <td class="text_right noborder" style="border:0;" style="border:0;">
+					                    <td class="text_right noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryPrivUser()">查询</a>
 			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryPrivUserCondition()">重置</a>
 					                    </td>

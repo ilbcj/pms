@@ -105,10 +105,10 @@
 						    		<div id="group_user_query_user_win_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 						    			<table class="nodt" style="width:100%">
 							                <tr>
-							                    <td class="query_name_small text_right">姓名</td>
-							                    <td class="query_value_small"><input id="group_user_query_user_win_query_name" class="easyui-textbox"></input></td>
-							                    <td class="query_name_small text_right">状态</td>
-							                    <td class="query_value_small"><input id="group_user_query_user_win_query_status" value="0" style="width:150px;"></input></td>
+							                    <td class="query_name_small text_right" style="width:10%;">姓名</td>
+							                    <td class="query_value_small" style="width:10%;"><input id="group_user_query_user_win_query_name" class="easyui-textbox"></input></td>
+							                    <td class="query_name_small text_right" style="width:10%;">状态</td>
+							                    <td class="query_value_small" style="width:10%;" ><input id="group_user_query_user_win_query_status" value="0" style="width:150px;"></input></td>
 							                    <td class="query_name_small noborder" style="border:0;">
 							                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
 							                    </td>
@@ -260,6 +260,7 @@
 			userTitle: title,
 			userPoliceNum: policeNum
 		});
+		toggleDetailQuery();
     }
     
     function cleargroupUserQueryUserWinQueryUserCondition(){

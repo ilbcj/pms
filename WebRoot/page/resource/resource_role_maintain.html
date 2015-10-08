@@ -192,48 +192,60 @@
 					<div id="resource_role_query_resource_data_win_main" class="easyui-layout" data-options="fit:true" >
 						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_data_win_ft'">
 					    	<div id="resource_role_query_resource_data_win_list_dg_tb" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
-				    			<table class="nodt" style="width:100%">
-					                <tr>
-					                    <td class="query_name_small text_right">资源唯一标识</td>
-					                    <td class="query_value_small"><input id="resource_data_query_resource_id" class="easyui-textbox"></input></td>
-					                    <td class="query_name_small text_right">资源状态</td>
-					                    <td class="query_value_small"><input id="resource_data_query_resource_status" class="easyui-textbox query_value_mid"></input></td>					                
-					                </tr>
-									<tr>
-					                    <td class="detail_query_name text_right">资源描述</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_resource_describe" class="easyui-textbox"></input></td>
-					                    <td class="detail_query_name text_right">备注</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_resource_remark" class="easyui-textbox"></input></td>	
-					                </tr>
-					                <tr>
-					                     <td class="detail_query_name text_right">字段编码</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_element" class="easyui-textbox query_value_mid"></input></td>
-					                    <td class="detail_query_name text_right">资源类型</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_resource_type" class="easyui-textbox query_value_mid"></input></td>	
-					                </tr>
-					                <tr>
-					                 <td class="detail_query_name text_right">字段分类关系编码</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_section_relatioin_class" class="easyui-textbox query_value_mid"></input></td>
-					                    <td class="detail_query_name text_right">数据集敏感度编码</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_dataset_sensitive_level" class="easyui-textbox query_value_mid"></input></td>	
-					                </tr>
-					                <tr>
-					                    <td class="detail_query_name text_right">数据集编码</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_data_set" class="easyui-textbox query_value_mid"></input></td>
-					                    <td class="detail_query_name text_right">字段分类编码</td>
-					                    <td class="detail_query_value"><input id="resource_data_query_section_class" class="easyui-textbox query_value_mid"></input></td>	
-					                </tr>
-<!-- 					                <tr> -->
-<!-- 					                    <td class="detail_query_name text_right">目标地市</td> -->
-<!-- 					                    <td class="detail_query_value"><input id="resource_data_query_clue_dst_sys" class="easyui-textbox"></input></td> -->
-<!-- 					                </tr> -->
-					                <tr>
-					                	<td class="text_center noborder" style="border:0;" colspan="4">
-					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceData()">查询</a>
-					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryResourceCondition()">重置</a>
-					                    </td>
-					                </tr>					                
-					            </table>
+				    			<div id="resource_role_query_resource_data_mouseButton" style="display: none;">
+					    			<table class="nodt" style="width:100%;">
+					    				<tr>
+							                <td class="text_center noborder">
+								                <a href="javascript:void(0)" class="easyui-linkbutton" 
+													onmouseover="resource_role_query_resource_data_win_list_dg_tb_mouseButton.style.display='block'">资源查询</a>
+							                </td>
+						            	</tr>
+					    			</table>
+				    			</div><!--   end of resource_role_query_resource_data_mouseButton --> 
+				    			<div id="resource_role_query_resource_data_win_list_dg_tb_mouseButton">
+					    			<table class="nodt" style="width:100%">
+						                <tr>
+						                    <td class="query_name_small text_right">资源唯一标识</td>
+						                    <td class="query_value_small"><input id="resource_data_query_resource_id" class="easyui-textbox"></input></td>
+						                    <td class="query_name_small text_right">资源状态</td>
+						                    <td class="query_value_small"><input id="resource_data_query_resource_status" class="easyui-textbox query_value_mid"></input></td>					                
+						                </tr>
+										<tr>
+						                    <td class="detail_query_name text_right">资源描述</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_resource_describe" class="easyui-textbox"></input></td>
+						                    <td class="detail_query_name text_right">备注</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_resource_remark" class="easyui-textbox"></input></td>	
+						                </tr>
+						                <tr>
+						                     <td class="detail_query_name text_right">字段编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_element" class="easyui-textbox query_value_mid"></input></td>
+						                    <td class="detail_query_name text_right">资源类型</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_resource_type" class="easyui-textbox query_value_mid"></input></td>	
+						                </tr>
+						                <tr>
+						                 <td class="detail_query_name text_right">字段分类关系编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_section_relatioin_class" class="easyui-textbox query_value_mid"></input></td>
+						                    <td class="detail_query_name text_right">数据集敏感度编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_dataset_sensitive_level" class="easyui-textbox query_value_mid"></input></td>	
+						                </tr>
+						                <tr>
+						                    <td class="detail_query_name text_right">数据集编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_data_set" class="easyui-textbox query_value_mid"></input></td>
+						                    <td class="detail_query_name text_right">字段分类编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_section_class" class="easyui-textbox query_value_mid"></input></td>	
+						                </tr>
+	<!-- 					                <tr> -->
+	<!-- 					                    <td class="detail_query_name text_right">目标地市</td> -->
+	<!-- 					                    <td class="detail_query_value"><input id="resource_data_query_clue_dst_sys" class="easyui-textbox"></input></td> -->
+	<!-- 					                </tr> -->
+						                <tr>
+						                	<td class="text_center noborder" style="border:0;" colspan="4">
+						                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceData()">查询</a>
+						                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryResourceCondition()">重置</a>
+						                    </td>
+						                </tr>					                
+						            </table>
+					            </div><!--   end of resource_role_query_resource_data_win_list_dg_tb_mouseButton --> 
 				    			
 								<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  
 							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
@@ -365,6 +377,8 @@
 			element: element,
 			section_relatioin_class: sectionRelatioinClass
 		});
+		resource_role_query_resource_data_win_list_dg_tb_mouseButton.style.display='none';
+		resource_role_query_resource_data_mouseButton.style.display='block';
 	}
 	
     function clearQueryResourceCondition(){
