@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>log.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+    <ul id="menu_log" class="easyui-tree" lines="true">
+        <li iconCls="icon-leaf" id="menu_log_operation">
+            <span>操作日志</span>
+        </li>
+    </ul>
+<script>
+$(document).ready(function () {
+	$('#menu_log').tree({
+		onClick: function(node){
+			if( node.id == 'menu_log_operation') {
+				$('body').layout('panel','center').panel('refresh','log/log_operation.html');
+			}
+			
+		}
+	});
+});
+
+</script>  
+  </body>
+</html>

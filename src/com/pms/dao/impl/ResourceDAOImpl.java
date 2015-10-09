@@ -13,8 +13,6 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.ResourceDAO;
-import com.pms.model.AttrDefinition;
-import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
@@ -304,9 +302,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResData> GetDatas( List<String> resource_status, List<String> delete_status, List<String> resource_type,
-			List<String> dataset_sensitive_level, List<String> data_set, List<String> section_class, 
-			List<String> element, List<String> section_relatioin_class, 
+	public List<ResData> GetDatas( List<String> resource_status, List<String> resource_type, List<String> dataset_sensitive_level,
+			List<String> data_set, List<String> section_class, List<String> element, List<String> section_relatioin_class, 
 			ResData criteria, int page, int rows)
 					throws Exception {
 		
@@ -334,14 +331,6 @@ public class ResourceDAOImpl implements ResourceDAO {
 				}
 				if(list.get(0) != "" && ! list.get(0).equals("")){
 					sqlString += " and RESOURCE_STATUS in (:RESOURCE_STATUS) ";
-				}
-			}
-			if(delete_status != null) {
-				for (int i = 0; i < delete_status.size(); i++) {
-					list =Arrays.asList(delete_status.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and DELETE_STATUS in (:DELETE_STATUS) ";
 				}
 			}
 			if(resource_type != null) {
@@ -418,14 +407,6 @@ public class ResourceDAOImpl implements ResourceDAO {
 						q.setParameterList("RESOURCE_STATUS", list);
 					}
 				}	
-				if(delete_status != null) {
-					for (int i = 0; i < delete_status.size(); i++) {
-						list =Arrays.asList(delete_status.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("DELETE_STATUS", list);
-					}
-				}
 				if(resource_type != null) {
 					for (int i = 0; i < resource_type.size(); i++) {
 						list =Arrays.asList(resource_type.get(i).split(","));	
@@ -671,87 +652,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return result;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<AttrDictionary> GetDatasDictionarys(int id) throws Exception
-	{
-		Session session = HibernateUtil.currentSession();
-		Transaction tx = session.beginTransaction();
-		List<AttrDictionary> rs = null;
-		String sqlString = "SELECT b.* " +
-				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
-				" WHERE b.attrid=c.id and c.type =:type and a.id=:id ";
-		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
-			q.setInteger("type", AttrDefinition.ATTRTYPERESOURCEDATA);
-			q.setInteger("id", id);
-			rs = q.list();
-			tx.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			tx.rollback();
-			System.out.println(e.getMessage());
-			throw e;
-		} finally {
-			HibernateUtil.closeSession();
-		}
-		return rs;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<AttrDictionary> GetRolesDictionarys(int id) throws Exception
-	{
-		Session session = HibernateUtil.currentSession();
-		Transaction tx = session.beginTransaction();
-		List<AttrDictionary> rs = null;
-		String sqlString = "SELECT b.* " +
-				" FROM WA_AUTHORITY_ROLE a,attrdict b,attrdef c " +
-				" WHERE b.attrid=c.id and c.type =:type and a.id=:id ";
-		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
-			q.setInteger("type", AttrDefinition.ATTRTYPEROLE);
-			q.setInteger("id", id);
-			rs = q.list();
-			tx.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			tx.rollback();
-			System.out.println(e.getMessage());
-			throw e;
-		} finally {
-			HibernateUtil.closeSession();
-		}
-		return rs;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<AttrDictionary> GetDictionarysNode(String name, int code, int id) throws Exception
-	{
-		Session session = HibernateUtil.currentSession();
-		Transaction tx = session.beginTransaction();
-		List<AttrDictionary> rs = null;
-		String sqlString = "SELECT b.* " +
-				" FROM WA_AUTHORITY_ROLE a,attrdict b,attrdef c " +
-				" WHERE b.attrid=c.id and c.name=:name and b.code=:code and a.id=:id ";
-		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
-			q.setString("name", name);
-			q.setInteger("code", code);
-			q.setInteger("id", id);
-			rs = q.list();
-			tx.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			tx.rollback();
-			System.out.println(e.getMessage());
-			throw e;
-		} finally {
-			HibernateUtil.closeSession();
-		}
-		return rs;
-	}
+
 	
 	@Override
 	public ResRole RoleAdd(ResRole role) throws Exception {
@@ -1298,17 +1199,18 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public ResData GetDataByResId(String resId) throws Exception {
+	public List<ResData> GetDataByResId(String resId) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		ResData rs = null;
+		List<ResData> rs = null;
 		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("RESOURCE_ID", resId);
-			rs = (ResData) q.uniqueResult();
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1323,15 +1225,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResData> GetDataById(String resId) throws Exception {
+	public List<ResData> GetDataById(int id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where id = :id";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
-			q.setString("RESOURCE_ID", resId);
+			q.setInteger("id", id);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

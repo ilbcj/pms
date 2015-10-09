@@ -71,6 +71,7 @@
 	<mapping resource="com/pms/model/SyncConfig.hbm.xml" />
 	<mapping resource="com/pms/model/OrganizationImport.hbm.xml" />
 	<mapping resource="com/pms/model/UserImport.hbm.xml" />
+	<mapping resource="com/pms/model/AuditLog.hbm.xml" />
 
 </session-factory>
 

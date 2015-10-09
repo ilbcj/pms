@@ -62,7 +62,7 @@
 		    		
 		    	</div><!-- end of privilege_authorize_usergroup_center_main -->
 		    	
-		    	<div id="privilege_authorize_usergroup_detail_win" class="easyui-window" title="用户授权" style="width:80%;height:600px;"
+		    	<div id="privilege_authorize_usergroup_detail_win" class="easyui-window" title="用户授权" style="width:90%;height:90%;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div class="easyui-panel" data-options="fit:true,footer:'#privilege_authorize_usergroup_detail_win_ft'">
 						<table id="privilege_authorize_usergroup_detail_win_list_dg"  
@@ -252,7 +252,7 @@ $(document).ready(function () {
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.roles;
+				res.rows = data.roleItems;
 			} else {
 				res.total=0;
 				res.rows = [];

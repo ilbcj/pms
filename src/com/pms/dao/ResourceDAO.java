@@ -2,7 +2,6 @@ package com.pms.dao;
 
 import java.util.List;
 
-import com.pms.model.AttrDictionary;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
 import com.pms.model.ResFeature;
@@ -22,13 +21,10 @@ public interface ResourceDAO {
 	
 	ResData DataAdd(ResData data) throws Exception;
 	void DataDel(ResData data) throws Exception;
-	List<ResData> GetDatas(List<String> resource_status, List<String> delete_status, List<String> resource_type,
-			List<String> dataset_sensitive_level, List<String> data_set, List<String> section_class, 
-			List<String> element, List<String> section_relatioin_class, 
+	List<ResData> GetDatas(List<String> resource_status, List<String> resource_type, List<String> dataset_sensitive_level,
+			List<String> data_set, List<String> section_class, List<String> element, List<String> section_relatioin_class, 
 			ResData criteria, int page, int rows) throws Exception;
 	int GetDatasCount(ResData criteria) throws Exception;
-	List<AttrDictionary> GetDatasDictionarys(int id) throws Exception;
-	List<AttrDictionary> GetRolesDictionarys(int id) throws Exception;
 	ResData GetDataByColumn(String dataSet, String element) throws Exception;
 	ResData GetDataByRelationRow(String dataSet, String element, String elemnetValue) throws Exception;
 	ResData GetDataByRelationColumn(String dataSet, String sectionClass, String element) throws Exception;
@@ -49,8 +45,8 @@ public interface ResourceDAO {
 	List<ResRole> GetRoleById(int id) throws Exception;
 	ResFeature GetFeatureByResId(String id) throws Exception;
 	List<ResFeature> GetFeatureById(int id) throws Exception;
-	ResData GetDataByResId(String ResId) throws Exception;
-	List<ResData> GetDataById(String resId) throws Exception;
+	List<ResData> GetDataByResId(String resId) throws Exception;
+	List<ResData> GetDataById(int id) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
 	List<ResData> GetDatasByTime(String time) throws Exception;
@@ -63,6 +59,4 @@ public interface ResourceDAO {
 
 	List<ResRoleOrg> GetResRoleOrgByRoleid(String id) throws Exception;
 	List<ResDataOrg> GetResDataOrgByResId(String id) throws Exception;
-	List<AttrDictionary> GetDictionarysNode(String name, int code, int id) throws Exception;	
-
 }
