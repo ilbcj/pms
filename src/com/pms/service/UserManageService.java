@@ -11,16 +11,19 @@ import sun.misc.BASE64Encoder;
 
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.UserDAO;
 import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.dto.PrivUserListItem;
 import com.pms.dto.UserListItem;
 import com.pms.model.AttrDictionary;
-import com.pms.model.AuditLog;
+import com.pms.model.AuditUserLog;
+import com.pms.model.AuditUserLogDescribe;
 import com.pms.model.Organization;
 import com.pms.model.Privilege;
 import com.pms.model.User;
@@ -36,21 +39,20 @@ public class UserManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		
-		AuditLog auditLog = new AuditLog();
+		AuditUserLog auditUserLog = new AuditUserLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
 		
-		auditLog.setAdminId(als.adminLogin());
-		auditLog.setIpAddr("");
-		auditLog.setType(AuditLog.LOGTYPEUSER);
+		auditUserLog.setAdminId(als.adminLogin());
+		auditUserLog.setIpAddr("");
 		if(user.getId() == 0){
-			auditLog.setFlag(AuditLog.LOGFLAGADD);
+			auditUserLog.setFlag(AuditUserLog.LOGFLAGADD);
 		}else{
-			auditLog.setFlag(AuditLog.LOGFLAGUPDATE);
+			auditUserLog.setFlag(AuditUserLog.LOGFLAGUPDATE);
 		}
-		auditLog.setDescrib(AuditLog.LOGDESCRIBSUCCESS);
-		auditLog.setLATEST_MOD_TIME(timenow);
-		auditLog = logdao.AuditLogAdd(auditLog);
+		auditUserLog.setResult(AuditUserLog.LOGRESULTSUCCESS);
+		auditUserLog.setLATEST_MOD_TIME(timenow);
+		auditUserLog = logdao.AuditUserLogAdd(auditUserLog);
 		
 		user.setLATEST_MOD_TIME(timenow);
 		user.setDATA_VERSION(user.getDATA_VERSION()+1);
@@ -61,6 +63,58 @@ public class UserManageService {
 		}
 		
 		user = dao.UserAdd(user);
+		
+		AuditUserLogDescribe auditUserLogDescribe = new AuditUserLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditUserLogDescribe.setLogid(auditUserLog.getId());
+		String str="";
+//		str=user.getNAME()+";"+user.getCERTIFICATE_CODE_SUFFIX()+";"+user.getSEXCODE()+";"
+//				+user.getGA_DEPARTMENT()+";"+user.getUNIT()+";"+user.getPOLICE_SORT()+";"
+//				+user.getPOLICE_NO()+";"+user.getSENSITIVE_LEVEL()+";"+user.getBUSINESS_TYPE()+";"
+//				+user.getTAKE_OFFICE()+";"+user.getPosition()+";"+user.getDept()
+//				;
+	
+		if(user.getNAME() != null && user.getNAME().length() > 0) {
+			str += user.getNAME()+";";
+		}
+		if(user.getBUSINESS_TYPE() != null && user.getBUSINESS_TYPE().length() > 0) {
+			str += user.getBUSINESS_TYPE()+";";
+		}
+		if(user.getPOLICE_SORT() != null && user.getPOLICE_SORT().length() > 0) {
+			str += user.getPOLICE_SORT()+";";
+		}
+		if(user.getSEXCODE() != null && user.getSEXCODE().length() > 0) {
+			str += user.getSEXCODE()+";";
+		}
+		if(user.getCERTIFICATE_CODE_SUFFIX() != null && user.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+			str += user.getCERTIFICATE_CODE_SUFFIX()+";";
+		}
+		if(user.getSENSITIVE_LEVEL() != null && user.getSENSITIVE_LEVEL().length() > 0) {
+			str += user.getSENSITIVE_LEVEL()+";";
+		}
+		if(user.getGA_DEPARTMENT() != null && user.getGA_DEPARTMENT().length() > 0) {
+			str += user.getGA_DEPARTMENT()+";";
+		}
+		if(user.getUNIT() != null && user.getUNIT().length() > 0) {
+			str += user.getUNIT()+";";
+		}
+		if(user.getPosition() != null && user.getPosition().length() > 0) {
+			str += user.getPosition()+";";
+		}
+		if(user.getDept() != null && user.getDept().length() > 0) {
+			str += user.getDept()+";";
+		}
+		if(user.getTAKE_OFFICE() != null && user.getTAKE_OFFICE().length() > 0) {
+			str += user.getTAKE_OFFICE()+";";
+		}
+		if(user.getPOLICE_NO() != null && user.getPOLICE_NO().length() > 0) {
+			str += user.getPOLICE_NO();
+		}
+		auditUserLogDescribe.setDescrib(str);
+		
+		auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 		
 		return user;
 	}
@@ -204,6 +258,69 @@ public class UserManageService {
 				items.add(userItem);
 			}
 		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditUserLog auditUserLog = new AuditUserLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditUserLog.setAdminId(als.adminLogin());
+		auditUserLog.setIpAddr("");
+		auditUserLog.setFlag(AuditUserLog.LOGFLAGQUERY);
+		auditUserLog.setResult(AuditUserLog.LOGRESULTSUCCESS);
+		auditUserLog.setLATEST_MOD_TIME(timenow);
+		auditUserLog = logdao.AuditUserLogAdd(auditUserLog);
+		
+//		str=criteria.getNAME()+";"+criteria.getBUSINESS_TYPE()+";"
+//				+criteria.getPOLICE_SORT()+";"+criteria.getSEXCODE()+";"+criteria.getCERTIFICATE_CODE_SUFFIX()+";"
+//				+criteria.getSENSITIVE_LEVEL()+";"+criteria.getPosition()+";"+criteria.getDept()+";"
+//				+criteria.getTAKE_OFFICE()+";"+criteria.getPOLICE_NO()
+//				;
+		if( criteria != null ) {
+			AuditUserLogDescribe auditUserLogDescribe = new AuditUserLogDescribe();
+			AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+			
+			auditUserLogDescribe.setLogid(auditUserLog.getId());
+			String str="";
+			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
+				str += criteria.getNAME()+";";
+			}
+			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
+				str += criteria.getBUSINESS_TYPE()+";";
+			}
+			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
+				str += criteria.getPOLICE_SORT()+";";
+			}
+			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
+				str += criteria.getSEXCODE()+";";
+			}
+			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+				str += criteria.getCERTIFICATE_CODE_SUFFIX()+";";
+			}
+			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
+				str += criteria.getSENSITIVE_LEVEL()+";";
+			}
+			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
+				str += criteria.getPosition()+";";
+			}
+			if(criteria.getDept() != null && criteria.getDept().length() > 0) {
+				str += criteria.getDept()+";";
+			}
+			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
+				str += criteria.getTAKE_OFFICE()+";";
+			}
+			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
+				str += criteria.getPOLICE_NO();
+			}
+			auditUserLogDescribe.setDescrib(str);
+			
+			auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
+		}
+		
 		return total;
 	}
 
@@ -269,21 +386,20 @@ public class UserManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		
-		AuditLog auditLog = new AuditLog();
+		AuditUserLog auditUserLog = new AuditUserLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
 		
-		auditLog.setAdminId(als.adminLogin());
-		auditLog.setIpAddr("");
-		auditLog.setType(AuditLog.LOGTYPEUSER);
-		auditLog.setFlag(AuditLog.LOGFLAGDELETE);
+		auditUserLog.setAdminId(als.adminLogin());
+		auditUserLog.setIpAddr("");
+		auditUserLog.setFlag(AuditUserLog.LOGFLAGDELETE);
 		if(nodeIds == null){
-			auditLog.setDescrib(AuditLog.LOGDESCRIBFAIL);
+			auditUserLog.setResult(AuditUserLog.LOGRESULTFAIL);
 		}else{
-			auditLog.setDescrib(AuditLog.LOGDESCRIBSUCCESS);
+			auditUserLog.setResult(AuditUserLog.LOGRESULTSUCCESS);
 		}
-		auditLog.setLATEST_MOD_TIME(timenow);
-		auditLog = logdao.AuditLogAdd(auditLog);	
+		auditUserLog.setLATEST_MOD_TIME(timenow);
+		auditUserLog = logdao.AuditUserLogAdd(auditUserLog);
 		
 		if(nodeIds == null)
 			return;
@@ -293,6 +409,58 @@ public class UserManageService {
 			user.setId(nodeIds.get(i));
 			
 			DeleteUserNode(user);
+			
+			AuditUserLogDescribe auditUserLogDescribe = new AuditUserLogDescribe();
+			AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+			
+			auditUserLogDescribe.setLogid(auditUserLog.getId());
+			
+			UserDAO dao = new UserDAOImpl();
+			List<User> nodes = dao.GetUserById(user.getId());
+			String str="";
+			for (int j = 0; j < nodes.size(); j++) {
+				if(nodes.get(j).getNAME() != null && nodes.get(j).getNAME().length() > 0) {
+					str += nodes.get(j).getNAME()+";";
+				}
+				if(nodes.get(j).getBUSINESS_TYPE() != null && nodes.get(j).getBUSINESS_TYPE().length() > 0) {
+					str += nodes.get(j).getBUSINESS_TYPE()+";";
+				}
+				if(nodes.get(j).getPOLICE_SORT() != null && nodes.get(j).getPOLICE_SORT().length() > 0) {
+					str += nodes.get(j).getPOLICE_SORT()+";";
+				}
+				if(nodes.get(j).getSEXCODE() != null && nodes.get(j).getSEXCODE().length() > 0) {
+					str += nodes.get(j).getSEXCODE()+";";
+				}
+				if(nodes.get(j).getCERTIFICATE_CODE_SUFFIX() != null && nodes.get(j).getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+					str += nodes.get(j).getCERTIFICATE_CODE_SUFFIX()+";";
+				}
+				if(nodes.get(j).getSENSITIVE_LEVEL() != null && nodes.get(j).getSENSITIVE_LEVEL().length() > 0) {
+					str += nodes.get(j).getSENSITIVE_LEVEL()+";";
+				}
+				if(nodes.get(j).getGA_DEPARTMENT() != null && nodes.get(j).getGA_DEPARTMENT().length() > 0) {
+					str += nodes.get(j).getGA_DEPARTMENT()+";";
+				}
+				if(nodes.get(j).getUNIT() != null && nodes.get(j).getUNIT().length() > 0) {
+					str += nodes.get(j).getUNIT()+";";
+				}
+				if(nodes.get(j).getPosition() != null && nodes.get(j).getPosition().length() > 0) {
+					str += nodes.get(j).getPosition()+";";
+				}
+				if(nodes.get(j).getDept() != null && nodes.get(j).getDept().length() > 0) {
+					str += nodes.get(j).getDept()+";";
+				}
+				if(nodes.get(j).getTAKE_OFFICE() != null && nodes.get(j).getTAKE_OFFICE().length() > 0) {
+					str += nodes.get(j).getTAKE_OFFICE()+";";
+				}
+				if(nodes.get(j).getPOLICE_NO() != null && nodes.get(j).getPOLICE_NO().length() > 0) {
+					str += nodes.get(j).getPOLICE_NO();
+				}
+			}
+			
+			auditUserLogDescribe.setDescrib(str);
+			
+			auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 		}
 		
 		return ;
@@ -352,4 +520,5 @@ public class UserManageService {
 
 		return value;
 	}
+	
 }

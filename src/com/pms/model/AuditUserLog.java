@@ -1,22 +1,18 @@
 package com.pms.model;
 
-public class AuditLog {
+public class AuditUserLog {
+	public final static String LOGFLAGQUERY = "query";
 	public final static String LOGFLAGADD = "add";
 	public final static String LOGFLAGUPDATE = "update";
 	public final static String LOGFLAGDELETE = "delete";
-	public final static String LOGDESCRIBSUCCESS = "成功";
-	public final static String LOGDESCRIBFAIL = "失败"; 
-	public final static int LOGTYPEUSER = 1;
-	public final static int LOGTYPERESOURCEDATA = 2;
-	public final static int LOGTYPEORG = 3;
-	public final static int LOGTYPEROLE = 4;
+	public final static String LOGRESULTSUCCESS = "成功";
+	public final static String LOGRESULTFAIL = "失败"; 
 	
 	private int id;
 	private int adminId;
 	private String ipAddr;
-	private int type;
 	private String flag;
-	private String describ;
+	private String result;
 	private String LATEST_MOD_TIME;
 	
 	public int getId() {
@@ -37,23 +33,17 @@ public class AuditLog {
 	public void setIpAddr(String ipAddr) {
 		this.ipAddr = ipAddr;
 	}
-	public int getType() {
-		return type;
-	}
-	public void setType(int type) {
-		this.type = type;
-	}
 	public String getFlag() {
 		return flag;
 	}
 	public void setFlag(String flag) {
 		this.flag = flag;
 	}
-	public String getDescrib() {
-		return describ;
+	public String getResult() {
+		return result;
 	}
-	public void setDescrib(String describ) {
-		this.describ = describ;
+	public void setResult(String result) {
+		this.result = result;
 	}
 	public String getLATEST_MOD_TIME() {
 		return LATEST_MOD_TIME;

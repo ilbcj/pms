@@ -13,16 +13,16 @@
   
   <body>
     <ul id="menu_log" class="easyui-tree" lines="true">
-        <li iconCls="icon-leaf" id="menu_log_operation">
-            <span>操作日志</span>
+        <li iconCls="icon-leaf" id="menu_userlog_operation">
+            <span>用户操作日志</span>
         </li>
     </ul>
 <script>
 $(document).ready(function () {
 	$('#menu_log').tree({
 		onClick: function(node){
-			if( node.id == 'menu_log_operation') {
-				$('body').layout('panel','center').panel('refresh','log/log_operation.html');
+			if( node.id == 'menu_userlog_operation') {
+				$('body').layout('panel','center').panel('refresh','log/userlog_operation.html');
 			}
 			
 		}

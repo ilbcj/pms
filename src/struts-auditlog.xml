@@ -15,7 +15,7 @@
 		//审计				method="AuditLogQuery"
 		
 	 -->
- 		<action name="queryAllAuditLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditLog" >
+ 		<action name="queryAllAuditUserLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditUserLog" >
  			<result name="success" type="json" />
  		</action>
  		

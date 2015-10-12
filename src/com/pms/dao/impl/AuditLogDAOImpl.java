@@ -10,19 +10,19 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.AuditLogDAO;
 import com.pms.model.HibernateUtil;
-import com.pms.model.AuditLog;
+import com.pms.model.AuditUserLog;
 
 public class AuditLogDAOImpl implements AuditLogDAO {
 	
 	@Override
-	public AuditLog AuditLogAdd(AuditLog auditLog) throws Exception {
+	public AuditUserLog AuditUserLogAdd(AuditUserLog auditUserLog) throws Exception {
 		//打开线程安全的session对象
 		Session session = HibernateUtil.currentSession();
 		//打开事务
 		Transaction tx = session.beginTransaction();
 		try
 		{
-			auditLog = (AuditLog) session.merge(auditLog);
+			auditUserLog = (AuditUserLog) session.merge(auditUserLog);
 			tx.commit();
 		}
 		catch(ConstraintViolationException cne){
@@ -47,32 +47,32 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		{
 			HibernateUtil.closeSession();
 		}
-		return auditLog;
+		return auditUserLog;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<AuditLog> GetAllAuditLogs(AuditLog criteria, int page, int rows)
+	public List<AuditUserLog> GetAllAuditUserLogs(AuditUserLog criteria, int page, int rows)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		List<AuditLog> rs = null;
-		String sqlString = "select * from wa_authority_auditlog where 1 = 1 ";
+		List<AuditUserLog> rs = null;
+		String sqlString = "select * from wa_authority_auditlog_user where 1 = 1 ";
 		if( criteria != null ) {
-//			if(criteria.getName() != null && criteria.getName().length() > 0) {
-//				sqlString += " and name like :name ";
-//			}
+			if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+				sqlString += " and flag =:flag ";
+			}
 //			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
 //				sqlString += " and code = :code ";
 //			}
 		}
 		
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(AuditLog.class);
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditUserLog.class);
 			if( criteria != null ) {
-//				if(criteria.getName() != null && criteria.getName().length() > 0) {
-//					q.setString( "name", "%" + criteria.getName() + "%" );
-//				}
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					q.setString( "flag",  criteria.getFlag() );
+				}
 //				if(criteria.getCode() != null && criteria.getCode().length() > 0) {
 //					q.setString( "code", criteria.getCode());
 //				}
@@ -95,11 +95,11 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 	}
 	
 	@Override
-	public int GetAuditLogsCount(AuditLog criteria) throws Exception {
+	public int GetAuditUserLogsCount(AuditUserLog criteria) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from wa_authority_auditlog where 1=1 ";
+		String sqlString = "select count(*) from wa_authority_auditlog_user where 1=1 ";
 		if( criteria != null ) {
 //			if(criteria.getName() != null && criteria.getName().length() > 0) {
 //			sqlString += " and name like :name ";

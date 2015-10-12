@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.pms.model.AuditLog;
+import com.pms.dto.UserLogItem;
+import com.pms.model.AuditUserLog;
 import com.pms.service.AuditLogService;
 
 @SuppressWarnings("serial")
@@ -16,7 +17,9 @@ public class AuditLogAction extends ActionSupport {
 	private int total;
 	private String message;
 	private boolean result;
-	private List<AuditLog> items;
+	private List<AuditUserLog> items;
+	private List<UserLogItem> userLogItems;
+	private String flag;
 	
 	public int getPage() {
 		return page;
@@ -48,20 +51,34 @@ public class AuditLogAction extends ActionSupport {
 	public void setResult(boolean result) {
 		this.result = result;
 	}
-	public List<AuditLog> getItems() {
+	public List<AuditUserLog> getItems() {
 		return items;
 	}
-	public void setItems(List<AuditLog> items) {
+	public void setItems(List<AuditUserLog> items) {
 		this.items = items;
 	}
 	
-	public String QueryAllAuditLog()
+	public List<UserLogItem> getUserLogItems() {
+		return userLogItems;
+	}
+	public void setUserLogItems(List<UserLogItem> userLogItems) {
+		this.userLogItems = userLogItems;
+	}
+	public String getFlag() {
+		return flag;
+	}
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	
+	public String QueryAllAuditUserLog()
 	{
 		AuditLogService oms = new AuditLogService();
-		items = new ArrayList<AuditLog>();
+		userLogItems = new ArrayList<UserLogItem>();
 		try {
-			AuditLog criteria=new AuditLog();
-			total = oms.QueryAllAuditLogItems(criteria, page, rows, items);
+			AuditUserLog criteria=new AuditUserLog();
+			criteria.setFlag(flag);
+			total = oms.QueryAllAuditLogItems(criteria, page, rows, userLogItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
