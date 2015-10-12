@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.pms.dto.UserLogItem;
+import com.pms.dto.LogOrgItem;
+import com.pms.dto.LogUserItem;
+import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditUserLog;
 import com.pms.service.AuditLogService;
 
@@ -18,7 +20,8 @@ public class AuditLogAction extends ActionSupport {
 	private String message;
 	private boolean result;
 	private List<AuditUserLog> items;
-	private List<UserLogItem> userLogItems;
+	private List<LogUserItem> logUserItems;
+	private List<LogOrgItem> logOrgItems;
 	private String flag;
 	
 	public int getPage() {
@@ -58,11 +61,17 @@ public class AuditLogAction extends ActionSupport {
 		this.items = items;
 	}
 	
-	public List<UserLogItem> getUserLogItems() {
-		return userLogItems;
+	public List<LogUserItem> getUserLogItems() {
+		return logUserItems;
 	}
-	public void setUserLogItems(List<UserLogItem> userLogItems) {
-		this.userLogItems = userLogItems;
+	public void setUserLogItems(List<LogUserItem> logUserItems) {
+		this.logUserItems = logUserItems;
+	}
+	public List<LogOrgItem> getOrgLogItems() {
+		return logOrgItems;
+	}
+	public void setOrgLogItems(List<LogOrgItem> logOrgItems) {
+		this.logOrgItems = logOrgItems;
 	}
 	public String getFlag() {
 		return flag;
@@ -74,11 +83,28 @@ public class AuditLogAction extends ActionSupport {
 	public String QueryAllAuditUserLog()
 	{
 		AuditLogService oms = new AuditLogService();
-		userLogItems = new ArrayList<UserLogItem>();
+		logUserItems = new ArrayList<LogUserItem>();
 		try {
 			AuditUserLog criteria=new AuditUserLog();
 			criteria.setFlag(flag);
-			total = oms.QueryAllAuditLogItems(criteria, page, rows, userLogItems);
+			total = oms.QueryUserLogItems(criteria, page, rows, logUserItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllAuditOrgLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logOrgItems = new ArrayList<LogOrgItem>();
+		try {
+			AuditOrgLog criteria=new AuditOrgLog();
+			criteria.setFlag(flag);
+			total = oms.QueryOrgLogItems(criteria, page, rows, logOrgItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

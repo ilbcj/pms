@@ -13,6 +13,9 @@
   
   <body>
     <ul id="menu_log" class="easyui-tree" lines="true">
+    	<li iconCls="icon-leaf" id="menu_orglog_operation">
+            <span>机构操作日志</span>
+        </li>
         <li iconCls="icon-leaf" id="menu_userlog_operation">
             <span>用户操作日志</span>
         </li>
@@ -21,7 +24,10 @@
 $(document).ready(function () {
 	$('#menu_log').tree({
 		onClick: function(node){
-			if( node.id == 'menu_userlog_operation') {
+			if( node.id == 'menu_orglog_operation') {
+				$('body').layout('panel','center').panel('refresh','log/orglog_operation.html');
+			}
+			else if( node.id == 'menu_userlog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/userlog_operation.html');
 			}
 			

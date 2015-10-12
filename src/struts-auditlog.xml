@@ -18,6 +18,9 @@
  		<action name="queryAllAuditUserLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditUserLog" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryAllAuditOrgLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditOrgLog" >
+ 			<result name="success" type="json" />
+ 		</action>
  		
 
 	</package>	

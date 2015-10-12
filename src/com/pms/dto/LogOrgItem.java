@@ -1,6 +1,6 @@
 package com.pms.dto;
 
-public class UserLogItem {
+public class LogOrgItem {
 	private int logid;
 	private int adminId;
 	private String ipAddr;

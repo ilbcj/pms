@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.AuditLogDAO;
+import com.pms.model.AuditOrgLog;
 import com.pms.model.HibernateUtil;
 import com.pms.model.AuditUserLog;
 
@@ -101,23 +102,17 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		int rs;
 		String sqlString = "select count(*) from wa_authority_auditlog_user where 1=1 ";
 		if( criteria != null ) {
-//			if(criteria.getName() != null && criteria.getName().length() > 0) {
-//			sqlString += " and name like :name ";
-//		}
-//		if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-//			sqlString += " and code = :code ";
-//		}
+			if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+				sqlString += " and flag =:flag ";
+			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			if( criteria != null ) {
-//				if(criteria.getName() != null && criteria.getName().length() > 0) {
-//				q.setString( "name", "%" + criteria.getName() + "%" );
-//			}
-//			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-//				q.setString( "code", criteria.getCode());
-//			}
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					q.setString( "flag",  criteria.getFlag() );
+				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();
@@ -131,4 +126,111 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		}
 		return rs;
 	}
+	
+	@Override
+	public AuditOrgLog AuditOrgLogAdd(AuditOrgLog auditOrgLog) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			auditOrgLog = (AuditOrgLog) session.merge(auditOrgLog);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名日志。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return auditOrgLog;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AuditOrgLog> GetAllAuditOrgLogs(AuditOrgLog criteria, int page, int rows)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditOrgLog> rs = null;
+		String sqlString = "select * from wa_authority_auditlog_org where 1 = 1 ";
+		if( criteria != null ) {
+			if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+				sqlString += " and flag =:flag ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditOrgLog.class);
+			if( criteria != null ) {
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					q.setString( "flag",  criteria.getFlag() );
+				}
+			}
+			if( page > 0 && rows > 0) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetAuditOrgLogsCount(AuditOrgLog criteria) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) from wa_authority_auditlog_org where 1=1 ";
+		if( criteria != null ) {
+			if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+				sqlString += " and flag =:flag ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			if( criteria != null ) {
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					q.setString( "flag",  criteria.getFlag() );
+				}
+			}
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 }

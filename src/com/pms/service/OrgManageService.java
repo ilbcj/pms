@@ -7,12 +7,18 @@ import java.util.List;
 import java.util.Locale;
 
 import com.pms.dao.AttributeDAO;
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.OrganizationDAO;
 import com.pms.dao.impl.AttributeDAOImpl;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dto.OrgListItem;
 import com.pms.dto.TreeNode;
 import com.pms.model.AttrDictionary;
+import com.pms.model.AuditOrgLog;
+import com.pms.model.AuditOrgLogDescribe;
 import com.pms.model.Organization;
 
 public class OrgManageService {
@@ -35,7 +41,11 @@ public class OrgManageService {
 		String timenow = sdf.format(new Date());
 		org.setLATEST_MOD_TIME(timenow);
 		org.setDATA_VERSION(org.getDATA_VERSION()+1);
+		
+		AddOrgAddOrUpdateLog(org);
+		
 		org = dao.OrgNodeAdd(org);
+		
 		return org;
 	}
 	
@@ -49,6 +59,9 @@ public class OrgManageService {
 			items.add(node);
 		}
 		int total = QueryChildrenNodesCount( pid );
+		
+		AddOrgQueryLog(null);
+		
 		return total;
 	}
 	
@@ -85,6 +98,8 @@ public class OrgManageService {
 			target.setGA_DEPARTMENT(nodeIds.get(i));
 			
 			DeleteOrgNode(target);
+			
+			AddOrgDelLog(target);
 		}
 		
 		return ;
@@ -181,6 +196,9 @@ public class OrgManageService {
 			node = ConvertOrgToListItem(nodes.get(i));
 			items.add(node);
 		}
+		
+		AddOrgQueryLog(condition);
+		
 		return total;
 	}
 	
@@ -230,6 +248,9 @@ public class OrgManageService {
 		node.setLATEST_MOD_TIME(timenow);
 		node.setDATA_VERSION(node.getDATA_VERSION()+1);
 		node = dao.OrgNodeAdd(node);
+		
+		AddOrgAddOrUpdateLog(node);
+		
 		return;
 	}
 	
@@ -251,5 +272,137 @@ public class OrgManageService {
 			name = name.substring(0, name.length()-1);
 		}
 		return name;
+	}
+	
+	private void AddOrgQueryLog(Organization condition) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditOrgLog auditOrgLog = new AuditOrgLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditOrgLog.setAdminId(als.adminLogin());
+		auditOrgLog.setIpAddr("");
+		auditOrgLog.setFlag(AuditOrgLog.LOGFLAGQUERY);
+		auditOrgLog.setResult(AuditOrgLog.LOGRESULTSUCCESS);
+		auditOrgLog.setLATEST_MOD_TIME(timenow);
+		auditOrgLog = logdao.AuditOrgLogAdd(auditOrgLog);
+		
+		if( condition != null ) {
+			AuditOrgLogDescribe auditOrgLogDescribe = new AuditOrgLogDescribe();
+			AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+			
+			auditOrgLogDescribe.setLogid(auditOrgLog.getId());
+			String str="";
+			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
+				str += condition.getUNIT()+";";
+			}
+			if(condition.getGA_DEPARTMENT() != null && condition.getGA_DEPARTMENT().length() > 0) {
+				str += condition.getGA_DEPARTMENT()+";";
+			}
+			if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+				str += condition.getORG_LEVEL();
+			}
+			auditOrgLogDescribe.setDescrib(str);
+			
+			auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
+		}
+	}
+	
+	private void AddOrgAddOrUpdateLog(Organization org) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		AuditOrgLog auditOrgLog = new AuditOrgLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditOrgLog.setAdminId(als.adminLogin());
+		auditOrgLog.setIpAddr("");
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		List<Organization> nodes = dao.GetOrgById(org.getGA_DEPARTMENT());
+		System.out.println(org.getGA_DEPARTMENT());
+		System.out.println(nodes.size());
+		if(nodes.size() == 0){
+			auditOrgLog.setFlag(AuditOrgLog.LOGFLAGADD);
+		}else{
+			auditOrgLog.setFlag(AuditOrgLog.LOGFLAGUPDATE);
+		}
+		auditOrgLog.setResult(AuditOrgLog.LOGRESULTSUCCESS);
+		auditOrgLog.setLATEST_MOD_TIME(timenow);
+		auditOrgLog = logdao.AuditOrgLogAdd(auditOrgLog);
+		
+		AuditOrgLogDescribe auditOrgLogDescribe = new AuditOrgLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditOrgLogDescribe.setLogid(auditOrgLog.getId());
+		String str="";
+//		str=org.getUNIT()+";"+org.getPARENT_ORG()+";"
+//				+org.getORG_LEVEL()
+//				;
+	
+		if(org.getUNIT() != null && org.getUNIT().length() > 0) {
+			str += org.getUNIT()+";";
+		}
+		if(org.getPARENT_ORG() != null && org.getPARENT_ORG().length() > 0) {
+			str += org.getPARENT_ORG()+";";
+		}
+		if(org.getORG_LEVEL() != null && org.getORG_LEVEL().length() > 0) {
+			str += org.getORG_LEVEL();
+		}
+		auditOrgLogDescribe.setDescrib(str);
+		
+		auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
+		
+		return ;
+	}
+	
+	private void AddOrgDelLog(Organization org) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditOrgLog auditOrgLog = new AuditOrgLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditOrgLog.setAdminId(als.adminLogin());
+		auditOrgLog.setIpAddr("");
+		auditOrgLog.setFlag(AuditOrgLog.LOGFLAGDELETE);
+		auditOrgLog.setResult(AuditOrgLog.LOGRESULTSUCCESS);
+		auditOrgLog.setLATEST_MOD_TIME(timenow);
+		auditOrgLog = logdao.AuditOrgLogAdd(auditOrgLog);
+		
+		AuditOrgLogDescribe auditOrgLogDescribe = new AuditOrgLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditOrgLogDescribe.setLogid(auditOrgLog.getId());
+		
+		OrganizationDAO dao = new OrganizationDAOImpl();
+		List<Organization> nodes = dao.GetOrgById(org.getGA_DEPARTMENT());
+		String str="";
+		for (int i = 0; i < nodes.size(); i++) {
+			if(nodes.get(i).getUNIT() != null && nodes.get(i).getUNIT().length() > 0) {
+				str += nodes.get(i).getUNIT()+";";
+			}
+			if(nodes.get(i).getGA_DEPARTMENT() != null && nodes.get(i).getGA_DEPARTMENT().length() > 0) {
+				str += nodes.get(i).getGA_DEPARTMENT()+";";
+			}
+			if(nodes.get(i).getPARENT_ORG() != null && nodes.get(i).getPARENT_ORG().length() > 0) {
+				str += nodes.get(i).getPARENT_ORG()+";";
+			}
+			if(nodes.get(i).getORG_LEVEL() != null && nodes.get(i).getORG_LEVEL().length() > 0) {
+				str += nodes.get(i).getORG_LEVEL();
+			}
+		}
+		
+		auditOrgLogDescribe.setDescrib(str);
+		
+		auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
 	}
 }
