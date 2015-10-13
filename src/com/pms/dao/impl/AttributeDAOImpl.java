@@ -173,5 +173,141 @@ public class AttributeDAOImpl implements AttributeDAO {
 		}
 		return;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetDatasDictionarys(String id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
+				" WHERE b.attrid=c.id and c.type =:type and a.RESOURCE_ID=:RESOURCE_ID ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("type", AttrDefinition.ATTRTYPERESOURCEDATA);
+			q.setString("RESOURCE_ID", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetRolesDictionarys(int id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_ROLE a,attrdict b,attrdef c " +
+				" WHERE b.attrid=c.id and c.type =:type and a.id=:id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("type", AttrDefinition.ATTRTYPEROLE);
+			q.setInteger("id", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetUsersDictionarys(int id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_POLICE a,attrdict b,attrdef c " +
+				" WHERE b.attrid=c.id and c.type =:type and a.id=:id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("type", AttrDefinition.ATTRTYPEUSER);
+			q.setInteger("id", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetOrgsDictionarys(String id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_ORGNIZATION a,attrdict b,attrdef c " +
+				" WHERE b.attrid=c.id and c.type =:type and a.GA_DEPARTMENT=:GA_DEPARTMENT ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("type", AttrDefinition.ATTRTYPEORG);
+			q.setString("GA_DEPARTMENT", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AttrDictionary> GetDictsDatasNode(String name, String code, int id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
+				" WHERE b.attrid=c.id and c.name=:name and b.code=:code and a.id=:id ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setString("name", name);
+			q.setString("code", code);
+			q.setInteger("id", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 }

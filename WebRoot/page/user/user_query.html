@@ -19,7 +19,7 @@
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
 			<div id="user_query_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
 				<div class="easyui-layout" data-options="fit:true,border:false">
-					<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
+					<div region="west" data-options="title:'机构组织',split:true,border:true" style="width:200px;padding:3px">
 			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
 				        <ul id="user_query_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
 				        </ul><!-- end of user_query_tree -->
@@ -45,8 +45,8 @@
 					            </table>
 					            <table class="detail_query noborder nodt" style="width:100%;display:none;border:0;">
 					                <tr>
-					                    <td class="detail_query_name text_right">二级部门</td>
-					                    <td class="detail_query_value"><input id="user_query_unit" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">业务部门类别</td>
+					                    <td class="detail_query_value"><input id="user_query_businesstype" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">警种</td>
 					                    <td class="detail_query_value"><input id="user_query_police_type" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
@@ -63,7 +63,7 @@
 					                    <td class="detail_query_value"><input id="user_query_position" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
 					                <tr>
-					                    <td class="detail_query_name text_right">部门</td>
+					                    <td class="detail_query_name text_right">二级部门</td>
 					                    <td class="detail_query_value"><input id="user_query_dept" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">职务/职称</td>
 					                    <td class="detail_query_value"><input id="user_query_title" class="easyui-textbox query_value_mid"></input></td>	
@@ -125,7 +125,7 @@
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 状态</td>
 				                <td><input id="user_status" name="user.status" class="form_value_mid easyui-combobox" 
-				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '1',selected:true}]" /></td>
+				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '正常',value: '0',selected:true}]" /></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 性别</td>
@@ -151,7 +151,7 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right">业务部门类别</td>
-				                <td><input id="user_dept" name="user.dept" class="form_value_mid easyui-textbox" data-options="prompt:'部门'"></input></td>
+				                <td><input id="user_businesstype" name="user.BUSINESS_TYPE" class="form_value_mid easyui-textbox" data-options="prompt:'部门'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right">职务/职称</td>
@@ -163,7 +163,7 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right">二级部门</td>
-				                <td><input id="user_unit" name="user.unit" class="form_value_mid easyui-textbox" data-options="prompt:'二级部门'"></input></td>
+				                <td><input id="user_dept" name="user.dept" class="form_value_mid easyui-textbox" data-options="prompt:'二级部门'"></input></td>
 				            </tr>
 				        </table>
 				    </form>
@@ -198,7 +198,7 @@
     
     function formatStatus(val,row){
 		if (val == 0){
-			return "使用中";
+			return "正常";
 		} else if (val == 1) {
 			return "注销";
 		}
@@ -216,7 +216,7 @@
     	var name = $("#user_query_name").val();
     	var status = $("#user_query_status").combobox("getValue");
     	
-    	var unit = "";
+    	var businesstype = "";
     	var policeType = "";
     	var sex = "";
     	var idnum = "";
@@ -226,13 +226,13 @@
     	var title = "";
     	var policeNum = "";
     	if( isDetailQuery ) {
-    		unit = $("#user_query_unit").val();
+    		businesstype = $("#user_query_businesstype").combobox("getValue");
     		policeType = $("#user_query_police_type").combobox("getValue");
     		sex = $("#user_query_sex").combobox("getValue");
     		idnum = $("#user_query_idnum").val();
     		maxSensitiveLevel = $("#user_query_max_sensitive_level").combobox("getValue");
     		position = $("#user_query_position").val();
-    		dept = $("#user_query_dept").combobox("getValue");
+    		dept = $("#user_query_dept").val();
     		title = $("#user_query_title").combobox("getValue");
     		policeNum = $("#user_query_police_num").combobox("getValue");
     	}
@@ -241,7 +241,7 @@
 			id: treeNodeId,
 			userName: name,
 			userStatus: status,
-			userUnit: unit,
+			userbusinesstype: businesstype,
 			userPoliceType: policeType,
 			userSex: sex,
 			userIdnum: idnum,
@@ -257,7 +257,7 @@
     	$("#user_query_name").textbox({value:""});
     	$("#user_query_status").combobox("setValue","0");
     	
-    	$("#user_query_unit").textbox({value:""});
+    	$("#user_query_businesstype").textbox({value:""});
     	$("#user_query_police_type").textbox({value:""});
     	$("#user_query_sex").textbox({value:""});
     	$("#user_query_idnum").textbox({value:""});
@@ -281,16 +281,45 @@
 		$("#user_id").val(rows[0].id);
 		$("#user_name").textbox('setValue',rows[0].name);
 		$("#user_pid").textbox('setValue',rows[0].pname);
-		$("#user_unit").textbox('setValue',rows[0].unit);
-		$("#user_police_type").textbox('setText',rows[0].police_type);
-		var sex=$("#user_sex").textbox('setValue',rows[0].sex);
 		$("#user_idnum").textbox('setValue',rows[0].idnum);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 1 && rows[0].dictionary[i].code == rows[0].sex){//性别attrid==1
+				$("#user_sex").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
+		$("#user_police_type").textbox('setValue',rows[0].police_type);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 2 && rows[0].dictionary[i].code == rows[0].police_type){//警种attrid==2
+				$("#user_police_type").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
+		$("#user_police_num").textbox('setValue',rows[0].police_num);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 3 && rows[0].dictionary[i].code == rows[0].police_num){//警号attrid==3
+				$("#user_police_num").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
 		$("#user_max_sensitive_level").textbox('setValue',rows[0].max_sensitive_level);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 4 && rows[0].dictionary[i].code == rows[0].max_sensitive_level){//最高敏感级别attrid==4
+				$("#user_max_sensitive_level").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
+		$("#user_businesstype").textbox('setValue',rows[0].business_type);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 5 && rows[0].dictionary[i].code == rows[0].business_type){//业务部门类别attrid==5
+				$("#user_businesstype").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
+		$("#user_title").textbox('setValue',rows[0].title);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 6 && rows[0].dictionary[i].code == rows[0].title){//职务/职称attrid==6
+				$("#user_title").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
 		$("#user_position").textbox('setValue',rows[0].position);
 		$("#user_dept").textbox('setValue',rows[0].dept);
-		$("#user_title").textbox('setText',rows[0].title);
-		$("#user_police_num").textbox('setValue',rows[0].police_num);
-		
+			
     	$("#user_query_center_main_wapper").panel('close');
     	$("#user_query_center_detail_wapper").panel('open');
     }
@@ -326,13 +355,13 @@ $(document).ready(function () {
 		textField: 'label',
 		data:[{
 			label: '请选择',
-			value: '0',
+			value: '',
 		},{
-			label: '使用中',
+			label: '正常',
+			value: '0'
+		},{
+			label: '注销',
 			value: '1'
-		},{
-			label: '挂起',
-			value: '2'
 		}]
 	});
 	
@@ -362,22 +391,22 @@ $(document).ready(function () {
 		var title="";					//职务/职称
 		
 		for(var i=0;i<data.items[0].dictionary.length;i++){
-			sex+= "{id:'"+data.items[0].dictionary[i].value+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
+			sex+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[1].dictionary.length;i++){
-			police_type+= "{id:'"+data.items[1].dictionary[i].value+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
+			police_type+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[2].dictionary.length;i++){
-			police_num+= "{id:'"+data.items[2].dictionary[i].value+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
+			police_num+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[3].dictionary.length;i++){
-			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i].value+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
+			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
-			dept+= "{id:'"+data.items[4].dictionary[i].value+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
+			dept+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[5].dictionary.length;i++){
-			title+= "{id:'"+data.items[5].dictionary[i].value+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
+			title+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
 		};
 		
 		var sexData='([' + sex.substring(0,sex.length-1) + '])';
@@ -421,7 +450,7 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-		$('#user_query_dept').combobox({
+		$('#user_query_businesstype').combobox({
 			data : deptJSON,
 			valueField:'id',
 			textField:'text'

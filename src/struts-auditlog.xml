@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="auditlog" extends="json-default" namespace="/auditlog">
+		
+		<global-results>
+ 			<result name="sqlException">/jsp/exception.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.sql.SQLException" result="sqlException" />
+			<exception-mapping exception="java.lang.Exception" result="sqlException" />	
+		</global-exception-mappings>
+	
+	<!-- 
+		//审计				method="AuditLogQuery"
+		
+	 -->
+ 		<action name="queryAllAuditLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditLog" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+
+	</package>	
+</struts>    

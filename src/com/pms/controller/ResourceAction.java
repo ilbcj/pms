@@ -426,9 +426,8 @@ public class ResourceAction extends ActionSupport {
 //			criteria.setRESOURCE_ID(resource_id);
 			criteria.setRESOURCE_DESCRIBE(resource_describe);
 			criteria.setRESOURCE_REMARK(resource_remark);
-			total = rms.QueryAllDataItems(resource_status, delete_status, resource_type, 
-					dataset_sensitive_level, data_set, section_class, 
-					element,section_relatioin_class, 
+			total = rms.QueryAllDataItems(resource_status, resource_type, dataset_sensitive_level,
+					data_set, section_class, element,section_relatioin_class, 
 					criteria, page, rows, dataItems );
 		} catch (Exception e) {
 			message = e.getMessage();

@@ -76,7 +76,7 @@ public class AttrDictionaryService {
 		
 		AttributeDAO dao = new AttributeDAOImpl();
 		List<AttrDictionary> attrDicts = dao.GetAttrDictionarysByAttrId(attr.getId());
-		List data = new ArrayList();
+		List<AttrDictionary> data = new ArrayList<AttrDictionary>();
 		for(int i = 0; i < attrDicts.size(); i++) {
 			AttrDictionary attrDictionary=new AttrDictionary();
 			

@@ -9,6 +9,12 @@ public class AttrDefinition {
 	public final static String ATTR_RESOURCEDATA_RESOURCE_TYPE = "资源类型";
 	public final static String ATTR_RESOURCEDATA_RESOURCE_STATUS = "资源状态";
 	public final static String ATTR_RESOURCEDATA_DELETE_STATUS = "删除状态";
+	public final static String ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL = "数据集敏感度编码";
+	public final static String ATTR_RESOURCEDATA_DATA_SET = "数据集编码";
+	public final static String ATTR_RESOURCEDATA_SECTION_CLASS = "字段分类编码";
+	public final static String ATTR_RESOURCEDATA_LEMENT = "字段编码";
+	public final static String ATTR_RESOURCEDATA_SECTION_RELATION_CLASS = "字段分类关系编码";
+	
 
 	private int id;
 	private String name="";

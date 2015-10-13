@@ -47,6 +47,7 @@ public class UserAction extends ActionSupport {
 	private String userDept;
 	private String userTitle;
 	private String userPoliceNum;
+	private String userbusinesstype;
 	private List<Integer> delNodeIds;
 	
 	private File fi;
@@ -139,6 +140,14 @@ public class UserAction extends ActionSupport {
 
 	public void setUserPoliceNum(String userPoliceNum) {
 		this.userPoliceNum = userPoliceNum;
+	}
+
+	public String getUserbusinesstype() {
+		return userbusinesstype;
+	}
+
+	public void setUserbusinesstype(String userbusinesstype) {
+		this.userbusinesstype = userbusinesstype;
 	}
 
 	public int getPage() {
@@ -288,7 +297,7 @@ public class UserAction extends ActionSupport {
 				User criteria = new User();
 				criteria.setNAME(userName);
 				criteria.setUSER_STATUS(userStatus);
-				criteria.setBUSINESS_TYPE(userUnit);
+				criteria.setBUSINESS_TYPE(userbusinesstype);
 				criteria.setPOLICE_SORT(userPoliceType);
 				criteria.setSEXCODE(userSex);
 				criteria.setCERTIFICATE_CODE_SUFFIX(userIdnum);

@@ -19,7 +19,7 @@
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
 			<div id="privilege_authorize_user_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
 				<div class="easyui-layout" data-options="fit:true,border:false">
-					<div region="west" data-options="split:false,border:true,noheader:true" style="width:200px;padding:3px">
+					<div region="west" data-options="title:'机构组织',split:true,border:true" style="width:200px;padding:3px">
 			    		<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
 				        <ul id="privilege_authorize_user_tree" class="easyui-tree" data-options="url:'../organization/queryChildrenNodes.action'">
 				        </ul><!-- end of privilege_authorize_user_tree -->
@@ -30,16 +30,16 @@
 				    		<div id="privilege_authorize_user_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 				    			<table class="nodt" style="width:100%">
 					                <tr>
-					                    <td class="query_name_mini text_right">姓名</td>
-					                    <td class="query_value_mini"><input id="priv_user_query_name" class="easyui-textbox"></input></td>
-					                    <td class="query_name_mini text_right">状态</td>
-					                    <td class="query_value_mini"><input id="priv_user_query_status" value="0" style="width:150px;"></input></td>
-					                    <td class="query_name_mini text_right">授权状态</td>
-					                    <td class="query_value_mini"><input id="priv_user_query_privilege_status" value="0" style="width:150px;"></input></td>
-					                    <td class="query_name_small noborder" style="border:0;" style="border:0;">
+					                    <td class="query_name_small text_right" style="width:5%;">姓名</td>
+					                    <td class="detail_query_value" style="width:10%;"><input id="priv_user_query_name" class="easyui-textbox"></input></td>
+					                    <td class="query_name_small text_right" style="width:5%;">状态</td>
+					                    <td class="detail_query_value" style="width:10%;"><input id="priv_user_query_status" value="0" style="width:150px;"></input></td>
+					                    <td class="query_name_small text_right" style="width:8%;">授权状态</td>
+					                    <td class="detail_query_value" style="width:10%;"><input id="priv_user_query_privilege_status" value="0" style="width:145px;"></input></td>
+					                    <td class="query_name_small noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton detail_query_button" data-options="plain:true,iconCls:'icon-detail'" onclick="toggleDetailQuery()" style="height:24px;">高级查询</a>
 					                    </td>
-					                    <td class="text_right noborder" style="border:0;" style="border:0;">
+					                    <td class="text_right noborder" style="border:0;">
 					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryPrivUser()">查询</a>
 			            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryPrivUserCondition()">重置</a>
 					                    </td>
@@ -47,8 +47,8 @@
 					            </table>
 					            <table class="detail_query noborder nodt" style="width:100%;display:none;border:0;">
 					                <tr>
-					                    <td class="detail_query_name text_right">二级部门</td>
-					                    <td class="detail_query_value"><input id="priv_user_query_unit" class="easyui-textbox query_value_mid"></input></td>
+					                    <td class="detail_query_name text_right">业务部门类别</td>
+					                    <td class="detail_query_value"><input id="priv_user_query_businesstype" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">警种</td>
 					                    <td class="detail_query_value"><input id="priv_user_query_police_type" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
@@ -65,7 +65,7 @@
 					                    <td class="detail_query_value"><input id="priv_user_query_position" class="easyui-textbox query_value_mid"></input></td>	
 					                </tr>
 					                <tr>
-					                    <td class="detail_query_name text_right">部门</td>
+					                    <td class="detail_query_name text_right">二级部门</td>
 					                    <td class="detail_query_value"><input id="priv_user_query_dept" class="easyui-textbox query_value_mid"></input></td>
 					                    <td class="detail_query_name text_right">职务/职称</td>
 					                    <td class="detail_query_value"><input id="priv_user_query_title" class="easyui-textbox query_value_mid"></input></td>	
@@ -109,7 +109,7 @@
 				    </div><!-- end of center -->
 				</div>
 				
-				<div id="privilege_authorize_user_detail_win" class="easyui-window" title="用户授权" style="width:80%;height:600px;"
+				<div id="privilege_authorize_user_detail_win" class="easyui-window" title="用户授权" style="width:90%;height:90%;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div class="easyui-panel" data-options="fit:true,footer:'#privilege_authorize_user_detail_win_ft'">
 						<table id="privilege_authorize_user_detail_win_list_dg"  
@@ -175,6 +175,12 @@
     }
     
     function queryPrivUser(){
+        	var treeNode = $('#user_maintain_tree').tree('getSelected');
+    	var treeNodeId = "";
+    	if( treeNode != null ) {
+    		treeNodeId = treeNode.id;
+    	}
+    	
     	var treeNode = $("#privilege_authorize_user_tree").tree('getSelected');
     	var treeNodeId = "";
     	if( treeNode != null ) {
@@ -184,7 +190,7 @@
     	var status = $("#priv_user_query_status").combobox("getValue");
     	var priv_status = $("#priv_user_query_privilege_status").combobox("getValue");
     	
-    	var unit = "";
+    	var businesstype = "";
     	var policeType = "";
     	var sex = "";
     	var idnum = "";
@@ -194,22 +200,22 @@
     	var title = "";
     	var policeNum = "";
     	if( isDetailQuery ) {
-    		unit = $("#priv_user_query_unit").val();
-    		policeType = $("#priv_user_query_police_type").val();
-    		sex = $("#priv_user_query_sex").val();
+    		businesstype = $("#priv_user_query_businesstype").combobox("getValue");
+    		policeType = $("#priv_user_query_police_type").combobox("getValue");
+    		sex = $("#priv_user_query_sex").combobox("getValue");
     		idnum = $("#priv_user_query_idnum").val();
-    		maxSensitiveLevel = $("#priv_user_query_max_sensitive_level").val();
+    		maxSensitiveLevel = $("#priv_user_query_max_sensitive_level").combobox("getValue");
     		position = $("#priv_user_query_position").val();
     		dept = $("#priv_user_query_dept").val();
-    		title = $("#priv_user_query_title").val();
-    		policeNum = $("#priv_user_query_police_num").val();
+    		title = $("#priv_user_query_title").combobox("getValue");
+    		policeNum = $("#priv_user_query_police_num").combobox("getValue");
     	}
     	$("#privilege_authorize_user_center_list_dg").datagrid('load',{
     		queryAll: true,
 			orgId: treeNodeId,
 			userName: name,
 			userStatus: status,
-			userUnit: unit,
+			userbusinesstype: businesstype,
 			userPoliceType: policeType,
 			userSex: sex,
 			userIdnum: idnum,
@@ -227,7 +233,7 @@
     	$("#priv_user_query_status").combobox("setValue","0");
     	$("#priv_user_query_privilege_status").combobox("setValue","0");
     	
-    	$("#priv_user_query_unit").textbox({value:""});
+    	$("#priv_user_query_businesstype").textbox({value:""});
     	$("#priv_user_query_police_type").textbox({value:""});
     	$("#priv_user_query_sex").textbox({value:""});
     	$("#priv_user_query_idnum").textbox({value:""});
@@ -369,13 +375,13 @@ $(document).ready(function () {
 		textField: 'label',
 		data:[{
 			label: '请选择',
-			value: '0',
+			value: '',
 		},{
-			label: '使用中',
+			label: '正常',
+			value: '0'
+		},{
+			label: '注销',
 			value: '1'
-		},{
-			label: '挂起',
-			value: '2'
 		}]
 	});
 	
@@ -414,10 +420,10 @@ $(document).ready(function () {
 			{field:'pname',title:'组织机构', width:'25%'},
 			{field:'status',title:'状态', width:'25%',
 				formatter: function(value,row,index){
-					if (value == 1){
-						return "使用中";
-					} else if (value == 2){
-						return "挂起";
+					if (value == 0){
+						return "正常";
+					} else if (value == 1){
+						return "注销";
 					} else {
 						return "未知用户状态";
 					}
@@ -455,6 +461,85 @@ $(document).ready(function () {
 //		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#privilege_authorize_user_detail_win_list_dg").layout('resize',{width:'100%',height:'100%'}); }
 	});
+	$.getJSON("../system/queryUserAttrs.action", function(data) {
+		var sex="";						//性别
+		var police_type="";				//警种
+		var police_num="";				//警号
+		var max_sensitive_level="";		//最高敏感级别
+		var businesstype="";			//业务部门类别
+		var title="";					//职务/职称
+		
+		for(var i=0;i<data.items[0].dictionary.length;i++){
+			sex+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
+		};
+		for(var i=0;i<data.items[1].dictionary.length;i++){
+			police_type+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
+		};
+		for(var i=0;i<data.items[2].dictionary.length;i++){
+			police_num+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
+		};
+		for(var i=0;i<data.items[3].dictionary.length;i++){
+			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
+		};
+		for(var i=0;i<data.items[4].dictionary.length;i++){
+			businesstype+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
+		};
+		for(var i=0;i<data.items[5].dictionary.length;i++){
+			title+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
+		};
+		
+		var sexData='([' + sex.substring(0,sex.length-1) + '])';
+ 		var sexJSON = (new Function('return '+sexData +';'))();
+ 		var police_typeData='([' + police_type.substring(0,police_type.length-1) + '])';
+ 		var police_typeJSON = (new Function('return '+police_typeData +';'))(); 
+ 		var police_numData='([' + police_num.substring(0,police_num.length-1) + '])';
+ 		var police_numJSON = (new Function('return '+police_numData +';'))(); 
+ 		var max_sensitive_levelData='([' + max_sensitive_level.substring(0,max_sensitive_level.length-1) + '])';
+ 		var max_sensitive_levelJSON = (new Function('return '+max_sensitive_levelData +';'))(); 
+ 		var businesstypeData='([' + businesstype.substring(0,businesstype.length-1) + '])';
+ 		var businesstypeJSON = (new Function('return '+businesstypeData +';'))(); 
+ 		var titleData='([' + title.substring(0,title.length-1) + '])';
+ 		var titleJSON = (new Function('return '+titleData +';'))();
+ 		
+ 		sexJSON.unshift({ "id": "", "text": "请选择" });
+		police_typeJSON.unshift({ "id": "", "text": "请选择" });
+		police_numJSON.unshift({ "id": "", "text": "请选择" });
+		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
+		businesstypeJSON.unshift({ "id": "", "text": "请选择" });
+		titleJSON.unshift({ "id": "", "text": "请选择" });
+ 		//查询部分
+		$('#priv_user_query_sex').combobox({
+			data : sexJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#priv_user_query_police_type').combobox({
+			data : police_typeJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#priv_user_query_police_num').combobox({
+			data : police_numJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#priv_user_query_max_sensitive_level').combobox({
+			data : max_sensitive_levelJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#priv_user_query_businesstype').combobox({
+			data : businesstypeJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		$('#priv_user_query_title').combobox({
+			data : titleJSON,
+			valueField:'id',
+			textField:'text'
+		});
+		
+	});	
 });
 </script>	
   </body>

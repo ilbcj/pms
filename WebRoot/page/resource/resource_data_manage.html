@@ -124,7 +124,7 @@
 				        </table>
 				    </form>
 				    
-				    <div id="org_query_win" class="easyui-window" title="组织机构" style="width:80%;height:80%;"
+				    <div id="org_query_win" class="easyui-window" title="组织机构" style="width:90%;height:90%;"
 				    		data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 				        <div class="easyui-layout" data-options="fit:true">
 				            <div data-options="region:'west',split:false" style="width:200px">
@@ -266,36 +266,61 @@
 		$("#resDataOrg_data_version").val(rows[0].dest_data_version);
 		$("#res_name").textbox('setValue',rows[0].name);
 		$("#res_resid").textbox('setValue',rows[0].RESOURCE_ID);
-		$("#res_status").textbox('setValue',rows[0].RESOURCE_STATUS);
-		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid == 7 && rows[0].value[i].code == rows[0].RESOURCE_STATUS){//资源状态attrid==7
-				$("#res_status").textbox('setText',rows[0].value[i].value);	
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 7 && rows[0].dictionary[i].value == rows[0].RESOURCE_STATUS){//资源状态attrid==7
+				$("#res_status").textbox('setValue',rows[0].dictionary[i].code);	
 			}
 		};
+		$("#res_status").textbox('setText',rows[0].RESOURCE_STATUS);
 		$("#res_desc").textbox('setValue',rows[0].RESOURCE_DESCRIBE);
 		$("#res_memo").textbox('setValue',rows[0].RESOURCE_REMARK);
-		$("#res_delstatus").textbox('setValue',''+rows[0].DELETE_STATUS);
-		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid == 8 && rows[0].value[i].code == rows[0].DELETE_STATUS){//删除状态attrid==8
-				$("#res_delstatus").textbox('setText',rows[0].value[i].value);	
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 8 && rows[0].dictionary[i].value == rows[0].DELETE_STATUS){//删除状态attrid==8
+				$("#res_delstatus").textbox('setValue',rows[0].dictionary[i].code);	
 			}
 		};
-		$("#res_type").textbox('setValue',rows[0].resource_type);
-		for(var i=0;i<rows[0].value.length;i++){
-			if(rows[0].value[i].attrid == 9 && rows[0].value[i].code == rows[0].resource_type){//资源类型attrid==9
-				$("#res_type").textbox('setText',rows[0].value[i].value);
+		$("#res_delstatus").textbox('setText',rows[0].DELETE_STATUS);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 9 && rows[0].dictionary[i].value == rows[0].resource_type){//资源类型attrid==9
+				$("#res_type").textbox('setValue',rows[0].dictionary[i].code);
 			}
 		};
+		$("#res_type").textbox('setText',rows[0].resource_type);
 		$("#res_type").textbox({ disabled: true});
 		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
 // 		$("#resOrg_dest").textbox('setValue',rows[0].CLUE_DST_SYS);
 		$("#resOrg_dest").textbox('setValue',rows[0].pid);
 		$("#resOrg_dest").textbox('setText',rows[0].pname);
-		$("#res_dsl").textbox('setValue',rows[0].DATASET_SENSITIVE_LEVEL);
-		$("#res_dataset").textbox('setValue',rows[0].DATA_SET);
-		$("#res_sectionclass").textbox('setValue',rows[0].SECTION_CLASS);
-		$("#res_element").textbox('setValue',rows[0].ELEMENT);
-		$("#res_secrelacls").textbox('setValue',rows[0].SECTION_RELATIOIN_CLASS);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 10 && rows[0].dictionary[i].value == rows[0].DATASET_SENSITIVE_LEVEL){//数据集敏感度编码attrid==10
+				$("#res_dsl").textbox('setValue',rows[0].dictionary[i].code);
+			}
+		};
+		$("#res_dsl").textbox('setText',rows[0].DATASET_SENSITIVE_LEVEL);
+		for(var i=0;i<rows[0].dictionary[i].length;i++){
+			if(rows[0].dictionary[i].attrid == 11 && rows[0].dictionary[i].value == rows[0].DATA_SET){//数据集编码attrid==11
+				$("#res_dataset").textbox('setValue',rows[0].dictionary[i].code);
+			}
+		};
+		$("#res_dataset").textbox('setText',rows[0].DATA_SET);
+		for(var i=0;i<rows[0].dictionary[i].length;i++){
+			if(rows[0].dictionary[i].attrid == 12 && rows[0].dictionary[i].value == rows[0].SECTION_CLASS){//字段分类编码attrid==12
+				$("#res_sectionclass").textbox('setValue',rows[0].dictionary[i].code);
+			}
+		};
+		$("#res_sectionclass").textbox('setText',rows[0].SECTION_CLASS);
+		for(var i=0;i<rows[0].dictionary[i].length;i++){
+			if(rows[0].dictionary[i].attrid == 13 && rows[0].dictionary[i].value == rows[0].ELEMENT){//字段分类关系编码attrid==13
+				$("#res_element").textbox('setValue',rows[0].dictionary[i].code);
+			}
+		};
+		$("#res_element").textbox('setText',rows[0].ELEMENT);
+		for(var i=0;i<rows[0].dictionary[i].length;i++){
+			if(rows[0].dictionary[i].attrid == 14 && rows[0].dictionary[i].value == rows[0].SECTION_RELATIOIN_CLASS){//资源类型attrid==14
+				$("#res_secrelacls").textbox('setValue',rows[0].dictionary[i].code);
+			}
+		};
+		$("#res_secrelacls").textbox('setText',rows[0].SECTION_RELATIOIN_CLASS);
 		
 		$("#resource_data_manage_center_main_wapper").panel('close');
    		$("#resource_data_manage_center_detail_wapper").panel('open');
@@ -428,19 +453,19 @@ $(document).ready(function () {
 			resource_type+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[3].dictionary.length;i++){
-			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].value+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
+			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[4].dictionary.length;i++){
-			data_set+= "{id:'"+data.items[4].dictionary[i].value+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
+			data_set+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[5].dictionary.length;i++){
-			section_class+= "{id:'"+data.items[5].dictionary[i].value+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
+			section_class+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[6].dictionary.length;i++){
-			lement+= "{id:'"+data.items[6].dictionary[i].value+"',text:'"+data.items[6].dictionary[i].value+"'},"; 
+			lement+= "{id:'"+data.items[6].dictionary[i].code+"',text:'"+data.items[6].dictionary[i].value+"'},"; 
 		};
 		for(var i=0;i<data.items[7].dictionary.length;i++){
-			section_relation_class+= "{id:'"+data.items[7].dictionary[i].value+"',text:'"+data.items[7].dictionary[i].value+"'},"; 
+			section_relation_class+= "{id:'"+data.items[7].dictionary[i].code+"',text:'"+data.items[7].dictionary[i].value+"'},"; 
 		};
 
 		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';

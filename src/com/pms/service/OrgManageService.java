@@ -6,10 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.pms.dao.AttributeDAO;
 import com.pms.dao.OrganizationDAO;
+import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dto.OrgListItem;
 import com.pms.dto.TreeNode;
+import com.pms.model.AttrDictionary;
 import com.pms.model.Organization;
 
 public class OrgManageService {
@@ -132,6 +135,23 @@ public class OrgManageService {
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		Organization parent = dao.GetOrgNodeById(org.getPARENT_ORG());
 		item.setPname(parent == null ? "" : parent.getUNIT());
+		
+		AttributeDAO attrdao = new AttributeDAOImpl();
+		List<AttrDictionary> attrDicts = attrdao.GetOrgsDictionarys(org.getGA_DEPARTMENT());
+		List<AttrDictionary> data = new ArrayList<AttrDictionary>();
+		for(int i = 0; i < attrDicts.size(); i++) {
+			AttrDictionary attrDictionary=new AttrDictionary();
+			
+			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
+			attrDictionary.setValue(attrDicts.get(i).getValue());
+			attrDictionary.setCode(attrDicts.get(i).getCode());
+			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			data.add(attrDictionary);
+		}
+
+		item.setDictionary(data);
+		
 		return item;
 	}
 

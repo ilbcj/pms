@@ -2,6 +2,8 @@ package com.pms.dto;
 
 import java.util.List;
 
+import com.pms.model.AttrDictionary;
+
 
 public class ResDataListItem {
 	private int id;
@@ -23,7 +25,7 @@ public class ResDataListItem {
 	private String pname;
 	private int dest_data_version;
 	
-	private List<String> value;
+	private List<AttrDictionary> dictionary;
 
 	public int getId() {
 		return id;
@@ -160,21 +162,20 @@ public class ResDataListItem {
 	public void setPname(String pname) {
 		this.pname = pname;
 	}
-
-	public List<String> getValue() {
-		return value;
-	}
-
-	public void setValue(List<String> value) {
-		this.value = value;
-	}
-
 	public int getDest_data_version() {
 		return dest_data_version;
 	}
 
 	public void setDest_data_version(int dest_data_version) {
 		this.dest_data_version = dest_data_version;
+	}
+
+	public List<AttrDictionary> getDictionary() {
+		return dictionary;
+	}
+
+	public void setDictionary(List<AttrDictionary> dictionary) {
+		this.dictionary = dictionary;
 	}
 	
 }
