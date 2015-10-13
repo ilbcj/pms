@@ -19,6 +19,9 @@
         <li iconCls="icon-leaf" id="menu_userlog_operation">
             <span>用户操作日志</span>
         </li>
+        <li iconCls="icon-leaf" id="menu_grouplog_operation">
+            <span>群体操作日志</span>
+        </li>
     </ul>
 <script>
 $(document).ready(function () {
@@ -30,7 +33,9 @@ $(document).ready(function () {
 			else if( node.id == 'menu_userlog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/userlog_operation.html');
 			}
-			
+			else if( node.id == 'menu_grouplog_operation') {
+				$('body').layout('panel','center').panel('refresh','log/grouplog_operation.html');
+			}
 		}
 	});
 });

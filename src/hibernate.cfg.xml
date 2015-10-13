@@ -75,6 +75,8 @@
 	<mapping resource="com/pms/model/AuditUserLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditOrgLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditOrgLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditGroupLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditGroupLogDescribe.hbm.xml" />
 
 </session-factory>
 

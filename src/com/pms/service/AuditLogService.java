@@ -9,9 +9,12 @@ import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.impl.AdminDAOImpl;
 import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.AuditLogDescribeDAOImpl;
+import com.pms.dto.LogGroupItem;
 import com.pms.dto.LogOrgItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.Admin;
+import com.pms.model.AuditGroupLog;
+import com.pms.model.AuditGroupLogDescribe;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditOrgLogDescribe;
 import com.pms.model.AuditUserLog;
@@ -84,6 +87,43 @@ public class AuditLogService {
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditOrgLogDescribe> logdesc = dao.GetOrgLogDescByLogId(auditOrgLog.getId());
+		for (int i = 0; i < logdesc.size(); i++) {
+			item.setDesc(logdesc.get(i).getDescrib());
+		}
+		
+		return item;
+		
+	}
+	
+	public int QueryGroupLogItems(AuditGroupLog criteria, int page, int rows, List<LogGroupItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditGroupLog> res = dao.GetAllAuditGroupLogs(criteria, page, rows );
+		LogGroupItem logGroupItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logGroupItem = ConvertGroupLogToListItem(res.get(i));
+			items.add(logGroupItem);
+		}
+		int total = QueryGroupLogsCount( criteria );
+		return total;
+	}
+	
+	private int QueryGroupLogsCount(AuditGroupLog criteria) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		int count = dao.GetAuditGroupLogsCount( criteria );
+		return count;
+	}
+	
+	public LogGroupItem ConvertGroupLogToListItem(AuditGroupLog auditGroupLog) throws Exception {
+		LogGroupItem item = new LogGroupItem();
+		item.setLogid(auditGroupLog.getId());
+		item.setAdminId(auditGroupLog.getAdminId());
+		item.setIpAddr(auditGroupLog.getIpAddr());
+		item.setFlag(auditGroupLog.getFlag());
+		item.setResult(auditGroupLog.getResult());
+		item.setLATEST_MOD_TIME(auditGroupLog.getLATEST_MOD_TIME());
+		
+		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
+		List<AuditGroupLogDescribe> logdesc = dao.GetGroupLogDescByLogId(auditGroupLog.getId());
 		for (int i = 0; i < logdesc.size(); i++) {
 			item.setDesc(logdesc.get(i).getDescrib());
 		}

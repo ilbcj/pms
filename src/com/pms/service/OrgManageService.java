@@ -324,8 +324,6 @@ public class OrgManageService {
 		auditOrgLog.setIpAddr("");
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		List<Organization> nodes = dao.GetOrgById(org.getGA_DEPARTMENT());
-		System.out.println(org.getGA_DEPARTMENT());
-		System.out.println(nodes.size());
 		if(nodes.size() == 0){
 			auditOrgLog.setFlag(AuditOrgLog.LOGFLAGADD);
 		}else{

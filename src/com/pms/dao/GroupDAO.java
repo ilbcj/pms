@@ -21,6 +21,7 @@ public interface GroupDAO {
 	List<Group> GetGroupRules(Group criteria, int page, int rows) throws Exception;
 	int GetGroupRulesCount(Group criteria) throws Exception;
 	List<Rule> GetGroupRulesByGroupId(int id) throws Exception;
+	List<Group> GetGroupByGroupId(int id) throws Exception;
 	void GroupOfRuleDel(Group target)  throws Exception;
 
 }

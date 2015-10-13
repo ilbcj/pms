@@ -2,6 +2,7 @@ package com.pms.dao;
 
 import java.util.List;
 
+import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditUserLog;
 
@@ -12,4 +13,7 @@ public interface AuditLogDAO {
 	List<AuditOrgLog> GetAllAuditOrgLogs(AuditOrgLog criteria, int page, int rows) throws Exception;
 	AuditOrgLog AuditOrgLogAdd(AuditOrgLog auditOrgLog) throws Exception;
 	int GetAuditOrgLogsCount(AuditOrgLog criteria) throws Exception;
+	List<AuditGroupLog> GetAllAuditGroupLogs(AuditGroupLog criteria, int page, int rows) throws Exception;
+	AuditGroupLog AuditGroupLogAdd(AuditGroupLog auditGroupLog) throws Exception;
+	int GetAuditGroupLogsCount(AuditGroupLog criteria) throws Exception;
 }
