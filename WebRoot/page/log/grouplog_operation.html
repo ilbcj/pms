@@ -27,8 +27,8 @@
 <!-- 			                    <td class="query_name_small text_right">编码</td> -->
 <!-- 			                    <td class="query_value_small"><input id="grouplog_operation_query_code" class="easyui-textbox"></input></td> -->
 			                    <td>
-			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="querygrouplogOperation()">查询</a>
-	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQuerygrouplogOperationCondition()">重置</a>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryGrouplogOperation()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryGrouplogOperationCondition()">重置</a>
 			                    </td>
 			                </tr>
 			            </table>
@@ -64,7 +64,7 @@
 	</div><!-- end of layout -->
 	
 <script type="text/javascript">	
-	function querygrouplogOperation(){
+	function queryGrouplogOperation(){
     	var flag = $("#grouplog_operation_query_flag").combobox("getValue");
     	
     	$("#grouplog_operation_maintain_center_list_dg").datagrid('load',{
@@ -73,7 +73,7 @@
 		});
     }
     
-    function clearQuerygrouplogOperationCondition(){
+    function clearQueryGrouplogOperationCondition(){
     	$("#grouplog_operation_query_flag").combobox("setValue","");
     }
     

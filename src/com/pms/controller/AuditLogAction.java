@@ -7,9 +7,11 @@ import java.util.List;
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.LogGroupItem;
 import com.pms.dto.LogOrgItem;
+import com.pms.dto.LogResItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditOrgLog;
+import com.pms.model.AuditResLog;
 import com.pms.model.AuditUserLog;
 import com.pms.service.AuditLogService;
 
@@ -25,6 +27,7 @@ public class AuditLogAction extends ActionSupport {
 	private List<LogUserItem> logUserItems;
 	private List<LogOrgItem> logOrgItems;
 	private List<LogGroupItem> logGroupItems;
+	private List<LogResItem> logResItems;
 	private String flag;
 	
 	public int getPage() {
@@ -81,6 +84,12 @@ public class AuditLogAction extends ActionSupport {
 	public void setLogGroupItems(List<LogGroupItem> logGroupItems) {
 		this.logGroupItems = logGroupItems;
 	}
+	public List<LogResItem> getLogResItems() {
+		return logResItems;
+	}
+	public void setLogResItems(List<LogResItem> logResItems) {
+		this.logResItems = logResItems;
+	}
 	public String getFlag() {
 		return flag;
 	}
@@ -130,6 +139,23 @@ public class AuditLogAction extends ActionSupport {
 			AuditGroupLog criteria=new AuditGroupLog();
 			criteria.setFlag(flag);
 			total = oms.QueryGroupLogItems(criteria, page, rows, logGroupItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllAuditResLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logResItems = new ArrayList<LogResItem>();
+		try {
+			AuditResLog criteria=new AuditResLog();
+			criteria.setFlag(flag);
+			total = oms.QueryResLogItems(criteria, page, rows, logResItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

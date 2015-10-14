@@ -11,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.AuditLogDAO;
 import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditOrgLog;
+import com.pms.model.AuditResLog;
 import com.pms.model.HibernateUtil;
 import com.pms.model.AuditUserLog;
 
@@ -339,4 +340,111 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		}
 		return rs;
 	}
+	
+	@Override
+	public AuditResLog AuditResLogAdd(AuditResLog auditResLog) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			auditResLog = (AuditResLog) session.merge(auditResLog);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名日志。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return auditResLog;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AuditResLog> GetAllAuditResLogs(AuditResLog criteria, int page, int rows)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditResLog> rs = null;
+		String sqlString = "select * from wa_authority_auditlog_res where 1 = 1 ";
+		if( criteria != null ) {
+			if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+				sqlString += " and flag =:flag ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditResLog.class);
+			if( criteria != null ) {
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					q.setString( "flag",  criteria.getFlag() );
+				}
+			}
+			if( page > 0 && rows > 0) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetAuditResLogsCount(AuditResLog criteria) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) from wa_authority_auditlog_res where 1=1 ";
+		if( criteria != null ) {
+			if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+				sqlString += " and flag =:flag ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			if( criteria != null ) {
+				if(criteria.getFlag() != null && criteria.getFlag().length() > 0) {
+					q.setString( "flag",  criteria.getFlag() );
+				}
+			}
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 }

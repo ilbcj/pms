@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>orglog_operation.html</title>
+    <title>reslog_operation.html</title>
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
@@ -14,28 +14,28 @@
   <body>
 	<div class="easyui-layout" data-options="fit:true,border:false">
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
-			<b>当前位置：<span style="color:blue">用户操作日志</span></b>
+			<b>当前位置：<span style="color:blue">群体操作日志</span></b>
 		</div>
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
-			<div id="orglog_operation_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
-				<div id="orglog_operation_maintain_center_main" class="easyui-layout" data-options="fit:true" >
-					<div id="orglog_operation_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+			<div id="reslog_operation_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+				<div id="reslog_operation_maintain_center_main" class="easyui-layout" data-options="fit:true" >
+					<div id="reslog_operation_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 		    			<table class="nodt" style="width:100%">
 			                <tr>
 			                    <td class="query_name_small text_right">操作类型</td>
-			                    <td class="query_value_small"><input id="orglog_operation_query_flag" class="easyui-textbox"></input></td>
+			                    <td class="query_value_small"><input id="reslog_operation_query_flag" class="easyui-textbox"></input></td>
 <!-- 			                    <td class="query_name_small text_right">编码</td> -->
-<!-- 			                    <td class="query_value_small"><input id="orglog_operation_query_code" class="easyui-textbox"></input></td> -->
+<!-- 			                    <td class="query_value_small"><input id="reslog_operation_query_code" class="easyui-textbox"></input></td> -->
 			                    <td>
-			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryorglogOperation()">查询</a>
-	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryOrglogOperationCondition()">重置</a>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryReslogOperation()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryReslogOperationCondition()">重置</a>
 			                    </td>
 			                </tr>
 			            </table>
-		    		</div><!-- end of orglog_operation_maintain_center_query -->
+		    		</div><!-- end of reslog_operation_maintain_center_query -->
 		    		
-		    		<div id="orglog_operation_maintain_center_list" region="center" data-options="border:false,noheader:true" >
-		    			<table class="nodt" id="orglog_operation_maintain_center_list_dg"  
+		    		<div id="reslog_operation_maintain_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="reslog_operation_maintain_center_list_dg"  
 					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
 					        <thead>
 					            <tr>
@@ -51,33 +51,33 @@
 					        </thead>
 					    </table>
 					    <div id="toolbar" style="background-color:#E7F0FF">
-					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addGroupOforg()">添加</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modGroupOforg()">修改</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delGroupOforg()">删除</a>
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addGroupOfUser()">添加</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modGroupOfUser()">修改</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delGroupOfUser()">删除</a>
 	            			
 					    </div><!-- end of toolbar -->
-		    		</div><!-- end of orglog_operation_maintain_center_list -->
-		    	</div><!-- end of orglog_operation_maintain_center_main -->
-			</div><!-- orglog_operation_maintain_center_main_wapper -->			
+		    		</div><!-- end of reslog_operation_maintain_center_list -->
+		    	</div><!-- end of reslog_operation_maintain_center_main -->
+			</div><!-- reslog_operation_maintain_center_main_wapper -->			
 	    			
 		</div><!-- end of center -->
 	</div><!-- end of layout -->
 	
 <script type="text/javascript">	
-	function queryOrglogOperation(){
-    	var flag = $("#orglog_operation_query_flag").combobox("getValue");
+	function queryReslogOperation(){
+    	var flag = $("#reslog_operation_query_flag").combobox("getValue");
     	
-    	$("#orglog_operation_maintain_center_list_dg").datagrid('load',{
+    	$("#reslog_operation_maintain_center_list_dg").datagrid('load',{
     		queryAll: true,
 			flag: flag
 		});
     }
     
-    function clearQueryOrglogOperationCondition(){
-    	$("#orglog_operation_query_flag").combobox("setValue","");
+    function clearQueryReslogOperationCondition(){
+    	$("#reslog_operation_query_flag").combobox("setValue","");
     }
     
-    $("#orglog_operation_query_flag").combobox({
+    $("#reslog_operation_query_flag").combobox({
 		valueField: 'value',
 		textField: 'label',
 		data:[{
@@ -98,14 +98,14 @@
 		}]
 	});
 	
-	$("#orglog_operation_maintain_center_list_dg").datagrid({
-		url:'../auditlog/queryAllAuditOrgLog.action',
+	$("#reslog_operation_maintain_center_list_dg").datagrid({
+		url:'../auditlog/queryAllAuditResLog.action',
 		queryParams:{queryAll: true},
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.logOrgItems;
+				res.rows = data.logResItems;
 			} else {
 				res.total=0;
 				res.rows = [];
@@ -123,7 +123,7 @@
 			}
 		},
 //		onLoadSuccess: function() {alert("success");},
-		onLoadError: function() { $("#orglog_operation_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
+		onLoadError: function() { $("#reslog_operation_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
 </script>
   </body>

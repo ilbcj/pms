@@ -11,12 +11,15 @@ import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dto.LogGroupItem;
 import com.pms.dto.LogOrgItem;
+import com.pms.dto.LogResItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.Admin;
 import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditGroupLogDescribe;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditOrgLogDescribe;
+import com.pms.model.AuditResLog;
+import com.pms.model.AuditResLogDescribe;
 import com.pms.model.AuditUserLog;
 import com.pms.model.AuditUserLogDescribe;
 
@@ -124,6 +127,43 @@ public class AuditLogService {
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditGroupLogDescribe> logdesc = dao.GetGroupLogDescByLogId(auditGroupLog.getId());
+		for (int i = 0; i < logdesc.size(); i++) {
+			item.setDesc(logdesc.get(i).getDescrib());
+		}
+		
+		return item;
+		
+	}
+	
+	public int QueryResLogItems(AuditResLog criteria, int page, int rows, List<LogResItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditResLog> res = dao.GetAllAuditResLogs(criteria, page, rows );
+		LogResItem logResItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logResItem = ConvertResLogToListItem(res.get(i));
+			items.add(logResItem);
+		}
+		int total = QueryResLogsCount( criteria );
+		return total;
+	}
+	
+	private int QueryResLogsCount(AuditResLog criteria) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		int count = dao.GetAuditResLogsCount( criteria );
+		return count;
+	}
+	
+	public LogResItem ConvertResLogToListItem(AuditResLog auditResLog) throws Exception {
+		LogResItem item = new LogResItem();
+		item.setLogid(auditResLog.getId());
+		item.setAdminId(auditResLog.getAdminId());
+		item.setIpAddr(auditResLog.getIpAddr());
+		item.setFlag(auditResLog.getFlag());
+		item.setResult(auditResLog.getResult());
+		item.setLATEST_MOD_TIME(auditResLog.getLATEST_MOD_TIME());
+		
+		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
+		List<AuditResLogDescribe> logdesc = dao.GetResLogDescByLogId(auditResLog.getId());
 		for (int i = 0; i < logdesc.size(); i++) {
 			item.setDesc(logdesc.get(i).getDescrib());
 		}

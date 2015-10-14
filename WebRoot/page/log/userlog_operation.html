@@ -27,8 +27,8 @@
 <!-- 			                    <td class="query_name_small text_right">编码</td> -->
 <!-- 			                    <td class="query_value_small"><input id="userlog_operation_query_code" class="easyui-textbox"></input></td> -->
 			                    <td>
-			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryuserlogOperation()">查询</a>
-	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryuserlogOperationCondition()">重置</a>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryUserlogOperation()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryUserlogOperationCondition()">重置</a>
 			                    </td>
 			                </tr>
 			            </table>
@@ -64,7 +64,7 @@
 	</div><!-- end of layout -->
 	
 <script type="text/javascript">	
-	function queryuserlogOperation(){
+	function queryUserlogOperation(){
     	var flag = $("#userlog_operation_query_flag").combobox("getValue");
     	
     	$("#userlog_operation_maintain_center_list_dg").datagrid('load',{
@@ -73,7 +73,7 @@
 		});
     }
     
-    function clearQueryuserlogOperationCondition(){
+    function clearQueryUserlogOperationCondition(){
     	$("#userlog_operation_query_flag").combobox("setValue","");
     }
     

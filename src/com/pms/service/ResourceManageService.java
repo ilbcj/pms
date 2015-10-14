@@ -7,13 +7,19 @@ import java.util.List;
 import java.util.Locale;
 
 import com.pms.dao.AttributeDAO;
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.AttributeDAOImpl;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.RoleListItem;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
+import com.pms.model.AuditResLog;
+import com.pms.model.AuditResLogDescribe;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
 import com.pms.model.ResFeature;
@@ -29,6 +35,9 @@ public class ResourceManageService {
 		List<ResFeature> res = dao.GetFeatures( criteria, page, rows );
 		items.addAll(res);
 		int total = QueryAllFeaturesCount( criteria );
+		
+		AddResQueryLog(null, criteria, null);
+		
 		return total;
 	}
 	
@@ -46,6 +55,8 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 		feature.setLatest_mod_time(timenow);
 		feature = dao.FeatureAdd(feature);
+		
+		AddResAddOrUpdateLog(null, null, feature, null, null);
 		return feature;
 	}
 
@@ -86,6 +97,7 @@ public class ResourceManageService {
 			feature.setLatest_mod_time(timenow);
 		
 			feature = dao.FeatureAdd(feature);
+			AddResDelLog(null, null, feature, null, null);
 		}
 		
 		return feature;
@@ -107,7 +119,9 @@ public class ResourceManageService {
 			items.add(resDataListItem);
 		}
 		int total = QueryAllDatasCount( criteria );
-
+		
+		AddResQueryLog(criteria, null, null);
+		
 		return total;
 	}
 	
@@ -229,6 +243,7 @@ public class ResourceManageService {
 			resDataOrg.setLATEST_MOD_TIME(timenow);
 			resDataOrg = dao.ResDataOrgAdd(resDataOrg);
 		}
+		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
 		return data;
 	}
 	
@@ -275,8 +290,8 @@ public class ResourceManageService {
 			data = dao.DataAdd(data);
 			
 			List<ResDataOrg> resDataOrgNodes=dao.GetResDataOrgByResId(data.getRESOURCE_ID());
+			ResDataOrg resDataOrg=new ResDataOrg();
 			for (int j = 0; j < resDataOrgNodes.size(); j++) {
-				ResDataOrg resDataOrg=new ResDataOrg();
 				resDataOrg.setId(resDataOrgNodes.get(j).getId());
 				resDataOrg.setRESOURCE_ID(resDataOrgNodes.get(j).getRESOURCE_ID());
 				resDataOrg.setCLUE_DST_SYS(resDataOrgNodes.get(j).getCLUE_DST_SYS());
@@ -286,6 +301,7 @@ public class ResourceManageService {
 				
 				resDataOrg = dao.ResDataOrgAdd(resDataOrg);
 			}
+			AddResDelLog(data, resDataOrg, null, null, null);
 		}
 		
 		return data;
@@ -302,6 +318,9 @@ public class ResourceManageService {
 			items.add(roleItem);
 		}
 		int total = QueryAllRolesCount( criteria );
+		
+		AddResQueryLog(null, null, criteria);
+		
 		return total;
 	}
 	
@@ -391,6 +410,7 @@ public class ResourceManageService {
 		
 		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds);
 		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds);
+		AddResAddOrUpdateLog(null, null, null, role, resRoleOrg);
 		return role;
 	}
 
@@ -431,8 +451,8 @@ public class ResourceManageService {
 			role = dao.RoleAdd(role);
 			
 			List<ResRoleResource> roleResNodes=dao.GetRoleResourcesByRoleid(roleNodes.get(i).getBUSINESS_ROLE());
+			ResRoleResource resRole=new ResRoleResource();
 			for (int j = 0; j < roleResNodes.size(); j++) {
-				ResRoleResource resRole=new ResRoleResource();
 				resRole.setRESOURCE_ID(roleResNodes.get(j).getRESOURCE_ID());
 				resRole.setBUSINESS_ROLE(roleResNodes.get(j).getBUSINESS_ROLE());
 				resRole.setRestype(roleResNodes.get(j).getRestype());
@@ -444,8 +464,8 @@ public class ResourceManageService {
 			}
 			
 			List<ResRoleOrg> resRoleOrgNodes=dao.GetResRoleOrgByRoleid(roleNodes.get(i).getBUSINESS_ROLE());
+			ResRoleOrg resRoleOrg=new ResRoleOrg();
 			for (int j = 0; j < resRoleOrgNodes.size(); j++) {
-				ResRoleOrg resRoleOrg=new ResRoleOrg();
 				resRoleOrg.setId(resRoleOrgNodes.get(j).getId());
 				resRoleOrg.setBUSINESS_ROLE(resRoleOrgNodes.get(j).getBUSINESS_ROLE());
 				resRoleOrg.setCLUE_DST_SYS(resRoleOrgNodes.get(j).getCLUE_DST_SYS());
@@ -455,6 +475,7 @@ public class ResourceManageService {
 				
 				resRoleOrg = dao.ResRoleOrgAdd(resRoleOrg);
 			}
+			AddResDelLog(null, null, null, role, resRoleOrg);
 		}
 		
 		return role;
@@ -482,4 +503,348 @@ public class ResourceManageService {
 		}
 		
 	}
+	
+	private void AddResQueryLog(ResData resData, ResFeature resFeature, ResRole resRole) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditResLog auditResLog = new AuditResLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditResLog.setAdminId(als.adminLogin());
+		auditResLog.setIpAddr("");
+		auditResLog.setFlag(AuditResLog.LOGFLAGQUERY);
+		auditResLog.setResult(AuditResLog.LOGRESULTSUCCESS);
+		auditResLog.setLATEST_MOD_TIME(timenow);
+		auditResLog = logdao.AuditResLogAdd(auditResLog);
+		
+		if( resData != null || resFeature != null || resRole != null) {
+			AuditResLogDescribe auditResLogDescribe = new AuditResLogDescribe();
+			AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+			
+			auditResLogDescribe.setLogid(auditResLog.getId());
+			String str="";
+			if( resData != null){
+				if(resData.getName() != null && resData.getName().length() > 0) {
+					str += resData.getName()+";";
+				}
+				if(resData.getRESOURCE_ID() != null && resData.getRESOURCE_ID().length() > 0) {
+					str += resData.getRESOURCE_ID();
+				}
+			}
+			if( resFeature != null){
+				if(resFeature.getName() != null && resFeature.getName().length() > 0) {
+					str += resFeature.getName()+";";
+				}
+				if(resFeature.getResource_id() != null && resFeature.getResource_id().length() > 0) {
+					str += resFeature.getResource_id();
+				}
+			}
+			if( resRole != null){
+				if(resRole.getBUSINESS_ROLE_NAME() != null && resRole.getBUSINESS_ROLE_NAME().length() > 0) {
+					str += resRole.getBUSINESS_ROLE_NAME()+";";
+				}
+				if(resRole.getBUSINESS_ROLE() != null && resRole.getBUSINESS_ROLE().length() > 0) {
+					str += resRole.getBUSINESS_ROLE();
+				}
+			}
+			auditResLogDescribe.setDescrib(str);
+			
+			auditResLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+		}
+	}
+	
+	private void AddResAddOrUpdateLog(ResData resData, ResDataOrg resDataOrg, ResFeature resFeature, ResRole role, ResRoleOrg resRoleOrg) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		AuditResLog auditResLog = new AuditResLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditResLog.setAdminId(als.adminLogin());
+		auditResLog.setIpAddr("");
+		if( resData != null) {
+			if(resData.getId() == 0 ){
+				auditResLog.setFlag(AuditResLog.LOGFLAGADD);
+			}else{
+				auditResLog.setFlag(AuditResLog.LOGFLAGUPDATE);
+			}
+		}
+		if( resFeature != null) {
+			if(resFeature.getId() == 0 ){
+				auditResLog.setFlag(AuditResLog.LOGFLAGADD);
+			}else{
+				auditResLog.setFlag(AuditResLog.LOGFLAGUPDATE);
+			}
+		}
+		if( role != null) {
+			if(role.getId() == 0 ){
+				auditResLog.setFlag(AuditResLog.LOGFLAGADD);
+			}else{
+				auditResLog.setFlag(AuditResLog.LOGFLAGUPDATE);
+			}
+		}
+		auditResLog.setResult(AuditResLog.LOGRESULTSUCCESS);
+		auditResLog.setLATEST_MOD_TIME(timenow);
+		auditResLog = logdao.AuditResLogAdd(auditResLog);
+		
+		AuditResLogDescribe auditResLogDescribe = new AuditResLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditResLogDescribe.setLogid(auditResLog.getId());
+		String str="";
+//		str=resData.getName()+";"+resData.getRESOURCE_ID()+";"+resData.getRESOURCE_STATUS()+";"
+//		+resData.getRESOURCE_DESCRIBE()+";"+resData.getRESOURCE_REMARK()+";"+resData.getDELETE_STATUS()+";"
+//		+resData.getResource_type()+";"+resDataOrg.CLUE_DST_SYS()+";"+resData.getDATASET_SENSITIVE_LEVEL()+";"
+//		+resData.getDATA_SET()+";"+resData.getELEMENT()+";"+resData.getSECTION_RELATIOIN_CLASS()+";"+resData.getSECTION_CLASS();
+		if( resData != null){
+			if(resData.getName() != null && resData.getName().length() > 0) {
+				str += resData.getName()+";";
+			}
+			if(resData.getRESOURCE_ID() != null && resData.getRESOURCE_ID().length() > 0) {
+				str += resData.getRESOURCE_ID()+";";
+			}
+			str += resData.getRESOURCE_STATUS()+";";
+			if(resData.getRESOURCE_DESCRIBE() != null && resData.getRESOURCE_DESCRIBE().length() > 0) {
+				str += resData.getRESOURCE_DESCRIBE()+";";
+			}
+			if(resData.getRESOURCE_REMARK() != null && resData.getRESOURCE_REMARK().length() > 0) {
+				str += resData.getRESOURCE_REMARK()+";";
+			}
+			str += resData.getDELETE_STATUS()+";"+resData.getResource_type()+";";
+			if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
+				str += resDataOrg.getCLUE_DST_SYS()+";";
+			}
+			if(resData.getDATASET_SENSITIVE_LEVEL() != null && resData.getDATASET_SENSITIVE_LEVEL().length() > 0) {
+				str += resData.getDATASET_SENSITIVE_LEVEL()+";";
+			}
+			if(resData.getDATA_SET() != null && resData.getDATA_SET().length() > 0) {
+				str += resData.getDATA_SET()+";";
+			}
+			if(resData.getELEMENT() != null && resData.getELEMENT().length() > 0) {
+				str += resData.getELEMENT()+";";
+			}
+			if(resData.getSECTION_RELATIOIN_CLASS() != null && resData.getSECTION_RELATIOIN_CLASS().length() > 0) {
+				str += resData.getSECTION_RELATIOIN_CLASS()+";";
+			}
+			if(resData.getSECTION_CLASS() != null && resData.getSECTION_CLASS().length() > 0) {
+				str += resData.getSECTION_CLASS();
+			}
+		}
+//		str=resFeature.getName()+";"+resFeature.getResource_id()+";"+resFeature.getResource_status()+";"
+//			+resFeature.getResource_describe()+";"+resFeature.getResource_remark()+";"+resFeature.getDelete_status()+";"
+//			+resFeature.getApp_id()+";"+resFeature.getParent_resource()+";"+resFeature.getResource_order()+";"
+//			+resFeature.getSystem_type();
+		if( resFeature != null){
+			if(resFeature.getName() != null && resFeature.getName().length() > 0) {
+				str += resFeature.getName()+";";
+			}
+			if(resFeature.getResource_id() != null && resFeature.getResource_id().length() > 0) {
+				str += resFeature.getResource_id()+";";
+			}
+			str += resFeature.getResource_status()+";";
+			if(resFeature.getResource_describe() != null && resFeature.getResource_describe().length() > 0) {
+				str += resFeature.getResource_describe()+";";
+			}
+			if(resFeature.getResource_remark() != null && resFeature.getResource_remark().length() > 0) {
+				str += resFeature.getResource_remark()+";";
+			}
+			str += resFeature.getDelete_status()+";";
+			if(resFeature.getApp_id() != null && resFeature.getApp_id().length() > 0) {
+				str += resFeature.getApp_id()+";";
+			}
+			if(resFeature.getParent_resource() != null && resFeature.getParent_resource().length() > 0) {
+				str += resFeature.getParent_resource()+";";
+			}
+			if(resFeature.getResource_order() != null && resFeature.getResource_order().length() > 0) {
+				str += resFeature.getResource_order()+";";
+			}
+			if(resFeature.getSystem_type() != null && resFeature.getSystem_type().length() > 0) {
+				str += resFeature.getSystem_type();
+			}
+		}
+//		str=role.getBUSINESS_ROLE_NAME()+";"+role.getBUSINESS_ROLE()+";"+role.getBUSINESS_ROLE_TYPE()+";"
+//			+roleOrg.getCLUE_DST_SYS()+";"+role.getSYSTEM_TYPE()+";"+role.getCLUE_SRC_SYS()+";"
+//			+role.getDELETE_STATUS()+";"+role.getROLE_DESC(); 	
+		if( role != null){
+			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
+				str += role.getBUSINESS_ROLE_NAME()+";";
+			}
+			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
+				str += role.getBUSINESS_ROLE()+";";
+			}
+			str += role.getBUSINESS_ROLE_TYPE()+";";
+			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
+				str += resRoleOrg.getCLUE_DST_SYS()+";";
+			}
+			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
+				str += role.getSYSTEM_TYPE()+";";
+			}
+			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
+				str += role.getCLUE_SRC_SYS()+";";
+			}
+			str += role.getDELETE_STATUS()+";";
+			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
+				str += role.getROLE_DESC();
+			}
+			
+			ResourceDAO dao = new ResourceDAOImpl();
+			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
+			
+			for(int i=0; i<rrs.size(); i++) {
+				if ( rrs.get(i).getRestype() == ResRoleResource.RESTYPEFEATURE ) {
+					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
+					str += ";"+feature.getName()+";"+feature.getResource_id();
+				}
+				else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
+					List<ResData> data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
+					for(int j=0; j<data.size(); j++) {
+						str += ";"+data.get(j).getName()+";"+data.get(j).getRESOURCE_ID();
+					}
+					
+				}
+			}
+		}
+		auditResLogDescribe.setDescrib(str);
+		
+		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+	}
+	
+	private void AddResDelLog(ResData resData, ResDataOrg resDataOrg, ResFeature resFeature, ResRole role, ResRoleOrg resRoleOrg) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditResLog auditResLog = new AuditResLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditResLog.setAdminId(als.adminLogin());
+		auditResLog.setIpAddr("");
+		auditResLog.setFlag(AuditResLog.LOGFLAGDELETE);
+		auditResLog.setResult(AuditResLog.LOGRESULTSUCCESS);
+		auditResLog.setLATEST_MOD_TIME(timenow);
+		auditResLog = logdao.AuditResLogAdd(auditResLog);
+		
+		AuditResLogDescribe auditResLogDescribe = new AuditResLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditResLogDescribe.setLogid(auditResLog.getId());
+		
+		String str="";
+		
+		if( resData != null){
+			if(resData.getName() != null && resData.getName().length() > 0) {
+				str += resData.getName()+";";
+			}
+			if(resData.getRESOURCE_ID() != null && resData.getRESOURCE_ID().length() > 0) {
+				str += resData.getRESOURCE_ID()+";";
+			}
+			str += resData.getRESOURCE_STATUS()+";";
+			if(resData.getRESOURCE_DESCRIBE() != null && resData.getRESOURCE_DESCRIBE().length() > 0) {
+				str += resData.getRESOURCE_DESCRIBE()+";";
+			}
+			if(resData.getRESOURCE_REMARK() != null && resData.getRESOURCE_REMARK().length() > 0) {
+				str += resData.getRESOURCE_REMARK()+";";
+			}
+			str += resData.getDELETE_STATUS()+";"+resData.getResource_type()+";";
+			if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
+				str += resDataOrg.getCLUE_DST_SYS()+";";
+			}
+			if(resData.getDATASET_SENSITIVE_LEVEL() != null && resData.getDATASET_SENSITIVE_LEVEL().length() > 0) {
+				str += resData.getDATASET_SENSITIVE_LEVEL()+";";
+			}
+			if(resData.getDATA_SET() != null && resData.getDATA_SET().length() > 0) {
+				str += resData.getDATA_SET()+";";
+			}
+			if(resData.getELEMENT() != null && resData.getELEMENT().length() > 0) {
+				str += resData.getELEMENT()+";";
+			}
+			if(resData.getSECTION_RELATIOIN_CLASS() != null && resData.getSECTION_RELATIOIN_CLASS().length() > 0) {
+				str += resData.getSECTION_RELATIOIN_CLASS()+";";
+			}
+			if(resData.getSECTION_CLASS() != null && resData.getSECTION_CLASS().length() > 0) {
+				str += resData.getSECTION_CLASS();
+			}
+		}
+		
+		if( resFeature != null){
+			if(resFeature.getName() != null && resFeature.getName().length() > 0) {
+				str += resFeature.getName()+";";
+			}
+			if(resFeature.getResource_id() != null && resFeature.getResource_id().length() > 0) {
+				str += resFeature.getResource_id()+";";
+			}
+			str += resFeature.getResource_status()+";";
+			if(resFeature.getResource_describe() != null && resFeature.getResource_describe().length() > 0) {
+				str += resFeature.getResource_describe()+";";
+			}
+			if(resFeature.getResource_remark() != null && resFeature.getResource_remark().length() > 0) {
+				str += resFeature.getResource_remark()+";";
+			}
+			str += resFeature.getDelete_status()+";";
+			if(resFeature.getApp_id() != null && resFeature.getApp_id().length() > 0) {
+				str += resFeature.getApp_id()+";";
+			}
+			if(resFeature.getParent_resource() != null && resFeature.getParent_resource().length() > 0) {
+				str += resFeature.getParent_resource()+";";
+			}
+			if(resFeature.getResource_order() != null && resFeature.getResource_order().length() > 0) {
+				str += resFeature.getResource_order()+";";
+			}
+			if(resFeature.getSystem_type() != null && resFeature.getSystem_type().length() > 0) {
+				str += resFeature.getSystem_type();
+			}
+		}
+		
+		if( role != null){
+			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
+				str += role.getBUSINESS_ROLE_NAME()+";";
+			}
+			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
+				str += role.getBUSINESS_ROLE()+";";
+			}
+			str += role.getBUSINESS_ROLE_TYPE()+";";
+			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
+				str += resRoleOrg.getCLUE_DST_SYS()+";";
+			}
+			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
+				str += role.getSYSTEM_TYPE()+";";
+			}
+			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
+				str += role.getCLUE_SRC_SYS()+";";
+			}
+			str += role.getDELETE_STATUS()+";";
+			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
+				str += role.getROLE_DESC();
+			}
+			
+			ResourceDAO dao = new ResourceDAOImpl();
+			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
+			
+			for(int i=0; i<rrs.size(); i++) {
+				if ( rrs.get(i).getRestype() == ResRoleResource.RESTYPEFEATURE ) {
+					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
+					str += ";"+feature.getName()+";"+feature.getResource_id();
+				}
+				else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
+					List<ResData> data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
+					for(int j=0; j<data.size(); j++) {
+						str += ";"+data.get(j).getName()+";"+data.get(j).getRESOURCE_ID();
+					}
+					
+				}
+			}
+		}
+		auditResLogDescribe.setDescrib(str);
+		
+		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+	}
+	
 }

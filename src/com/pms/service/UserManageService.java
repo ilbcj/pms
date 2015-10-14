@@ -474,7 +474,7 @@ public class UserManageService {
 		AuditLogService als = new AuditLogService();
 		
 		auditUserLog.setAdminId(als.adminLogin());
-		auditUserLog.setIpAddr("");System.out.println(AuditUserLog.LOGFLAGDELETE);
+		auditUserLog.setIpAddr("");
 		auditUserLog.setFlag(AuditUserLog.LOGFLAGDELETE);
 		auditUserLog.setResult(AuditUserLog.LOGRESULTSUCCESS);
 		auditUserLog.setLATEST_MOD_TIME(timenow);

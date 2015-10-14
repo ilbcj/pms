@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.pms.model.AuditGroupLogDescribe;
 import com.pms.model.AuditOrgLogDescribe;
+import com.pms.model.AuditResLogDescribe;
 import com.pms.model.AuditUserLogDescribe;
 
 public interface AuditLogDescribeDao {
@@ -14,4 +15,6 @@ public interface AuditLogDescribeDao {
 	List<AuditOrgLogDescribe> GetOrgLogDescByLogId(int logid) throws Exception;
 	AuditGroupLogDescribe AuditGroupLogDescribeAdd(AuditGroupLogDescribe auditGroupLogDescribe) throws Exception;
 	List<AuditGroupLogDescribe> GetGroupLogDescByLogId(int logid) throws Exception;
+	AuditResLogDescribe AuditResLogDescribeAdd(AuditResLogDescribe auditResLogDescribe) throws Exception;
+	List<AuditResLogDescribe> GetResLogDescByLogId(int logid) throws Exception;
 }
