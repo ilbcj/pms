@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditOrgLog;
+import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditResLog;
 import com.pms.model.AuditUserLog;
 
@@ -20,4 +21,7 @@ public interface AuditLogDAO {
 	List<AuditResLog> GetAllAuditResLogs(AuditResLog criteria, int page, int rows) throws Exception;
 	AuditResLog AuditResLogAdd(AuditResLog auditResLog) throws Exception;
 	int GetAuditResLogsCount(AuditResLog criteria) throws Exception;
+	List<AuditPrivLog> GetAllAuditPrivLogs(AuditPrivLog criteria, int page, int rows) throws Exception;
+	AuditPrivLog AuditPrivLogAdd(AuditPrivLog auditPrivLog) throws Exception;
+	int GetAuditPrivLogsCount(AuditPrivLog criteria) throws Exception;
 }
