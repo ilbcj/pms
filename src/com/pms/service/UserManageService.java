@@ -47,7 +47,6 @@ public class UserManageService {
 			user.setCERTIFICATE_CODE_SUFFIX( generateSuffix(idNum) );
 		}
 		AddUserAddOrUpdateLog(user);
-		
 		user = dao.UserAdd(user);
 		
 		return user;
@@ -264,8 +263,6 @@ public class UserManageService {
 			user.setId(nodeIds.get(i));
 			
 			DeleteUserNode(user);
-			
-			AddUserDelLog(user);
 		}
 		
 		return ;
@@ -300,8 +297,8 @@ public class UserManageService {
 			user.setLATEST_MOD_TIME(timenow);
 			
 			user = dao.UserAdd(user);
+			AddUserDelLog(user);
 		}
-		
 		return user;
 	}
 	
@@ -342,11 +339,6 @@ public class UserManageService {
 		auditUserLog.setLATEST_MOD_TIME(timenow);
 		auditUserLog = logdao.AuditUserLogAdd(auditUserLog);
 		
-//		str=criteria.getNAME()+";"+criteria.getBUSINESS_TYPE()+";"
-//				+criteria.getPOLICE_SORT()+";"+criteria.getSEXCODE()+";"+criteria.getCERTIFICATE_CODE_SUFFIX()+";"
-//				+criteria.getSENSITIVE_LEVEL()+";"+criteria.getPosition()+";"+criteria.getDept()+";"
-//				+criteria.getTAKE_OFFICE()+";"+criteria.getPOLICE_NO()
-//				;
 		if( criteria != null ) {
 			AuditUserLogDescribe auditUserLogDescribe = new AuditUserLogDescribe();
 			AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
@@ -414,11 +406,6 @@ public class UserManageService {
 		
 		auditUserLogDescribe.setLogid(auditUserLog.getId());
 		String str="";
-//		str=user.getNAME()+";"+user.getCERTIFICATE_CODE_SUFFIX()+";"+user.getSEXCODE()+";"
-//				+user.getGA_DEPARTMENT()+";"+user.getUNIT()+";"+user.getPOLICE_SORT()+";"
-//				+user.getPOLICE_NO()+";"+user.getSENSITIVE_LEVEL()+";"+user.getBUSINESS_TYPE()+";"
-//				+user.getTAKE_OFFICE()+";"+user.getPosition()+";"+user.getDept()
-//				;
 	
 		if(user.getNAME() != null && user.getNAME().length() > 0) {
 			str += user.getNAME()+";";
@@ -485,46 +472,42 @@ public class UserManageService {
 		
 		auditUserLogDescribe.setLogid(auditUserLog.getId());
 		
-		UserDAO dao = new UserDAOImpl();
-		List<User> nodes = dao.GetUserById(user.getId());
 		String str="";
-		for (int i = 0; i < nodes.size(); i++) {
-			if(nodes.get(i).getNAME() != null && nodes.get(i).getNAME().length() > 0) {
-				str += nodes.get(i).getNAME()+";";
-			}
-			if(nodes.get(i).getBUSINESS_TYPE() != null && nodes.get(i).getBUSINESS_TYPE().length() > 0) {
-				str += nodes.get(i).getBUSINESS_TYPE()+";";
-			}
-			if(nodes.get(i).getPOLICE_SORT() != null && nodes.get(i).getPOLICE_SORT().length() > 0) {
-				str += nodes.get(i).getPOLICE_SORT()+";";
-			}
-			if(nodes.get(i).getSEXCODE() != null && nodes.get(i).getSEXCODE().length() > 0) {
-				str += nodes.get(i).getSEXCODE()+";";
-			}
-			if(nodes.get(i).getCERTIFICATE_CODE_SUFFIX() != null && nodes.get(i).getCERTIFICATE_CODE_SUFFIX().length() > 0) {
-				str += nodes.get(i).getCERTIFICATE_CODE_SUFFIX()+";";
-			}
-			if(nodes.get(i).getSENSITIVE_LEVEL() != null && nodes.get(i).getSENSITIVE_LEVEL().length() > 0) {
-				str += nodes.get(i).getSENSITIVE_LEVEL()+";";
-			}
-			if(nodes.get(i).getGA_DEPARTMENT() != null && nodes.get(i).getGA_DEPARTMENT().length() > 0) {
-				str += nodes.get(i).getGA_DEPARTMENT()+";";
-			}
-			if(nodes.get(i).getUNIT() != null && nodes.get(i).getUNIT().length() > 0) {
-				str += nodes.get(i).getUNIT()+";";
-			}
-			if(nodes.get(i).getPosition() != null && nodes.get(i).getPosition().length() > 0) {
-				str += nodes.get(i).getPosition()+";";
-			}
-			if(nodes.get(i).getDept() != null && nodes.get(i).getDept().length() > 0) {
-				str += nodes.get(i).getDept()+";";
-			}
-			if(nodes.get(i).getTAKE_OFFICE() != null && nodes.get(i).getTAKE_OFFICE().length() > 0) {
-				str += nodes.get(i).getTAKE_OFFICE()+";";
-			}
-			if(nodes.get(i).getPOLICE_NO() != null && nodes.get(i).getPOLICE_NO().length() > 0) {
-				str += nodes.get(i).getPOLICE_NO();
-			}
+		if(user.getNAME() != null && user.getNAME().length() > 0) {
+			str += user.getNAME()+";";
+		}
+		if(user.getBUSINESS_TYPE() != null && user.getBUSINESS_TYPE().length() > 0) {
+			str += user.getBUSINESS_TYPE()+";";
+		}
+		if(user.getPOLICE_SORT() != null && user.getPOLICE_SORT().length() > 0) {
+			str += user.getPOLICE_SORT()+";";
+		}
+		if(user.getSEXCODE() != null && user.getSEXCODE().length() > 0) {
+			str += user.getSEXCODE()+";";
+		}
+		if(user.getCERTIFICATE_CODE_SUFFIX() != null && user.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
+			str += user.getCERTIFICATE_CODE_SUFFIX()+";";
+		}
+		if(user.getSENSITIVE_LEVEL() != null && user.getSENSITIVE_LEVEL().length() > 0) {
+			str += user.getSENSITIVE_LEVEL()+";";
+		}
+		if(user.getGA_DEPARTMENT() != null && user.getGA_DEPARTMENT().length() > 0) {
+			str += user.getGA_DEPARTMENT()+";";
+		}
+		if(user.getUNIT() != null && user.getUNIT().length() > 0) {
+			str += user.getUNIT()+";";
+		}
+		if(user.getPosition() != null && user.getPosition().length() > 0) {
+			str += user.getPosition()+";";
+		}
+		if(user.getDept() != null && user.getDept().length() > 0) {
+			str += user.getDept()+";";
+		}
+		if(user.getTAKE_OFFICE() != null && user.getTAKE_OFFICE().length() > 0) {
+			str += user.getTAKE_OFFICE()+";";
+		}
+		if(user.getPOLICE_NO() != null && user.getPOLICE_NO().length() > 0) {
+			str += user.getPOLICE_NO();
 		}
 		
 		auditUserLogDescribe.setDescrib(str);

@@ -279,7 +279,7 @@ public class GroupManageService {
 				str += groups.get(i).getName()+";";
 			}
 			if(groups.get(i).getCode() != null && groups.get(i).getCode().length() > 0) {
-				str += group.getCode()+";";
+				str += groups.get(i).getCode()+";";
 			}
 			if(groups.get(i).getDescrib() != null && groups.get(i).getDescrib().length() > 0) {
 				str += groups.get(i).getDescrib()+";";

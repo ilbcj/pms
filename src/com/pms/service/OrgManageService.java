@@ -83,6 +83,7 @@ public class OrgManageService {
 			target.setLATEST_MOD_TIME(timenow);
 			
 			target = dao.OrgNodeAdd(target);
+			AddOrgDelLog(target);
 		}
 		
 		return target;
@@ -98,8 +99,6 @@ public class OrgManageService {
 			target.setGA_DEPARTMENT(nodeIds.get(i));
 			
 			DeleteOrgNode(target);
-			
-			AddOrgDelLog(target);
 		}
 		
 		return ;
@@ -247,9 +246,10 @@ public class OrgManageService {
 		String timenow = sdf.format(new Date());
 		node.setLATEST_MOD_TIME(timenow);
 		node.setDATA_VERSION(node.getDATA_VERSION()+1);
-		node = dao.OrgNodeAdd(node);
 		
 		AddOrgAddOrUpdateLog(node);
+		
+		node = dao.OrgNodeAdd(node);
 		
 		return;
 	}
@@ -338,9 +338,6 @@ public class OrgManageService {
 		
 		auditOrgLogDescribe.setLogid(auditOrgLog.getId());
 		String str="";
-//		str=org.getUNIT()+";"+org.getPARENT_ORG()+";"
-//				+org.getORG_LEVEL()
-//				;
 	
 		if(org.getUNIT() != null && org.getUNIT().length() > 0) {
 			str += org.getUNIT()+";";
@@ -380,22 +377,18 @@ public class OrgManageService {
 		
 		auditOrgLogDescribe.setLogid(auditOrgLog.getId());
 		
-		OrganizationDAO dao = new OrganizationDAOImpl();
-		List<Organization> nodes = dao.GetOrgById(org.getGA_DEPARTMENT());
 		String str="";
-		for (int i = 0; i < nodes.size(); i++) {
-			if(nodes.get(i).getUNIT() != null && nodes.get(i).getUNIT().length() > 0) {
-				str += nodes.get(i).getUNIT()+";";
-			}
-			if(nodes.get(i).getGA_DEPARTMENT() != null && nodes.get(i).getGA_DEPARTMENT().length() > 0) {
-				str += nodes.get(i).getGA_DEPARTMENT()+";";
-			}
-			if(nodes.get(i).getPARENT_ORG() != null && nodes.get(i).getPARENT_ORG().length() > 0) {
-				str += nodes.get(i).getPARENT_ORG()+";";
-			}
-			if(nodes.get(i).getORG_LEVEL() != null && nodes.get(i).getORG_LEVEL().length() > 0) {
-				str += nodes.get(i).getORG_LEVEL();
-			}
+		if(org.getUNIT() != null && org.getUNIT().length() > 0) {
+			str += org.getUNIT()+";";
+		}
+		if(org.getGA_DEPARTMENT() != null && org.getGA_DEPARTMENT().length() > 0) {
+			str += org.getGA_DEPARTMENT()+";";
+		}
+		if(org.getPARENT_ORG() != null && org.getPARENT_ORG().length() > 0) {
+			str += org.getPARENT_ORG()+";";
+		}
+		if(org.getORG_LEVEL() != null && org.getORG_LEVEL().length() > 0) {
+			str += org.getORG_LEVEL();
 		}
 		
 		auditOrgLogDescribe.setDescrib(str);
