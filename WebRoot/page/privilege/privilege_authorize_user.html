@@ -290,7 +290,7 @@
 			}
 		}
     	//alert(poststr);
-    	$.getJSON("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../priv/savePrivileges.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -302,7 +302,7 @@
 				warningTip("提示", '用户授权失败');	
 			}
 			privAuthUserDetailWinReturn();
-		});
+		}, "json");
     	
     	
     }
@@ -323,7 +323,7 @@
 		
 		var poststr = "ownerIds=" + userids;
     	poststr += "&ownerType=2";
-		$.getJSON("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {
+		$.post("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -348,7 +348,7 @@
 			{
 				warningTip("提示", '获取用户已授权信息失败');	
 			}
-		});
+		}, "json");
 		return;
     }
     

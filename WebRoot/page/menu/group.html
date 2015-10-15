@@ -12,7 +12,7 @@
   </head>
   
   <body>
-    <ul id="menu_user" class="easyui-tree" lines="true">
+    <ul id="menu_group" class="easyui-tree" lines="true">
         <li iconCls="icon-leaf" id="menu_group_rule_maintain">
             <span>规则群体维护</span>
         </li>
@@ -22,7 +22,7 @@
     </ul>
 <script>
 $(document).ready(function () {
-	$('#menu_user').tree({
+	$("#menu_group").tree({
 		onClick: function(node){
 // 			alert(node.text);  // alert node text property when clicked
 // 			alert(node.state);

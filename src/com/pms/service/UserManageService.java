@@ -304,16 +304,17 @@ public class UserManageService {
 	
 	private String generateHash(String idNum) throws Exception {
 		
-		MessageDigest digest = MessageDigest.getInstance("MD5");
-
-		if(digest == null)
-		{
-			throw new Exception("generate hash operator fail.");
-		}
-		byte[] hash = digest.digest(idNum.getBytes());
-
-		String result =  new BASE64Encoder().encode(hash);
-		return result;
+//		MessageDigest digest = MessageDigest.getInstance("MD5");
+//
+//		if(digest == null)
+//		{
+//			throw new Exception("generate hash operator fail.");
+//		}
+//		byte[] hash = digest.digest(idNum.getBytes());
+//
+//		String result =  new BASE64Encoder().encode(hash);
+//		return result;
+		return MD5Security.md5(idNum);
 	}
 	
 	private String generateSuffix(String idNum) throws Exception {

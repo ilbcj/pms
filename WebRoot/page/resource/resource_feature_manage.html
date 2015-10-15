@@ -211,7 +211,7 @@
 					    poststr += "&delIds=" + rows[i].id;
 					}
 
-                    $.getJSON("../resource/deleteResourceFeatures.action", poststr, function(retObj) {
+                    $.post("../resource/deleteResourceFeatures.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -222,7 +222,7 @@
 						{
 							warningTip("提示", '删除功能资源操作失败：' + retObj.message);
 						}
-					});
+					}, "json");
                 }
             });
 		}
@@ -253,9 +253,9 @@ $(document).ready(function () {
 		    var recive = $.parseJSON(data);
 			
 	        if(recive.result == false) {
-	        	errorTip("保存功能资源信息失败："+recive.message);
+	        	warningTip("保存功能资源信息失败："+recive.message);
 	        } else {
-	        	successTip('保存功能资源信息','保存成功',1000);
+	        	successTip("保存功能资源信息","保存成功");
 
 				refreshDetailPage();
 	        	

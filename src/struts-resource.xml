@@ -23,7 +23,6 @@
  			<result name="success" type="json" />
  		</action>
  		<action name="saveResourceFeature" class="com.pms.controller.ResourceAction" method="SaveResourceFeature" >
- 			<result name="success" type="json" />
  		</action>
  		<action name="deleteResourceFeatures" class="com.pms.controller.ResourceAction" method="DeleteResourceFeatures" >
  			<result name="success" type="json" />
@@ -33,7 +32,6 @@
  			<result name="success" type="json" />
  		</action>
  		<action name="saveResourceData" class="com.pms.controller.ResourceAction" method="SaveResourceData" >
- 			<result name="success" type="json" />
  		</action>
  		<action name="deleteResourceDatas" class="com.pms.controller.ResourceAction" method="DeleteResourceDatas" >
  			<result name="success" type="json" />

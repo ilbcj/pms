@@ -35,7 +35,7 @@
 	function exportAllRes(){
   		$.messager.progress();
   		var amount="All";
-		$.getJSON("../system/dataSyncRes.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncRes.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.resDatas.length > 0){
@@ -50,13 +50,13 @@
 				warningTip("提示", '资源数据全量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
 
 	function exportAddRes(){
   		$.messager.progress();
   		var amount="Add";
-		$.getJSON("../system/dataSyncRes.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncRes.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.resDatas.length > 0){
@@ -71,13 +71,13 @@
 				warningTip("提示", '资源数据增量导出失败');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
 	
 	function exportAllOrg(){
   		$.messager.progress();
   		var amount="All";
-		$.getJSON("../system/dataSyncOrg.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncOrg.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.orgNode.length > 0){
@@ -92,13 +92,13 @@
 				warningTip("提示", '组织机构数据全量导出失败');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
   
 	function exportAddOrg(){
   		$.messager.progress();
   		var amount="Add";
-		$.getJSON("../system/dataSyncOrg.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncOrg.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.orgNode.length > 0){
@@ -113,13 +113,13 @@
 				warningTip("提示", '组织机构数据增量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
 	
 	function exportAllUser(){
   		$.messager.progress();
   		var amount="All";
-		$.getJSON("../system/dataSyncUser.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncUser.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.users.length > 0){
@@ -134,13 +134,13 @@
 				warningTip("提示", '用户数据全量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
 	
 	function exportAddUser(){
   		$.messager.progress();
   		var amount="Add";
-		$.getJSON("../system/dataSyncUser.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncUser.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.users.length > 0){
@@ -155,13 +155,13 @@
 				warningTip("提示", '用户数据增量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
   
 	function exportAllResRole(){
   		$.messager.progress();
   		var amount="All";
-		$.getJSON("../system/dataSyncResRole.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncResRole.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.resRoleResources.length > 0){
@@ -176,13 +176,13 @@
 				warningTip("提示", '资源与角色关系信息数据全量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
 	
 	function exportAddResRole(){
   		$.messager.progress();
   		var amount="Add";
-		$.getJSON("../system/dataSyncResRole.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncResRole.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.resRoleResources.length > 0){
@@ -197,13 +197,13 @@
 				warningTip("提示", '资源与角色关系信息数据增量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
   
 	function exportAllRole(){
   		$.messager.progress();
   		var amount="All";
-		$.getJSON("../system/dataSyncRole.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncRole.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.roles.length > 0){
@@ -218,13 +218,13 @@
 				warningTip("提示", '角色数据全量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
 	
 	function exportAddRole(){
   		$.messager.progress();
   		var amount="Add";
-		$.getJSON("../system/dataSyncRole.action",{amount :amount},function(retObj) {
+		$.post("../system/dataSyncRole.action",{amount :amount},function(retObj) {
 			if(retObj.result == true)
 			{
 				if(retObj.roles.length > 0){
@@ -239,7 +239,7 @@
 				warningTip("提示", '角色数据增量导出失败！');	
 			}
 			$.messager.progress('close');
-		});
+		}, "json");
 	}
 </script>
   </body>

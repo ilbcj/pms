@@ -168,7 +168,7 @@
     	var tmp = $.toJSON(convertArray);
     	poststr += '&attrItem.dictionary='+ tmp;
 
-    	$.getJSON("../system/saveUserAttrs.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../system/saveUserAttrs.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -180,7 +180,7 @@
 				warningTip("提示", '保存属性字典失败');	
 			}
 			attrDictOrgReturn();
-		});
+		}, "json");
 	}
 	
 	//------------------for value edit datagrid-------

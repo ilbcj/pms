@@ -465,7 +465,7 @@
 					    poststr += "&delNodeIds=" + rows[i].id;
 					}
 					
-                    $.getJSON("../user/deleteUserNode.action", poststr, function(retObj) {
+                    $.post("../user/deleteUserNode.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -477,7 +477,7 @@
 						{
 							warningTip("提示", '删除机构操作失败：' + retObj.message);
 						}
-					});
+					}, "json");
                 }
             });
 		}
@@ -602,7 +602,7 @@ $(document).ready(function () {
 	        }
 	    }
 	});
-	$.getJSON("../system/queryUserAttrs.action", function(data) {
+	$.post("../system/queryUserAttrs.action", function(data) {
 		var sex="";						//性别
 		var police_type="";				//警种
 		var police_num="";				//警号
@@ -712,7 +712,7 @@ $(document).ready(function () {
 			textField:'text'
 		});
 		
-	});	
+	}, "json");	
 });
 </script>	
   </body>

@@ -371,18 +371,34 @@ public class ResourceAction extends ActionSupport {
 		return SUCCESS;
 	}
 
-	public String SaveResourceFeature()
+	public String SaveResourceFeature() throws IOException
 	{
-		ResourceManageService rms = new ResourceManageService();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
 		try {
+			ResourceManageService rms = new ResourceManageService();
 			feature = rms.SaveResourceFeature(feature);
+			setResult(true);
+			return null;
 		} catch (Exception e) {
-			message = e.getMessage();
 			setResult(false);
-			return SUCCESS;
+			this.setMessage("导入文件失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
 		}
-		setResult(true);
-		return SUCCESS;
 	}
 	
 	public String DeleteResourceFeatures()
@@ -422,18 +438,34 @@ public class ResourceAction extends ActionSupport {
 		return SUCCESS;
 	}
 
-	public String SaveResourceData()
+	public String SaveResourceData() throws IOException
 	{
-		ResourceManageService rms = new ResourceManageService();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
 		try {
+			ResourceManageService rms = new ResourceManageService();
 			data = rms.SaveResourceData(data, resDataOrg);
+			setResult(true);
+			return null;
 		} catch (Exception e) {
-			message = e.getMessage();
 			setResult(false);
-			return SUCCESS;
+			this.setMessage("导入文件失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
 		}
-		setResult(true);
-		return SUCCESS;
 	}
 	
 	public String DeleteResourceDatas()
@@ -559,6 +591,6 @@ public class ResourceAction extends ActionSupport {
 			htmlout.print(json);
 			htmlout.flush();
 			htmlout.close();
-		}		
+		}
 	}
 }

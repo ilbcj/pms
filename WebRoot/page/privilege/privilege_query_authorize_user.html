@@ -236,7 +236,7 @@
 		var userids = rows[0].id;
 		
 		var poststr = "id=" + userids;
-		$.getJSON("../priv/queryUserPrivileges.action", poststr, function(retObj) {
+		$.post("../priv/queryUserPrivileges.action", poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -251,7 +251,7 @@
 			{
 				warningTip("提示", '获取用户已授权信息失败');	
 			}
-		});
+		}, "json");
 		return;
     }
     
@@ -313,7 +313,7 @@ $(document).ready(function () {
 	
 	$("#privilege_query_authorize_user_detail_win_list_dg").datagrid();
 	
-	$.getJSON("../system/queryUserAttrs.action", function(data) {
+	$.post("../system/queryUserAttrs.action", function(data) {
 		var sex="";						//性别
 		var police_type="";				//警种
 		var police_num="";				//警号
@@ -396,7 +396,7 @@ $(document).ready(function () {
 		$("#user_query_max_sensitive_level").combobox('loadData', max_sensitive_levelJSON);
 		$("#user_query_dept").combobox('loadData', deptJSON);
 		$("#user_query_title").combobox('loadData', titleJSON);
-	});	
+	}, "json");	
 });
 </script>	
   </body>
