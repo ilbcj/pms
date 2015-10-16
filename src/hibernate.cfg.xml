@@ -71,7 +71,16 @@
 	<mapping resource="com/pms/model/SyncConfig.hbm.xml" />
 	<mapping resource="com/pms/model/OrganizationImport.hbm.xml" />
 	<mapping resource="com/pms/model/UserImport.hbm.xml" />
-	<mapping resource="com/pms/model/AuditLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditUserLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditUserLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditOrgLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditOrgLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditGroupLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditGroupLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditResLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditResLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditPrivLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditPrivLogDescribe.hbm.xml" />
 
 </session-factory>
 

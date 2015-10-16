@@ -6,9 +6,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.GroupDAO;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.GroupDAOImpl;
 import com.pms.dto.UserListItem;
+import com.pms.model.AuditGroupLog;
+import com.pms.model.AuditGroupLogDescribe;
 import com.pms.model.Group;
 import com.pms.model.Rule;
 import com.pms.model.User;
@@ -22,6 +28,9 @@ public class GroupManageService {
 		String timenow = sdf.format(new Date());
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPEUSER);
+		
+		AddGroupAddOrUpdateLog(group, null);
+		
 		group = dao.GroupAdd(group);
 		
 		dao.UpdateGroupUsers(group.getId(), userIds);
@@ -34,6 +43,8 @@ public class GroupManageService {
 		List<Group> res = dao.GetGroupUsers( criteria, page, rows );
 		items.addAll(res);
 		int total = QueryAllGroupsUsersCount( criteria );
+		
+		AddGroupQueryLog(criteria);
 		return total;
 	}
 
@@ -67,6 +78,9 @@ public class GroupManageService {
 		for(int i = 0; i< groupIds.size(); i++) {
 			target = new Group();
 			target.setId(groupIds.get(i));
+			
+			AddGroupDelLog(target);
+			
 			dao.GroupOfUserDel(target);
 		}
 		
@@ -89,6 +103,9 @@ public class GroupManageService {
 		String timenow = sdf.format(new Date());
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPERULE);
+		
+		AddGroupAddOrUpdateLog(group, rules);
+		
 		group = dao.GroupAdd(group);
 		
 		dao.UpdateGroupRules(group.getId(), rules);
@@ -101,6 +118,9 @@ public class GroupManageService {
 		List<Group> res = dao.GetGroupRules( criteria, page, rows );
 		items.addAll(res);
 		int total = QueryAllGroupsRulesCount( criteria );
+		
+		AddGroupQueryLog(criteria);
+		
 		return total;
 	}
 	
@@ -126,10 +146,168 @@ public class GroupManageService {
 		for(int i = 0; i< groupIds.size(); i++) {
 			target = new Group();
 			target.setId(groupIds.get(i));
+			
+			AddGroupDelLog(target);
+			
 			dao.GroupOfRuleDel(target);
 		}
 		
 		return ;
 	}
-
+	private void AddGroupQueryLog(Group criteria) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditGroupLog auditGroupLog = new AuditGroupLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditGroupLog.setAdminId(als.adminLogin());
+		auditGroupLog.setIpAddr("");
+		auditGroupLog.setFlag(AuditGroupLog.LOGFLAGQUERY);
+		auditGroupLog.setResult(AuditGroupLog.LOGRESULTSUCCESS);
+		auditGroupLog.setLATEST_MOD_TIME(timenow);
+		auditGroupLog = logdao.AuditGroupLogAdd(auditGroupLog);
+		
+		if( criteria != null ) {
+			AuditGroupLogDescribe auditGroupLogDescribe = new AuditGroupLogDescribe();
+			AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+			
+			auditGroupLogDescribe.setLogid(auditGroupLog.getId());
+			String str="";
+			if(criteria.getName() != null && criteria.getName().length() > 0) {
+				str += criteria.getName()+";";
+			}
+			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
+				str += criteria.getCode();
+			}
+			auditGroupLogDescribe.setDescrib(str);
+			
+			auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+		}
+	}
+	
+	private void AddGroupAddOrUpdateLog(Group group, List<Rule> rules) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		AuditGroupLog auditGroupLog = new AuditGroupLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditGroupLog.setAdminId(als.adminLogin());
+		auditGroupLog.setIpAddr("");
+		if(group.getId() == 0){
+			auditGroupLog.setFlag(AuditGroupLog.LOGFLAGADD);
+		}else{
+			auditGroupLog.setFlag(AuditGroupLog.LOGFLAGUPDATE);
+		}
+		auditGroupLog.setResult(AuditGroupLog.LOGRESULTSUCCESS);
+		auditGroupLog.setLATEST_MOD_TIME(timenow);
+		auditGroupLog = logdao.AuditGroupLogAdd(auditGroupLog);
+		
+		AuditGroupLogDescribe auditGroupLogDescribe = new AuditGroupLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditGroupLogDescribe.setLogid(auditGroupLog.getId());
+		String str="";
+		if(group.getName() != null && group.getName().length() > 0) {
+			str += group.getName()+";";
+		}
+		if(group.getCode() != null && group.getCode().length() > 0) {
+			str += group.getCode()+";";
+		}
+		if(group.getDescrib() != null && group.getDescrib().length() > 0) {
+			str += group.getDescrib()+";";
+		}
+		if (rules != null) {
+			for(int i = 0; i<rules.size(); i++) {
+				if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
+					str += rules.get(i).getRulename()+";";
+				}
+				if(rules.get(i).getRulevalue() != null && rules.get(i).getRulevalue().length() > 0) {
+					str += rules.get(i).getRulevalue();
+				}
+			}
+		}
+		GroupDAO dao = new GroupDAOImpl();
+		List<User> users = dao.GetGroupUsersByGroupId( group.getId() );
+		for(int i = 0; i<users.size(); i++) {
+			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
+				str += users.get(i).getNAME()+";";
+			}
+			if(users.get(i).getUNIT() != null && users.get(i).getUNIT().length() > 0) {
+				str += users.get(i).getUNIT();
+			}
+		}
+		auditGroupLogDescribe.setDescrib(str);
+		
+		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+		
+		return ;
+	}
+	
+	private void AddGroupDelLog(Group group) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditGroupLog auditGroupLog = new AuditGroupLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditGroupLog.setAdminId(als.adminLogin());
+		auditGroupLog.setIpAddr("");
+		auditGroupLog.setFlag(AuditGroupLog.LOGFLAGDELETE);
+		auditGroupLog.setResult(AuditGroupLog.LOGRESULTSUCCESS);
+		auditGroupLog.setLATEST_MOD_TIME(timenow);
+		auditGroupLog = logdao.AuditGroupLogAdd(auditGroupLog);
+		
+		AuditGroupLogDescribe auditGroupLogDescribe = new AuditGroupLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditGroupLogDescribe.setLogid(auditGroupLog.getId());
+		
+		GroupDAO dao = new GroupDAOImpl();
+		List<Group> groups = dao.GetGroupByGroupId(group.getId());
+		String str="";
+		for (int i = 0; i < groups.size(); i++) {
+			if(groups.get(i).getName() != null && groups.get(i).getName().length() > 0) {
+				str += groups.get(i).getName()+";";
+			}
+			if(groups.get(i).getCode() != null && groups.get(i).getCode().length() > 0) {
+				str += groups.get(i).getCode()+";";
+			}
+			if(groups.get(i).getDescrib() != null && groups.get(i).getDescrib().length() > 0) {
+				str += groups.get(i).getDescrib()+";";
+			}
+		}
+		
+		List<Rule> rules = dao.GetGroupRulesByGroupId(group.getId());
+		for(int i = 0; i<rules.size(); i++) {
+			if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
+				str += rules.get(i).getRulename()+";";
+			}
+			if(rules.get(i).getRulevalue() != null && rules.get(i).getRulevalue().length() > 0) {
+				str += rules.get(i).getRulevalue();
+			}
+		}
+		List<User> users = dao.GetGroupUsersByGroupId( group.getId() );
+		for(int i = 0; i<users.size(); i++) {
+			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
+				str += users.get(i).getNAME()+";";
+			}
+			if(users.get(i).getUNIT() != null && users.get(i).getUNIT().length() > 0) {
+				str += users.get(i).getUNIT();
+			}
+		}
+		auditGroupLogDescribe.setDescrib(str);
+		
+		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+	}
+	
 }
