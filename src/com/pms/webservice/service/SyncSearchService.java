@@ -271,12 +271,13 @@ public class SyncSearchService extends SyncService {
 		List<Item> connectCons = this.getSc().getCONNECTITEMS();
 		if(cons != null && cons.size() > 0) {
 			if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
-				where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
+				//where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
+				where += cons.get(0).getEng() + " in (" + matchSubSearchWithInCondition(subMap, cons.get(0).getVal()) + ") ";
 			}else {
-				where += cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "=" + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
+				where += cons.get(0).getVal() == null || cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "=" + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
 				for(int i = 1; i<cons.size(); i++) {
 					where += this.getSc().getCONDITION() + " ";
-					where += cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "=" + matchSubSearch(subMap, cons.get(i).getVal()) + " ";
+					where += cons.get(i).getVal() == null || cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "=" + matchSubSearch(subMap, cons.get(i).getVal()) + " ";
 				}
 			}
 		}
@@ -285,6 +286,16 @@ public class SyncSearchService extends SyncService {
 			where += " START WITH " + startCons.get(0).getEng() + " = " + startCons.get(0).getVal();
 		}
 		return where;
+	}
+	
+	private String matchSubSearchWithInCondition(Map<String, String> subMap, String columnValue) {
+		String result = null;
+		if( subMap.containsKey(columnValue) ) {
+			result = subMap.get(columnValue);
+		} else {
+			result = columnValue;
+		}
+		return result;	
 	}
 	
 	private String matchSubSearch(Map<String, String> subMap, String columnValue) {
