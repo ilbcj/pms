@@ -473,6 +473,31 @@ public class GroupDAOImpl implements GroupDAO {
 		}
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Group> GetGroupByGroupId(int id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<Group> rs = null;
+		String sqlString = "select * from groups where id = :id ";
+				
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(Group.class);
+			q.setInteger("id", id);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 
 	@Override
 	public void GroupOfRuleDel(Group group) throws Exception {

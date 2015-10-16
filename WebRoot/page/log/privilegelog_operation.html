@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>privilegelog_operation.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">授权操作日志</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="privilegelog_operation_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+				<div id="privilegelog_operation_maintain_center_main" class="easyui-layout" data-options="fit:true" >
+					<div id="privilegelog_operation_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+		    			<table class="nodt" style="width:100%">
+			                <tr>
+			                    <td class="query_name_small text_right">操作类型</td>
+			                    <td class="query_value_small"><input id="privilegelog_operation_query_flag" class="easyui-textbox"></input></td>
+<!-- 			                    <td class="query_name_small text_right">编码</td> -->
+<!-- 			                    <td class="query_value_small"><input id="privilegelog_operation_query_code" class="easyui-textbox"></input></td> -->
+			                    <td>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryPrivilegelogOperation()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryPrivilegelogOperationCondition()">重置</a>
+			                    </td>
+			                </tr>
+			            </table>
+		    		</div><!-- end of privilegelog_operation_maintain_center_query -->
+		    		
+		    		<div id="privilegelog_operation_maintain_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="privilegelog_operation_maintain_center_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+					        <thead>
+					            <tr>
+					            	<th field="ck" checkbox="true"></th>
+					                <th data-options="field:'logid'" style="width:;">LogID</th>
+					                <th data-options="field:'adminId'" style="width:;">管理员ID</th>
+<!-- 					                <th data-options="field:'ipAddr'" style="width:;">管理员登录IP地址</th> -->
+					                <th data-options="field:'flag'" style="width:;">操作类型</th>
+					                <th data-options="field:'result'" style="width:;">结果</th>
+<!-- 					                <th data-options="field:'desc'" style="width:;">描述</th> -->
+					                <th data-options="field:'LATEST_MOD_TIME'" style="width:;">操作时间</th>
+					            </tr>
+					        </thead>
+					    </table>
+					    <div id="toolbar" style="background-color:#E7F0FF">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addGroupOfUser()">添加</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modGroupOfUser()">修改</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delGroupOfUser()">删除</a>
+	            			
+					    </div><!-- end of toolbar -->
+		    		</div><!-- end of privilegelog_operation_maintain_center_list -->
+		    	</div><!-- end of privilegelog_operation_maintain_center_main -->
+			</div><!-- privilegelog_operation_maintain_center_main_wapper -->			
+	    			
+		</div><!-- end of center -->
+	</div><!-- end of layout -->
+	
+<script type="text/javascript">	
+	function queryPrivilegelogOperation(){
+    	var flag = $("#privilegelog_operation_query_flag").combobox("getValue");
+    	
+    	$("#privilegelog_operation_maintain_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			flag: flag
+		});
+    }
+    
+    function clearQueryPrivilegelogOperationCondition(){
+    	$("#privilegelog_operation_query_flag").combobox("setValue","");
+    }
+    
+    $("#privilegelog_operation_query_flag").combobox({
+		valueField: 'value',
+		textField: 'label',
+		data:[{
+			label: '请选择',
+			value: '',
+		},{
+			label: 'query',
+			value: 'query',
+		},{
+			label: 'add',
+			value: 'add',
+		},{
+			label: 'update',
+			value: 'update',
+		},{
+			label: 'delete',
+			value: 'delete'
+		}]
+	});
+	
+	$("#privilegelog_operation_maintain_center_list_dg").datagrid({
+		url:'../auditlog/queryAllAuditPrivLog.action',
+		queryParams:{queryAll: true},
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.logPrivItems;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+		view: detailview,
+		detailFormatter: function(rowIndex, rowData){
+			if(rowData.desc != null && rowData.desc != ''){ 
+				return '<table><tr>' +
+						'<td style="border:0">' +
+						'<p>描述: ' + rowData.desc + '</p>' +
+						'</td>' +
+						'</tr></table>';
+			}
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#privilegelog_operation_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+</script>
+  </body>
+</html>
