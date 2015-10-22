@@ -101,7 +101,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Privilege> QueryPrivilegesByOwnerId(int ownerid, int ownertype)
+	public List<Privilege> QueryPrivilegesByOwnerId(String ownerid, int ownertype)
 			throws Exception {
  		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -110,7 +110,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Privilege.class);
-			q.setInteger("owner_id", ownerid);
+			q.setString("owner_id", ownerid);
 			q.setInteger("owner_type", ownertype);
 			rs = q.list();
 			tx.commit();
@@ -125,7 +125,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		return rs;
 	}
 	
-	public void UpdatePrivilegeByOwnerId(int ownerid, int ownertype,
+	public void UpdatePrivilegeByOwnerId(String ownerid, int ownertype,
 			List<Privilege> privileges) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -133,7 +133,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("owner_id", ownerid);
+			q.setString("owner_id", ownerid);
 			q.setInteger("owner_type", ownertype);
 			q.executeUpdate();
 			
@@ -177,7 +177,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRole> QueryPrivInfosByUserid(int userid) throws Exception {
+	public List<ResRole> QueryPrivInfosByUserid(String userid) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRole> rs = null;
@@ -185,7 +185,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
-			q.setInteger("owner_id", userid);
+			q.setString("owner_id", userid);
 			q.setInteger("owner_type", Privilege.OWNERTYPEUSER);
 			rs = q.list();
 			tx.commit();
@@ -202,16 +202,16 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRole> QueryPrivInfosByUsersOrg(int userid) throws Exception {
+	public List<ResRole> QueryPrivInfosByUsersOrg(String userid) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
 		List<ResRole> rs = null;
-		String sqlString = "SELECT a.* FROM res_role a, privilege b where b.owner_id=(select parent_id from user where id = :userid) and owner_type=:owner_type and a.id = b.role_id ";
+		String sqlString = "SELECT a.* FROM res_role a, privilege b where b.owner_id=(select parent_id from user where certificate_code_md5 = :userid) and owner_type=:owner_type and a.id = b.role_id ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
-			q.setInteger("userid", userid);
+			q.setString("userid", userid);
 			q.setInteger("owner_type", Privilege.OWNERTYPEORG);
 			rs = q.list();
 			tx.commit();
@@ -228,7 +228,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRole> QueryPrivInfosByUsersGroup(int groupid)
+	public List<ResRole> QueryPrivInfosByUsersGroup(String groupid)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -237,7 +237,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
-			q.setInteger("owner_id", groupid);
+			q.setString("owner_id", groupid);
 			q.setInteger("owner_type", Privilege.OWNERTYPEUSERGROUP);
 			rs = q.list();
 			tx.commit();

@@ -359,8 +359,8 @@ public class ResourceAction extends ActionSupport {
 		try {
 
 				ResFeature criteria = new ResFeature();
-				criteria.setName(resName);
-				criteria.setResource_id(resCode);
+				criteria.setRESOUCE_NAME(resName);
+				criteria.setRESOURCE_ID(resCode);
 				total = rms.QueryAllFeatureItems( criteria, page, rows, features );
 		} catch (Exception e) {
 			message = e.getMessage();
@@ -425,7 +425,7 @@ public class ResourceAction extends ActionSupport {
 			criteria.setRESOURCE_ID(resCode);
 //			criteria.setRESOURCE_ID(resource_id);
 			criteria.setRESOURCE_DESCRIBE(resource_describe);
-			criteria.setRESOURCE_REMARK(resource_remark);
+			criteria.setRMK(resource_remark);
 			total = rms.QueryAllDataItems(resource_status, resource_type, dataset_sensitive_level,
 					data_set, section_class, element,section_relatioin_class, 
 					criteria, page, rows, dataItems );

@@ -156,8 +156,9 @@ public class PrivilegeAction extends ActionSupport {
 				pms.SavePrivilege(ownerIds, ownerType, roleIds);
 			}
 			else if( PrivilegeAction.SAVETYPEMOD == saveType ) {
-				int orgid = Integer.parseInt(ownerIds);
-				pms.UpdatePrivilege(orgid, ownerType, roleIds);
+//				int orgid = Integer.parseInt(ownerIds);
+//				pms.UpdatePrivilege(orgid, ownerType, roleIds);
+				pms.UpdatePrivilege(ownerIds, ownerType, roleIds);
 			}
 			else {
 				message = "传入服务的待保存数据不完整。";
@@ -179,8 +180,8 @@ public class PrivilegeAction extends ActionSupport {
 	{
 		PrivilegeManageService pms = new PrivilegeManageService();
 		try {
-			int orgid = Integer.parseInt(ownerIds);
-			privileges = pms.QueryPrivilegesByOwnerId(orgid, ownerType);
+			//int orgid = Integer.parseInt(ownerIds);
+			privileges = pms.QueryPrivilegesByOwnerId(ownerIds, ownerType);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

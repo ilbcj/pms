@@ -26,7 +26,7 @@ public class GroupAction extends ActionSupport {
 	private String groupCode;
 	private Group group;
 	private List<Group> items;
-	private List<Integer> addUserIds;
+	private List<String> addUserIds;
 	private List<UserListItem> users;
 	private List<Integer> delIds;
 	private List<Rule> rules;
@@ -139,12 +139,12 @@ public class GroupAction extends ActionSupport {
 	}
 
 
-	public List<Integer> getAddUserIds() {
+	public List<String> getAddUserIds() {
 		return addUserIds;
 	}
 
 
-	public void setAddUserIds(List<Integer> addUserIds) {
+	public void setAddUserIds(List<String> addUserIds) {
 		this.addUserIds = addUserIds;
 	}
 

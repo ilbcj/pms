@@ -82,22 +82,22 @@ public class ResourceUploadService {
 	private final String SHEET_COLUMN_CLASSIFY_COL_CLUE_SRC_SYS = "所属节点编码";
 	private final String SHEET_COLUMN_CLASSIFY_COL_CLASSIFY_NAME = "字段分类名称";
 	
-	private final String SHEET_COLUMN_COL_COLUMN_ID = "字段编码";
+	private final String SHEET_COLUMN_COL_ELEMENT = "字段编码";
 	private final String SHEET_COLUMN_COL_CLUE_SRC_SYS = "所属节点编码";
 	private final String SHEET_COLUMN_COL_DATA_SET = "数据集编码";
 	private final String SHEET_COLUMN_COL_COLUMU_CN = "字段中文名称";
 	private final String SHEET_COLUMN_COL_COLUMN_NAME = "字段英文名称";
-	private final String SHEET_COLUMN_COL_COLUMN_RMK = "字段描述";
+	private final String SHEET_COLUMN_COL_RMK = "字段描述";
 	
-	private final String SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITTIVE_ID = "敏感度编码";
+	private final String SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_ID = "敏感度编码";
 	private final String SHEET_VALUE_SENSITIVE_COL_CLUE_SRC_SYS = "所属节点编码";
 	private final String SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_NAME = "敏感度名称";
 	
-	private final String SHEET_VALUE_COL_VALUE_ID = "字段值";
+	private final String SHEET_VALUE_COL_ELEMENT_VALUE = "字段值";
 	private final String SHEET_VALUE_COL_CLUE_SRC_SYS = "所属节点编码";
 	private final String SHEET_VALUE_COL_VALUE_NAME = "备注";
 	private final String SHEET_VALUE_COL_VALUE_SENSITIVE_ID = "字段值敏感度编码";
-	private final String SHEET_VALUE_COL_COLUMN_ID = "字段值所属的字段编码";
+	private final String SHEET_VALUE_COL_ELEMENT = "字段值所属的字段编码";
 	
 	private final String SHEET_COLUMN_ClASSIFY_REALTION_COL_SECTION_RELATIOIN_CLASS = "字段分类关系代码";
 	private final String SHEET_COLUMN_ClASSIFY_REALTION_COL_CLUE_SRC_SYS = "所属节点编码";
@@ -106,19 +106,19 @@ public class ResourceUploadService {
 	
 	private final String SHEET_ROW_RELATION_COL_ID = "关系的唯一标识";
 	private final String SHEET_ROW_RELATION_COL_DATA_SET = "数据集编码";
-	private final String SHEET_ROW_RELATION_COL_COLUMN_ID = "字段编码";
+	private final String SHEET_ROW_RELATION_COL_ELEMENT = "字段编码";
 	private final String SHEET_ROW_RELATION_COL_CLUE_SRC_SYS = "所属节点编码";
-	private final String SHEET_ROW_RELATION_COL_VALUE_ID = "字段值";
+	private final String SHEET_ROW_RELATION_COL_ELEMENT_VALUE = "字段值";
 	
 	private final String SHEET_COLUMN_RELATION_COL_ID = "关系唯一标识";
 	private final String SHEET_COLUMN_RELATION_COL_DATA_SET = "数据集编码";
 	private final String SHEET_COLUMN_RELATION_COL_COLUMN_CLASS_ID = "字段分类编码";
 	private final String SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS = "所属节点编码";
-	private final String SHEET_COLUMN_RELATION_COL_COLUMN_ID = "字段";
+	private final String SHEET_COLUMN_RELATION_COL_ELEMENT = "字段";
 
 	private final String SHEET_CLASSIFY_RELATION_COL_ID = "关系唯一标识";
 	private final String SHEET_CLASSIFY_RELATION_COL_DATA_SET = "数据集编码";
-	private final String SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID = "字段分类关系编码";
+	private final String SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS = "字段分类关系编码";
 	private final String SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS = "所属节点编码";
 	
 	
@@ -353,8 +353,8 @@ public class ResourceUploadService {
             	Cell cell = row.getCell(c);
             	String cellValue = getCellValue(cell);
             	if(r == 0) {
-            		if ( SHEET_COLUMN_COL_COLUMN_ID.equals(cellValue) ) {
-            			idx.put(SHEET_COLUMN_COL_COLUMN_ID, c);
+            		if ( SHEET_COLUMN_COL_ELEMENT.equals(cellValue) ) {
+            			idx.put(SHEET_COLUMN_COL_ELEMENT, c);
             		} else if ( SHEET_COLUMN_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_COLUMN_COL_CLUE_SRC_SYS, c);
             		} else if ( SHEET_COLUMN_COL_DATA_SET.equals(cellValue) ) {
@@ -363,15 +363,15 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_COL_COLUMU_CN, c);
             		} else if ( SHEET_COLUMN_COL_COLUMN_NAME.equals(cellValue) ) {
             			idx.put(SHEET_COLUMN_COL_COLUMN_NAME, c);
-            		} else if ( SHEET_COLUMN_COL_COLUMN_RMK.equals(cellValue) ) {
-            			idx.put(SHEET_COLUMN_COL_COLUMN_RMK, c);
+            		} else if ( SHEET_COLUMN_COL_RMK.equals(cellValue) ) {
+            			idx.put(SHEET_COLUMN_COL_RMK, c);
             		}            		
             	} else {
             		if(idx.size() == 0) {
             			throw new Exception("导入数据文件格式不正确!");
             		}
-            		if( c == idx.get(SHEET_COLUMN_COL_COLUMN_ID) ) {
-            			col.setCOLUMN_ID(cellValue);
+            		if( c == idx.get(SHEET_COLUMN_COL_ELEMENT) ) {
+            			col.setELEMENT(cellValue);
             		} else if ( c == idx.get(SHEET_COLUMN_COL_CLUE_SRC_SYS) ) {
             			col.setCLUE_SRC_SYS(cellValue);
             		} else if ( c== idx.get(SHEET_COLUMN_COL_DATA_SET) ) {
@@ -380,8 +380,8 @@ public class ResourceUploadService {
             			col.setCOLUMU_CN(cellValue);
             		} else if ( c== idx.get(SHEET_COLUMN_COL_COLUMN_NAME) ) {
             			col.setCOLUMN_NAME(cellValue);
-            		} else if ( c== idx.get(SHEET_COLUMN_COL_COLUMN_RMK) ) {
-            			col.setCOLUMN_RMK(cellValue);
+            		} else if ( c== idx.get(SHEET_COLUMN_COL_RMK) ) {
+            			col.setRMK(cellValue);
             		}             		
             	}
             }
@@ -416,8 +416,8 @@ public class ResourceUploadService {
             	String cellValue = getCellValue(cell);
             	
             	if(r == 0) {
-            		if ( SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITTIVE_ID.equals(cellValue) ) {
-            			idx.put(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITTIVE_ID, c);
+            		if ( SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_ID.equals(cellValue) ) {
+            			idx.put(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_ID, c);
             		} else if ( SHEET_VALUE_SENSITIVE_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_VALUE_SENSITIVE_COL_CLUE_SRC_SYS, c);
             		} else if ( SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_NAME.equals(cellValue) ) {
@@ -427,8 +427,8 @@ public class ResourceUploadService {
             		if(idx.size() == 0) {
             			throw new Exception("导入数据文件格式不正确!");
             		}
-            		if( c == idx.get(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITTIVE_ID) ) {
-            			vs.setVALUE_SENSITTIVE_ID(cellValue);
+            		if( c == idx.get(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_ID) ) {
+            			vs.setVALUE_SENSITIVE_ID(cellValue);
             		} else if ( c == idx.get(SHEET_VALUE_SENSITIVE_COL_CLUE_SRC_SYS) ) {
             			vs.setCLUE_SRC_SYS(cellValue);
             		} else if ( c== idx.get(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_NAME) ) {
@@ -467,31 +467,31 @@ public class ResourceUploadService {
             	String cellValue = getCellValue(cell);
             	
             	if(r == 0) {
-            		if ( SHEET_VALUE_COL_VALUE_ID.equals(cellValue) ) {
-            			idx.put(SHEET_VALUE_COL_VALUE_ID, c);
+            		if ( SHEET_VALUE_COL_ELEMENT_VALUE.equals(cellValue) ) {
+            			idx.put(SHEET_VALUE_COL_ELEMENT_VALUE, c);
             		} else if ( SHEET_VALUE_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_VALUE_COL_CLUE_SRC_SYS, c);
             		} else if ( SHEET_VALUE_COL_VALUE_NAME.equals(cellValue) ) {
             			idx.put(SHEET_VALUE_COL_VALUE_NAME, c);
             		} else if ( SHEET_VALUE_COL_VALUE_SENSITIVE_ID.equals(cellValue) ) {
             			idx.put(SHEET_VALUE_COL_VALUE_SENSITIVE_ID, c);
-            		} else if ( SHEET_VALUE_COL_COLUMN_ID.equals(cellValue) ) {
-            			idx.put(SHEET_VALUE_COL_COLUMN_ID, c);
+            		} else if ( SHEET_VALUE_COL_ELEMENT.equals(cellValue) ) {
+            			idx.put(SHEET_VALUE_COL_ELEMENT, c);
             		}
             	} else {
             		if(idx.size() == 0) {
             			throw new Exception("导入数据文件格式不正确!");
             		}
-            		if( c == idx.get(SHEET_VALUE_COL_VALUE_ID) ) {
-            			val.setVALUE_ID(cellValue);
+            		if( c == idx.get(SHEET_VALUE_COL_ELEMENT_VALUE) ) {
+            			val.setELEMENT_VALUE(cellValue);
             		} else if ( c == idx.get(SHEET_VALUE_COL_CLUE_SRC_SYS) ) {
             			val.setCLUE_SRC_SYS(cellValue);
             		} else if ( c== idx.get(SHEET_VALUE_COL_VALUE_NAME) ) {
             			val.setVALUE_NAME(cellValue);
             		} else if ( c== idx.get(SHEET_VALUE_COL_VALUE_SENSITIVE_ID) ) {
             			val.setVALUE_SENSITIVE_ID(cellValue);
-            		} else if ( c== idx.get(SHEET_VALUE_COL_COLUMN_ID) ) {
-            			val.setCOLUMN_ID(cellValue);
+            		} else if ( c== idx.get(SHEET_VALUE_COL_ELEMENT) ) {
+            			val.setELEMENT(cellValue);
             		}           		
             	}
             }
@@ -585,12 +585,12 @@ public class ResourceUploadService {
             			idx.put(SHEET_ROW_RELATION_COL_ID, c);
             		} else if ( SHEET_ROW_RELATION_COL_DATA_SET.equals(cellValue) ) {
             			idx.put(SHEET_ROW_RELATION_COL_DATA_SET, c);
-            		} else if ( SHEET_ROW_RELATION_COL_COLUMN_ID.equals(cellValue) ) {
-            			idx.put(SHEET_ROW_RELATION_COL_COLUMN_ID, c);
+            		} else if ( SHEET_ROW_RELATION_COL_ELEMENT.equals(cellValue) ) {
+            			idx.put(SHEET_ROW_RELATION_COL_ELEMENT, c);
             		} else if ( SHEET_ROW_RELATION_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_ROW_RELATION_COL_CLUE_SRC_SYS, c);
-            		} else if ( SHEET_ROW_RELATION_COL_VALUE_ID.equals(cellValue) ) {
-            			idx.put(SHEET_ROW_RELATION_COL_VALUE_ID, c);
+            		} else if ( SHEET_ROW_RELATION_COL_ELEMENT_VALUE.equals(cellValue) ) {
+            			idx.put(SHEET_ROW_RELATION_COL_ELEMENT_VALUE, c);
             		}
             	} else {
             		if(idx.size() == 0) {
@@ -600,12 +600,12 @@ public class ResourceUploadService {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_ROW_RELATION_COL_DATA_SET) ) {
             			rr.setDATA_SET(cellValue);
-            		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_COLUMN_ID) ) {
-            			rr.setCOLUMN_ID(cellValue);
+            		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_ELEMENT) ) {
+            			rr.setELEMENT(cellValue);
             		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_CLUE_SRC_SYS) ) {
             			rr.setCLUE_SRC_SYS(cellValue);
-            		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_VALUE_ID) ) {
-            			rr.setVALUE_ID(cellValue);
+            		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_ELEMENT_VALUE) ) {
+            			rr.setELEMENT_VALUE(cellValue);
             		}        		
             	}
             }
@@ -648,8 +648,8 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_RELATION_COL_COLUMN_CLASS_ID, c);
             		} else if ( SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS, c);
-            		} else if ( SHEET_COLUMN_RELATION_COL_COLUMN_ID.equals(cellValue) ) {
-            			idx.put(SHEET_COLUMN_RELATION_COL_COLUMN_ID, c);
+            		} else if ( SHEET_COLUMN_RELATION_COL_ELEMENT.equals(cellValue) ) {
+            			idx.put(SHEET_COLUMN_RELATION_COL_ELEMENT, c);
             		}
             	} else {
             		if(idx.size() == 0) {
@@ -660,11 +660,11 @@ public class ResourceUploadService {
             		} else if ( c == idx.get(SHEET_COLUMN_RELATION_COL_DATA_SET) ) {
             			rc.setDATA_SET(cellValue);
             		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_COLUMN_CLASS_ID) ) {
-            			rc.setCOLUMN_CLASS_ID(cellValue);
+            			rc.setSECTION_RELATIOIN_CLASS(cellValue);
             		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS) ) {
             			rc.setCLUE_SRC_SYS(cellValue);
-            		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_COLUMN_ID) ) {
-            			rc.setCOLUMN_ID(cellValue);
+            		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_ELEMENT) ) {
+            			rc.setELEMENT(cellValue);
             		}        		
             	}
             }
@@ -703,8 +703,8 @@ public class ResourceUploadService {
             			idx.put(SHEET_CLASSIFY_RELATION_COL_ID, c);
             		} else if ( SHEET_CLASSIFY_RELATION_COL_DATA_SET.equals(cellValue) ) {
             			idx.put(SHEET_CLASSIFY_RELATION_COL_DATA_SET, c);
-            		} else if ( SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID.equals(cellValue) ) {
-            			idx.put(SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID, c);
+            		} else if ( SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS.equals(cellValue) ) {
+            			idx.put(SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS, c);
             		} else if ( SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS, c);
             		}
@@ -716,8 +716,8 @@ public class ResourceUploadService {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_CLASSIFY_RELATION_COL_DATA_SET) ) {
             			rc.setDATA_SET(cellValue);
-            		} else if ( c== idx.get(SHEET_CLASSIFY_RELATION_COL_COLUMN_CLASS_ID) ) {
-            			rc.setCOLUMN_CLASS_ID(cellValue);
+            		} else if ( c== idx.get(SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS) ) {
+            			rc.setSECTION_RELATIOIN_CLASS(cellValue);
             		} else if ( c== idx.get(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS) ) {
             			rc.setCLUE_SRC_SYS(cellValue);
             		}       		
@@ -918,7 +918,7 @@ public class ResourceUploadService {
 		ResRoleResource rrr = new ResRoleResource();
 		rrr.setBUSINESS_ROLE(roleId);
 		rrr.setRESOURCE_ID(resId);
-		rrr.setRestype(ResRoleResource.RESTYPEDATA);
+		rrr.setRESOURCE_CLASS(ResRoleResource.RESCLASSDATA);
 		rrr.setDATA_VERSION(1);
 		rrr.setDELETE_STATUS(ResRoleResource.DELSTATUSNO);
 		dao.ResRoleResourceAdd(rrr);
@@ -1028,7 +1028,7 @@ public class ResourceUploadService {
 		rd.setRESOURCE_DESCRIBE("字段数据资源");
 		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
 		rd.setDATA_SET(rc.getDATA_SET());
-		rd.setELEMENT(rc.getCOLUMN_ID());
+		rd.setELEMENT(rc.getELEMENT());
 		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
 		rd.setResource_type(ResData.RESTYPEPUBLIC);
 		rd.setName(rc.getCOLUMU_CN());
@@ -1043,8 +1043,8 @@ public class ResourceUploadService {
 		rd.setResource_type(ResData.RESTYPEPUBLIC);
 		rd.setRESOURCE_DESCRIBE("数据集-字段分类-字段数据资源");
 		rd.setDATA_SET(rrc.getDATA_SET());
-		rd.setELEMENT(rrc.getCOLUMN_ID());
-		rd.setSECTION_CLASS(rrc.getCOLUMN_CLASS_ID());
+		rd.setELEMENT(rrc.getELEMENT());
+		rd.setSECTION_CLASS(rrc.getSECTION_RELATIOIN_CLASS());
 		
 		rddao.ResDataOfRelationColumnSave(rd, rrc.getCLUE_SRC_SYS());
 	}
@@ -1058,10 +1058,10 @@ public class ResourceUploadService {
 		rd.setRESOURCE_DESCRIBE("数据集-字段-字段值数据资源");
 		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrr.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
 		rd.setDATA_SET(rrr.getDATA_SET());
-		rd.setELEMENT(rrr.getCOLUMN_ID());
-		rd.setELEMENT_VALUE(rrr.getVALUE_ID());
+		rd.setELEMENT(rrr.getELEMENT());
+		rd.setELEMENT_VALUE(rrr.getELEMENT_VALUE());
 		rd.setOPERATE_SYMBOL("等于");
-		rd.setName(rrr.getCOLUMN_ID());
+		rd.setName(rrr.getELEMENT());
 		
 		rddao.ResDataOfRelationRowSave(rd, rrr.getCLUE_SRC_SYS());
 	}
@@ -1077,8 +1077,8 @@ public class ResourceUploadService {
 		rd.setRESOURCE_DESCRIBE("数据集-字段分类关系数据资源");
 		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
 		rd.setDATA_SET(rrc.getDATA_SET());
-		rd.setSECTION_RELATIOIN_CLASS(rrc.getCOLUMN_CLASS_ID());
-		rd.setName("字段分类关系" + rrc.getCOLUMN_CLASS_ID());
+		rd.setSECTION_RELATIOIN_CLASS(rrc.getSECTION_RELATIOIN_CLASS());
+		rd.setName("字段分类关系" + rrc.getSECTION_RELATIOIN_CLASS());
 		
 		rddao.ResDataOfRelationClassifySave(rd, rrc.getCLUE_SRC_SYS());
 	}

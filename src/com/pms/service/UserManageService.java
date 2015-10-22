@@ -1,14 +1,10 @@
 package com.pms.service;
 
-import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import sun.misc.BASE64Encoder;
-
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
@@ -211,7 +207,7 @@ public class UserManageService {
 			pulItem.setPname(ulItems.get(i).getPname());
 			pulItem.setGname(ulItems.get(i).getGname());
 			pulItem.setStatus(ulItems.get(i).getStatus());
-			
+			pulItem.setCertificate_code_md5(ulItems.get(i).getCertificate_code_md5());
 			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getId(), Privilege.OWNERTYPEUSER);
 			pulItem.setPriv_status(count>0?PrivUserListItem.PRIVSTATUSYES:PrivUserListItem.PRIVSTATUSNO);
 			if(PrivUserListItem.PRIVSTATUSYES == privStatus) {
@@ -270,35 +266,57 @@ public class UserManageService {
 	public User DeleteUserNode(User user) throws Exception
 	{
 		UserDAO dao = new UserDAOImpl();
-		List<User> nodes = dao.GetUserById(user.getId());
+		//List<User> nodes = dao.GetUserByCertificateCodeMd5(user.getCERTIFICATE_CODE_MD5());
+		User node = dao.GetUserByCertificateCodeMd5(user.getCERTIFICATE_CODE_MD5());
 	
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		
-		for(int i = 0; i< nodes.size(); i++) {
-			user.setNAME(nodes.get(i).getNAME());
-			user.setCERTIFICATE_CODE_MD5(nodes.get(i).getCERTIFICATE_CODE_MD5());
-			user.setCERTIFICATE_CODE_SUFFIX(nodes.get(i).getCERTIFICATE_CODE_SUFFIX());
-			user.setSEXCODE(nodes.get(i).getSEXCODE());
-			user.setGA_DEPARTMENT(nodes.get(i).getGA_DEPARTMENT());
-			user.setUNIT(nodes.get(i).getUNIT());
-			user.setORG_LEVEL(nodes.get(i).getORG_LEVEL());
-			user.setPOLICE_SORT(nodes.get(i).getPOLICE_SORT());
-			user.setPOLICE_NO(nodes.get(i).getPOLICE_NO());
-			user.setSENSITIVE_LEVEL(nodes.get(i).getSENSITIVE_LEVEL());
-			user.setBUSINESS_TYPE(nodes.get(i).getBUSINESS_TYPE());
-			user.setTAKE_OFFICE(nodes.get(i).getTAKE_OFFICE());
-			user.setUSER_STATUS(nodes.get(i).getUSER_STATUS());
-			user.setPosition(nodes.get(i).getPosition());
-			user.setDept(nodes.get(i).getDept());
-			user.setDELETE_STATUS(User.DELSTATUSYES);
-			user.setDATA_VERSION(nodes.get(i).getDATA_VERSION());
-			user.setLATEST_MOD_TIME(timenow);
-			
-			user = dao.UserAdd(user);
-			AddUserDelLog(user);
-		}
+//		for(int i = 0; i< nodes.size(); i++) {
+//			user.setNAME(nodes.get(i).getNAME());
+//			user.setCERTIFICATE_CODE_MD5(nodes.get(i).getCERTIFICATE_CODE_MD5());
+//			user.setCERTIFICATE_CODE_SUFFIX(nodes.get(i).getCERTIFICATE_CODE_SUFFIX());
+//			user.setSEXCODE(nodes.get(i).getSEXCODE());
+//			user.setGA_DEPARTMENT(nodes.get(i).getGA_DEPARTMENT());
+//			user.setUNIT(nodes.get(i).getUNIT());
+//			user.setORG_LEVEL(nodes.get(i).getORG_LEVEL());
+//			user.setPOLICE_SORT(nodes.get(i).getPOLICE_SORT());
+//			user.setPOLICE_NO(nodes.get(i).getPOLICE_NO());
+//			user.setSENSITIVE_LEVEL(nodes.get(i).getSENSITIVE_LEVEL());
+//			user.setBUSINESS_TYPE(nodes.get(i).getBUSINESS_TYPE());
+//			user.setTAKE_OFFICE(nodes.get(i).getTAKE_OFFICE());
+//			user.setUSER_STATUS(nodes.get(i).getUSER_STATUS());
+//			user.setPosition(nodes.get(i).getPosition());
+//			user.setDept(nodes.get(i).getDept());
+//			user.setDELETE_STATUS(User.DELSTATUSYES);
+//			user.setDATA_VERSION(nodes.get(i).getDATA_VERSION());
+//			user.setLATEST_MOD_TIME(timenow);
+//			
+//			user = dao.UserAdd(user);
+//			AddUserDelLog(user);
+//		}
+		user.setNAME(node.getNAME());
+		user.setCERTIFICATE_CODE_MD5(node.getCERTIFICATE_CODE_MD5());
+		user.setCERTIFICATE_CODE_SUFFIX(node.getCERTIFICATE_CODE_SUFFIX());
+		user.setSEXCODE(node.getSEXCODE());
+		user.setGA_DEPARTMENT(node.getGA_DEPARTMENT());
+		user.setUNIT(node.getUNIT());
+		user.setORG_LEVEL(node.getORG_LEVEL());
+		user.setPOLICE_SORT(node.getPOLICE_SORT());
+		user.setPOLICE_NO(node.getPOLICE_NO());
+		user.setSENSITIVE_LEVEL(node.getSENSITIVE_LEVEL());
+		user.setBUSINESS_TYPE(node.getBUSINESS_TYPE());
+		user.setTAKE_OFFICE(node.getTAKE_OFFICE());
+		user.setUSER_STATUS(node.getUSER_STATUS());
+		user.setPosition(node.getPosition());
+		user.setDept(node.getDept());
+		user.setDELETE_STATUS(User.DELSTATUSYES);
+		user.setDATA_VERSION(node.getDATA_VERSION());
+		user.setLATEST_MOD_TIME(timenow);
+		
+		user = dao.UserAdd(user);
+		AddUserDelLog(user);
 		return user;
 	}
 	

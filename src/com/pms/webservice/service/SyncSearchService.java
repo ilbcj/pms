@@ -19,10 +19,13 @@ import com.pms.dao.OrganizationDAO;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.model.Organization;
 import com.pms.model.ResData;
+import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.User;
 import com.pms.webservice.dao.SearchDAO;
 import com.pms.webservice.dao.impl.SearchDAOImpl;
+import com.pms.webservice.model.Common010123;
+import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.SearchCondition;
 
@@ -139,10 +142,22 @@ public class SyncSearchService extends SyncService {
 				sqlStr += "* ";
 			}
 			else {
-				// TODO parse return column
+				sqlStr += "* ";
+//				// TODO parse return column
+//				List<Item> retCols = getSc().getRETURNITEMS();
+//				String tableAlias = getSc().getTableAlias();
+//				for( int i = 0; i < retCols.size(); i++ ) {
+//					if(tableAlias != null && !tableAlias.isEmpty()) {
+//						sqlStr += tableAlias + "." + retCols.get(i).getEng() + ", ";
+//					}
+//					else {
+//						sqlStr += retCols.get(i).getEng() + ", ";
+//					}
+//				}
+//				sqlStr = sqlStr.substring(0, sqlStr.length() - 2);
 			}
 			
-			sqlStr += "from ";
+			sqlStr += " from ";
 			
 			if( this.getSc().getTableName() == null || this.getSc().getTableName().length() == 0) {
 				setError(getDataSet(message, "WA_COMMON_010004"), "-10002", "查询条件不正确，表名不存在");
@@ -150,6 +165,9 @@ public class SyncSearchService extends SyncService {
 			}
 			else {
 				sqlStr += this.getSc().getTableName() + " ";
+				if( this.getSc().getTableAlias() != null ) {
+					sqlStr += getSc().getTableAlias() + " ";
+				}
 			}
 			
 			if( (this.getSc().getCONDITION() == null || this.getSc().getCONDITION().length() == 0 
@@ -157,7 +175,8 @@ public class SyncSearchService extends SyncService {
 					&& ( this.getSc().getCONDITION_START() == null || this.getSc().getCONDITION_START().length() == 0 
 						|| this.getSc().getSTARTITEMS() == null || this.getSc().getSTARTITEMS().size() == 0
 						|| this.getSc().getCONDITION_CONNECT() == null || this.getSc().getCONDITION_CONNECT().length() == 0
-						|| this.getSc().getCONNECTITEMS() == null || this.getSc().getCONNECTITEMS().size() == 0) ) {
+						|| this.getSc().getCONNECTITEMS() == null || this.getSc().getCONNECTITEMS().size() == 0)
+					&& ( this.getSc().getCommon010123() == null || this.getSc().getCommon010123().size() == 0 ) ) {
 				//no where case
 			}
 			else {
@@ -215,76 +234,123 @@ public class SyncSearchService extends SyncService {
 	@SuppressWarnings("unchecked")
 	private String addSearchConditionToSQL() throws Exception {
 		Map<String, String> subMap = new HashMap<String, String>();
-		if( this.getSsc() != null ) {
-			String subSearch = "";
-			subSearch = "select ";
-			if(this.getSsc().getRETURNITEMS() == null || this.getSsc().getRETURNITEMS().size() == 0 ) {
-				subSearch +=  " * ";
-			}
-			else {
-				for(int i = 0; i< this.getSsc().getRETURNITEMS().size(); i++) {
-					subSearch += " " + ((Item)this.getSsc().getRETURNITEMS().get(i)).getEng() + ", ";
+		String where = "";
+		
+		if( this.getSc().getCommon010123() != null && this.getSc().getCommon010123().size() > 0 ) {
+			//1 join case
+			for(Common010123 common010123 : getSc().getCommon010123() ) {
+				if( Common010123.JOINTYPEINNER == common010123.getJoin() ) {
+					where += " inner join ";
 				}
-				subSearch = subSearch.substring(0,subSearch.lastIndexOf(','));
-				subSearch += " ";
-			}
-			subSearch += "from " + this.getSsc().getTableName() + " ";
-			List<Item> subCons = this.getSsc().getCONDITIONITEMS();
-			List<Item> subStartCons = this.getSsc().getSTARTITEMS();
-			List<Item> subConnectCons = this.getSsc().getCONNECTITEMS();
-			if(subCons != null && subCons.size() > 0) {
-				subSearch += " where ";
-				if( "IN".equalsIgnoreCase(this.getSsc().getCONDITION()) ) {
-					subSearch += subCons.get(0).getEng() + " in (" + subCons.get(0).getVal() + ") ";
-				}else {
-					subSearch += subCons.get(0).getVal().length() == 0 ? subCons.get(0).getEng() + " is null " : subCons.get(0).getEng() + "='" + subCons.get(0).getVal() + "' ";
-					for(int i = 1; i<subCons.size(); i++) {
-						subSearch += this.getSsc().getCONDITION() + " ";
-						subSearch += subCons.get(i).getVal().length() == 0 ? subCons.get(i).getEng() + " is null " : subCons.get(i).getEng() + "='" + subCons.get(i).getVal() + "' ";
+				else if( Common010123.JOINTYPELEFT == common010123.getJoin() ) {
+					where += " left join ";
+				}
+				else if( Common010123.JOINTYPERIGHT == common010123.getJoin() ) {
+					where += " right join ";
+				}
+				else {
+					throw new Exception("unknow join flag");
+				}
+				
+				if(common010123.getTable() == null || common010123.getTable().isEmpty()) {
+					throw new Exception("missing table name parameter");
+				}
+				else {
+					where += common010123.getTable() + " ";
+				}
+				
+				if(common010123.getAlias() == null || common010123.getAlias().isEmpty()) {
+					throw new Exception("missing table alias parameter");
+				}
+				else {
+					where += common010123.getAlias() + " on ";
+				}
+				
+				Condition joinConditions = common010123.getSearch();
+				if( joinConditions.getItems().size() > 0 ) {
+					Item item = joinConditions.getItems().get(0);
+					where += item.getEng() + "=" + item.getVal() + " ";
+					for( int i = 1; i < joinConditions.getItems().size(); i++ ) {
+						item = joinConditions.getItems().get(i);
+						where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + " ";
 					}
 				}
 			}
-			else if (subStartCons != null && subStartCons.size() > 0 && subConnectCons != null && subConnectCons.size() > 0) {
-				List<Organization> datas = queryOrgChildrenList(this.getSsc().getSTARTITEMS().get(0).getVal());
-				subSearch = "";
-				for(int i = 0; i<datas.size(); i++) {
-					if( "GA_DEPARTMENT".equals(((Item)this.getSsc().getRETURNITEMS().get(0)).getEng())) {
-						subSearch += datas.get(i).getGA_DEPARTMENT() + ", ";
-					}
+		}
+		else {
+			//2 subsearch case
+			if( this.getSsc() != null ) {
+				String subSearch = "";
+				subSearch = "select ";
+				if(this.getSsc().getRETURNITEMS() == null || this.getSsc().getRETURNITEMS().size() == 0 ) {
+					subSearch +=  " * ";
 				}
-				if(subSearch.length() > 0) {
+				else {
+					for(int i = 0; i< this.getSsc().getRETURNITEMS().size(); i++) {
+						subSearch += " " + ((Item)this.getSsc().getRETURNITEMS().get(i)).getEng() + ", ";
+					}
 					subSearch = subSearch.substring(0,subSearch.lastIndexOf(','));
 					subSearch += " ";
 				}
-			}
-			subMap.put(this.getSsc().getAlias(), subSearch);
-			if( this.getSsc().getRETURNITEMS().size() == 1 ) {
-				String retColFlag = ((Item)this.getSsc().getRETURNITEMS().get(0)).getKey();
-				subMap.put(this.getSsc().getAlias() + "." + retColFlag, subSearch);
-			}
-		}
-		
-		
-		String where = "where ";
-		List<Item> cons = this.getSc().getCONDITIONITEMS();
-		List<Item> startCons = this.getSc().getSTARTITEMS();
-		List<Item> connectCons = this.getSc().getCONNECTITEMS();
-		if(cons != null && cons.size() > 0) {
-			if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
-				//where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
-				where += cons.get(0).getEng() + " in (" + matchSubSearchWithInCondition(subMap, cons.get(0).getVal()) + ") ";
-			}else {
-				where += cons.get(0).getVal() == null || cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "=" + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
-				for(int i = 1; i<cons.size(); i++) {
-					where += this.getSc().getCONDITION() + " ";
-					where += cons.get(i).getVal() == null || cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "=" + matchSubSearch(subMap, cons.get(i).getVal()) + " ";
+				subSearch += "from " + this.getSsc().getTableName() + " ";
+				List<Item> subCons = this.getSsc().getCONDITIONITEMS();
+				List<Item> subStartCons = this.getSsc().getSTARTITEMS();
+				List<Item> subConnectCons = this.getSsc().getCONNECTITEMS();
+				if(subCons != null && subCons.size() > 0) {
+					subSearch += " where ";
+					if( "IN".equalsIgnoreCase(this.getSsc().getCONDITION()) ) {
+						subSearch += subCons.get(0).getEng() + " in (" + subCons.get(0).getVal() + ") ";
+					}else {
+						subSearch += subCons.get(0).getVal().length() == 0 ? subCons.get(0).getEng() + " is null " : subCons.get(0).getEng() + "='" + subCons.get(0).getVal() + "' ";
+						for(int i = 1; i<subCons.size(); i++) {
+							subSearch += this.getSsc().getCONDITION() + " ";
+							subSearch += subCons.get(i).getVal().length() == 0 ? subCons.get(i).getEng() + " is null " : subCons.get(i).getEng() + "='" + subCons.get(i).getVal() + "' ";
+						}
+					}
+				}
+				else if (subStartCons != null && subStartCons.size() > 0 && subConnectCons != null && subConnectCons.size() > 0) {
+					List<Organization> datas = queryOrgChildrenList(this.getSsc().getSTARTITEMS().get(0).getVal());
+					subSearch = "";
+					for(int i = 0; i<datas.size(); i++) {
+						if( "GA_DEPARTMENT".equals(((Item)this.getSsc().getRETURNITEMS().get(0)).getEng())) {
+							subSearch += datas.get(i).getGA_DEPARTMENT() + ", ";
+						}
+					}
+					if(subSearch.length() > 0) {
+						subSearch = subSearch.substring(0,subSearch.lastIndexOf(','));
+						subSearch += " ";
+					}
+				}
+				subMap.put(this.getSsc().getAlias(), subSearch);
+				if( this.getSsc().getRETURNITEMS().size() == 1 ) {
+					String retColFlag = ((Item)this.getSsc().getRETURNITEMS().get(0)).getKey();
+					subMap.put(this.getSsc().getAlias() + "." + retColFlag, subSearch);
 				}
 			}
+			
+			
+			where = "where ";
+			List<Item> cons = this.getSc().getCONDITIONITEMS();
+			List<Item> startCons = this.getSc().getSTARTITEMS();
+			List<Item> connectCons = this.getSc().getCONNECTITEMS();
+			if(cons != null && cons.size() > 0) {
+				if( "IN".equalsIgnoreCase(this.getSc().getCONDITION()) ) {
+					//where += cons.get(0).getEng() + " in " + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
+					where += cons.get(0).getEng() + " in (" + matchSubSearchWithInCondition(subMap, cons.get(0).getVal()) + ") ";
+				}else {
+					where += cons.get(0).getVal() == null || cons.get(0).getVal().length() == 0 ? cons.get(0).getEng() + " is null " : cons.get(0).getEng() + "=" + matchSubSearch(subMap, cons.get(0).getVal()) + " ";
+					for(int i = 1; i<cons.size(); i++) {
+						where += this.getSc().getCONDITION() + " ";
+						where += cons.get(i).getVal() == null || cons.get(i).getVal().length() == 0 ? cons.get(i).getEng() + " is null " : cons.get(i).getEng() + "=" + matchSubSearch(subMap, cons.get(i).getVal()) + " ";
+					}
+				}
+			}
+			else if( startCons != null && startCons.size() > 0 && connectCons != null && connectCons.size() > 0 ) {
+				where = "CONNECT BY PRIOR " + connectCons.get(0).getEng() + " = " + connectCons.get(0).getVal() + " ";
+				where += " START WITH " + startCons.get(0).getEng() + " = " + startCons.get(0).getVal();
+			}
 		}
-		else if( startCons != null && startCons.size() > 0 && connectCons != null && connectCons.size() > 0 ) {
-			where = "CONNECT BY PRIOR " + connectCons.get(0).getEng() + " = " + connectCons.get(0).getVal() + " ";
-			where += " START WITH " + startCons.get(0).getEng() + " = " + startCons.get(0).getVal();
-		}
+		
 		return where;
 	}
 	
@@ -567,7 +633,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.J030013");
-			itemSetAttribute(item, "val", resData.getRESOURCE_REMARK());
+			itemSetAttribute(item, "val", resData.getRMK());
 			itemSetAttribute(item, "rmk", "备注");
 			
 			item = new Element("ITEM");
@@ -586,6 +652,99 @@ public class SyncSearchService extends SyncService {
 			data.addContent(item);
 			itemSetAttribute(item, "key", "WA_AUTHORITY_DATA_RESOURCE.I010005");
 			itemSetAttribute(item, "val", ""+ getLongTime(resData.getLATEST_MOD_TIME()) );
+			itemSetAttribute(item, "rmk", "最新修改时间");
+		}
+		else if( type == SearchDAO.TYPERESFUN ) {
+			ResFeature resFeature = (ResFeature)model;
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J020012");
+			itemSetAttribute(item, "val", resFeature.getSYSTEM_TYPE());
+			itemSetAttribute(item, "rmk", "系统类型");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030006");
+			itemSetAttribute(item, "val", resFeature.getRESOURCE_ID());
+			itemSetAttribute(item, "rmk", "资源唯一标识");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J020013");
+			itemSetAttribute(item, "val", resFeature.getAPP_ID());
+			itemSetAttribute(item, "rmk", "所属业务系统ID");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030007");
+			itemSetAttribute(item, "val", resFeature.getRESOUCE_NAME());
+			itemSetAttribute(item, "rmk", "名称");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030008");
+			itemSetAttribute(item, "val", resFeature.getPARENT_RESOURCE());
+			itemSetAttribute(item, "rmk", "父资源唯一标识");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.G010002");
+			itemSetAttribute(item, "val", resFeature.getURL());
+			itemSetAttribute(item, "rmk", "URL");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030009");
+			itemSetAttribute(item, "val", resFeature.getRESOURCE_ICON_PATH());
+			itemSetAttribute(item, "rmk", "图标路径");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030010");
+			itemSetAttribute(item, "val", "" + resFeature.getRESOURCE_STATUS());
+			itemSetAttribute(item, "rmk", "资源状态");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030011");
+			itemSetAttribute(item, "val", resFeature.getRESOURCE_ORDER());
+			itemSetAttribute(item, "rmk", "顺序");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030012");
+			itemSetAttribute(item, "val", resFeature.getRESOURCE_DESCRIBE());
+			itemSetAttribute(item, "rmk", "资源描述");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030013");
+			itemSetAttribute(item, "val", resFeature.getRMK());
+			itemSetAttribute(item, "rmk", "备注");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030035");
+			itemSetAttribute(item, "val", "" + resFeature.getFUN_RESOURCE_TYPE());
+			itemSetAttribute(item, "rmk", "功能资源分类");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.H010029");
+			itemSetAttribute(item, "val", ""+resFeature.getDELETE_STATUS());
+			itemSetAttribute(item, "rmk", "删除状态");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030017");
+			itemSetAttribute(item, "val", ""+resFeature.getDATA_VERSION());
+			itemSetAttribute(item, "rmk", "数据版本号");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.I010005");
+			itemSetAttribute(item, "val", ""+ getLongTime(resFeature.getLATEST_MOD_TIME()) );
 			itemSetAttribute(item, "rmk", "最新修改时间");
 		}
 	}

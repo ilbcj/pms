@@ -5,7 +5,7 @@ public class ResValueSensitive {
 	public final static int DELSTATUSYES = 1;
 	
 	private int id;
-	private String VALUE_SENSITTIVE_ID;
+	private String VALUE_SENSITIVE_ID;
 	private String CLUE_SRC_SYS;
 	private String VALUE_SENSITIVE_NAME;
 	private int DELETE_STATUS;
@@ -24,11 +24,11 @@ public class ResValueSensitive {
 	public void setCLUE_SRC_SYS(String cLUE_SRC_SYS) {
 		CLUE_SRC_SYS = cLUE_SRC_SYS;
 	}
-	public String getVALUE_SENSITTIVE_ID() {
-		return VALUE_SENSITTIVE_ID;
+	public String getVALUE_SENSITIVE_ID() {
+		return VALUE_SENSITIVE_ID;
 	}
-	public void setVALUE_SENSITTIVE_ID(String vALUE_SENSITTIVE_ID) {
-		VALUE_SENSITTIVE_ID = vALUE_SENSITTIVE_ID;
+	public void setVALUE_SENSITIVE_ID(String vALUE_SENSITIVE_ID) {
+		VALUE_SENSITIVE_ID = vALUE_SENSITIVE_ID;
 	}
 	public String getVALUE_SENSITIVE_NAME() {
 		return VALUE_SENSITIVE_NAME;
@@ -56,7 +56,7 @@ public class ResValueSensitive {
 	}
 	
 	public boolean isValid() {
-		if( (VALUE_SENSITTIVE_ID == null || VALUE_SENSITTIVE_ID.isEmpty()) 
+		if( (VALUE_SENSITIVE_ID == null || VALUE_SENSITIVE_ID.isEmpty()) 
 				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
 				&& (VALUE_SENSITIVE_NAME == null || VALUE_SENSITIVE_NAME.isEmpty()) ) {
 			return false;

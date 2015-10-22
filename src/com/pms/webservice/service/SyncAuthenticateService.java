@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +15,7 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.google.common.collect.HashMultimap;
 import com.pms.dao.GroupDAO;
 import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.ResourceDAO;
@@ -39,11 +41,12 @@ public class SyncAuthenticateService extends SyncService {
 	public String GetResult() throws Exception {
 		//0. get user by user id
 		UserDAO udao = new UserDAOImpl();
-		User user = udao.GetUserByUserName(this.getUa().getUSER_NAME());
+		User user = udao.GetUserByCertificateCodeMd5(this.getUa().getCERTIFICATE_CODE_MD5());
 		this.getAc().setSensitiveLevel(user.getSENSITIVE_LEVEL());
 		
 		//1. get resource's by user id
-		List<ResData> resources = queryResourceByUser(user.getId());
+		List<ResData> resources = queryResourceByUser(user.getCERTIFICATE_CODE_MD5());
+		
 
 		//2. compare if seaching data in the query result of step 1.
 		String dataset = null;
@@ -51,27 +54,99 @@ public class SyncAuthenticateService extends SyncService {
 			dataset = this.getAc().getCommon010032().get(i).getSourceName();
 			//compare subcondition
 			List<Condition> subConditions = this.getAc().getCommon010032().get(i).getSubConditions();
-			for( int j = 0; j < subConditions.size(); j++ ) {
-				Condition condition = subConditions.get(j);
-				List<Item> items = condition.getItems();
-				for(int k = 0; k < items.size(); k++) {
-					Item item = items.get(k);
+			List<Item> subItems = this.getAc().getCommon010032().get(i).getSubItems();
+			if( (subConditions == null || subConditions.size() == 0) && (subItems == null || subItems.size() == 0) ) {
+				//return all privileged conditions
+				HashMultimap<String,ResData> privilegedResDatas = HashMultimap.create();
+				for(int j = 0; j < resources.size(); j++) {
+					ResData resource = resources.get(j);
+					if( dataset.equalsIgnoreCase(resource.getDATA_SET()) && resource.getELEMENT() != null && resource.getELEMENT().length() > 0 
+							&& resource.getELEMENT_VALUE() != null && resource.getELEMENT_VALUE().length() > 0 
+							&& resource.getOPERATE_SYMBOL() != null && resource.getOPERATE_SYMBOL().length() > 0 ) {
+						privilegedResDatas.put(resource.getELEMENT(), resource);
+					}
+				}
+				
+				Set<String> keys = privilegedResDatas.keySet();
+				subConditions = new ArrayList<Condition>();
+			    //subItems = new ArrayList<Item>();
+				for(String key:keys)
+				{
+				    //String result = String.format("%d:", key);
+				    Set<ResData> values = privilegedResDatas.get(key);
+				    Condition condition = new Condition();
+				    List<Item> items = new ArrayList<Item>();
+			    	for(ResData value:values) {
+			    		if(condition.getRel() == null || condition.getRel().length() == 0) {
+			    			if( "=".equalsIgnoreCase(value.getOPERATE_SYMBOL())) {
+			    				condition.setRel("IN");
+			    			}
+			    		}
+			    		Item itme = new Item();
+			    		itme.setKey(value.getELEMENT());
+			    		itme.setVal(value.getELEMENT_VALUE());
+			    		itme.setEng(convertKeyToEngName(value.getELEMENT()));
+			    		itme.setHasAccessAuth(true);
+			    		items.add(itme);
+				    }
+			    	condition.setItems(items);				    	
+			    	subConditions.add(condition);
+			    	this.getAc().getCommon010032().get(i).setSubConditions(subConditions);
+				}
+			}
+			else {
+				for( int j = 0; j < subConditions.size(); j++ ) {
+					Condition condition = subConditions.get(j);
+					List<Item> items = condition.getItems();
+					for(int k = 0; k < items.size(); k++) {
+						Item item = items.get(k);
+						if( checkResourceAccessRights(resources, dataset, item.getKey(), item.getVal()) ) {
+							item.setHasAccessAuth(true);
+						} else {
+							item.setHasAccessAuth(false);
+						}
+					}
+				}
+				
+				for( int j = 0; j < subItems.size(); j++) {
+					Item item = subItems.get(j);
 					if( checkResourceAccessRights(resources, dataset, item.getKey(), item.getVal()) ) {
 						item.setHasAccessAuth(true);
 					} else {
 						item.setHasAccessAuth(false);
 					}
-				}				
+				}
 			}
 			
 			//compare return column
 			List<Item> retColumns = this.getAc().getCommon010032().get(i).getItems();
-			for(int j = 0; j < retColumns.size(); j++) {
-				Item column = retColumns.get(j);
-				if( checkResourceAccessRights(resources, dataset, column.getKey(), column.getVal()) ) {
-					column.setHasAccessAuth(true);
-				} else {
-					column.setHasAccessAuth(false);
+			if( retColumns == null || retColumns.size() == 0 ) {
+				//return all privileged columns 
+				//this a simple resource compare, no relation deal
+				retColumns = new ArrayList<Item>();
+				for(int j = 0; j < resources.size(); j++) {
+					ResData resource = resources.get(j);
+					if( dataset.equalsIgnoreCase(resource.getDATA_SET()) && resource.getELEMENT() != null && resource.getELEMENT().length() > 0 
+							&& (resource.getELEMENT_VALUE() == null || resource.getELEMENT_VALUE().length() == 0) 
+							&& (resource.getOPERATE_SYMBOL() == null || resource.getOPERATE_SYMBOL().length() == 0) ) {
+						Item itme = new Item();
+			    		itme.setKey(resource.getELEMENT());
+			    		itme.setVal("");
+			    		itme.setEng(convertKeyToEngName(resource.getELEMENT()));
+			    		itme.setHasAccessAuth(true);
+			    		retColumns.add(itme);
+					}
+				}
+				this.getAc().getCommon010032().get(i).setItems(retColumns);
+			}
+			else {
+				for(int j = 0; j < retColumns.size(); j++) {
+					Item column = retColumns.get(j);
+					if( checkResourceAccessRights(resources, dataset, column.getKey(), column.getVal()) ) {
+						column.setHasAccessAuth(true);
+					} else {
+						column.setHasAccessAuth(false);
+					}
 				}
 			}
 		}
@@ -82,7 +157,7 @@ public class SyncAuthenticateService extends SyncService {
 		return result;
 	}
 
-	private List<ResData> queryResourceByUser(int userId) throws Exception {
+	private List<ResData> queryResourceByUser(String userId) throws Exception {
 		
 		// get user's role
 		PrivilegeDAO pdao = new PrivilegeDAOImpl();

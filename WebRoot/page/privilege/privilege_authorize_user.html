@@ -175,7 +175,7 @@
     }
     
     function queryPrivUser(){
-        	var treeNode = $('#user_maintain_tree').tree('getSelected');
+        var treeNode = $('#user_maintain_tree').tree('getSelected');
     	var treeNodeId = "";
     	if( treeNode != null ) {
     		treeNodeId = treeNode.id;
@@ -319,8 +319,9 @@
 		}
 		
 		var usernames = rows[0].name;
-		var userids = rows[0].id;
-		
+		//var userids = rows[0].id;
+		var userids = rows[0].certificate_code_md5;
+
 		var poststr = "ownerIds=" + userids;
     	poststr += "&ownerType=2";
 		$.post("../priv/queryPrivilegesByOwnerId.action", poststr, function(retObj) {

@@ -5,12 +5,12 @@ public class ResColumn {
 	public final static int DELSTATUSYES = 1;
 	
 	private int id;
-	private String COLUMN_ID;
+	private String ELEMENT;
 	private String CLUE_SRC_SYS;
 	private String DATA_SET;
 	private String COLUMU_CN;
 	private String COLUMN_NAME;
-	private String COLUMN_RMK;
+	private String RMK;
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
@@ -21,11 +21,11 @@ public class ResColumn {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getCOLUMN_ID() {
-		return COLUMN_ID;
+	public String getELEMENT() {
+		return ELEMENT;
 	}
-	public void setCOLUMN_ID(String cOLUMN_ID) {
-		COLUMN_ID = cOLUMN_ID;
+	public void setELEMENT(String eLEMENT) {
+		ELEMENT = eLEMENT;
 	}
 	public String getCLUE_SRC_SYS() {
 		return CLUE_SRC_SYS;
@@ -51,11 +51,11 @@ public class ResColumn {
 	public void setCOLUMN_NAME(String cOLUMN_NAME) {
 		COLUMN_NAME = cOLUMN_NAME;
 	}
-	public String getCOLUMN_RMK() {
-		return COLUMN_RMK;
+	public String getRMK() {
+		return RMK;
 	}
-	public void setCOLUMN_RMK(String cOLUMN_RMK) {
-		COLUMN_RMK = cOLUMN_RMK;
+	public void setRMK(String rMK) {
+		RMK = rMK;
 	}
 	public int getDELETE_STATUS() {
 		return DELETE_STATUS;
@@ -77,12 +77,12 @@ public class ResColumn {
 	}
 	
 	public boolean isValid() {
-		if( (COLUMN_ID == null || COLUMN_ID.isEmpty()) 
+		if( (ELEMENT == null || ELEMENT.isEmpty()) 
 				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
 				&& (DATA_SET == null || DATA_SET.isEmpty())
 				&& (COLUMU_CN == null || COLUMU_CN.isEmpty())
 				&& (COLUMN_NAME == null || COLUMN_NAME.isEmpty())
-				&& (COLUMN_RMK == null || COLUMN_RMK.isEmpty()) ) {
+				&& (RMK == null || RMK.isEmpty()) ) {
 			return false;
 		}
 		return true;

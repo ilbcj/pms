@@ -13,7 +13,7 @@ import com.pms.model.ResRole;
 
 public class PrivilegeSearchService {
 	
-	public List<UserPrivListItem> QueryUserPrivileges(int userid) throws Exception {
+	public List<UserPrivListItem> QueryUserPrivileges(String userid) throws Exception {
 		List<UserPrivListItem> res = new ArrayList<UserPrivListItem>();
 		//query user priv
 		QueryPrivsByUserid(userid, res);
@@ -27,7 +27,7 @@ public class PrivilegeSearchService {
 		return res;
 	}
 	
-	private void QueryPrivsByUserid(int userid, List<UserPrivListItem> privItems) throws Exception
+	private void QueryPrivsByUserid(String userid, List<UserPrivListItem> privItems) throws Exception
 	{
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		List<ResRole> res = dao.QueryPrivInfosByUserid(userid);
@@ -57,7 +57,7 @@ public class PrivilegeSearchService {
 		return;
 	}
 	
-	private void QueryPrivsByOrg(int userid, List<UserPrivListItem> privItems) throws Exception
+	private void QueryPrivsByOrg(String userid, List<UserPrivListItem> privItems) throws Exception
 	{
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		List<ResRole> res = dao.QueryPrivInfosByUsersOrg(userid);
@@ -87,7 +87,7 @@ public class PrivilegeSearchService {
 		return;
 	}
 	
-	private void QueryPrivsByGroup(int userid, List<UserPrivListItem> privItems) throws Exception
+	private void QueryPrivsByGroup(String userid, List<UserPrivListItem> privItems) throws Exception
 	{
 		GroupDAO gdao = new GroupDAOImpl();
 		List<GroupUser> groups = gdao.GetGroupsByUserId(userid);

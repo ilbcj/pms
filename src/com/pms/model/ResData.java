@@ -25,7 +25,7 @@ public class ResData {
 	private int DELETE_STATUS;//delete_status;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;//latest_mod_time;
-	private String RESOURCE_REMARK;//resource_remark;
+	private String RMK;//resource_remark;
 
 //	private String clue_dst_sys;
 //	private String row_constraint;
@@ -126,10 +126,10 @@ public class ResData {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
-	public String getRESOURCE_REMARK() {
-		return RESOURCE_REMARK;
+	public String getRMK() {
+		return RMK;
 	}
-	public void setRESOURCE_REMARK(String rESOURCE_REMARK) {
-		RESOURCE_REMARK = rESOURCE_REMARK;
+	public void setRMK(String rMK) {
+		RMK = rMK;
 	}
 }

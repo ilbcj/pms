@@ -33,8 +33,10 @@ public class ResourceDAOImpl implements ResourceDAO {
 		try
 		{
 			feature = (ResFeature) session.merge(feature);
-			feature.setResource_id(new Integer(feature.getId()).toString());
-			feature = (ResFeature) session.merge(feature);
+			if(feature.getRESOURCE_ID() == null || feature.getRESOURCE_ID().isEmpty()) {
+				feature.setRESOURCE_ID(new Integer(feature.getId()).toString());
+				feature = (ResFeature) session.merge(feature);
+			}
 			tx.commit();
 		}
 		catch(ConstraintViolationException cne){
@@ -164,25 +166,25 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResFeature> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where 1 = 1 and delete_status =:delete_status";
+		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where 1 = 1 and DELETE_STATUS =:DELETE_STATUS";
 		if( criteria != null ) {
-			if(criteria.getName() != null && criteria.getName().length() > 0) {
-				sqlString += " and name like :name ";
+			if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+				sqlString += " and RESOUCE_NAME like :RESOUCE_NAME ";
 			}
-			if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-				sqlString += " and resource_id = :resource_id ";
+			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
 			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
-			q.setInteger("delete_status", criteria.getDelete_status());
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
 			if( criteria != null ) {
-				if(criteria.getName() != null && criteria.getName().length() > 0) {
-					q.setString( "name", "%" + criteria.getName() + "%" );
+				if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+					q.setString( "RESOUCE_NAME", "%" + criteria.getRESOUCE_NAME() + "%" );
 				}
-				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-					q.setString( "resource_id",  criteria.getResource_id());
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					q.setString( "RESOURCE_ID",  criteria.getRESOURCE_ID());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -207,25 +209,25 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) from WA_AUTHORITY_FUNC_RESOURCE where 1 = 1 and delete_status =:delete_status";
+		String sqlString = "select count(*) from WA_AUTHORITY_FUNC_RESOURCE where 1 = 1 and DELETE_STATUS =:DELETE_STATUS";
 		if( criteria != null ) {
-			if(criteria.getName() != null && criteria.getName().length() > 0) {
-				sqlString += " and name like :name ";
+			if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+				sqlString += " and RESOUCE_NAME like :RESOUCE_NAME ";
 			}
-			if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-				sqlString += " and resource_id = :resource_id ";
+			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
 			}
 		}
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("delete_status", criteria.getDelete_status());
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
 			if( criteria != null ) {
-				if(criteria.getName() != null && criteria.getName().length() > 0) {
-					q.setString( "name", "%" + criteria.getName() + "%" );
+				if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+					q.setString( "RESOUCE_NAME", "%" + criteria.getRESOUCE_NAME() + "%" );
 				}
-				if(criteria.getResource_id() != null && criteria.getResource_id().length() > 0) {
-					q.setString( "resource_id", criteria.getResource_id());
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
@@ -322,8 +324,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 			if(criteria.getRESOURCE_DESCRIBE() != null && criteria.getRESOURCE_DESCRIBE().length() > 0) {
 				sqlString += " and RESOURCE_DESCRIBE like :RESOURCE_DESCRIBE ";
 			}
-			if(criteria.getRESOURCE_REMARK() != null && criteria.getRESOURCE_REMARK().length() > 0) {
-				sqlString += " and RESOURCE_REMARK like :RESOURCE_REMARK ";
+			if(criteria.getRMK() != null && criteria.getRMK().length() > 0) {
+				sqlString += " and RMK like :RMK ";
 			}
 			if(resource_status != null) {
 				for (int i = 0; i < resource_status.size(); i++) {
@@ -396,8 +398,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 				if(criteria.getRESOURCE_DESCRIBE() != null && criteria.getRESOURCE_DESCRIBE().length() > 0) {
 					q.setString( "RESOURCE_DESCRIBE", "%" + criteria.getRESOURCE_DESCRIBE() + "%" );
 				}
-				if(criteria.getRESOURCE_REMARK() != null && criteria.getRESOURCE_REMARK().length() > 0) {
-					q.setString( "RESOURCE_REMARK", "%" + criteria.getRESOURCE_REMARK() + "%" );
+				if(criteria.getRMK() != null && criteria.getRMK().length() > 0) {
+					q.setString( "RMK", "%" + criteria.getRMK() + "%" );
 				}
 				if(resource_status != null) {
 					for (int i = 0; i < resource_status.size(); i++) {
@@ -979,12 +981,12 @@ public class ResourceDAOImpl implements ResourceDAO {
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and restype = :restype ";
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("BUSINESS_ROLE", roleId);
-			q.setInteger("restype", ResRoleResource.RESTYPEFEATURE);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSFEATURE);
 			q.executeUpdate();
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
@@ -999,7 +1001,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					rr.setRESOURCE_ID(featureIds.get(i));
 					rr.setLATEST_MOD_TIME(timenow);
 					rr.setDATA_VERSION(1);
-					rr.setRestype(ResRoleResource.RESTYPEFEATURE);
+					rr.setRESOURCE_CLASS(ResRoleResource.RESCLASSFEATURE);
 					session.merge(rr);
 				}
 			}
@@ -1020,12 +1022,12 @@ public class ResourceDAOImpl implements ResourceDAO {
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and restype = :restype ";
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("BUSINESS_ROLE", roleId);
-			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
 			q.executeUpdate();
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
@@ -1040,7 +1042,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 					rr.setRESOURCE_ID(dataIds.get(i));
 					rr.setLATEST_MOD_TIME(timenow);
 					rr.setDATA_VERSION(1);
-					rr.setRestype(ResRoleResource.RESTYPEDATA);
+					rr.setRESOURCE_CLASS(ResRoleResource.RESCLASSDATA);
 					session.merge(rr);
 				}
 			}
@@ -1253,12 +1255,12 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID in (SELECT resource_id FROM wa_authority_resource_role where business_role = :business_role and restype = :restype);";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID in (SELECT resource_id FROM wa_authority_resource_role where business_role = :business_role and RESOURCE_CLASS = :RESOURCE_CLASS);";
 
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("business_role", roleId);
-			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -1468,10 +1470,10 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Transaction tx = session.beginTransaction();
 		int rs = 0;
 		//SET SQL_SAFE_UPDATES = 0; 
-		String sqlString = "DELETE from WA_AUTHORITY_RESOURCE_ROLE where restype = :restype and BUSINESS_ROLE in (SELECT x.y FROM ( SELECT a.BUSINESS_ROLE as y FROM WA_AUTHORITY_RESOURCE_ROLE a, WA_AUTHORITY_ROLE b where a.BUSINESS_ROLE = b.BUSINESS_ROLE and b.BUSINESS_ROLE_TYPE = 0) x); ";
+		String sqlString = "DELETE from WA_AUTHORITY_RESOURCE_ROLE where RESOURCE_CLASS = :RESOURCE_CLASS and BUSINESS_ROLE in (SELECT x.y FROM ( SELECT a.BUSINESS_ROLE as y FROM WA_AUTHORITY_RESOURCE_ROLE a, WA_AUTHORITY_ROLE b where a.BUSINESS_ROLE = b.BUSINESS_ROLE and b.BUSINESS_ROLE_TYPE = 0) x); ";
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("restype", ResRoleResource.RESTYPEDATA);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
 			rs = q.executeUpdate();
 			tx.commit();
 		} catch (Exception e) {

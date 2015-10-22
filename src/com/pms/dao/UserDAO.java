@@ -17,9 +17,10 @@ public interface UserDAO {
 	public List<User> GetUsersByParentId(String pid, int page, int rows) throws Exception;
 	public List<User> GetUsersByParentIdWithNoPage(String pid, User criteria) throws Exception;
 	public int GetUsersCountByParentId(String pid, User criteria) throws Exception;
-	public User GetUserByUserName(String name) throws Exception;
+	//public User GetUserByUserName(String name) throws Exception;
 	List<User> GetUsersByTime(String time) throws Exception;
-	List<User> GetUserById(int id) throws Exception;
+	//List<User> GetUserById(int id) throws Exception;
+	User GetUserByCertificateCodeMd5(String id) throws Exception;
 	
 	public void UserImportSave(UserImport ui) throws Exception;
 	public int UserImportClear() throws Exception;

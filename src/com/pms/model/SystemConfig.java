@@ -17,6 +17,10 @@ public class SystemConfig {
 	public final static String SYSTEMCONFIG_ITEM_Role = "sync_Role";
 	public final static String SYSTEMCONFIG_ITEM_RESINROLE = "sync_ResInRole";
 	
+	public final static int SYSTEMCONFIGTYPESYSTEM = 2;
+	
+	public final static String SYSTEMCONFIG_ITEM_REGION = "system_region";
+	
 	private int id;
 	private String item;
 	private String value;

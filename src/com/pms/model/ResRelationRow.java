@@ -6,9 +6,9 @@ public class ResRelationRow {
 	
 	private int id;
 	private String DATA_SET;
-	private String COLUMN_ID;
+	private String ELEMENT;
 	private String CLUE_SRC_SYS;
-	private String VALUE_ID;
+	private String ELEMENT_VALUE;
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
@@ -25,11 +25,11 @@ public class ResRelationRow {
 	public void setDATA_SET(String dATA_SET) {
 		DATA_SET = dATA_SET;
 	}
-	public String getCOLUMN_ID() {
-		return COLUMN_ID;
+	public String getELEMENT() {
+		return ELEMENT;
 	}
-	public void setCOLUMN_ID(String cOLUMN_ID) {
-		COLUMN_ID = cOLUMN_ID;
+	public void setELEMENT(String eLEMENT) {
+		ELEMENT = eLEMENT;
 	}
 	public String getCLUE_SRC_SYS() {
 		return CLUE_SRC_SYS;
@@ -37,11 +37,11 @@ public class ResRelationRow {
 	public void setCLUE_SRC_SYS(String cLUE_SRC_SYS) {
 		CLUE_SRC_SYS = cLUE_SRC_SYS;
 	}
-	public String getVALUE_ID() {
-		return VALUE_ID;
+	public String getELEMENT_VALUE() {
+		return ELEMENT_VALUE;
 	}
-	public void setVALUE_ID(String vALUE_ID) {
-		VALUE_ID = vALUE_ID;
+	public void setELEMENT_VALUE(String eLEMENT_VALUE) {
+		ELEMENT_VALUE = eLEMENT_VALUE;
 	}
 	public int getDELETE_STATUS() {
 		return DELETE_STATUS;
@@ -64,9 +64,9 @@ public class ResRelationRow {
 	
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
-				&& (COLUMN_ID == null || COLUMN_ID.isEmpty()) 
+				&& (ELEMENT == null || ELEMENT.isEmpty()) 
 				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
-				&& (VALUE_ID == null || VALUE_ID.isEmpty()) ) {
+				&& (ELEMENT_VALUE == null || ELEMENT_VALUE.isEmpty()) ) {
 			return false;
 		}
 		return true;

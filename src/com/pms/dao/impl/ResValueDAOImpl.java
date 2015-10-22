@@ -24,10 +24,10 @@ public class ResValueDAOImpl implements ResValueDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResValue rs = null;
-		String sqlString = "select * from WA_VALUE where VALUE_ID = :VALUE_ID ";
+		String sqlString = "select * from WA_VALUE where ELEMENT_VALUE = :ELEMENT_VALUE ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResValue.class);
-			q.setString("VALUE_ID", val.getVALUE_ID());
+			q.setString("ELEMENT_VALUE", val.getELEMENT_VALUE());
 			rs = (ResValue) q.uniqueResult();
 			
 			if(rs != null) {

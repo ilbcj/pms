@@ -24,10 +24,10 @@ public class ResValueSensitiveDAOImpl implements ResValueSensitiveDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResValueSensitive rs = null;
-		String sqlString = "select * from WA_VALUE_SENSITIVE where VALUE_SENSITTIVE_ID = :VALUE_SENSITTIVE_ID ";
+		String sqlString = "select * from WA_VALUE_SENSITIVE where VALUE_SENSITIVE_ID = :VALUE_SENSITIVE_ID ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResValueSensitive.class);
-			q.setString("VALUE_SENSITTIVE_ID", vs.getVALUE_SENSITTIVE_ID());
+			q.setString("VALUE_SENSITIVE_ID", vs.getVALUE_SENSITIVE_ID());
 			rs = (ResValueSensitive) q.uniqueResult();
 			
 			if(rs != null) {

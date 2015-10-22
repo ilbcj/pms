@@ -1,15 +1,15 @@
 package com.pms.model;
 
 public class ResRoleResource {
-	public static final int RESTYPEFEATURE = 1;
-	public static final int RESTYPEDATA = 2;
+	public static final int RESCLASSFEATURE = 0;
+	public static final int RESCLASSDATA = 1;
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
 	
 	private int id;
 	private String RESOURCE_ID;
 	private String BUSINESS_ROLE;
-	private int restype;
+	private int RESOURCE_CLASS;
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
@@ -32,11 +32,11 @@ public class ResRoleResource {
 	public void setBUSINESS_ROLE(String bUSINESS_ROLE) {
 		BUSINESS_ROLE = bUSINESS_ROLE;
 	}
-	public int getRestype() {
-		return restype;
+	public int getRESOURCE_CLASS() {
+		return RESOURCE_CLASS;
 	}
-	public void setRestype(int restype) {
-		this.restype = restype;
+	public void setRESOURCE_CLASS(int rESOURCE_CLASS) {
+		RESOURCE_CLASS = rESOURCE_CLASS;
 	}
 	public int getDELETE_STATUS() {
 		return DELETE_STATUS;

@@ -43,35 +43,57 @@ public class SyncDataexchangeService extends SyncService {
 	
 	private void updateData(SyncDataexchangeService sds) throws Exception {
 		ExchangeCondition ec = sds.getEc();
-		if(ec == null || ec.getCommon010131() == null || ec.getCommon010131().getItems() == null || ec.getCommon010131().getItems().size() == 0 
-				|| ec.getCondition() == null || ec.getCondition().getItems() == null || ec.getCondition().getItems().size() == 0) {
+		if( ec == null || ec.getCommon010131() == null || ec.getCommon010131().getItems() == null || ec.getCommon010131().getItems().size() == 0 ) {
 			return;
 		}
 		
-		if("IN".equalsIgnoreCase(ec.getCondition().getRel())) {
-			throw new Exception("can not deal with \"IN\" condition in update data process's condition");
+		if( ec.getCondition() == null || ec.getCondition().getItems() == null || ec.getCondition().getItems().size() == 0 ) {
+			//insert into `pms`.`systemdata` ('item', 'value', 'rmk') values ( 'item','value','rmk');
+			String sqlString = "insert into " + ec.getTable() + " ( ";
+			String values = " values ( ";
+			for(int i = 0; i < ec.getCommon010131().getItems().size(); i++) {
+				Item item = ec.getCommon010131().getItems().get(i);
+				sqlString += item.getEng() + ", ";
+				values += "'" + item.getVal() + "', ";
+			}
+			sqlString = sqlString.substring(0, sqlString.length()- 2) + " ) ";
+			values = values.substring(0, values.length()- 2) + " ) ";
+			
+			sqlString += values;
+			System.out.println(sqlString);
+			
+			ExchangeDAO dao = new ExchangeDAOImpl();
+			int rs = dao.SqlExchangeData(sqlString);
+			System.out.println(rs);
 		}
+		else {
 		
-		String sqlString = "update " + ec.getTable() + " set ";
-		for(int i = 0; i < ec.getCommon010131().getItems().size(); i++) {
-			Item item = ec.getCommon010131().getItems().get(i);
-			sqlString += item.getEng() + "='" + item.getVal() + "', ";
+			if("IN".equalsIgnoreCase(ec.getCondition().getRel())) {
+				throw new Exception("can not deal with \"IN\" condition in update data process's condition");
+			}
+			
+			String sqlString = "update " + ec.getTable() + " set ";
+			for(int i = 0; i < ec.getCommon010131().getItems().size(); i++) {
+				Item item = ec.getCommon010131().getItems().get(i);
+				sqlString += item.getEng() + "='" + item.getVal() + "', ";
+			}
+			
+			sqlString = sqlString.substring(0, sqlString.length() - 2);
+			
+			sqlString += " where " ;
+			for(int j = 0; j < ec.getCondition().getItems().size(); j++) {
+				Item item = ec.getCondition().getItems().get(j);
+				sqlString += item.getEng() + "='" + item.getVal() + "' " + ec.getCondition().getRel() + " ";
+			}
+			
+			sqlString = sqlString.substring(0, sqlString.length() - ec.getCondition().getRel().length() - 1);
+			System.out.println(sqlString);
+			
+			ExchangeDAO dao = new ExchangeDAOImpl();
+			int rs = dao.SqlExchangeData(sqlString);
+			System.out.println(rs);
 		}
-		
-		sqlString = sqlString.substring(0, sqlString.length() - 2);
-		
-		sqlString += " where " ;
-		for(int j = 0; j < ec.getCondition().getItems().size(); j++) {
-			Item item = ec.getCondition().getItems().get(j);
-			sqlString += item.getEng() + "='" + item.getVal() + "' " + ec.getCondition().getRel() + " ";
-		}
-		
-		sqlString = sqlString.substring(0, sqlString.length() - ec.getCondition().getRel().length() - 1);
-		System.out.println(sqlString);
-		
-		ExchangeDAO dao = new ExchangeDAOImpl();
-		int rs = dao.SqlExchangeData(sqlString);
-		System.out.println(rs);
+		return;
 	}
 	
 	private String generateExchangeResponseResult() throws IOException {

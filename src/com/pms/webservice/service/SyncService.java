@@ -13,6 +13,7 @@ import org.jdom2.Element;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
 
+import com.pms.webservice.model.Common010123;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.DataCommonInfo;
@@ -176,9 +177,9 @@ public abstract class SyncService {
 					} else if( "H010005".equals(element.getAttributeValue("key")) ) {
 						result.setSyncKey( element.getAttributeValue("val") );
 					} else if( "I010017".equals(element.getAttributeValue("key")) ) {
-						result.setAllReturnCount( Integer.parseInt( element.getAttributeValue("val") ) );
+						result.setAllReturnCount( element.getAttributeValue("val") == null || element.getAttributeValue("val").trim().length() == 0 ? 0 :Integer.parseInt(element.getAttributeValue("val")) );
 					} else if( "I010019".equals(element.getAttributeValue("key")) ) {
-						result.setCurrentReturnCount( Integer.parseInt(element.getAttributeValue("val") ) );
+						result.setCurrentReturnCount( element.getAttributeValue("val") == null || element.getAttributeValue("val").trim().length() == 0 ? 0 :Integer.parseInt(element.getAttributeValue("val")) );
 					} 
 				}
 			}
@@ -273,14 +274,21 @@ public abstract class SyncService {
 						common010032.setParentCondition(xmlParentCondition.getAttributeValue("rel"));
 						List<Element> xmlSubConditions = xmlParentCondition.getChildren();
 						List<Condition> conditions = new ArrayList<Condition>();
+						List<Item> subItems = new ArrayList<Item>();
 						for(int j = 0; j < xmlSubConditions.size(); j++) {
 							Condition condition = new Condition();
+							Item subItem = new Item();
 							Element xmlCurrentCondition = xmlSubConditions.get(j);
-							if( !"CONDITION".equals(xmlCurrentCondition.getName()) ) {
-								logger.info("parse 'WA_COMMON_010032 --> data --> dataset --> data(0) --> CONDITION --> CONDITION(" + j + ")' error.");
-								continue;
+							if( "ITEM".equalsIgnoreCase(xmlCurrentCondition.getName()) ) {
+								subItem.setKey( xmlCurrentCondition.getAttributeValue("key") );
+								subItem.setEng( convertKeyToEngName( xmlCurrentCondition.getAttributeValue("key") ) );
+								subItem.setVal( xmlCurrentCondition.getAttributeValue("val") );
+								if(subItem.getEng() == null || subItem.getEng().length() == 0) {
+									throw new Exception("unsupport search column key:" + subItem.getKey());
+								}
+								subItems.add(subItem);
 							}
-							else {
+							else if( "CONDITION".equalsIgnoreCase(xmlCurrentCondition.getName()) ) {
 								condition.setRel(xmlCurrentCondition.getAttributeValue("rel"));
 								List<Element> xmlItems = xmlCurrentCondition.getChildren();
 								List<Item> items = new ArrayList<Item>();
@@ -299,10 +307,17 @@ public abstract class SyncService {
 									}
 								}
 								condition.setItems(items);
+								conditions.add(condition);
 							}
-							conditions.add(condition);
+							else {
+								logger.info("parse 'WA_COMMON_010032 --> data --> dataset --> data(0) --> CONDITION --> CONDITION(" + j + ")' error.");
+								continue;
+							}
+							
+							
 						}
 						common010032.setSubConditions(conditions);
+						common010032.setSubItems(subItems);
 					}
 				}
 				
@@ -497,6 +512,7 @@ public abstract class SyncService {
 					if("ITEM".equals(item.getName())) {
 						if( "J010002".equals(item.getAttributeValue("key")) ) {
 							result.setTableName( item.getAttributeValue("val") );
+							result.setTableAlias( item.getAttributeValue("alias") );
 						} else if ( "I010017".equals(item.getAttributeValue("key"))  ) {
 							result.setTotalNum( item.getAttributeValue("val") );
 						} else if ( "I010019".equals(item.getAttributeValue("key"))  ) {
@@ -545,6 +561,64 @@ public abstract class SyncService {
 								}
 							}
 						}
+						else if ("WA_COMMON_010123".equalsIgnoreCase( item.getAttributeValue("name")) ) {
+							List<Element> children = item.getChildren();
+							if( children.size() > 0 ) {
+								List<Common010123> common010123s = new ArrayList<Common010123>();
+								for(int o = 0; o < children.size(); o++) {
+									String childName = children.get(o).getName();
+									if( "DATA".equals(childName) ) {
+										List<Element> _010123ItemList = children.get(o).getChildren();
+										Common010123 common010123 = new Common010123();
+										
+										for(int p=0; p < _010123ItemList.size(); p++) {
+											
+											Element _010123Item = _010123ItemList.get(p);
+											if("ITEM".equals(_010123Item.getName())) {
+												if( "J010002".equals(_010123Item.getAttributeValue("key")) ) {
+													common010123.setTable( _010123Item.getAttributeValue("val") );
+													common010123.setAlias( _010123Item.getAttributeValue("alias") );
+												} else if ( "J010007".equals(_010123Item.getAttributeValue("key"))  ) {
+													common010123.setJoin( Integer.parseInt(_010123Item.getAttributeValue("val")) );
+												}
+											} else if ( "CONDITION".equals(_010123Item.getName()) ) {
+												Condition joinCondition = new Condition();
+												joinCondition.setRel( _010123Item.getAttributeValue("rel") );
+												List<Item> joinConditionItems = new ArrayList<Item>();
+												List<Element> joinConditionList = _010123Item.getChildren();
+												for(int q=0; q<joinConditionList.size(); q++) {
+													Element joinConditionItem = joinConditionList.get(q);
+													Item con = new Item();
+													con.setKey( joinConditionItem.getAttributeValue("key") );
+													con.setEng( convertKeyToEngNameWithAlias( joinConditionItem.getAttributeValue("key") ) );
+													if( joinConditionItem.getAttributeValue("val") == null || joinConditionItem.getAttributeValue("val").isEmpty() ) {
+														con.setVal( convertKeyToEngNameWithAlias(joinConditionItem.getAttributeValue("dstkey")) );
+													}
+													else {
+														String value = joinConditionItem.getAttributeValue("val");
+														try{
+															Integer.parseInt(value);
+														}
+														catch(Exception e) {
+															value = "'" + value + "'";
+														}
+														con.setVal( value );
+													}
+													if(con.getEng() == null || con.getEng().length() == 0) {
+														throw new Exception("unsupport search column key: " + con.getKey());
+													}
+													joinConditionItems.add(con);
+												}
+												joinCondition.setItems(joinConditionItems);
+												common010123.setSearch(joinCondition);
+											}
+										}
+										common010123s.add(common010123);
+									}
+								}
+								result.setCommon010123(common010123s);
+							}
+						}
 					}
 				}
 			}
@@ -568,16 +642,43 @@ public abstract class SyncService {
 		keyColumnMap.put("A010004", "DATA_SET");
 		keyColumnMap.put("A010005", "PARENT_ORG");
 		
+		keyColumnMap.put("J010019", "COLUMN_NAME");
+		
+		keyColumnMap.put("J020012", "SYSTEM_TYPE");
+		keyColumnMap.put("J020013", "APP_ID");
 		keyColumnMap.put("J030001", "SECTION_CLASS");
 		keyColumnMap.put("J030002", "SECTION_RELATIOIN_CLASS");
 		keyColumnMap.put("J030003", "DATASET_SENSITIVE_LEVEL");
+		keyColumnMap.put("J030004", "ELEMENT");
+		keyColumnMap.put("J030005", "ELEMENT_VALUE");
 		keyColumnMap.put("J030006", "RESOURCE_ID");
+		keyColumnMap.put("J030007", "RESOUCE_NAME");
+		keyColumnMap.put("J030008", "PARENT_RESOURCE");
+		keyColumnMap.put("J030009", "RESOURCE_ICON_PATH");
 		keyColumnMap.put("J030010", "RESOURCE_STATUS");
+		keyColumnMap.put("J030011", "RESOURCE_ORDER");
+		keyColumnMap.put("J030012", "RESOURCE_DESCRIBE");
 		keyColumnMap.put("J030014", "CERTIFICATE_CODE_MD5");
 		keyColumnMap.put("J030016", "USER_STATUS");
+		keyColumnMap.put("J030018", "DATASET_SENSITIVE_NAME");
+		keyColumnMap.put("J030013", "RMK");
+		keyColumnMap.put("J030019", "DATASET_NAME");
+		keyColumnMap.put("J030020", "CLASSIFY_NAME");
+		keyColumnMap.put("J030022", "COLUMU_CN");
+		keyColumnMap.put("J030023", "VALUE_SENSITIVE_ID");
+		keyColumnMap.put("J030024", "VALUE_SENSITIVE_NAME");
+		keyColumnMap.put("J030025", "ID");
+		keyColumnMap.put("J030026", "VALUE_NAME");
+		keyColumnMap.put("J030027", "DST_CLASS_CODE");
+		keyColumnMap.put("J030028", "SRC_CLASS_CODE");
 		keyColumnMap.put("J030029", "RESOURCE_TYPE");
+		keyColumnMap.put("J030035", "FUN_RESOURCE_TYPE");
+		keyColumnMap.put("J030036", "RESOURCE_CLASS");
 		
+		
+		keyColumnMap.put("I010025", "BUSINESS_ROLE_TYPE");
 		keyColumnMap.put("I010026", "BUSINESS_ROLE");
+		keyColumnMap.put("I010054", "BUSINESS_ROLE_NAME");
 		
 		keyColumnMap.put("H010005", "SEARCH_ID");
 		keyColumnMap.put("H010034", "SENSITIVE_LEVEL");
@@ -642,7 +743,9 @@ public abstract class SyncService {
 		
 		keyColumnMap.put("G010003", "TopDomain");
 		keyColumnMap.put("G010004", "CONTENT_TYPE");
+		keyColumnMap.put("G010002", "URL");
 		keyColumnMap.put("G010005", "REFERER");
+		
 		keyColumnMap.put("G020004", "SERVICECODE");
 		keyColumnMap.put("G020013", "SECURITY_SOFTWARE_ORGCODE");
 		keyColumnMap.put("G020014", "COMPANY_NAME");
@@ -659,6 +762,7 @@ public abstract class SyncService {
 		keyColumnMap.put("H010020", "OTHER_FILE");
 		keyColumnMap.put("H010021", "FILESIZE");
 		keyColumnMap.put("H010028", "FILE_MD5");
+		keyColumnMap.put("H010029", "DELETE_STATUS");
 		keyColumnMap.put("H010031", "PRXOY_TOOLE_TYPE");
 		keyColumnMap.put("H010032", "PROXY_ADDRESS");
 		keyColumnMap.put("H010033", "PROXY_PROVIDER");
@@ -681,6 +785,166 @@ public abstract class SyncService {
 		return keyColumnMap.get(key);
 	}
 	
+	protected static String convertKeyToEngNameWithAlias(String key) {
+		Map<String, String> keyColumnMap = new HashMap<String, String>();
+		
+		keyColumnMap.put("A010001", "GA_DEPARTMENT");
+		keyColumnMap.put("A010004", "DATA_SET");
+		keyColumnMap.put("A010005", "PARENT_ORG");
+		
+		keyColumnMap.put("J010019", "COLUMN_NAME");
+		
+		keyColumnMap.put("J020012", "SYSTEM_TYPE");
+		keyColumnMap.put("J020013", "APP_ID");
+		keyColumnMap.put("J030001", "SECTION_CLASS");
+		keyColumnMap.put("J030002", "SECTION_RELATIOIN_CLASS");
+		keyColumnMap.put("J030003", "DATASET_SENSITIVE_LEVEL");
+		keyColumnMap.put("J030004", "ELEMENT");
+		keyColumnMap.put("J030005", "ELEMENT_VALUE");
+		keyColumnMap.put("J030006", "RESOURCE_ID");
+		keyColumnMap.put("J030007", "RESOUCE_NAME");
+		keyColumnMap.put("J030008", "PARENT_RESOURCE");
+		keyColumnMap.put("J030009", "RESOURCE_ICON_PATH");
+		keyColumnMap.put("J030010", "RESOURCE_STATUS");
+		keyColumnMap.put("J030011", "RESOURCE_ORDER");
+		keyColumnMap.put("J030012", "RESOURCE_DESCRIBE");
+		keyColumnMap.put("J030014", "CERTIFICATE_CODE_MD5");
+		keyColumnMap.put("J030016", "USER_STATUS");
+		keyColumnMap.put("J030018", "DATASET_SENSITIVE_NAME");
+		keyColumnMap.put("J030013", "RMK");
+		keyColumnMap.put("J030019", "DATASET_NAME");
+		keyColumnMap.put("J030020", "CLASSIFY_NAME");
+		keyColumnMap.put("J030022", "COLUMU_CN");
+		keyColumnMap.put("J030023", "VALUE_SENSITIVE_ID");
+		keyColumnMap.put("J030024", "VALUE_SENSITIVE_NAME");
+		keyColumnMap.put("J030025", "ID");
+		keyColumnMap.put("J030026", "VALUE_NAME");
+		keyColumnMap.put("J030027", "DST_CLASS_CODE");
+		keyColumnMap.put("J030028", "SRC_CLASS_CODE");
+		keyColumnMap.put("J030029", "RESOURCE_TYPE");
+		keyColumnMap.put("J030035", "FUN_RESOURCE_TYPE");
+		keyColumnMap.put("J030036", "RESOURCE_CLASS");
+		
+		
+		keyColumnMap.put("I010025", "BUSINESS_ROLE_TYPE");
+		keyColumnMap.put("I010026", "BUSINESS_ROLE");
+		keyColumnMap.put("I010054", "BUSINESS_ROLE_NAME");
+		
+		keyColumnMap.put("H010005", "SEARCH_ID");
+		keyColumnMap.put("H010034", "SENSITIVE_LEVEL");
+		
+		keyColumnMap.put("B050016", "SYSTEM_TYPE");
+		keyColumnMap.put("B030005", "CERTIFICATE_CODE");
+		
+		
+		keyColumnMap.put("G010002", "URL");
+/////////////////////////////////////////////////////////////////////////////		
+		keyColumnMap.put("220040B", "AUTH_ACCOUNT");
+		keyColumnMap.put("B010001", "NAME");
+		keyColumnMap.put("B010011", "SEXCODE");
+		keyColumnMap.put("B020001", "ISP_ID");
+		keyColumnMap.put("B020005", "BUYPHONE");
+		keyColumnMap.put("B020007", "IMSI");
+		keyColumnMap.put("B030001", "COUNTRY_TYPE");
+		keyColumnMap.put("B030002", "AREA_CODE");
+		keyColumnMap.put("B030004", "CERTIFICATE_TYPE");
+		keyColumnMap.put("B030020", "LANGUAGES");
+		keyColumnMap.put("B030021", "CHINESE_LANGUAGES");
+		keyColumnMap.put("B040002", "USERNAME");
+		keyColumnMap.put("B040003", "ACCOUNT_ID");
+		keyColumnMap.put("B040005", "PASSWORD");
+		keyColumnMap.put("B040014", "PASSWORD_HASH_STRING");
+		keyColumnMap.put("B040021", "AUTH_TYPE");
+		keyColumnMap.put("B040022", "AUTH_ACCOUNT");
+		
+		keyColumnMap.put("C020011", "TERMINAL_MODEL");
+		keyColumnMap.put("C020005", "TERMINAL_OS_VERSION");
+		keyColumnMap.put("C020006", "BROWSE_TYPE");
+		keyColumnMap.put("C020007", "BROWSE_VERSION");
+		keyColumnMap.put("C020009", "TERMINAL_OS_TYPE");
+		keyColumnMap.put("C020017", "TERMINAL_TYPE");
+		keyColumnMap.put("C020021", "SOFTWARE_NAME");
+		keyColumnMap.put("C020022", "SOFTWARE_VERSION");
+		keyColumnMap.put("C040002", "MAC");
+		keyColumnMap.put("C040003", "HARDWARE_SIGNATURE");
+		keyColumnMap.put("C040004", "HARDWARESTRING_TYPE");
+		keyColumnMap.put("C050001", "EQUIPMENT_ID");
+		keyColumnMap.put("C110008", "COOKIE");
+		
+		keyColumnMap.put("F010001", "LONGITUDE");
+		keyColumnMap.put("F010002", "LATITUDE");
+		keyColumnMap.put("F010008", "COLLECT_PLACE");
+		keyColumnMap.put("F010009", "ABOVE_SEALEVEL");
+		keyColumnMap.put("F020001", "CLINET_IP");
+		keyColumnMap.put("F020004", "SRC_IP");
+		keyColumnMap.put("F020005", "DST_IP");
+		keyColumnMap.put("F020006", "SRC_PORT");
+		keyColumnMap.put("F020007", "DST_PORT");
+		keyColumnMap.put("F020010", "SRC_IPV6");
+		keyColumnMap.put("F020011", "DST_IPV6");
+		keyColumnMap.put("F020012", "SRC_PORT_V6");
+		keyColumnMap.put("F020013", "DST_PORT_V6");
+		keyColumnMap.put("F020016", "SRC_IP_AREA");
+		keyColumnMap.put("F020017", "DST_IP_AREA");
+		keyColumnMap.put("F030002", "BASE_STATION_ID");
+		keyColumnMap.put("F030013", "UP_TEID");
+		keyColumnMap.put("F030014", "DOWN_TEID");
+		keyColumnMap.put("F040007", "ROOM_ID");
+		
+		keyColumnMap.put("G010003", "TopDomain");
+		keyColumnMap.put("G010004", "CONTENT_TYPE");
+		keyColumnMap.put("G010002", "URL");
+		keyColumnMap.put("G010005", "REFERER");
+		
+		keyColumnMap.put("G020004", "SERVICECODE");
+		keyColumnMap.put("G020013", "SECURITY_SOFTWARE_ORGCODE");
+		keyColumnMap.put("G020014", "COMPANY_NAME");
+		keyColumnMap.put("G020036", "ICP_PROVIDER");
+		
+		keyColumnMap.put("H010001", "VOICE_TYPE");
+		keyColumnMap.put("H010002", "APP_TYPE");
+		keyColumnMap.put("H010006", "CLUE_SRC_SYS");
+		keyColumnMap.put("H010007", "CLUE_DST_SYS");
+		keyColumnMap.put("H010013", "SESSIONID");
+		keyColumnMap.put("H010014", "CAPTURE_TIME");
+		keyColumnMap.put("H010018", "DEVICE_ID");
+		keyColumnMap.put("H010019", "MAINFILE");
+		keyColumnMap.put("H010020", "OTHER_FILE");
+		keyColumnMap.put("H010021", "FILESIZE");
+		keyColumnMap.put("H010028", "FILE_MD5");
+		keyColumnMap.put("H010029", "DELETE_STATUS");
+		keyColumnMap.put("H010031", "PRXOY_TOOLE_TYPE");
+		keyColumnMap.put("H010032", "PROXY_ADDRESS");
+		keyColumnMap.put("H010033", "PROXY_PROVIDER");
+		keyColumnMap.put("H010035", "OWNERSHIP_LAND");
+		keyColumnMap.put("H010036", "INTERNET_LAND");
+		keyColumnMap.put("H010037", "INTERRUPT_FILE");
+		keyColumnMap.put("H010038", "OTHER_FILE_MD5");
+		keyColumnMap.put("H010041", "APPLICATION_LAYER_PROTOCOL");
+		keyColumnMap.put("H010042", "RECORD_ID");
+		keyColumnMap.put("H020002", "TITLE");
+		keyColumnMap.put("H040002", "LOCAL_ACTION");
+		keyColumnMap.put("H070003", "TOOLTYPE");
+		
+		keyColumnMap.put("I010009", "CONTEXT");
+		
+		String result = "";
+		if(key.contains(".")) {
+			String[] aliasAndKey = key.split("\\.");
+			if( aliasAndKey.length == 2 ) {
+				result = aliasAndKey[0] + "." + keyColumnMap.get(aliasAndKey[1]);
+			}
+			else {
+				logger.info("unknow column with alias format.[" + key + "]");
+			}
+		}
+		else {
+			result = keyColumnMap.get(key);
+		}
+		
+		return result;
+	}
+	
 	private static UserAuth parseUserAuth(Element element) {
 		UserAuth result = null;
 		String name = element.getChildren().get(0).getName();
@@ -692,9 +956,9 @@ public abstract class SyncService {
 				if("ITEM".equals(item.getName())) {
 					if( "A010001".equals(item.getAttributeValue("key")) ) {
 						result.setGA_DEPARTMENT( item.getAttributeValue("val") );
+					} else if ( "J030014".equals(item.getAttributeValue("key"))  ) {
+						result.setCERTIFICATE_CODE_MD5( item.getAttributeValue( "val") );
 					} else if ( "I010026".equals(item.getAttributeValue("key"))  ) {
-						result.setUSER_NAME( item.getAttributeValue( "val") );
-					} else if ( "I010024".equals(item.getAttributeValue("key"))  ) {
 						result.setROLE_ID( item.getAttributeValue( "val") );
 					} else if ( "I010025".equals(item.getAttributeValue("key"))  ) {
 						result.setROLE_TYPE( item.getAttributeValue( "val") );

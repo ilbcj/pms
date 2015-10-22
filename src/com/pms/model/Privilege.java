@@ -6,7 +6,7 @@ public class Privilege {
 	public static final int OWNERTYPEUSERGROUP = 3;
 	
 	private int id;
-	private int owner_id;
+	private String owner_id;
 	private int owner_type;
 //	private int app_id;
 	private int role_id;
@@ -31,10 +31,10 @@ public class Privilege {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getOwner_id() {
+	public String getOwner_id() {
 		return owner_id;
 	}
-	public void setOwner_id(int owner_id) {
+	public void setOwner_id(String owner_id) {
 		this.owner_id = owner_id;
 	}
 	public int getOwner_type() {

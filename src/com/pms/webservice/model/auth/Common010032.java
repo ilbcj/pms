@@ -9,8 +9,15 @@ public class Common010032 {
 	private String sourceName;
 	private String parentCondition;
 	private List<Condition> subConditions;
+	private List<Item> subItems;
 	private List<Item> items;
 	
+	public List<Item> getSubItems() {
+		return subItems;
+	}
+	public void setSubItems(List<Item> subItems) {
+		this.subItems = subItems;
+	}
 	public String getSourceName() {
 		return sourceName;
 	}

@@ -25,11 +25,11 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResColumn rs = null;
-		String sqlString = "select * from WA_COLUMN where DATA_SET = :DATA_SET and COLUMN_ID = :COLUMN_ID and CLUE_SRC_SYS = :CLUE_SRC_SYS ";
+		String sqlString = "select * from WA_COLUMN where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and CLUE_SRC_SYS = :CLUE_SRC_SYS ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
 			q.setString("DATA_SET", c.getDATA_SET());
-			q.setString("COLUMN_ID", c.getCOLUMN_ID());
+			q.setString("ELEMENT", c.getELEMENT());
 			q.setString("CLUE_SRC_SYS", c.getCLUE_SRC_SYS());
 			rs = (ResColumn) q.uniqueResult();
 			

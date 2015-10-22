@@ -24,7 +24,7 @@ public class PrivilegeUserAction extends ActionSupport {
 	
 	private ArrayList<PrivUserListItem> items;
 	private boolean queryAll;
-	private int id;
+	private String id;
 	private String orgId;
 	private String userName;
 	private int userStatus;
@@ -120,11 +120,11 @@ public class PrivilegeUserAction extends ActionSupport {
 		this.queryAll = queryAll;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

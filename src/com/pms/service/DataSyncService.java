@@ -68,7 +68,7 @@ public class DataSyncService {
 				"DATASET_SENSITIVE_LEVEL" + "\t" + "DATA_SET" + "\t" + "SECTION_CLASS" + "\t"  + 
 				"ELEMENT" + "\t" + "SECTION_RELATIOIN_CLASS" + "\t" + "OPERATE_SYMBOL" + "\t"  + 
 				"ELEMENT_VALUE" + "\t" + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"  + 
-				"LATEST_MOD_TIME" + "\t" + "RESOURCE_REMARK" + "\n";
+				"LATEST_MOD_TIME" + "\t" + "RMK" + "\n";
             for (int i = num; i < res.size(); i++)  {
             	str = str + res.get(i).getResource_type() + "\t"
         			 + nullConvertEmptyStr( res.get(i).getRESOURCE_ID() ) + "\t" 
@@ -84,7 +84,7 @@ public class DataSyncService {
             		 + res.get(i).getDELETE_STATUS() + "\t" 
             		 + res.get(i).getDATA_VERSION() + "\t"
             		 + getLongTime(res.get(i).getLATEST_MOD_TIME()) + "\t" 
-            		 + nullConvertEmptyStr( res.get(i).getRESOURCE_REMARK() ) + "\n";
+            		 + nullConvertEmptyStr( res.get(i).getRMK() ) + "\n";
             	num++;
         		if(num >= n*j){
                 	break;
@@ -145,7 +145,7 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
         FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");
         FileStructures.addElement("ITEM").addAttribute("key", "I010005").addAttribute("eng", "LATEST_MOD_TIME").addAttribute("val", "").addAttribute("chn", "最新修改时间");
-        FileStructures.addElement("ITEM").addAttribute("key", "J030013").addAttribute("eng", "RESOURCE_REMARK").addAttribute("val", "").addAttribute("chn", "备注");	
+        FileStructures.addElement("ITEM").addAttribute("key", "J030013").addAttribute("eng", "RMK").addAttribute("val", "").addAttribute("chn", "备注");	
 
             
         String xmlIndex = domIndex.asXML();
@@ -493,7 +493,7 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "J030006").addAttribute("eng", "RESOURCE_ID").addAttribute("val", "").addAttribute("chn", "资源唯一标识");
         FileStructures.addElement("ITEM").addAttribute("key", "I010026").addAttribute("eng", "BUSINESS_ROLE").addAttribute("val", "").addAttribute("chn", "角色编码");
         
-//        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "restype").addAttribute("val", "").addAttribute("chn", "");
+        FileStructures.addElement("ITEM").addAttribute("key", "J030036").addAttribute("eng", "RESOURCE_CLASS").addAttribute("val", "").addAttribute("chn", "资源分类");
         
         FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");
         FileStructures.addElement("ITEM").addAttribute("key", "J030017").addAttribute("eng", "DATA_VERSION").addAttribute("val", "").addAttribute("chn", "数据版本号");

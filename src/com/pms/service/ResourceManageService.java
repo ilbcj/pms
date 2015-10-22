@@ -26,11 +26,12 @@ import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
+import com.pms.util.ConfigHelper;
 
 public class ResourceManageService {
 
 	public int QueryAllFeatureItems(ResFeature criteria, int page, int rows, List<ResFeature> items) throws Exception {
-		criteria.setDelete_status(ResFeature.DELSTATUSNO);
+		criteria.setDELETE_STATUS(ResFeature.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResFeature> res = dao.GetFeatures( criteria, page, rows );
 		items.addAll(res);
@@ -42,7 +43,7 @@ public class ResourceManageService {
 	}
 	
 	private int QueryAllFeaturesCount(ResFeature criteria) throws Exception {
-		criteria.setDelete_status(ResFeature.DELSTATUSNO);
+		criteria.setDELETE_STATUS(ResFeature.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		int count = dao.GetFeaturesCount( criteria );
 		return count;
@@ -53,7 +54,7 @@ public class ResourceManageService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
-		feature.setLatest_mod_time(timenow);
+		feature.setLATEST_MOD_TIME(timenow);
 		
 		AddResAddOrUpdateLog(null, null, feature, null, null);
 		
@@ -86,17 +87,17 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 
 		for(int i = 0; i< nodes.size(); i++) {
-			feature.setName(nodes.get(i).getName());
-			feature.setResource_id(nodes.get(i).getResource_id());
-			feature.setResource_status(nodes.get(i).getResource_status());
-			feature.setResource_describe(nodes.get(i).getResource_describe());
-			feature.setResource_remark(nodes.get(i).getResource_remark());
-			feature.setDelete_status(ResFeature.DELSTATUSYES);
-			feature.setApp_id(nodes.get(i).getApp_id());
-			feature.setParent_resource(nodes.get(i).getParent_resource());
-			feature.setResource_order(nodes.get(i).getResource_order());
-			feature.setSystem_type(nodes.get(i).getSystem_type());
-			feature.setLatest_mod_time(timenow);
+			feature.setRESOUCE_NAME(nodes.get(i).getRESOUCE_NAME());
+			feature.setRESOURCE_ID(nodes.get(i).getRESOURCE_ID());
+			feature.setRESOURCE_STATUS(nodes.get(i).getRESOURCE_STATUS());
+			feature.setRESOURCE_DESCRIBE(nodes.get(i).getRESOURCE_DESCRIBE());
+			feature.setRMK(nodes.get(i).getRMK());
+			feature.setDELETE_STATUS(ResFeature.DELSTATUSYES);
+			feature.setAPP_ID(nodes.get(i).getAPP_ID());
+			feature.setPARENT_RESOURCE(nodes.get(i).getPARENT_RESOURCE());
+			feature.setRESOURCE_ORDER(nodes.get(i).getRESOURCE_ORDER());
+			feature.setSYSTEM_TYPE(nodes.get(i).getSYSTEM_TYPE());
+			feature.setLATEST_MOD_TIME(timenow);
 		
 			feature = dao.FeatureAdd(feature);
 			AddResDelLog(null, null, feature, null, null);
@@ -133,7 +134,7 @@ public class ResourceManageService {
 		item.setName(attr.getName());
 		item.setRESOURCE_ID(attr.getRESOURCE_ID());
 		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
-		item.setRESOURCE_REMARK(attr.getRESOURCE_REMARK());				
+		item.setRESOURCE_REMARK(attr.getRMK());				
 		item.setDATA_VERSION(attr.getDATA_VERSION());
 		
 		AttributeDAO attrdao = new AttributeDAOImpl();
@@ -236,6 +237,11 @@ public class ResourceManageService {
 		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
 		
 		data = dao.DataAdd(data);
+		if(data.getRESOURCE_ID() == null || data.getRESOURCE_ID().length() == 0) {
+			String resId = String.format("%s%010d", ConfigHelper.getRegion(), data.getId());
+			data.setRESOURCE_ID(resId);
+		}
+		data = dao.DataAdd(data);
 		
 		if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
 			List<ResDataOrg> resDataOrgNodes=dao.GetResDataOrgByResId(data.getRESOURCE_ID());
@@ -290,7 +296,7 @@ public class ResourceManageService {
 			data.setDELETE_STATUS(ResData.DELSTATUSYES);
 			data.setDATA_VERSION(nodes.get(i).getDATA_VERSION());	
 			data.setLATEST_MOD_TIME(timenow);
-			data.setRESOURCE_REMARK(nodes.get(i).getRESOURCE_REMARK());
+			data.setRMK(nodes.get(i).getRMK());
 		
 			data = dao.DataAdd(data);
 			
@@ -463,7 +469,7 @@ public class ResourceManageService {
 			for (int j = 0; j < roleResNodes.size(); j++) {
 				resRole.setRESOURCE_ID(roleResNodes.get(j).getRESOURCE_ID());
 				resRole.setBUSINESS_ROLE(roleResNodes.get(j).getBUSINESS_ROLE());
-				resRole.setRestype(roleResNodes.get(j).getRestype());
+				resRole.setRESOURCE_CLASS(roleResNodes.get(j).getRESOURCE_CLASS());
 				resRole.setDELETE_STATUS(ResRoleResource.DELSTATUSYES);
 				resRole.setDATA_VERSION(roleResNodes.get(j).getDATA_VERSION());
 				resRole.setLATEST_MOD_TIME(timenow);
@@ -495,11 +501,11 @@ public class ResourceManageService {
 		List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(id);
 		
 		for(int i=0; i<rrs.size(); i++) {
-			if ( rrs.get(i).getRestype() == ResRoleResource.RESTYPEFEATURE ) {
+			if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
 				ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
 				features.add(feature);
 			}
-			else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
+			else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
 				List<ResData> data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
 				ResDataListItem resDataListItem = null;
 				for(int j=0; j<data.size(); j++) {
@@ -543,11 +549,11 @@ public class ResourceManageService {
 				}
 			}
 			if( resFeature != null){
-				if(resFeature.getName() != null && resFeature.getName().length() > 0) {
-					str += resFeature.getName()+";";
+				if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
+					str += resFeature.getRESOUCE_NAME()+";";
 				}
-				if(resFeature.getResource_id() != null && resFeature.getResource_id().length() > 0) {
-					str += resFeature.getResource_id();
+				if(resFeature.getRESOURCE_ID() != null && resFeature.getRESOURCE_ID().length() > 0) {
+					str += resFeature.getRESOURCE_ID();
 				}
 			}
 			if( resRole != null){
@@ -616,8 +622,8 @@ public class ResourceManageService {
 			if(resData.getRESOURCE_DESCRIBE() != null && resData.getRESOURCE_DESCRIBE().length() > 0) {
 				str += resData.getRESOURCE_DESCRIBE()+";";
 			}
-			if(resData.getRESOURCE_REMARK() != null && resData.getRESOURCE_REMARK().length() > 0) {
-				str += resData.getRESOURCE_REMARK()+";";
+			if(resData.getRMK() != null && resData.getRMK().length() > 0) {
+				str += resData.getRMK()+";";
 			}
 			str += resData.getDELETE_STATUS()+";"+resData.getResource_type()+";";
 			if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
@@ -640,31 +646,31 @@ public class ResourceManageService {
 			}
 		}
 		if( resFeature != null){
-			if(resFeature.getName() != null && resFeature.getName().length() > 0) {
-				str += resFeature.getName()+";";
+			if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
+				str += resFeature.getRESOUCE_NAME()+";";
 			}
-			if(resFeature.getResource_id() != null && resFeature.getResource_id().length() > 0) {
-				str += resFeature.getResource_id()+";";
+			if(resFeature.getRESOURCE_ID() != null && resFeature.getRESOURCE_ID().length() > 0) {
+				str += resFeature.getRESOURCE_ID()+";";
 			}
-			str += resFeature.getResource_status()+";";
-			if(resFeature.getResource_describe() != null && resFeature.getResource_describe().length() > 0) {
-				str += resFeature.getResource_describe()+";";
+			str += resFeature.getRESOURCE_STATUS()+";";
+			if(resFeature.getRESOURCE_DESCRIBE() != null && resFeature.getRESOURCE_DESCRIBE().length() > 0) {
+				str += resFeature.getRESOURCE_DESCRIBE()+";";
 			}
-			if(resFeature.getResource_remark() != null && resFeature.getResource_remark().length() > 0) {
-				str += resFeature.getResource_remark()+";";
+			if(resFeature.getRMK() != null && resFeature.getRMK().length() > 0) {
+				str += resFeature.getRMK()+";";
 			}
-			str += resFeature.getDelete_status()+";";
-			if(resFeature.getApp_id() != null && resFeature.getApp_id().length() > 0) {
-				str += resFeature.getApp_id()+";";
+			str += resFeature.getDELETE_STATUS()+";";
+			if(resFeature.getAPP_ID() != null && resFeature.getAPP_ID().length() > 0) {
+				str += resFeature.getAPP_ID()+";";
 			}
-			if(resFeature.getParent_resource() != null && resFeature.getParent_resource().length() > 0) {
-				str += resFeature.getParent_resource()+";";
+			if(resFeature.getPARENT_RESOURCE() != null && resFeature.getPARENT_RESOURCE().length() > 0) {
+				str += resFeature.getPARENT_RESOURCE()+";";
 			}
-			if(resFeature.getResource_order() != null && resFeature.getResource_order().length() > 0) {
-				str += resFeature.getResource_order()+";";
+			if(resFeature.getRESOURCE_ORDER() != null && resFeature.getRESOURCE_ORDER().length() > 0) {
+				str += resFeature.getRESOURCE_ORDER()+";";
 			}
-			if(resFeature.getSystem_type() != null && resFeature.getSystem_type().length() > 0) {
-				str += resFeature.getSystem_type();
+			if(resFeature.getSYSTEM_TYPE() != null && resFeature.getSYSTEM_TYPE().length() > 0) {
+				str += resFeature.getSYSTEM_TYPE();
 			}
 		}	
 		if( role != null){
@@ -693,11 +699,11 @@ public class ResourceManageService {
 			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
 			
 			for(int i=0; i<rrs.size(); i++) {
-				if ( rrs.get(i).getRestype() == ResRoleResource.RESTYPEFEATURE ) {
+				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
 					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
-					str += ";"+feature.getName()+";"+feature.getResource_id();
+					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
 				}
-				else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
+				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
 					List<ResData> data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
 					for(int j=0; j<data.size(); j++) {
 						str += ";"+data.get(j).getName()+";"+data.get(j).getRESOURCE_ID();
@@ -746,8 +752,8 @@ public class ResourceManageService {
 			if(resData.getRESOURCE_DESCRIBE() != null && resData.getRESOURCE_DESCRIBE().length() > 0) {
 				str += resData.getRESOURCE_DESCRIBE()+";";
 			}
-			if(resData.getRESOURCE_REMARK() != null && resData.getRESOURCE_REMARK().length() > 0) {
-				str += resData.getRESOURCE_REMARK()+";";
+			if(resData.getRMK() != null && resData.getRMK().length() > 0) {
+				str += resData.getRMK()+";";
 			}
 			str += resData.getDELETE_STATUS()+";"+resData.getResource_type()+";";
 			if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
@@ -771,31 +777,31 @@ public class ResourceManageService {
 		}
 		
 		if( resFeature != null){
-			if(resFeature.getName() != null && resFeature.getName().length() > 0) {
-				str += resFeature.getName()+";";
+			if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
+				str += resFeature.getRESOUCE_NAME()+";";
 			}
-			if(resFeature.getResource_id() != null && resFeature.getResource_id().length() > 0) {
-				str += resFeature.getResource_id()+";";
+			if(resFeature.getRESOURCE_ID() != null && resFeature.getRESOURCE_ID().length() > 0) {
+				str += resFeature.getRESOURCE_ID()+";";
 			}
-			str += resFeature.getResource_status()+";";
-			if(resFeature.getResource_describe() != null && resFeature.getResource_describe().length() > 0) {
-				str += resFeature.getResource_describe()+";";
+			str += resFeature.getRESOURCE_STATUS()+";";
+			if(resFeature.getRESOURCE_DESCRIBE() != null && resFeature.getRESOURCE_DESCRIBE().length() > 0) {
+				str += resFeature.getRESOURCE_DESCRIBE()+";";
 			}
-			if(resFeature.getResource_remark() != null && resFeature.getResource_remark().length() > 0) {
-				str += resFeature.getResource_remark()+";";
+			if(resFeature.getRMK() != null && resFeature.getRMK().length() > 0) {
+				str += resFeature.getRMK()+";";
 			}
-			str += resFeature.getDelete_status()+";";
-			if(resFeature.getApp_id() != null && resFeature.getApp_id().length() > 0) {
-				str += resFeature.getApp_id()+";";
+			str += resFeature.getDELETE_STATUS()+";";
+			if(resFeature.getAPP_ID() != null && resFeature.getAPP_ID().length() > 0) {
+				str += resFeature.getAPP_ID()+";";
 			}
-			if(resFeature.getParent_resource() != null && resFeature.getParent_resource().length() > 0) {
-				str += resFeature.getParent_resource()+";";
+			if(resFeature.getPARENT_RESOURCE() != null && resFeature.getPARENT_RESOURCE().length() > 0) {
+				str += resFeature.getPARENT_RESOURCE()+";";
 			}
-			if(resFeature.getResource_order() != null && resFeature.getResource_order().length() > 0) {
-				str += resFeature.getResource_order()+";";
+			if(resFeature.getRESOURCE_ORDER() != null && resFeature.getRESOURCE_ORDER().length() > 0) {
+				str += resFeature.getRESOURCE_ORDER()+";";
 			}
-			if(resFeature.getSystem_type() != null && resFeature.getSystem_type().length() > 0) {
-				str += resFeature.getSystem_type();
+			if(resFeature.getSYSTEM_TYPE() != null && resFeature.getSYSTEM_TYPE().length() > 0) {
+				str += resFeature.getSYSTEM_TYPE();
 			}
 		}
 		
@@ -825,11 +831,11 @@ public class ResourceManageService {
 			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
 			
 			for(int i=0; i<rrs.size(); i++) {
-				if ( rrs.get(i).getRestype() == ResRoleResource.RESTYPEFEATURE ) {
+				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
 					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
-					str += ";"+feature.getName()+";"+feature.getResource_id();
+					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
 				}
-				else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
+				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
 					List<ResData> data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
 					for(int j=0; j<data.size(); j++) {
 						str += ";"+data.get(j).getName()+";"+data.get(j).getRESOURCE_ID();

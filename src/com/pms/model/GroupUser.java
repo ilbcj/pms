@@ -2,8 +2,8 @@ package com.pms.model;
 
 public class GroupUser {
 	private int id;
-	private int groupid;
-	private int userid;
+	private String groupid;
+	private String userid;
 	
 	public int getId() {
 		return id;
@@ -11,16 +11,16 @@ public class GroupUser {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getGroupid() {
+	public String getGroupid() {
 		return groupid;
 	}
-	public void setGroupid(int groupid) {
+	public void setGroupid(String groupid) {
 		this.groupid = groupid;
 	}
-	public int getUserid() {
+	public String getUserid() {
 		return userid;
 	}
-	public void setUserid(int userid) {
+	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 }

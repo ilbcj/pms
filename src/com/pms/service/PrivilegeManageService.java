@@ -83,7 +83,8 @@ public class PrivilegeManageService {
 		for(int i = 0; i< orgs.length; i++) {
 			for(int j = 0; j<roleIds.size(); j++) {
 				Privilege priv = new Privilege();
-				priv.setOwner_id(Integer.parseInt(orgs[i]));
+				//priv.setOwner_id(Integer.parseInt(orgs[i]));
+				priv.setOwner_id(orgs[i]);
 				priv.setOwner_type(ownertype);
 				//priv.setApp_id(roleIds.get(j).getAppid());
 				priv.setRole_id(roleIds.get(j));
@@ -93,11 +94,12 @@ public class PrivilegeManageService {
 				priv.setTstamp(timenow);
 				dao.PrivilegeAdd(priv);
 			}
-			AddPrivilegeAddOrUpdateLog(Integer.parseInt(orgs[i]),ownertype,roleIds,"add");
+			//AddPrivilegeAddOrUpdateLog(Integer.parseInt(orgs[i]),ownertype,roleIds,"add");
+			AddPrivilegeAddOrUpdateLog(orgs[i],ownertype,roleIds,"add");
 		}
 	}
 
-	public void UpdatePrivilege(int ownerid, int ownertype,
+	public void UpdatePrivilege(String ownerid, int ownertype,
 			List<Integer> roleIds) throws Exception {
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		List<Privilege> privs = new ArrayList<Privilege>();
@@ -116,14 +118,14 @@ public class PrivilegeManageService {
 		AddPrivilegeAddOrUpdateLog(ownerid,ownertype,roleIds,"update");
 	}
 
-	public List<Privilege> QueryPrivilegesByOwnerId(int ownerid, int ownertype) throws Exception {
+	public List<Privilege> QueryPrivilegesByOwnerId(String ownerid, int ownertype) throws Exception {
 		List<Privilege> res = null;
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		res = dao.QueryPrivilegesByOwnerId(ownerid, ownertype);
 		return res;
 	}
 	
-	private void AddPrivilegeAddOrUpdateLog(int ownerid, int ownertype, List<Integer> roleIds, String flag) throws Exception {
+	private void AddPrivilegeAddOrUpdateLog(String ownerid, int ownertype, List<Integer> roleIds, String flag) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
@@ -150,16 +152,24 @@ public class PrivilegeManageService {
 		String str="";
 		if (ownertype==Privilege.OWNERTYPEUSER) {
 			UserDAO userDao = new UserDAOImpl();
-			List<User> userNodes = userDao.GetUserById(ownerid);
-			for (int i = 0; i < userNodes.size(); i++) {
-				if(userNodes.get(i).getNAME() != null && userNodes.get(i).getNAME().length() > 0) {
-					str += userNodes.get(i).getNAME()+";";
-				}
-				if(userNodes.get(i).getUNIT() != null && userNodes.get(i).getUNIT().length() > 0) {
-					str += userNodes.get(i).getUNIT()+";";
-				}
-				
+//			List<User> userNodes = userDao.GetUserByCertificateCodeMd5(ownerid);
+//			for (int i = 0; i < userNodes.size(); i++) {
+//				if(userNodes.get(i).getNAME() != null && userNodes.get(i).getNAME().length() > 0) {
+//					str += userNodes.get(i).getNAME()+";";
+//				}
+//				if(userNodes.get(i).getUNIT() != null && userNodes.get(i).getUNIT().length() > 0) {
+//					str += userNodes.get(i).getUNIT()+";";
+//				}
+//				
+//			}
+			User userNode = userDao.GetUserByCertificateCodeMd5(ownerid);
+			if(userNode.getNAME() != null && userNode.getNAME().length() > 0) {
+				str += userNode.getNAME()+";";
 			}
+			if(userNode.getUNIT() != null && userNode.getUNIT().length() > 0) {
+				str += userNode.getUNIT()+";";
+			}
+				
 			ResourceDAO resDao = new ResourceDAOImpl();
 			for(int i = 0; i<roleIds.size(); i++) {
 				List<ResRole> roleNodes=resDao.GetRoleById(roleIds.get(i));
@@ -175,7 +185,9 @@ public class PrivilegeManageService {
 		}
 		else if(ownertype==Privilege.OWNERTYPEUSERGROUP){
 			GroupDAO dao = new GroupDAOImpl();
-			List<Group> groupNodes = dao.GetGroupByGroupId(ownerid);
+			//List<Group> groupNodes = dao.GetGroupByGroupId(ownerid);
+			int gid = Integer.parseInt(ownerid);
+			List<Group> groupNodes = dao.GetGroupByGroupId(gid);
 			for (int i = 0; i < groupNodes.size(); i++) {
 				if(groupNodes.get(i).getName() != null && groupNodes.get(i).getName().length() > 0) {
 					str += groupNodes.get(i).getName()+";";

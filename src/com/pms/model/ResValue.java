@@ -5,11 +5,11 @@ public class ResValue {
 	public final static int DELSTATUSYES = 1;
 	
 	private int id;
-	private String VALUE_ID;
+	private String ELEMENT_VALUE;
 	private String CLUE_SRC_SYS;
 	private String VALUE_NAME;
 	private String VALUE_SENSITIVE_ID;
-	private String COLUMN_ID;
+	private String ELEMENT;
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
@@ -20,11 +20,11 @@ public class ResValue {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getVALUE_ID() {
-		return VALUE_ID;
+	public String getELEMENT_VALUE() {
+		return ELEMENT_VALUE;
 	}
-	public void setVALUE_ID(String vALUE_ID) {
-		VALUE_ID = vALUE_ID;
+	public void setELEMENT_VALUE(String eLEMENT_VALUE) {
+		ELEMENT_VALUE = eLEMENT_VALUE;
 	}
 	public String getCLUE_SRC_SYS() {
 		return CLUE_SRC_SYS;
@@ -44,11 +44,11 @@ public class ResValue {
 	public void setVALUE_SENSITIVE_ID(String vALUE_SENSITIVE_ID) {
 		VALUE_SENSITIVE_ID = vALUE_SENSITIVE_ID;
 	}
-	public String getCOLUMN_ID() {
-		return COLUMN_ID;
+	public String getELEMENT() {
+		return ELEMENT;
 	}
-	public void setCOLUMN_ID(String cOLUMN_ID) {
-		COLUMN_ID = cOLUMN_ID;
+	public void setELEMENT(String eLEMENT) {
+		ELEMENT = eLEMENT;
 	}
 	public int getDELETE_STATUS() {
 		return DELETE_STATUS;
@@ -70,11 +70,11 @@ public class ResValue {
 	}
 	
 	public boolean isValid() {
-		if( (VALUE_ID == null || VALUE_ID.isEmpty()) 
+		if( (ELEMENT_VALUE == null || ELEMENT_VALUE.isEmpty()) 
 				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
 				&& (VALUE_NAME == null || VALUE_NAME.isEmpty())
 				&& (VALUE_SENSITIVE_ID == null || VALUE_SENSITIVE_ID.isEmpty())
-				&& (COLUMN_ID == null || COLUMN_ID.isEmpty()) ) {
+				&& (ELEMENT == null || ELEMENT.isEmpty()) ) {
 			return false;
 		}
 		return true;

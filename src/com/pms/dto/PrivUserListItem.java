@@ -10,6 +10,14 @@ public class PrivUserListItem {
 	private String pname;
 	private String gname;
 	private int priv_status;
+	private String certificate_code_md5;
+	
+	public String getCertificate_code_md5() {
+		return certificate_code_md5;
+	}
+	public void setCertificate_code_md5(String certificate_code_md5) {
+		this.certificate_code_md5 = certificate_code_md5;
+	}
 	public int getId() {
 		return id;
 	}

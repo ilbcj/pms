@@ -21,6 +21,22 @@ public class SearchCondition {
 	
 	private int CONNECTTYPE;
 	
+	//join conditions
+	private List<Common010123> common010123;
+	private String tableAlias;
+	
+	public String getTableAlias() {
+		return tableAlias;
+	}
+	public void setTableAlias(String tableAlias) {
+		this.tableAlias = tableAlias;
+	}
+	public List<Common010123> getCommon010123() {
+		return common010123;
+	}
+	public void setCommon010123(List<Common010123> common010123) {
+		this.common010123 = common010123;
+	}
 	public int getCONNECTTYPE() {
 		return CONNECTTYPE;
 	}

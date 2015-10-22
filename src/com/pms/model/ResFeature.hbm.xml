@@ -11,18 +11,20 @@
 			<generator class="identity"/>
 		</id>
 		<!-- property元素定义常规属性 -->
-		<property name="name" type="java.lang.String" length="64" not-null="true"/>
-		<property name="resource_id" type="java.lang.String" length="64"/>
-		<property name="resource_status" type="java.lang.Integer"/>
-		
-		<property name="resource_describe" type="java.lang.String" length="256"/>
-		<property name="resource_remark" type="java.lang.String" length="256"/>
-		<property name="delete_status" type="java.lang.Integer"/>
-		<property name="app_id" type="java.lang.String" length="128"/>
-		<property name="parent_resource" type="java.lang.String" length="128"/>
-		<property name="resource_order" type="java.lang.String" length="64"/>
-		<property name="system_type" type="java.lang.String" length="64"/>
-		
-		<property name="latest_mod_time" type="java.lang.String" length="64"/>
+		<property name="SYSTEM_TYPE" type="java.lang.String" length="64"/>
+		<property name="RESOURCE_ID" type="java.lang.String" length="64"/>
+		<property name="APP_ID" type="java.lang.String" length="64"/>
+		<property name="RESOUCE_NAME" type="java.lang.String" length="64"/>
+		<property name="PARENT_RESOURCE" type="java.lang.String" length="64"/>
+		<property name="URL" type="java.lang.String" length="128"/>
+		<property name="RESOURCE_ICON_PATH" type="java.lang.String" length="128"/>
+		<property name="RESOURCE_STATUS" type="java.lang.Integer"/>
+		<property name="RESOURCE_ORDER" type="java.lang.String" length="64"/>
+		<property name="RESOURCE_DESCRIBE" type="java.lang.String" length="256"/>
+		<property name="RMK" type="java.lang.String" length="256"/>
+		<property name="FUN_RESOURCE_TYPE" type="java.lang.Integer"/>
+		<property name="DELETE_STATUS" type="java.lang.Integer"/>
+		<property name="DATA_VERSION" type="java.lang.Integer"/>
+		<property name="LATEST_MOD_TIME" type="java.lang.String" length="64"/>
 	</class>
 </hibernate-mapping>

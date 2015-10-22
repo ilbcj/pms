@@ -56,14 +56,14 @@ public class GroupDAOImpl implements GroupDAO {
 	}
 
 	@Override
-	public void UpdateGroupUsers(int id, List<Integer> userIds) throws Exception {
+	public void UpdateGroupUsers(String id, List<String> userIds) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		String sqlString = "delete from group_user where groupid = :groupid ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("groupid", id);
+			q.setString("groupid", id);
 			q.executeUpdate();
 			
 			GroupUser gu;
@@ -247,7 +247,7 @@ public class GroupDAOImpl implements GroupDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<GroupUser> GetGroupsByUserId(int id) throws Exception {
+	public List<GroupUser> GetGroupsByUserId(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<GroupUser> rs = null;
@@ -255,7 +255,7 @@ public class GroupDAOImpl implements GroupDAO {
 				
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(GroupUser.class);
-			q.setInteger("userid", id);
+			q.setString("userid", id);
 			
 			rs = q.list();
 			tx.commit();

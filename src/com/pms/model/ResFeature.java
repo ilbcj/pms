@@ -1,92 +1,137 @@
 package com.pms.model;
 
 public class ResFeature {
+	public final static int RESSTATUSENABLE = 1;
+	public final static int RESSTATUSDISABLE = 0;
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
-	
+	public final static int FUNRESTYPEDIR = 0;
+	public final static int FUNRESTYPEBUSINESSMENU = 1;
+	public final static int FUNRESTYPEOPERATEMENU = 2;
+	public final static int FUNRESTYPEDEPEND = 3;
+//	private int id;
+//	private String name="";
+//	private String resource_id;
+//	private int resource_status;
+//	private String resource_describe;
+//	private String RMK;
+//	private int delete_status;
+//	private String app_id;
+//	private String parent_resource;
+//	private String resource_order;
+//	private String system_type;
+//	private String latest_mod_time;
 	private int id;
-	private String name="";
-	private String resource_id;
-	private int resource_status;
-	private String resource_describe;
-	private String resource_remark;
-	private int delete_status;
-	private String app_id;
-	private String parent_resource;
-	private String resource_order;
-	private String system_type;
-	private String latest_mod_time;
+	private String SYSTEM_TYPE;
+	private String RESOURCE_ID;
+	private String APP_ID;
+	private String RESOUCE_NAME;
+	private String PARENT_RESOURCE;
+	private String URL;
+	private String RESOURCE_ICON_PATH;
+	private int RESOURCE_STATUS;
+	private String RESOURCE_ORDER;
+	private String RESOURCE_DESCRIBE;
+	private String RMK;
+	private int FUN_RESOURCE_TYPE;
+	private int DATA_VERSION;
+	private int DELETE_STATUS;
+	private String LATEST_MOD_TIME;
 	
+	public int getFUN_RESOURCE_TYPE() {
+		return FUN_RESOURCE_TYPE;
+	}
+	public void setFUN_RESOURCE_TYPE(int fUN_RESOURCE_TYPE) {
+		FUN_RESOURCE_TYPE = fUN_RESOURCE_TYPE;
+	}
+	public int getDATA_VERSION() {
+		return DATA_VERSION;
+	}
+	public void setDATA_VERSION(int dATA_VERSION) {
+		DATA_VERSION = dATA_VERSION;
+	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
+	public String getSYSTEM_TYPE() {
+		return SYSTEM_TYPE;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setSYSTEM_TYPE(String sYSTEM_TYPE) {
+		SYSTEM_TYPE = sYSTEM_TYPE;
 	}
-	public String getResource_id() {
-		return resource_id;
+	public String getRESOURCE_ID() {
+		return RESOURCE_ID;
 	}
-	public void setResource_id(String resource_id) {
-		this.resource_id = resource_id;
+	public void setRESOURCE_ID(String rESOURCE_ID) {
+		RESOURCE_ID = rESOURCE_ID;
 	}
-	public int getResource_status() {
-		return resource_status;
+	public String getAPP_ID() {
+		return APP_ID;
 	}
-	public void setResource_status(int resource_status) {
-		this.resource_status = resource_status;
+	public void setAPP_ID(String aPP_ID) {
+		APP_ID = aPP_ID;
 	}
-	public String getResource_describe() {
-		return resource_describe;
+	public String getRESOUCE_NAME() {
+		return RESOUCE_NAME;
 	}
-	public void setResource_describe(String resource_describe) {
-		this.resource_describe = resource_describe;
+	public void setRESOUCE_NAME(String rESOUCE_NAME) {
+		RESOUCE_NAME = rESOUCE_NAME;
 	}
-	public String getResource_remark() {
-		return resource_remark;
+	public String getPARENT_RESOURCE() {
+		return PARENT_RESOURCE;
 	}
-	public void setResource_remark(String resource_remark) {
-		this.resource_remark = resource_remark;
+	public void setPARENT_RESOURCE(String pARENT_RESOURCE) {
+		PARENT_RESOURCE = pARENT_RESOURCE;
 	}
-	public int getDelete_status() {
-		return delete_status;
+	public String getURL() {
+		return URL;
 	}
-	public void setDelete_status(int delete_status) {
-		this.delete_status = delete_status;
+	public void setURL(String uRL) {
+		URL = uRL;
 	}
-	public String getApp_id() {
-		return app_id;
+	public String getRESOURCE_ICON_PATH() {
+		return RESOURCE_ICON_PATH;
 	}
-	public void setApp_id(String app_id) {
-		this.app_id = app_id;
+	public void setRESOURCE_ICON_PATH(String rESOURCE_ICON_PATH) {
+		RESOURCE_ICON_PATH = rESOURCE_ICON_PATH;
 	}
-	public String getParent_resource() {
-		return parent_resource;
+	public int getRESOURCE_STATUS() {
+		return RESOURCE_STATUS;
 	}
-	public void setParent_resource(String parent_resource) {
-		this.parent_resource = parent_resource;
+	public void setRESOURCE_STATUS(int rESOURCE_STATUS) {
+		RESOURCE_STATUS = rESOURCE_STATUS;
 	}
-	public String getResource_order() {
-		return resource_order;
+	public String getRESOURCE_ORDER() {
+		return RESOURCE_ORDER;
 	}
-	public void setResource_order(String resource_order) {
-		this.resource_order = resource_order;
+	public void setRESOURCE_ORDER(String rESOURCE_ORDER) {
+		RESOURCE_ORDER = rESOURCE_ORDER;
 	}
-	public String getSystem_type() {
-		return system_type;
+	public String getRESOURCE_DESCRIBE() {
+		return RESOURCE_DESCRIBE;
 	}
-	public void setSystem_type(String system_type) {
-		this.system_type = system_type;
+	public void setRESOURCE_DESCRIBE(String rESOURCE_DESCRIBE) {
+		RESOURCE_DESCRIBE = rESOURCE_DESCRIBE;
 	}
-	public String getLatest_mod_time() {
-		return latest_mod_time;
+	public String getRMK() {
+		return RMK;
 	}
-	public void setLatest_mod_time(String latest_mod_time) {
-		this.latest_mod_time = latest_mod_time;
+	public void setRMK(String rMK) {
+		RMK = rMK;
+	}
+	public int getDELETE_STATUS() {
+		return DELETE_STATUS;
+	}
+	public void setDELETE_STATUS(int dELETE_STATUS) {
+		DELETE_STATUS = dELETE_STATUS;
+	}
+	public String getLATEST_MOD_TIME() {
+		return LATEST_MOD_TIME;
+	}
+	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
+		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
 }

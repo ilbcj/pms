@@ -21,7 +21,7 @@ import com.pms.model.User;
 
 public class GroupManageService {
 
-	public Group SaveGroupUser(Group group, List<Integer> userIds) throws Exception {
+	public Group SaveGroupUser(Group group, List<String> userIds) throws Exception {
 		GroupDAO dao = new GroupDAOImpl();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
@@ -33,7 +33,7 @@ public class GroupManageService {
 		
 		group = dao.GroupAdd(group);
 		
-		dao.UpdateGroupUsers(group.getId(), userIds);
+		dao.UpdateGroupUsers(group.getCode(), userIds);
 		return group;
 	}
 

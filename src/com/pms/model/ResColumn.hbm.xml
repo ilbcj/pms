@@ -11,12 +11,12 @@
 			<generator class="identity"/>
 		</id>
 		<!-- property元素定义常规属性 -->
-		<property name="COLUMN_ID" type="java.lang.String" length="64"/>
+		<property name="ELEMENT" type="java.lang.String" length="64"/>
 		<property name="CLUE_SRC_SYS" type="java.lang.String" length="256"/>
 		<property name="DATA_SET" type="java.lang.String" length="64"/>
 		<property name="COLUMU_CN" type="java.lang.String" length="64"/>
 		<property name="COLUMN_NAME" type="java.lang.String" length="64"/>
-		<property name="COLUMN_RMK" type="java.lang.String" length="256"/>
+		<property name="RMK" type="java.lang.String" length="256"/>
 		<property name="DELETE_STATUS" type="java.lang.Integer"/>
 		<property name="DATA_VERSION" type="java.lang.Integer"/>
 		<property name="LATEST_MOD_TIME" type="java.lang.String" length="64"/>
