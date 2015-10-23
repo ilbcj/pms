@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
+import com.pms.model.ResDataTemplate;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -25,6 +26,10 @@ public interface ResourceDAO {
 			List<String> data_set, List<String> section_class, List<String> element, List<String> section_relatioin_class, 
 			ResData criteria, int page, int rows) throws Exception;
 	int GetDatasCount(ResData criteria) throws Exception;
+	List<ResDataTemplate> GetDataTemplates(List<String> resource_status, List<String> resource_type, List<String> dataset_sensitive_level,
+			List<String> data_set, List<String> section_class, List<String> element, List<String> section_relatioin_class, 
+			ResDataTemplate criteria, int page, int rows) throws Exception;
+	int GetDataTemplatesCount(ResDataTemplate criteria) throws Exception;
 	ResData GetDataByColumn(String dataSet, String element) throws Exception;
 	ResData GetDataByRelationRow(String dataSet, String element, String elemnetValue) throws Exception;
 	ResData GetDataByRelationColumn(String dataSet, String sectionClass, String element) throws Exception;
@@ -39,6 +44,7 @@ public interface ResourceDAO {
 	
 	void UpdateFeatureRoleResource(String roleId, List<String> featureIds) throws Exception;
 	void UpdateDataRoleResource(String roleId, List<String> dataIds) throws Exception;
+	void UpdateDataResource(List<String> dataIds) throws Exception;
 	List<ResRoleResource> GetAllResRoles() throws Exception;
 	List<ResRoleResource> GetResRolesByTime(String time) throws Exception;
 	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
@@ -46,6 +52,7 @@ public interface ResourceDAO {
 	ResFeature GetFeatureByResId(String id) throws Exception;
 	List<ResFeature> GetFeatureById(int id) throws Exception;
 	List<ResData> GetDataByResId(String resId) throws Exception;
+	List<ResDataTemplate> GetDataTemplateByResId(String resId) throws Exception;
 	List<ResData> GetDataById(int id) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
