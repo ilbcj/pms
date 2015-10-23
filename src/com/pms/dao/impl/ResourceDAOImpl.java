@@ -16,6 +16,7 @@ import com.pms.dao.ResourceDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
+import com.pms.model.ResDataTemplate;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -484,6 +485,225 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Transaction tx = session.beginTransaction();
 		int rs;
 		String sqlString = "select count(*) from WA_AUTHORITY_DATA_RESOURCE where 1 = 1 and DELETE_STATUS =:DELETE_STATUS ";
+		if( criteria != null ) {
+			if( criteria != null ) {
+				if(criteria.getName() != null && criteria.getName().length() > 0) {
+					sqlString += " and name like :name ";
+				}
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
+				}
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
+			if( criteria != null ) {
+				if( criteria != null ) {
+					if(criteria.getName() != null && criteria.getName().length() > 0) {
+						q.setString( "name", "%" + criteria.getName() + "%" );
+					}
+					if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+						q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
+					}
+				}
+			}
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataTemplate> GetDataTemplates( List<String> resource_status, List<String> resource_type, List<String> dataset_sensitive_level,
+			List<String> data_set, List<String> section_class, List<String> element, List<String> section_relatioin_class, 
+			ResDataTemplate criteria, int page, int rows)
+					throws Exception {
+		
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResDataTemplate> rs = null;
+		List<String> list=null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_Template where 1 = 1 and DELETE_STATUS =:DELETE_STATUS ";
+		if( criteria != null ) {
+			if(criteria.getName() != null && criteria.getName().length() > 0) {
+				sqlString += " and name like :name ";
+			}
+			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
+			}
+			if(criteria.getRESOURCE_DESCRIBE() != null && criteria.getRESOURCE_DESCRIBE().length() > 0) {
+				sqlString += " and RESOURCE_DESCRIBE like :RESOURCE_DESCRIBE ";
+			}
+			if(criteria.getRESOURCE_REMARK() != null && criteria.getRESOURCE_REMARK().length() > 0) {
+				sqlString += " and RESOURCE_REMARK like :RESOURCE_REMARK ";
+			}
+			if(resource_status != null) {
+				for (int i = 0; i < resource_status.size(); i++) {
+					list =Arrays.asList(resource_status.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					sqlString += " and RESOURCE_STATUS in (:RESOURCE_STATUS) ";
+				}
+			}
+			if(resource_type != null) {
+				for (int i = 0; i < resource_type.size(); i++) {
+					list =Arrays.asList(resource_type.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					sqlString += " and resource_type in (:resource_type) ";
+				}
+			}
+			if(dataset_sensitive_level != null) {
+				for (int i = 0; i < dataset_sensitive_level.size(); i++) {
+					list =Arrays.asList(dataset_sensitive_level.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					sqlString += " and DATASET_SENSITIVE_LEVEL in (:DATASET_SENSITIVE_LEVEL) ";
+				}
+			}
+			if(data_set != null) {
+				for (int i = 0; i < data_set.size(); i++) {
+					list =Arrays.asList(data_set.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					sqlString += " and DATA_SET in (:DATA_SET) ";
+				}
+			}
+			if(section_class != null) {
+				for (int i = 0; i < section_class.size(); i++) {
+					list =Arrays.asList(section_class.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					sqlString += " and SECTION_CLASS in (:SECTION_CLASS) ";
+				}
+			}
+			if(element != null) {
+				for (int i = 0; i < element.size(); i++) {
+					list =Arrays.asList(element.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					sqlString += " and ELEMENT in (:ELEMENT) ";
+				}
+			}
+			if(section_relatioin_class != null) {
+				for (int i = 0; i < section_relatioin_class.size(); i++) {
+					list =Arrays.asList(section_relatioin_class.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					sqlString += " and SECTION_RELATIOIN_CLASS in (:SECTION_RELATIOIN_CLASS) ";
+				}
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
+			if( criteria != null ) {
+				if(criteria.getName() != null && criteria.getName().length() > 0) {
+					q.setString( "name", "%" + criteria.getName() + "%" );
+				}
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
+				}
+				if(criteria.getRESOURCE_DESCRIBE() != null && criteria.getRESOURCE_DESCRIBE().length() > 0) {
+					q.setString( "RESOURCE_DESCRIBE", "%" + criteria.getRESOURCE_DESCRIBE() + "%" );
+				}
+				if(criteria.getRESOURCE_REMARK() != null && criteria.getRESOURCE_REMARK().length() > 0) {
+					q.setString( "RESOURCE_REMARK", "%" + criteria.getRESOURCE_REMARK() + "%" );
+				}
+				if(resource_status != null) {
+					for (int i = 0; i < resource_status.size(); i++) {
+						list =Arrays.asList(resource_status.get(i).split(","));	
+					}
+					if(list.get(0) != "" && ! list.get(0).equals("")){
+						q.setParameterList("RESOURCE_STATUS", list);
+					}
+				}	
+				if(resource_type != null) {
+					for (int i = 0; i < resource_type.size(); i++) {
+						list =Arrays.asList(resource_type.get(i).split(","));	
+					}
+					if(list.get(0) != "" && ! list.get(0).equals("")){
+						q.setParameterList("resource_type", list);
+					}
+				}
+				if(dataset_sensitive_level != null) {
+					for (int i = 0; i < dataset_sensitive_level.size(); i++) {
+						list =Arrays.asList(dataset_sensitive_level.get(i).split(","));	
+					}
+					if(list.get(0) != "" && ! list.get(0).equals("")){
+						q.setParameterList("DATASET_SENSITIVE_LEVEL", list);
+					}
+				}
+				if(data_set != null) {
+					for (int i = 0; i < data_set.size(); i++) {
+						list =Arrays.asList(data_set.get(i).split(","));	
+					}
+					if(list.get(0) != "" && ! list.get(0).equals("")){
+						q.setParameterList("DATA_SET", list);
+					}
+				}
+				if(section_class != null) {
+					for (int i = 0; i < section_class.size(); i++) {
+						list =Arrays.asList(section_class.get(i).split(","));	
+					}
+					if(list.get(0) != "" && ! list.get(0).equals("")){
+						q.setParameterList("SECTION_CLASS", list);
+					}
+				}
+				if(element != null) {
+					for (int i = 0; i < element.size(); i++) {
+						list =Arrays.asList(element.get(i).split(","));	
+					}
+					if(list.get(0) != "" && ! list.get(0).equals("")){
+						q.setParameterList("ELEMENT", list);
+					}
+				}
+				if(section_relatioin_class != null) {
+					for (int i = 0; i < section_relatioin_class.size(); i++) {
+						list =Arrays.asList(section_relatioin_class.get(i).split(","));	
+					}
+					if(list.get(0) != "" && ! list.get(0).equals("")){
+						q.setParameterList("SECTION_RELATIOIN_CLASS", list);
+					}
+					
+				}
+				
+
+			}
+			if( page > 0 && rows > 0) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public int GetDataTemplatesCount(ResDataTemplate criteria) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) from WA_AUTHORITY_DATA_RESOURCE_Template where 1 = 1 and DELETE_STATUS =:DELETE_STATUS ";
 		if( criteria != null ) {
 			if( criteria != null ) {
 				if(criteria.getName() != null && criteria.getName().length() > 0) {
@@ -1058,6 +1278,30 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return;		
 	}
 	
+	@Override
+	public void UpdateDataResource(List<String> dataIds) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		String sqlString = "REPLACE INTO wa_authority_data_resource SELECT * FROM wa_authority_data_resource_Template WHERE RESOURCE_ID in (:RESOURCE_ID) ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			if(dataIds != null) {
+				q.setParameterList("RESOURCE_ID", dataIds);
+			}
+			q.executeUpdate();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return;		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ResRoleResource> GetAllResRoles() throws Exception {
 		Session session = HibernateUtil.currentSession();
@@ -1211,6 +1455,30 @@ public class ResourceDAOImpl implements ResourceDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("RESOURCE_ID", resId);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataTemplate> GetDataTemplateByResId(String resId) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResDataTemplate> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_Template where RESOURCE_ID = :RESOURCE_ID ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
 			q.setString("RESOURCE_ID", resId);
 			rs = q.list();
 			tx.commit();

@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.hibernate.Hibernate;
+
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.GroupDAO;
@@ -182,7 +184,7 @@ public class GroupManageService {
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
 				str += criteria.getCode();
 			}
-			auditGroupLogDescribe.setDescrib(str);
+//			auditGroupLogDescribe.setDescrib(str);
 			
 			auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
 			auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
@@ -228,7 +230,7 @@ public class GroupManageService {
 					str += rules.get(i).getRulename()+";";
 				}
 				if(rules.get(i).getRulevalue() != null && rules.get(i).getRulevalue().length() > 0) {
-					str += rules.get(i).getRulevalue();
+					str += rules.get(i).getRulevalue()+";";
 				}
 			}
 		}
@@ -239,11 +241,18 @@ public class GroupManageService {
 				str += users.get(i).getNAME()+";";
 			}
 			if(users.get(i).getUNIT() != null && users.get(i).getUNIT().length() > 0) {
-				str += users.get(i).getUNIT();
+				str += users.get(i).getUNIT()+";";
 			}
 		}
-		auditGroupLogDescribe.setDescrib(str);
+	    byte[] byteData = str.getBytes("UTF-8");
+	    
+//	    Blob b=Hibernate.createBlob(byteData);
+//	    ByteArrayInputStream out = (ByteArrayInputStream) b.getBinaryStream();		
+//		byte[] byteData2 = new byte[out.available()];		
+//		out.read(byteData2, 0,byteData2.length);
+//		System.out.println(new String(byteData2,"utf-8"));
 		
+	    auditGroupLogDescribe.setDescrib(Hibernate.createBlob(byteData));
 		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
 		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
 		
@@ -304,7 +313,7 @@ public class GroupManageService {
 				str += users.get(i).getUNIT();
 			}
 		}
-		auditGroupLogDescribe.setDescrib(str);
+//		auditGroupLogDescribe.setDescrib(str);
 		
 		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
 		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
