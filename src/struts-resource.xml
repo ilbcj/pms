@@ -37,6 +37,10 @@
  			<result name="success" type="json" />
  		</action>
  		
+ 		<action name="queryDataTemplateItems" class="com.pms.controller.ResourceAction" method="QueryDataTemplateItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
  		<action name="queryRoleItems" class="com.pms.controller.ResourceAction" method="QueryRoleItems" >
  			<result name="success" type="json" />
  		</action>

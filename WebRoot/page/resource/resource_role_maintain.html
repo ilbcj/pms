@@ -102,7 +102,15 @@
 			                <td><input id="role_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入描述'"></input></td>
 			            </tr>
 					</table>
-
+					<div class="easyui-window" id="dataLoad" style="width:20%;height:12%;"
+						data-options="title:'',draggable:false,inline:true,modal:true,resizable:false,closable:false,collapsible:false,minimizable:false,maximizable:false">
+						<table>	
+							<tr><td align=center>
+					    		<img src="../themes/default/images/loading.gif"/>正在处理，请稍后。。。
+					    	</td></tr>									
+						</table>
+					</div>
+					
 					<table class="nodt" id="role_resource_feature_dg" >
 				    </table>
 				    <div id="featureToolbar" style="background-color:#E7F0FF">
@@ -111,6 +119,7 @@
 				    
 				    <table class="nodt" id="role_resource_data_dg" >
 				    </table>
+				    
 				    <div id="dataToolbar" style="background-color:#E7F0FF">
 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData()">添加</a>
 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleCopyResourceData()">复制资源</a>
@@ -217,23 +226,29 @@
 						                    <td class="detail_query_value"><input id="resource_data_query_resource_remark" class="easyui-textbox"></input></td>	
 						                </tr>
 						                <tr>
-						                     <td class="detail_query_name text_right">字段编码</td>
-						                    <td class="detail_query_value"><input id="resource_data_query_element" class="easyui-textbox query_value_mid"></input></td>
+						                    <td class="detail_query_name text_right">字段分类编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_section_class" class="easyui-textbox query_value_mid"></input></td>	
 						                    <td class="detail_query_name text_right">资源类型</td>
 						                    <td class="detail_query_value"><input id="resource_data_query_resource_type" class="easyui-textbox query_value_mid"></input></td>	
 						                </tr>
-						                <tr>
-						                 <td class="detail_query_name text_right">字段分类关系编码</td>
-						                    <td class="detail_query_value"><input id="resource_data_query_section_relatioin_class" class="easyui-textbox query_value_mid"></input></td>
+						                <tr>	                  
 						                    <td class="detail_query_name text_right">数据集敏感度编码</td>
 						                    <td class="detail_query_value"><input id="resource_data_query_dataset_sensitive_level" class="easyui-textbox query_value_mid"></input></td>	
+						                	<td class="detail_query_name text_right">数据集编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_data_set" disabled="disabled"  class="easyui-textbox query_value_mid"></input></td>
 						                </tr>
 						                <tr>
-						                    <td class="detail_query_name text_right">数据集编码</td>
-						                    <td class="detail_query_value"><input id="resource_data_query_data_set" class="easyui-textbox query_value_mid"></input></td>
-						                    <td class="detail_query_name text_right">字段分类编码</td>
-						                    <td class="detail_query_value"><input id="resource_data_query_section_class" class="easyui-textbox query_value_mid"></input></td>	
+						                    <td class="detail_query_name text_right">字段编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_element" class="easyui-textbox query_value_mid"></input></td>
+						                	<td class="detail_query_name text_right">字段分类关系编码</td>
+						                    <td class="detail_query_value"><input id="resource_data_query_section_relatioin_class" class="easyui-textbox query_value_mid"></input></td>
 						                </tr>
+						                <tr>
+							                <td class="detail_query_name text_right">操作符</td>
+							                <td class="detail_query_value"><input id="resource_data_query_operatesymbol" class="easyui-textbox query_value_mid"></input></td>	
+							                <td class="detail_query_name text_right"> 字段值</td>
+							                <td class="detail_query_value"><input id="resource_data_query_elementvalue" class="easyui-textbox query_value_mid"></input></td>	
+							            </tr>
 	<!-- 					                <tr> -->
 	<!-- 					                    <td class="detail_query_name text_right">目标地市</td> -->
 	<!-- 					                    <td class="detail_query_value"><input id="resource_data_query_clue_dst_sys" class="easyui-textbox"></input></td> -->
@@ -559,19 +574,20 @@
 			}
 		};
 		$("#role_describe").textbox('setValue',rows[0].ROLE_DESC);
-		
 		//load datagrid's data
 		var poststr = "role.BUSINESS_ROLE=" + rows[0].BUSINESS_ROLE;
-		$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
 		
+		$('#dataLoad').window('open').window('center');
+		$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+			$('#dataLoad').window('close').window('center');
 			if(retObj.result == true)
 			{
  				var index;
  				for( index=0; index < retObj.features.length; index++) {
  					insertFeature( retObj.features[index]);
  				}
- 				for( index=0; index < retObj.dataItems.length; index++) {
- 					insertData( retObj.dataItems[index]);
+ 				for( index=0; index < retObj.dataTemplateItems.length; index++) {
+ 					insertData( retObj.dataTemplateItems[index]);
  				}
 		    	
 //  		    	for( index=0; index < retObj。datas.length; index++ ) {
@@ -597,7 +613,7 @@
 	    
     	$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
 			arr.push(retObj);
-			if( retObj.dataItems.length ==0 ){
+			if( retObj.dataTemplateItems.length ==0 ){
 				warningTip("提示", '没有可复制的资源！');
 				return;
 			}
@@ -617,13 +633,13 @@
     }
     
     function rolePasteResourceData(data){
-		if( data.dataItems.length ==0 ){
+		if( data.dataTemplateItems.length ==0 ){
 			warningTip("提示", '请先选择要粘贴的资源！');
 			return;
 		}
 		var index;
-	    for( index=0; index < data.dataItems.length; index++) {
-	    	insertData( data.dataItems[index]);
+	    for( index=0; index < data.dataTemplateItems.length; index++) {
+	    	insertData( data.dataTemplateItems[index]);
 	    }
     }
     
@@ -781,12 +797,12 @@
         
     function roleQueryResourceData(){
     	$("#resource_role_query_resource_data_win_list_dg").datagrid({
-			url:'../resource/queryDataItems.action',
+			url:'../resource/queryDataTemplateItems.action',
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
 					res.total = data.total;
-					res.rows = data.dataItems;
+					res.rows = data.dataTemplateItems;
 				} else {
 					res.total=0;
 					res.rows = [];
@@ -841,7 +857,7 @@ $(document).ready(function () {
 		title:'功能资源',
 		iconCls:'icon-edit',
 		nowrap:true,
-		height:'30%',
+		height:'50%',
 		toolbar:'#featureToolbar',
 		singleSelect:true,
 		pagination:false,
@@ -863,7 +879,7 @@ $(document).ready(function () {
 		title:'数据资源',
 		iconCls:'icon-edit',
 		nowrap:true,
-		height:'30%',
+		height:'50%',
 		toolbar:'#dataToolbar',
 		singleSelect:true,
 		pagination:false,
@@ -1022,7 +1038,16 @@ $(document).ready(function () {
 			textField:'text',
 			multiple:true,
 			editable:false,
-			panelHeight:'auto'
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var datasetSensitive = $("#resource_data_query_dataset_sensitive_level").combobox("getValues");
+		    	if(datasetSensitive == ''){
+		    		$("#resource_data_query_data_set").textbox({value:""});
+					$('#resource_data_query_data_set').textbox({ disabled: true});
+    			}else{
+    				$('#resource_data_query_data_set').textbox({ disabled: false});
+    			}
+    		}
 		});
 		$('#resource_data_query_data_set').combobox({
 			data : data_setJSON,
@@ -1046,7 +1071,16 @@ $(document).ready(function () {
 			textField:'text',
 			multiple:true,
 			editable:false,
-			panelHeight:'auto'
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var element = $("#resource_data_query_element").combobox("getValues");
+		    	if(element != ''){
+		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
+					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
+    			}else{
+    				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
+    			}
+    		}
 		});
 		$('#resource_data_query_section_relatioin_class').combobox({
 			data : section_classJSON,
@@ -1054,7 +1088,56 @@ $(document).ready(function () {
 			textField:'text',
 			multiple:true,
 			editable:false,
-			panelHeight:'auto'
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var secrelacls = $("#resource_data_query_section_relatioin_class").combobox("getValues");
+		    	if(secrelacls != ''){
+		    		$("#resource_data_query_element").textbox({value:""});
+					$('#resource_data_query_element').textbox({ disabled: true});
+					$('#resource_data_query_operatesymbol').textbox({ disabled: true});
+					$('#resource_data_query_elementvalue').textbox({ disabled: true});
+    			}else{
+    				$('#resource_data_query_element').textbox({ disabled: false});
+    				$('#resource_data_query_operatesymbol').textbox({ disabled: false});
+    				$('#resource_data_query_elementvalue').textbox({ disabled: false});
+    			}
+    		}
+		});
+		$('#resource_data_query_operatesymbol').combobox({
+			data : section_classJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var operatesymbol = $("#resource_data_query_operatesymbol").combobox("getValues");
+		    	var elementvalue = $("#resource_data_query_elementvalue").combobox("getValues");
+		    	if(operatesymbol != '' || elementvalue != ''){
+		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
+					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
+    			}else{
+    				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
+   
+    			}
+    		}
+		});
+		$('#resource_data_query_elementvalue').combobox({
+			data : section_classJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var operatesymbol = $("#resource_data_query_operatesymbol").combobox("getValues");
+		    	var elementvalue = $("#resource_data_query_elementvalue").combobox("getValues");
+		    	if(operatesymbol != '' || elementvalue != ''){
+		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
+					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
+    			}else{
+    				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
+   
+    			}
+    		}
 			
 		});
 

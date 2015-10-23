@@ -15,6 +15,7 @@ import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dto.ResDataListItem;
+import com.pms.dto.ResDataTemplateListItem;
 import com.pms.dto.RoleListItem;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
@@ -22,6 +23,7 @@ import com.pms.model.AuditResLog;
 import com.pms.model.AuditResLogDescribe;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
+import com.pms.model.ResDataTemplate;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -127,6 +129,28 @@ public class ResourceManageService {
 		return total;
 	}
 	
+	public int QueryAllDataTemplateItems(List<String> resource_status, List<String> resource_type,
+			List<String> dataset_sensitive_level, List<String> data_set, List<String> section_class, 
+			List<String> lement, List<String> section_relatioin_class, 
+			ResDataTemplate criteria, int page, int rows, List<ResDataTemplateListItem> items) 
+					throws Exception {
+		criteria.setDELETE_STATUS(ResData.DELSTATUSNO);
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResDataTemplate> res = dao.GetDataTemplates( resource_status, resource_type, dataset_sensitive_level,
+				data_set, section_class, lement,section_relatioin_class,
+				criteria, page, rows );
+		ResDataTemplateListItem resDataTemplateListItem = null;
+		for(int i=0; i<res.size(); i++) {
+			resDataTemplateListItem = ConvertDatasDefinitonToResDataTemplateListItem(res.get(i));
+			items.add(resDataTemplateListItem);
+		}
+		int total = QueryAllDataTemplatesCount( criteria );
+		
+//		AddResQueryLog(criteria, null, null);
+		
+		return total;
+	}
+	
 	public ResDataListItem ConvertDatasDefinitonToResDataListItem(ResData attr) throws Exception {
 		ResDataListItem item = new ResDataListItem();
 		item.setId(attr.getId());
@@ -218,13 +242,111 @@ public class ResourceManageService {
 		return item;
 	}	
 	
+	public ResDataTemplateListItem ConvertDatasDefinitonToResDataTemplateListItem(ResDataTemplate attr) throws Exception {
+		ResDataTemplateListItem item = new ResDataTemplateListItem();
+		item.setId(attr.getId());
+		item.setName(attr.getName());
+		item.setRESOURCE_ID(attr.getRESOURCE_ID());
+		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
+		item.setRESOURCE_REMARK(attr.getRESOURCE_REMARK());				
+		item.setDATA_VERSION(attr.getDATA_VERSION());
+		
+		AttributeDAO attrdao = new AttributeDAOImpl();
+		List<AttrDictionary> resStatNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_STATUS, String.valueOf(attr.getRESOURCE_STATUS()), attr.getId());
+		for (int i = 0; i < resStatNode.size(); i++) {
+			item.setRESOURCE_STATUS(resStatNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> delStatNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DELETE_STATUS, String.valueOf(attr.getDELETE_STATUS()), attr.getId());
+		for (int i = 0; i < delStatNode.size(); i++) {
+			item.setDELETE_STATUS(delStatNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> resTypeNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_TYPE, String.valueOf(attr.getResource_type()), attr.getId());
+		for (int i = 0; i < resTypeNode.size(); i++) {
+			item.setResource_type(resTypeNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> dslNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL, attr.getDATASET_SENSITIVE_LEVEL(), attr.getId());
+		for (int i = 0; i < dslNode.size(); i++) {
+			item.setDATASET_SENSITIVE_LEVEL(dslNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> datasetNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DATA_SET, attr.getDATA_SET(), attr.getId());
+		for (int i = 0; i < datasetNode.size(); i++) {
+			item.setDATA_SET(datasetNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> sectionclassNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_CLASS, attr.getSECTION_CLASS(), attr.getId());
+		for (int i = 0; i < sectionclassNode.size(); i++) {
+			item.setSECTION_CLASS(sectionclassNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> lementNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_LEMENT, attr.getELEMENT(), attr.getId());
+		for (int i = 0; i < lementNode.size(); i++) {
+			item.setELEMENT(lementNode.get(i).getValue());
+		}
+		
+		List<AttrDictionary> secrelaclsNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_RELATION_CLASS, attr.getSECTION_RELATIOIN_CLASS(), attr.getId());
+		for (int i = 0; i < secrelaclsNode.size(); i++) {
+			item.setSECTION_RELATIOIN_CLASS(secrelaclsNode.get(i).getValue());
+		}
+		
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResDataOrg> nodes = dao.GetResDataOrgByResId(attr.getRESOURCE_ID());
+		
+		OrgManageService oms = new OrgManageService();
+		String path = null;
+		for (int i = 0; i < nodes.size(); i++) {
+			
+			path = oms.QueryNodePath(nodes.get(i).getCLUE_DST_SYS());
+			item.setPid(nodes.get(i).getCLUE_DST_SYS());
+			item.setDest_data_version(nodes.get(i).getDATA_VERSION());
+		}
+		if(path != null && path.length() > 0){
+			int index = path.lastIndexOf('/');
+			String pname = "";
+			if( -1 == index ) {
+				pname = path;
+			}
+			else {
+				pname = path.substring(path.lastIndexOf('/')+1, path.length());
+			}
+			item.setPname(pname);
+		}
+		
+		List<AttrDictionary> attrDicts = attrdao.GetDatasDictionarys(attr.getRESOURCE_ID());
+		List<AttrDictionary> data = new ArrayList<AttrDictionary>();
+		for(int i = 0; i < attrDicts.size(); i++) {
+			AttrDictionary attrDictionary=new AttrDictionary();
+
+			attrDictionary.setId(attrDicts.get(i).getId());
+			attrDictionary.setAttrid(attrDicts.get(i).getAttrid());
+			attrDictionary.setValue(attrDicts.get(i).getValue());
+			attrDictionary.setCode(attrDicts.get(i).getCode());
+			attrDictionary.setTstamp(attrDicts.get(i).getTstamp());
+			data.add(attrDictionary);
+		}
+		
+		item.setDictionary(data);
+
+		return item;
+	}	
+	
 	private int QueryAllDatasCount(ResData criteria) throws Exception {
 		criteria.setDELETE_STATUS(ResData.DELSTATUSNO);
 		ResourceDAO dao = new ResourceDAOImpl();
 		int count = dao.GetDatasCount( criteria );
 		return count;
 	}
-
+	
+	private int QueryAllDataTemplatesCount(ResDataTemplate criteria) throws Exception {
+		criteria.setDELETE_STATUS(ResData.DELSTATUSNO);
+		ResourceDAO dao = new ResourceDAOImpl();
+		int count = dao.GetDataTemplatesCount( criteria );
+		return count;
+	}
+	
 	public ResData SaveResourceData(ResData data, ResDataOrg resDataOrg) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
@@ -418,6 +540,7 @@ public class ResourceManageService {
 		
 		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds);
 		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds);
+		dao.UpdateDataResource(dataIds);
 		
 		return role;
 	}
@@ -490,7 +613,7 @@ public class ResourceManageService {
 	}
 	
 	public void QueryRoleResource(String id, List<ResFeature> features,
-			List<ResDataListItem> items) throws Exception {
+			List<ResDataTemplateListItem> items) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(id);
 		
@@ -500,12 +623,12 @@ public class ResourceManageService {
 				features.add(feature);
 			}
 			else if( rrs.get(i).getRestype() == ResRoleResource.RESTYPEDATA ) {
-				List<ResData> data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
-				ResDataListItem resDataListItem = null;
-				for(int j=0; j<data.size(); j++) {
-					resDataListItem = ConvertDatasDefinitonToResDataListItem( data.get(j) );
+				List<ResDataTemplate> dataTemplate = dao.GetDataTemplateByResId( rrs.get(i).getRESOURCE_ID() );
+				ResDataTemplateListItem resDataTemplateListItem = null;
+				for(int j=0; j<dataTemplate.size(); j++) {
+					resDataTemplateListItem = ConvertDatasDefinitonToResDataTemplateListItem( dataTemplate.get(j) );
 				}
-				items.add(resDataListItem);
+				items.add(resDataTemplateListItem);
 				
 			}
 		}

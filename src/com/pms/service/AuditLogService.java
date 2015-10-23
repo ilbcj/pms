@@ -1,5 +1,7 @@
 package com.pms.service;
 
+import java.io.ByteArrayInputStream;
+import java.sql.Blob;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionContext;
@@ -131,7 +133,15 @@ public class AuditLogService {
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditGroupLogDescribe> logdesc = dao.GetGroupLogDescByLogId(auditGroupLog.getId());
 		for (int i = 0; i < logdesc.size(); i++) {
-			item.setDesc(logdesc.get(i).getDescrib());
+			Blob noteBlob = logdesc.get(i).getDescrib();		
+			String note = null;			
+			if(noteBlob != null){		
+				ByteArrayInputStream in = (ByteArrayInputStream) noteBlob.getBinaryStream();		
+				byte[] byteData = new byte[in.available()];		
+				in.read(byteData, 0,byteData.length);	
+				note = new String(byteData,"utf-8");			
+			}
+			item.setDesc(note);
 		}
 		
 		return item;

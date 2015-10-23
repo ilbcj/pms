@@ -15,9 +15,11 @@ import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
+import com.pms.dto.ResDataTemplateListItem;
 import com.pms.dto.RoleListItem;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
+import com.pms.model.ResDataTemplate;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
@@ -51,6 +53,7 @@ public class ResourceAction extends ActionSupport {
 	private List<String> addFeatureIds;
 	private List<String> addDataIds;
 	private List<ResDataListItem> dataItems;
+	private List<ResDataTemplateListItem> dataTemplateItems;
 	private List<RoleListItem> roleItems;
 	
 	private String resource_id;
@@ -77,6 +80,14 @@ public class ResourceAction extends ActionSupport {
 
 	public void setDataItems(List<ResDataListItem> dataItems) {
 		this.dataItems = dataItems;
+	}
+
+	public List<ResDataTemplateListItem> getDataTemplateItems() {
+		return dataTemplateItems;
+	}
+
+	public void setDataTemplateItems(List<ResDataTemplateListItem> dataTemplateItems) {
+		this.dataTemplateItems = dataTemplateItems;
 	}
 
 	public List<RoleListItem> getRoleItems() {
@@ -437,6 +448,28 @@ public class ResourceAction extends ActionSupport {
 		setResult(true);
 		return SUCCESS;
 	}
+	
+	public String QueryDataTemplateItems()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		dataTemplateItems = new ArrayList<ResDataTemplateListItem>();
+		try {
+			ResDataTemplate criteria = new ResDataTemplate();
+			criteria.setName(resName);
+			criteria.setRESOURCE_ID(resCode);
+			criteria.setRESOURCE_DESCRIBE(resource_describe);
+			criteria.setRESOURCE_REMARK(resource_remark);
+			total = rms.QueryAllDataTemplateItems(resource_status, resource_type, dataset_sensitive_level,
+					data_set, section_class, element,section_relatioin_class, 
+					criteria, page, rows, dataTemplateItems );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
 
 	public String SaveResourceData() throws IOException
 	{
@@ -534,9 +567,9 @@ public class ResourceAction extends ActionSupport {
 		ResourceManageService rms = new ResourceManageService();
 		features = new ArrayList<ResFeature>();
 //		datas = new ArrayList<ResData>();
-		dataItems = new ArrayList<ResDataListItem>();
+		dataTemplateItems = new ArrayList<ResDataTemplateListItem>();
 		try {
-			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, dataItems );
+			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, dataTemplateItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

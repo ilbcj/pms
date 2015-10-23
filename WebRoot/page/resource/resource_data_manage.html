@@ -107,7 +107,7 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 数据集编码</td>
-				                <td><input id="res_dataset" name="data.DATA_SET" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集编码'"></input></td>
+				                <td><input id="res_dataset" name="data.DATA_SET" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集编码',disabled: true"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 字段分类编码</td>
@@ -120,6 +120,14 @@
 				            <tr>
 				                <td class="form_name_small text_right"> 字段分类关系编码</td>
 				                <td><input id="res_secrelacls" name="data.SECTION_RELATIOIN_CLASS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类关系编码'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 操作符</td>
+				                <td><input id="res_operatesymbol" name="data.OPERATE_SYMBOL" class="form_value_mid easyui-textbox" data-options="prompt:'请输入操作符'"></input></td>
+				            </tr>
+				            <tr>
+				                <td class="form_name_small text_right"> 字段值</td>
+				                <td><input id="res_elementvalue" name="data.ELEMENT_VALUE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段值'"></input></td>
 				            </tr>
 				        </table>
 				    </form>
@@ -530,7 +538,16 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto'
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var datasetSensitive = $("#res_dsl").combobox("getValues");
+		    	if(datasetSensitive == ''){
+		    		$("#res_dataset").textbox({value:""});
+					$('#res_dataset').textbox({ disabled: true});
+    			}else{
+    				$('#res_dataset').textbox({ disabled: false});
+    			}
+    		}
 		});
 		$('#res_dataset').combobox({
 			data : data_setJSON,
@@ -551,14 +568,72 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto'
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var element = $("#res_element").combobox("getValue");
+		    	if(element != ''){
+		    		$("#res_secrelacls").textbox({value:""});
+					$('#res_secrelacls').textbox({ disabled: true});
+    			}else{
+    				$('#res_secrelacls').textbox({ disabled: false});
+    			}
+    		}
 		});
 		$('#res_secrelacls').combobox({
 			data : section_classJSON,
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto'
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var secrelacls = $("#res_secrelacls").combobox("getValue");
+		    	if(secrelacls != ''){
+		    		$("#res_element").textbox({value:""});
+					$('#res_element').textbox({ disabled: true});
+					$('#res_operatesymbol').textbox({ disabled: true});
+					$('#res_elementvalue').textbox({ disabled: true});
+    			}else{
+    				$('#res_element').textbox({ disabled: false});
+    				$('#res_operatesymbol').textbox({ disabled: false});
+    				$('#res_elementvalue').textbox({ disabled: false});
+    			}
+    		}
+		});
+		$('#res_operatesymbol').combobox({
+			data : section_classJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var operatesymbol = $("#res_operatesymbol").combobox("getValues");
+		    	var elementvalue = $("#res_elementvalue").combobox("getValues");
+		    	if(operatesymbol != '' || elementvalue != ''){
+		    		$("#res_secrelacls").textbox({value:""});
+					$('#res_secrelacls').textbox({ disabled: true});
+    			}else{
+    				$('#res_secrelacls').textbox({ disabled: false});
+   
+    			}
+    		}
+		});
+		$('#res_elementvalue').combobox({
+			data : section_classJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false,
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var operatesymbol = $("#res_operatesymbol").combobox("getValues");
+		    	var elementvalue = $("#res_elementvalue").combobox("getValues");
+		    	if(operatesymbol != '' || elementvalue != ''){
+		    		$("#res_secrelacls").textbox({value:""});
+					$('#res_secrelacls').textbox({ disabled: true});
+    			}else{
+    				$('#res_secrelacls').textbox({ disabled: false});
+   
+    			}
+    		}
 			
 		});
 		
