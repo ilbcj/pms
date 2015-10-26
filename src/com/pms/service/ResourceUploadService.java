@@ -112,7 +112,7 @@ public class ResourceUploadService {
 	
 	private final String SHEET_COLUMN_RELATION_COL_ID = "关系唯一标识";
 	private final String SHEET_COLUMN_RELATION_COL_DATA_SET = "数据集编码";
-	private final String SHEET_COLUMN_RELATION_COL_COLUMN_CLASS_ID = "字段分类编码";
+	private final String SHEET_COLUMN_RELATION_COL_SECTION_CLASS = "字段分类编码";
 	private final String SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS = "所属节点编码";
 	private final String SHEET_COLUMN_RELATION_COL_ELEMENT = "字段";
 
@@ -644,8 +644,8 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_RELATION_COL_ID, c);
             		} else if ( SHEET_COLUMN_RELATION_COL_DATA_SET.equals(cellValue) ) {
             			idx.put(SHEET_COLUMN_RELATION_COL_DATA_SET, c);
-            		} else if ( SHEET_COLUMN_RELATION_COL_COLUMN_CLASS_ID.equals(cellValue) ) {
-            			idx.put(SHEET_COLUMN_RELATION_COL_COLUMN_CLASS_ID, c);
+            		} else if ( SHEET_COLUMN_RELATION_COL_SECTION_CLASS.equals(cellValue) ) {
+            			idx.put(SHEET_COLUMN_RELATION_COL_SECTION_CLASS, c);
             		} else if ( SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS, c);
             		} else if ( SHEET_COLUMN_RELATION_COL_ELEMENT.equals(cellValue) ) {
@@ -659,8 +659,8 @@ public class ResourceUploadService {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_COLUMN_RELATION_COL_DATA_SET) ) {
             			rc.setDATA_SET(cellValue);
-            		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_COLUMN_CLASS_ID) ) {
-            			rc.setSECTION_RELATIOIN_CLASS(cellValue);
+            		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_SECTION_CLASS) ) {
+            			rc.setSECTION_CLASS(cellValue);
             		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_CLUE_SRC_SYS) ) {
             			rc.setCLUE_SRC_SYS(cellValue);
             		} else if ( c== idx.get(SHEET_COLUMN_RELATION_COL_ELEMENT) ) {
@@ -1044,7 +1044,7 @@ public class ResourceUploadService {
 		rd.setRESOURCE_DESCRIBE("数据集-字段分类-字段数据资源");
 		rd.setDATA_SET(rrc.getDATA_SET());
 		rd.setELEMENT(rrc.getELEMENT());
-		rd.setSECTION_CLASS(rrc.getSECTION_RELATIOIN_CLASS());
+		rd.setSECTION_CLASS(rrc.getSECTION_CLASS());
 		
 		rddao.ResDataOfRelationColumnSave(rd, rrc.getCLUE_SRC_SYS());
 	}
