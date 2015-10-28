@@ -21,7 +21,7 @@ public class WSExecuteController {
 			
 //			DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 //			DocumentBuilder db = factory.newDocumentBuilder();
-//			InputStream inXml = new ByteArrayInputStream(localXml.getBytes("UTF-8")); 
+//			InputStream inXml = new ByteArrayInputStream(localXml.getBytes("UTF-8"));
 //			Document xmlDoc = db.parse(inXml);
 
 			if( "MESSAGE".equals(root.getName()) ) {

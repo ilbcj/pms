@@ -20,6 +20,9 @@ import com.pms.webservice.model.DataCommonInfo;
 import com.pms.webservice.model.SearchCondition;
 import com.pms.webservice.model.SubSearchCondition;
 import com.pms.webservice.model.UserAuth;
+import com.pms.webservice.model.acquiredata.AcquiredataCondition;
+import com.pms.webservice.model.acquiredata.Feedback;
+import com.pms.webservice.model.acquiredata.FeedbackCondition;
 import com.pms.webservice.model.auth.AuthCondition;
 import com.pms.webservice.model.auth.Common010032;
 import com.pms.webservice.model.exchange.Common010131;
@@ -33,7 +36,25 @@ public abstract class SyncService {
 	private SubSearchCondition ssc;
 	private AuthCondition ac;
 	private ExchangeCondition ec;
+	private AcquiredataCondition adc;
+	private FeedbackCondition fc;
 	
+	public FeedbackCondition getFc() {
+		return fc;
+	}
+
+	public void setFc(FeedbackCondition fc) {
+		this.fc = fc;
+	}
+
+	public AcquiredataCondition getAdc() {
+		return adc;
+	}
+
+	public void setAdc(AcquiredataCondition adc) {
+		this.adc = adc;
+	}
+
 	public ExchangeCondition getEc() {
 		return ec;
 	}
@@ -90,6 +111,8 @@ public abstract class SyncService {
 		SubSearchCondition ssc = null;
 		AuthCondition ac = null;
 		ExchangeCondition ec = null;
+		AcquiredataCondition adc = null;
+		FeedbackCondition fc = null;
 		
 		List<Element> datasetList = root.getChildren();//getElementsByTagName("DATASET");
 		for(int i=0;i<datasetList.size();i++) {
@@ -98,11 +121,15 @@ public abstract class SyncService {
 				String name = element.getAttributeValue("name"); //获得name属性
 				if("WA_COMMON_010117".equals(name) ) {
 					result = new SyncSearchService();
-				} else if ("WA_COMMON_010031".equals(name) ) {
+				} else if ("WA_COMMON_010031".equalsIgnoreCase(name) ) {
 					result = new SyncAuthenticateService();
-				} else if ("WA_COMMON_010130".equals(name) ) {
+				} else if ("WA_COMMON_010130".equalsIgnoreCase(name) ) {
 					result = new SyncDataexchangeService();
-				}
+				} else if ("WA_COMMON_010220".equalsIgnoreCase(name)) {
+					result = new SyncAcquireDataService();
+				} else if ("WA_COMMON_010046".equalsIgnoreCase(name)) {
+					result = new SyncFeedbackService();
+				}				
 			}
 		}
 		
@@ -111,29 +138,113 @@ public abstract class SyncService {
 				Element element = datasetList.get(i); //得到"page"的第i+1组标签
 				if("DATASET".equals(element.getName())) {
 					String name = element.getAttributeValue("name");  //获得ID属性
-					if("WA_COMMON_010000".equals(name) ) {
+					if("WA_COMMON_010000".equalsIgnoreCase(name) ) {
 						dci = parseDataCommonInfo( element );
 						result.setDci(dci);
-					} else if ("WA_COMMON_010001".equals(name) ) {
+					} else if ("WA_COMMON_010001".equalsIgnoreCase(name) ) {
 						ua = parseUserAuth( element );
 						result.setUa(ua);
-					} else if("WA_COMMON_010117".equals(name) ) {
+					} else if("WA_COMMON_010117".equalsIgnoreCase(name) ) {
 						sc = parseSearchCondition( element );
 						result.setSc(sc);
-					} else if("WA_COMMON_010121".equals(name) ) {
+					} else if("WA_COMMON_010121".equalsIgnoreCase(name) ) {
 						ssc = parseSubSearchCondition( element );
 						result.setSsc(ssc);
-					} else if("WA_COMMON_010031".equals(name) ) {
+					} else if("WA_COMMON_010031".equalsIgnoreCase(name) ) {
 						ac = parseAuthCondition( element );
 						result.setAc(ac);
-					} else if("WA_COMMON_010130".equals(name) ) {
+					} else if("WA_COMMON_010130".equalsIgnoreCase(name) ) {
 						ec = parseExchangeCondition( element );
 						result.setEc(ec);
-					}
+					} else if ("WA_COMMON_010220".equalsIgnoreCase(name)) {
+						adc = parseAcquriedataCondition( element );
+						result.setAdc(adc);
+					} else if ("WA_COMMON_010046".equalsIgnoreCase(name)) {
+						fc = parseFeedbackCondition( element );
+						result.setFc(fc);
+					}	
 				}
 			}
 		}
 		
+		return result;
+	}
+	
+	private static FeedbackCondition parseFeedbackCondition( Element root ) throws Exception {
+		FeedbackCondition result = new FeedbackCondition();
+		List<Feedback> fbs = new ArrayList<Feedback>();
+		
+		List<Element> elementList = root.getChildren();
+		if(elementList == null) {
+			return result;
+		}
+		
+		for(int i = 0; i < elementList.size(); i++) {
+			Element element = elementList.get(i);
+			if( "DATA".equals(element.getName()) ) {
+				List<Element> itemList = element.getChildren();
+				Feedback fb = new Feedback();
+				for( int j = 0; j < itemList.size(); j++ ) {
+					Element current = itemList.get(j);
+					Item item = new Item();
+					item.setKey( current.getAttributeValue("key") );
+					item.setEng( convertKeyToEngName( current.getAttributeValue("key") ) );
+					item.setVal( current.getAttributeValue("val") );
+					if(item.getEng() == null || item.getEng().length() == 0) {
+						String loginfo = "unsupport item key:" + item.getKey();
+						logger.error(loginfo);
+						throw new Exception(loginfo);
+					}
+					if( "H010019".equalsIgnoreCase( item.getKey() ) || "H010020".equalsIgnoreCase( item.getKey() ) ) {
+						fb.setFile(item);
+					}
+					else if( "I030003".equalsIgnoreCase( item.getKey() )) {
+						fb.setStatus(item);
+					}
+					else {
+						String loginfo = "unknow key in feedback request's item:" + item.getKey();
+						logger.error(loginfo);
+						throw new Exception(loginfo);
+						
+					}
+				}
+				fbs.add(fb);				
+			}
+		}
+		result.setResults(fbs);
+		return result;
+	}
+	
+	private static AcquiredataCondition parseAcquriedataCondition( Element root) throws Exception {
+		AcquiredataCondition result = new AcquiredataCondition();
+		List<Item> all = new ArrayList<Item>();
+		List<Item> add = new ArrayList<Item>();
+		
+		List<Element> elementList = root.getChildren();
+		if(elementList == null) {
+			return result;
+		}
+		for(int i = 0; i < elementList.size(); i++) {
+			Element element = elementList.get(i);
+			if( "DATA".equals(element.getName()) ) {
+				Element current = element.getChildren().get(0);
+				Item item = new Item();
+				item.setKey( current.getAttributeValue("key") );
+				item.setEng( convertKeyToEngName( current.getAttributeValue("key") ) );
+				item.setVal( current.getAttributeValue("val") );
+				if(item.getEng() == null || item.getEng().length() == 0) {
+					throw new Exception("unsupport item key:" + item.getKey());
+				}
+				if( "H010019".equalsIgnoreCase( item.getKey() )) {
+					all.add(item);
+				}
+				else if( "H010020".equalsIgnoreCase( item.getKey() )) {
+					add.add(item);
+				}
+			}
+		}
+		result.setAddDataItems(add);
+		result.setAllDataItems(all);
 		return result;
 	}
 	
@@ -679,6 +790,7 @@ public abstract class SyncService {
 		keyColumnMap.put("I010025", "BUSINESS_ROLE_TYPE");
 		keyColumnMap.put("I010026", "BUSINESS_ROLE");
 		keyColumnMap.put("I010054", "BUSINESS_ROLE_NAME");
+		keyColumnMap.put("I030003", "BUSINESS_STATUS");
 		
 		keyColumnMap.put("H010005", "SEARCH_ID");
 		keyColumnMap.put("H010034", "SENSITIVE_LEVEL");
