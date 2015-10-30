@@ -6,7 +6,7 @@ public class ResRelationColumn {
 	
 	private int id;
 	private String DATA_SET;
-	private String SECTION_RELATIOIN_CLASS;
+	private String SECTION_CLASS;
 	private String CLUE_SRC_SYS;
 	private String ELEMENT;
 	private int DELETE_STATUS;
@@ -37,11 +37,11 @@ public class ResRelationColumn {
 	public void setCLUE_SRC_SYS(String cLUE_SRC_SYS) {
 		CLUE_SRC_SYS = cLUE_SRC_SYS;
 	}
-	public String getSECTION_RELATIOIN_CLASS() {
-		return SECTION_RELATIOIN_CLASS;
+	public String getSECTION_CLASS() {
+		return SECTION_CLASS;
 	}
-	public void setSECTION_RELATIOIN_CLASS(String sECTION_RELATIOIN_CLASS) {
-		SECTION_RELATIOIN_CLASS = sECTION_RELATIOIN_CLASS;
+	public void setSECTION_CLASS(String sECTION_CLASS) {
+		SECTION_CLASS = sECTION_CLASS;
 	}
 	public int getDELETE_STATUS() {
 		return DELETE_STATUS;
@@ -64,7 +64,7 @@ public class ResRelationColumn {
 	
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
-				&& (SECTION_RELATIOIN_CLASS == null || SECTION_RELATIOIN_CLASS.isEmpty()) 
+				&& (SECTION_CLASS == null || SECTION_CLASS.isEmpty()) 
 				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
 				&& (ELEMENT == null || ELEMENT.isEmpty()) ) {
 			return false;
