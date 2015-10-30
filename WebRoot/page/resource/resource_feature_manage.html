@@ -40,9 +40,9 @@
 					        <thead>
 					            <tr>
 					            	<th field="ck" checkbox="true"></th>
-					                <th data-options="field:'name'" style="width:33%;">名称</th>
-					                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
-					                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
+					                <th data-options="field:'RESOUCE_NAME'" style="width:33%;">名称</th>
+					                <th data-options="field:'RESOURCE_ID'" style="width:33%;">编码</th>
+					                <th data-options="field:'RESOURCE_DESCRIBE'" style="width:33%;">描述</th>
 					            </tr>
 					        </thead>
 					    </table>
@@ -68,43 +68,43 @@
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 名称</td>
-				                <td><input id="res_name" name="feature.name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源名称'"></input></td>
+				                <td><input id="res_name" name="feature.RESOUCE_NAME" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源名称'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 资源唯一标识</td>
-				                <td><input id="res_resid" name="feature.resource_id" class="form_value_mid easyui-textbox" data-options="editable:false,prompt:'此项由后台生成'"></input></td>
+				                <td><input id="res_resid" name="feature.RESOURCE_ID" class="form_value_mid easyui-textbox" data-options="editable:false,prompt:'此项由后台生成'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 资源状态</td>
-				                <td><input id="res_status" name="feature.resource_status" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
+				                <td><input id="res_status" name="feature.RESOURCE_STATUS" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 资源描述</td>
-				                <td><input id="res_desc" name="feature.resource_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源描述'"></input></td>
+				                <td><input id="res_desc" name="feature.RESOURCE_DESCRIBE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入资源描述'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 备注</td>
-				                <td><input id="res_memo" name="feature.resource_remark" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
+				                <td><input id="res_memo" name="feature.RMK" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 删除状态</td>
-				                <td><input id="res_delstatus" name="feature.delete_status" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
+				                <td><input id="res_delstatus" name="feature.DELETE_STATUS" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 所属业务系统</td>
-				                <td><input id="res_appid" name="feature.app_id" class="form_value_mid easyui-textbox" data-options="prompt:'请输入所属业务系统'"></input></td>
+				                <td><input id="res_appid" name="feature.APP_ID" class="form_value_mid easyui-textbox" data-options="prompt:'请输入所属业务系统'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 父资源唯一标识</td>
-				                <td><input id="res_pid" name="feature.parent_resource" class="form_value_mid easyui-textbox" data-options="prompt:'请输入父资源唯一标识'"></input></td>
+				                <td><input id="res_pid" name="feature.PARENT_RESOURCE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入父资源唯一标识'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 顺序</td>
-				                <td><input id="res_order" name="feature.resource_order" class="form_value_mid easyui-textbox" data-options="prompt:'请输入顺序'"></input></td>
+				                <td><input id="res_order" name="feature.RESOURCE_ORDER" class="form_value_mid easyui-textbox" data-options="prompt:'请输入顺序'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 系统类型</td>
-				                <td><input id="res_type" name="feature.system_type" class="form_value_mid easyui-textbox" data-options="prompt:'请输入系统类型'"></input></td>
+				                <td><input id="res_type" name="feature.SYSTEM_TYPE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入系统类型'"></input></td>
 				            </tr>
 				        </table>
 				    </form>
@@ -178,16 +178,16 @@
 		}
 		
 		$("#res_id").val(rows[0].id);
-		$("#res_name").textbox('setValue',rows[0].name);
-		$("#res_resid").textbox('setValue',rows[0].resource_id);
-		$("#res_status").textbox('setValue',rows[0].resource_status);
-		$("#res_desc").textbox('setValue',rows[0].resource_describe);
-		$("#res_memo").textbox('setValue',rows[0].resource_remark);
-		$("#res_delstatus").textbox('setValue',rows[0].delete_status);
-		$("#res_appid").textbox('setValue',rows[0].app_id);
-		$("#res_pid").textbox('setValue',rows[0].parent_resource);
-		$("#res_order").textbox('setValue',rows[0].resource_order);
-		$("#res_type").textbox('setValue',rows[0].system_type);
+		$("#res_name").textbox('setValue',rows[0].RESOUCE_NAME);
+		$("#res_resid").textbox('setValue',rows[0].RESOURCE_ID);
+		$("#res_status").textbox('setValue',rows[0].RESOURCE_STATUS);
+		$("#res_desc").textbox('setValue',rows[0].RESOURCE_DESCRIBE);
+		$("#res_memo").textbox('setValue',rows[0].RMK);
+		$("#res_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
+		$("#res_appid").textbox('setValue',rows[0].APP_ID);
+		$("#res_pid").textbox('setValue',rows[0].PARENT_RESOURCE);
+		$("#res_order").textbox('setValue',rows[0].RESOURCE_ORDER);
+		$("#res_type").textbox('setValue',rows[0].SYSTEM_TYPE);
 		
 		$("#resource_feature_manage_center_main_wapper").panel('close');
    		$("#resource_feature_manage_center_detail_wapper").panel('open');

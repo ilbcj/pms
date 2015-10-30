@@ -152,16 +152,6 @@ public class PrivilegeManageService {
 		String str="";
 		if (ownertype==Privilege.OWNERTYPEUSER) {
 			UserDAO userDao = new UserDAOImpl();
-//			List<User> userNodes = userDao.GetUserByCertificateCodeMd5(ownerid);
-//			for (int i = 0; i < userNodes.size(); i++) {
-//				if(userNodes.get(i).getNAME() != null && userNodes.get(i).getNAME().length() > 0) {
-//					str += userNodes.get(i).getNAME()+";";
-//				}
-//				if(userNodes.get(i).getUNIT() != null && userNodes.get(i).getUNIT().length() > 0) {
-//					str += userNodes.get(i).getUNIT()+";";
-//				}
-//				
-//			}
 			User userNode = userDao.GetUserByCertificateCodeMd5(ownerid);
 			if(userNode.getNAME() != null && userNode.getNAME().length() > 0) {
 				str += userNode.getNAME()+";";
@@ -212,7 +202,7 @@ public class PrivilegeManageService {
 		auditPrivLogDescribe.setDescrib(str);
 		
 		auditPrivLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditPrivLogDescribe = logDescdao.AuditPrivLogDescribeAdd(auditPrivLogDescribe);
+//		auditPrivLogDescribe = logDescdao.AuditPrivLogDescribeAdd(auditPrivLogDescribe);
 		
 		return ;
 	}

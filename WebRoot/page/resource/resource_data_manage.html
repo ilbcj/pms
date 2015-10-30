@@ -58,6 +58,20 @@
 
 			</div><!-- resource_data_manage_center_main_wapper -->			
 			
+			<div id="permissionControl_resource_data_manage_center_detail_wapper" 
+					style="width:320px;height:150px;" data-options="title:'提示',draggable:false,inline:true,modal:true,resizable:false,closable:false,collapsible:false,minimizable:false,maximizable:false">
+				<table>	
+					<tr><td>
+			    		请选择权限控制类型：
+			    	</td></tr>
+			    	<tr><td align=center>
+			    		<a href="javascript:void(0)" class="easyui-linkbutton" onclick="permissionControl('row_relation')">字段权限控制</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="permissionControl('classify_relation')">字段分类关系权限控制</a>
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="permissionControl('column_relation')">行权限控制</a>
+			    	</td></tr>									
+				</table>
+			</div>
+			
 			<div id="resource_data_manage_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
 				<div id="resource_data_manage_center_detail" class="easyui-panel" 
 								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_data_manage_center_detail_ft'" >
@@ -85,7 +99,7 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 备注</td>
-				                <td><input id="res_memo" name="data.RESOURCE_REMARK" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
+				                <td><input id="res_memo" name="data.RMK" class="form_value_mid easyui-textbox" data-options="prompt:'请输入备注'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 删除状态</td>
@@ -102,30 +116,30 @@
 								</td>
 				            </tr>
 				            <tr>
-				                <td class="form_name_small text_right"> 数据集敏感度编码</td>
-				                <td><input id="res_dsl" name="data.DATASET_SENSITIVE_LEVEL" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集敏感度编码'"></input></td>
+				                <td class="form_name_small text_right"> 数据集编码</td>
+				                <td><input id="res_dataset" name="data.DATA_SET" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集编码'"></input></td>
 				            </tr>
 				            <tr>
-				                <td class="form_name_small text_right"> 数据集编码</td>
-				                <td><input id="res_dataset" name="data.DATA_SET" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集编码',disabled: true"></input></td>
+				                <td class="form_name_small text_right"> 数据集敏感度编码</td>
+				                <td><input id="res_dsl" name="data.DATASET_SENSITIVE_LEVEL" class="form_value_mid easyui-textbox" data-options="prompt:'请输入数据集敏感度编码',disabled: true"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 字段分类编码</td>
 				                <td><input id="res_sectionclass" name="data.SECTION_CLASS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类编码'"></input></td>
 				            </tr>
-				            <tr>
+				            <tr id="permissionControl_element">
 				                <td class="form_name_small text_right"> 字段编码</td>
 				                <td><input id="res_element" name="data.ELEMENT" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段编码'"></input></td>
 				            </tr>
-				            <tr>
+				            <tr id="permissionControl_secrelacls">
 				                <td class="form_name_small text_right"> 字段分类关系编码</td>
 				                <td><input id="res_secrelacls" name="data.SECTION_RELATIOIN_CLASS" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段分类关系编码'"></input></td>
 				            </tr>
-				            <tr>
+				            <tr id="permissionControl_operatesymbol">
 				                <td class="form_name_small text_right"> 操作符</td>
 				                <td><input id="res_operatesymbol" name="data.OPERATE_SYMBOL" class="form_value_mid easyui-textbox" data-options="prompt:'请输入操作符'"></input></td>
 				            </tr>
-				            <tr>
+				            <tr id="permissionControl_elementvalue">
 				                <td class="form_name_small text_right"> 字段值</td>
 				                <td><input id="res_elementvalue" name="data.ELEMENT_VALUE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入字段值'"></input></td>
 				            </tr>
@@ -220,8 +234,8 @@
     }
        
     function addResourceData() {
+    	$('#permissionControl_resource_data_manage_center_detail_wapper').window({});
     	$("#resource_data_manage_center_main_wapper").panel('close');
-    	$("#resource_data_manage_center_detail_wapper").panel('open');
     }
     
     function addDataSave(){
@@ -249,13 +263,19 @@
      	$("#res_delstatus").textbox('setValue',"");
      	$("#res_type").textbox('setValue',"");
      	$("#res_type").textbox({ disabled: false});
-		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: false});
-//      	$("#resOrg_dest").textbox('setValue',"");
+		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
+     	$("#resOrg_dest").textbox('setValue',"");
      	$("#res_dsl").textbox('setValue',"");
+     	$("#res_dsl").textbox({ disabled: true});
      	$("#res_dataset").textbox('setValue',"");
      	$("#res_sectionclass").textbox('setValue',"");
      	$("#res_element").textbox('setValue',"");
      	$("#res_secrelacls").textbox('setValue',"");
+     	
+		$("#permissionControl_element").show();
+		$("#permissionControl_secrelacls").show();
+		$("#permissionControl_operatesymbol").show();
+		$("#permissionControl_elementvalue").show();
     }
     
     function modResourceData(){
@@ -281,7 +301,7 @@
 		};
 		$("#res_status").textbox('setText',rows[0].RESOURCE_STATUS);
 		$("#res_desc").textbox('setValue',rows[0].RESOURCE_DESCRIBE);
-		$("#res_memo").textbox('setValue',rows[0].RESOURCE_REMARK);
+		$("#res_memo").textbox('setValue',rows[0].RMK);
 		for(var i=0;i<rows[0].dictionary.length;i++){
 			if(rows[0].dictionary[i].attrid == 8 && rows[0].dictionary[i].value == rows[0].DELETE_STATUS){//删除状态attrid==8
 				$("#res_delstatus").textbox('setValue',rows[0].dictionary[i].code);	
@@ -305,33 +325,69 @@
 			}
 		};
 		$("#res_dsl").textbox('setText',rows[0].DATASET_SENSITIVE_LEVEL);
-		for(var i=0;i<rows[0].dictionary[i].length;i++){
+		for(var i=0;i<rows[0].dictionary.length;i++){
 			if(rows[0].dictionary[i].attrid == 11 && rows[0].dictionary[i].value == rows[0].DATA_SET){//数据集编码attrid==11
 				$("#res_dataset").textbox('setValue',rows[0].dictionary[i].code);
 			}
 		};
 		$("#res_dataset").textbox('setText',rows[0].DATA_SET);
-		for(var i=0;i<rows[0].dictionary[i].length;i++){
+		for(var i=0;i<rows[0].dictionary.length;i++){
 			if(rows[0].dictionary[i].attrid == 12 && rows[0].dictionary[i].value == rows[0].SECTION_CLASS){//字段分类编码attrid==12
 				$("#res_sectionclass").textbox('setValue',rows[0].dictionary[i].code);
 			}
 		};
 		$("#res_sectionclass").textbox('setText',rows[0].SECTION_CLASS);
-		for(var i=0;i<rows[0].dictionary[i].length;i++){
-			if(rows[0].dictionary[i].attrid == 13 && rows[0].dictionary[i].value == rows[0].ELEMENT){//字段分类关系编码attrid==13
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 13 && rows[0].dictionary[i].value == rows[0].ELEMENT){//字段编码attrid==13
 				$("#res_element").textbox('setValue',rows[0].dictionary[i].code);
 			}
 		};
 		$("#res_element").textbox('setText',rows[0].ELEMENT);
-		for(var i=0;i<rows[0].dictionary[i].length;i++){
-			if(rows[0].dictionary[i].attrid == 14 && rows[0].dictionary[i].value == rows[0].SECTION_RELATIOIN_CLASS){//资源类型attrid==14
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == 14 && rows[0].dictionary[i].value == rows[0].SECTION_RELATIOIN_CLASS){//字段分类关系编码attrid==14
 				$("#res_secrelacls").textbox('setValue',rows[0].dictionary[i].code);
 			}
 		};
 		$("#res_secrelacls").textbox('setText',rows[0].SECTION_RELATIOIN_CLASS);
 		
 		$("#resource_data_manage_center_main_wapper").panel('close');
-   		$("#resource_data_manage_center_detail_wapper").panel('open');
+		$('#permissionControl_resource_data_manage_center_detail_wapper').window({});
+		$("#permissionControl_resource_data_manage_center_detail_wapper").window('close');
+		var element = $("#res_element").combobox('getValue');
+		var secrelacls = $("#res_secrelacls").combobox('getValue');
+		var operatesymbol = $("#res_operatesymbol").combobox('getValue');
+		var elementvalue = $("#res_elementvalue").combobox('getValue');
+		
+		if( element != '' && secrelacls == '' && operatesymbol == '' && elementvalue == ''){
+	    	$("#permissionControl_secrelacls").hide();
+	    	$("#permissionControl_operatesymbol").hide();
+	    	$("#permissionControl_elementvalue").hide();
+    	}else if( secrelacls != '' && element == '' && operatesymbol == '' && elementvalue == ''){
+    		$("#permissionControl_element").hide();
+	    	$("#permissionControl_operatesymbol").hide();
+	    	$("#permissionControl_elementvalue").hide();
+    	}else if( operatesymbol != '' && elementvalue != '' && element != '' && secrelacls == ''){
+    		$("#permissionControl_secrelacls").hide();
+    	}
+		
+    	$("#resource_data_manage_center_detail_wapper").panel('open');
+    }
+    
+    function permissionControl(relation){
+    	if(relation=='row_relation'){
+	    	$("#permissionControl_secrelacls").hide();
+	    	$("#permissionControl_operatesymbol").hide();
+	    	$("#permissionControl_elementvalue").hide();
+    	}else if(relation=='classify_relation'){
+    		$("#permissionControl_element").hide();
+	    	$("#permissionControl_operatesymbol").hide();
+	    	$("#permissionControl_elementvalue").hide();
+    	}else if(relation=='column_relation'){
+    		$("#permissionControl_secrelacls").hide();
+    	}
+    	
+    	$("#permissionControl_resource_data_manage_center_detail_wapper").window('close');
+    	$("#resource_data_manage_center_detail_wapper").panel('open');
     }
     
     function delResourceData(){
@@ -538,23 +594,23 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var datasetSensitive = $("#res_dsl").combobox("getValues");
-		    	if(datasetSensitive == ''){
-		    		$("#res_dataset").textbox({value:""});
-					$('#res_dataset').textbox({ disabled: true});
-    			}else{
-    				$('#res_dataset').textbox({ disabled: false});
-    			}
-    		}
+			panelHeight:'auto'
 		});
 		$('#res_dataset').combobox({
 			data : data_setJSON,
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto'
+			panelHeight:'auto',
+			onChange:function(){  
+		    	var dataset = $("#res_dataset").combobox("getValues");
+		    	if(dataset == ''){
+		    		$("#res_dsl").textbox({value:""});
+					$('#res_dsl').textbox({ disabled: true});
+    			}else{
+    				$('#res_dsl').textbox({ disabled: false});
+    			}
+    		}
 		});
 		$('#res_sectionclass').combobox({
 			data : section_classJSON,
@@ -568,72 +624,74 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var element = $("#res_element").combobox("getValue");
-		    	if(element != ''){
-		    		$("#res_secrelacls").textbox({value:""});
-					$('#res_secrelacls').textbox({ disabled: true});
-    			}else{
-    				$('#res_secrelacls').textbox({ disabled: false});
-    			}
-    		}
+			panelHeight:'auto'
+// 			,
+// 			onChange:function(){  
+// 		    	var element = $("#res_element").combobox("getValue");
+// 		    	if(element != ''){
+// 		    		$("#res_secrelacls").textbox({value:""});
+// 					$('#res_secrelacls').textbox({ disabled: true});
+//     			}else{
+//     				$('#res_secrelacls').textbox({ disabled: false});
+//     			}
+//     		}
 		});
 		$('#res_secrelacls').combobox({
-			data : section_classJSON,
+			data : section_relation_classJSON,
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var secrelacls = $("#res_secrelacls").combobox("getValue");
-		    	if(secrelacls != ''){
-		    		$("#res_element").textbox({value:""});
-					$('#res_element').textbox({ disabled: true});
-					$('#res_operatesymbol').textbox({ disabled: true});
-					$('#res_elementvalue').textbox({ disabled: true});
-    			}else{
-    				$('#res_element').textbox({ disabled: false});
-    				$('#res_operatesymbol').textbox({ disabled: false});
-    				$('#res_elementvalue').textbox({ disabled: false});
-    			}
-    		}
+			panelHeight:'auto'
+// 			,
+// 			onChange:function(){  
+// 		    	var secrelacls = $("#res_secrelacls").combobox("getValue");
+// 		    	if(secrelacls != ''){
+// 		    		$("#res_element").textbox({value:""});
+// 					$('#res_element').textbox({ disabled: true});
+// 					$('#res_operatesymbol').textbox({ disabled: true});
+// 					$('#res_elementvalue').textbox({ disabled: true});
+//     			}else{
+//     				$('#res_element').textbox({ disabled: false});
+//     				$('#res_operatesymbol').textbox({ disabled: false});
+//     				$('#res_elementvalue').textbox({ disabled: false});
+//     			}
+//     		}
 		});
 		$('#res_operatesymbol').combobox({
 			data : section_classJSON,
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var operatesymbol = $("#res_operatesymbol").combobox("getValues");
-		    	var elementvalue = $("#res_elementvalue").combobox("getValues");
-		    	if(operatesymbol != '' || elementvalue != ''){
-		    		$("#res_secrelacls").textbox({value:""});
-					$('#res_secrelacls').textbox({ disabled: true});
-    			}else{
-    				$('#res_secrelacls').textbox({ disabled: false});
-   
-    			}
-    		}
+			panelHeight:'auto'
+// 			,
+// 			onChange:function(){  
+// 		    	var operatesymbol = $("#res_operatesymbol").combobox("getValues");
+// 		    	var elementvalue = $("#res_elementvalue").combobox("getValues");
+// 		    	if(operatesymbol != '' || elementvalue != ''){
+// 		    		$("#res_secrelacls").textbox({value:""});
+// 					$('#res_secrelacls').textbox({ disabled: true});
+//     			}else{
+//     				$('#res_secrelacls').textbox({ disabled: false});
+//     			}
+//     		}
 		});
 		$('#res_elementvalue').combobox({
 			data : section_classJSON,
 			valueField:'id',
 			textField:'text',
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var operatesymbol = $("#res_operatesymbol").combobox("getValues");
-		    	var elementvalue = $("#res_elementvalue").combobox("getValues");
-		    	if(operatesymbol != '' || elementvalue != ''){
-		    		$("#res_secrelacls").textbox({value:""});
-					$('#res_secrelacls').textbox({ disabled: true});
-    			}else{
-    				$('#res_secrelacls').textbox({ disabled: false});
-   
-    			}
-    		}
+			panelHeight:'auto'
+// 			,
+// 			onChange:function(){  
+// 		    	var operatesymbol = $("#res_operatesymbol").combobox("getValues");
+// 		    	var elementvalue = $("#res_elementvalue").combobox("getValues");
+// 		    	if(operatesymbol != '' || elementvalue != ''){
+// 		    		$("#res_secrelacls").textbox({value:""});
+// 					$('#res_secrelacls').textbox({ disabled: true});
+//     			}else{
+//     				$('#res_secrelacls').textbox({ disabled: false});
+//     			}
+//     		}
 			
 		});
 		
