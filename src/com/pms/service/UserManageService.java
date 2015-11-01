@@ -397,7 +397,7 @@ public class UserManageService {
 			auditUserLogDescribe.setDescrib(str);
 			
 			auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
-			auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
+//			auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 		}
 	}
 	
@@ -465,7 +465,7 @@ public class UserManageService {
 		auditUserLogDescribe.setDescrib(str);
 		
 		auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
+//		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 		
 		return ;
 	}
@@ -532,6 +532,6 @@ public class UserManageService {
 		auditUserLogDescribe.setDescrib(str);
 		
 		auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
+//		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 	}
 }

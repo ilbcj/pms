@@ -17,6 +17,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.ResDataTemplateListItem;
 import com.pms.dto.RoleListItem;
+import com.pms.dto.TreeNode;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
 import com.pms.model.ResDataTemplate;
@@ -41,6 +42,8 @@ public class ResourceAction extends ActionSupport {
 	
 	private String resName;
 	private String resCode;
+	private String reSystemtType;
+	private String resAppid;
 	private ResFeature feature;
 	private List<Integer> delIds;
 	private List<ResFeature> features;
@@ -68,6 +71,10 @@ public class ResourceAction extends ActionSupport {
 	private List<String> section_class;
 	private List<String> element;
 	private List<String> section_relatioin_class;
+	
+	private List<TreeNode> treeNodes;
+	private List<ResFeature> childrenNodes;
+	private String id;
 	
 	private File fi;
 	private String fiFileName;
@@ -314,6 +321,22 @@ public class ResourceAction extends ActionSupport {
 		this.resCode = resCode;
 	}
 
+	public String getReSystemtType() {
+		return reSystemtType;
+	}
+
+	public void setReSystemtType(String reSystemtType) {
+		this.reSystemtType = reSystemtType;
+	}
+
+	public String getResAppid() {
+		return resAppid;
+	}
+
+	public void setResAppid(String resAppid) {
+		this.resAppid = resAppid;
+	}
+
 	public ResFeature getFeature() {
 		return feature;
 	}
@@ -336,6 +359,30 @@ public class ResourceAction extends ActionSupport {
 
 	public void setFeatures(List<ResFeature> features) {
 		this.features = features;
+	}
+
+	public List<TreeNode> getTreeNodes() {
+		return treeNodes;
+	}
+
+	public void setTreeNodes(List<TreeNode> treeNodes) {
+		this.treeNodes = treeNodes;
+	}
+
+	public List<ResFeature> getChildrenNodes() {
+		return childrenNodes;
+	}
+
+	public void setChildrenNodes(List<ResFeature> childrenNodes) {
+		this.childrenNodes = childrenNodes;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public File getFi() {
@@ -367,12 +414,43 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		features = new ArrayList<ResFeature>();
+		if( id == null || id.length() == 0) {
+			id = "0";
+		}
 		try {
 
 				ResFeature criteria = new ResFeature();
 				criteria.setRESOUCE_NAME(resName);
 				criteria.setRESOURCE_ID(resCode);
-				total = rms.QueryAllFeatureItems( criteria, page, rows, features );
+				criteria.setSYSTEM_TYPE(reSystemtType);
+				criteria.setAPP_ID(resAppid);
+				total = rms.QueryAllFeatureItems( id, criteria, page, rows, features );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryFeatureChildrenNodes()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		try {
+			treeNodes = new ArrayList<TreeNode>();
+			if( id == null || id.length() == 0) {
+				id = "0";
+			}
+			ResFeature criteria = new ResFeature();
+			criteria.setSYSTEM_TYPE(reSystemtType);
+			criteria.setAPP_ID(resAppid);
+			childrenNodes = rms.QueryFeatureChildrenNodes( id ,criteria);
+			TreeNode node = null;
+			for(int i=0; i<childrenNodes.size(); i++) {
+				node = rms.ConvertFeatureToTreeNode(childrenNodes.get(i));
+				this.treeNodes.add(node);
+			}
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -458,7 +536,7 @@ public class ResourceAction extends ActionSupport {
 			criteria.setName(resName);
 			criteria.setRESOURCE_ID(resCode);
 			criteria.setRESOURCE_DESCRIBE(resource_describe);
-			criteria.setRESOURCE_REMARK(resource_remark);
+			criteria.setRMK(resource_remark);
 			total = rms.QueryAllDataTemplateItems(resource_status, resource_type, dataset_sensitive_level,
 					data_set, section_class, element,section_relatioin_class, 
 					criteria, page, rows, dataTemplateItems );
@@ -579,7 +657,7 @@ public class ResourceAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String FileUpload() throws IOException{
+	public String FileUploadResourceData() throws IOException{
 		
 //		System.out.println("文件的名称："+fiFileName);
 //		System.out.println("文件的类型："+fiContentType);
@@ -610,6 +688,72 @@ public class ResourceAction extends ActionSupport {
 				System.out.println("上传文件长度为0");
 			} else {
 				rus.UploadResource(fi);
+			}
+			setResult(true);
+			return null;
+		} catch (Exception e) {
+			setResult(false);
+			this.setMessage("导入文件失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
+		}
+	}
+	
+	public String FileUploadResourceFeature() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
+		try {
+//			ResourceUploadService rus = new ResourceUploadService();
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+//				rus.UploadResource(fi);
+			}
+			setResult(true);
+			return null;
+		} catch (Exception e) {
+			setResult(false);
+			this.setMessage("导入文件失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
+		}
+	}
+	
+	public String FileUploadRole() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
+		try {
+//			ResourceUploadService rus = new ResourceUploadService();
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+//				rus.UploadResource(fi);
 			}
 			setResult(true);
 			return null;
