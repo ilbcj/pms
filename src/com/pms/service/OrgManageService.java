@@ -308,7 +308,7 @@ public class OrgManageService {
 			auditOrgLogDescribe.setDescrib(str);
 			
 			auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
-			auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
+//			auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
 		}
 	}
 	
@@ -351,7 +351,7 @@ public class OrgManageService {
 		auditOrgLogDescribe.setDescrib(str);
 		
 		auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
+//		auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
 		
 		return ;
 	}
@@ -394,6 +394,6 @@ public class OrgManageService {
 		auditOrgLogDescribe.setDescrib(str);
 		
 		auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
+//		auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
 	}
 }

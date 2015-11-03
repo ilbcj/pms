@@ -17,7 +17,11 @@ public interface ResourceDAO {
 	ResRoleOrg ResRoleOrgAdd(ResRoleOrg resRoleOrg) throws Exception;
 	ResDataOrg ResDataOrgAdd(ResDataOrg resDataOrg) throws Exception;
 	void FeatureDel(ResFeature feature) throws Exception;
-	List<ResFeature> GetFeatures(ResFeature criteria, int page, int rows) throws Exception;
+	List<ResFeature> GetFeatureNodeByParentId(String pid, ResFeature criteria) throws Exception;
+	boolean FeatureHasChild(String pid) throws Exception;
+	int GetFeatureNodeCountByParentId(String pid) throws Exception;
+	List<ResFeature> GetAllFeatures(ResFeature criteria) throws Exception;
+	List<ResFeature> GetFeatures(String pid, ResFeature criteria, int page, int rows) throws Exception;
 	int GetFeaturesCount(ResFeature criteria) throws Exception;
 	
 	ResData DataAdd(ResData data) throws Exception;

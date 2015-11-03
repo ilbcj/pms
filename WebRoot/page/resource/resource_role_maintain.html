@@ -175,15 +175,37 @@
 				<div id="resource_role_query_resource_feature_win" class="easyui-window" title="功能资源" style="width:90%;height:90%;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div id="resource_role_query_resource_feature_win_main" class="easyui-layout" data-options="fit:true" >
+						 <div data-options="region:'west',split:false" style="width:200px">
+				            	<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+						        <ul id="resource_feature_query_tree" class="easyui-tree" data-options="url:'../resource/queryFeatureChildrenNodes.action'">
+						        </ul><!-- end of resource_feature_query_tree -->
+						        </div>
+				            </div><!-- end of west -->
+				            <div data-options="region:'center'">
+				            
 						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_feature_win_ft'">				
+				    		<div id="resource_role_query_resource_feature_win_main_query">
+				    			<table class="nodt" style="width:100%">
+					                <tr>
+						                <td class="query_name_small text_right"> 系统类型</td>
+						                <td class="query_value_small"><input id="resource_feature_query_systemtype" class="easyui-textbox"></input></td>	
+						                <td class="query_name_small text_right"> 所属业务系统ID</td>
+						                <td class="query_value_small"><input id="resource_feature_query_appid" class="easyui-textbox"></input></td>	
+					                	<td>
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryResourceFeature()">查询</a>
+					                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryResourceFeatureCondition()">重置</a>
+					                    </td>					                
+						            </tr>
+					            </table>
+					        </div><!--   end of resource_role_query_resource_feature_win_main_query --> 
 							<table class="nodt" id="resource_role_query_resource_feature_win_list_dg"  
 						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
 						        <thead>
 						            <tr>
 						            	<th field="ck" checkbox="true"></th>
-						                <th data-options="field:'name'" style="width:33%;">名称</th>
-						                <th data-options="field:'resource_id'" style="width:33%;">编码</th>
-						                <th data-options="field:'resource_describe'" style="width:33%;">描述</th>
+						                <th data-options="field:'RESOUCE_NAME'" style="width:33%;">名称</th>
+						                <th data-options="field:'RESOURCE_ID'" style="width:33%;">编码</th>
+						                <th data-options="field:'RESOURCE_DESCRIBE'" style="width:33%;">描述</th>
 						            </tr>
 						        </thead>
 						    </table>
@@ -193,6 +215,7 @@
 	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleQueryResourceFeatureReturn();">返回</a>
 					    </div>
 					    
+				    </div><!-- end of center -->
 				    </div><!--  end of resource_role_query_resource_feature_win_main -->
 				</div><!--   end of resource_role_query_resource_feature_win --> 	
 					
@@ -271,7 +294,7 @@
 							                <th data-options="field:'RESOURCE_ID'">资源唯一标识</th>
 							                <th data-options="field:'RESOURCE_STATUS'">资源状态 </th>
 							                <th data-options="field:'RESOURCE_DESCRIBE'">资源描述</th>
-							                <th data-options="field:'RESOURCE_REMARK'">备注</th>
+							                <th data-options="field:'RMK'">备注</th>
 							                <th data-options="field:'DELETE_STATUS'">删除状态 </th>
 							                <th data-options="field:'resource_type'">资源类型</th>
 <!-- 							                <th data-options="field:'CLUE_DST_SYS'">目标地市</th> -->
@@ -421,6 +444,28 @@
 		});
     }
     
+    function queryResourceFeature(){
+    	var systemtype = $("#resource_feature_query_systemtype").val();
+    	var appid = $("#resource_feature_query_appid").val();
+    	
+    	$("#resource_feature_query_tree").tree({
+    		onBeforeLoad:function(node, param){
+	    		param.reSystemtType=systemtype,
+	    		param.resAppid=appid;
+    		}
+		});
+		$("#resource_role_query_resource_feature_win_list_dg").datagrid('load',{
+    		queryAll: true,
+			reSystemtType: systemtype,
+			resAppid: appid
+		});
+    }
+    
+     function clearQueryResourceFeatureCondition(){
+    	$("#resource_feature_query_systemtype").textbox({value:""});
+    	$("#resource_feature_query_appid").textbox({value:""});
+    }
+    
     function openOrgSelectWin(){
     	$('#org_query_win').window('open').window('center');
     }
@@ -448,6 +493,7 @@
     }
     
     function addResourceRole() {
+    	$('#dataLoad').window('close').window('center');
     	$("#resource_role_manage_center_main_wapper").panel('close');
     	$("#resource_role_manage_center_detail_wapper").panel('open');
     }
@@ -740,9 +786,9 @@
 			index: index,
 			row:{
 				id:data.id, 
-				name:data.name, 
-				resource_id:data.resource_id, 
-				resource_describe:data.resource_describe
+				name:data.RESOUCE_NAME, 
+				resource_id:data.RESOURCE_ID, 
+				resource_describe:data.RESOURCE_DESCRIBE
 			}
 		});
 		
@@ -763,7 +809,7 @@
 				RESOURCE_ID:data.RESOURCE_ID, 
 				RESOURCE_STATUS:data.RESOURCE_STATUS,
 				RESOURCE_DESCRIBE:data.RESOURCE_DESCRIBE, 
-				RESOURCE_REMARK:data.RESOURCE_REMARK,
+				RESOURCE_REMARK:data.RMK,
 				DELETE_STATUS:data.DELETE_STATUS, 
 				resource_type:data.resource_type,
 				CLUE_DST_SYS:data.CLUE_DST_SYS,
@@ -864,9 +910,9 @@ $(document).ready(function () {
 		idField:'id',
 		//url:'data/datagrid_data.json',
 		columns:[[
-			{field:'name',title:'名称',width:'30%',editor:'text'},
-			{field:'resource_id',title:'编码',width:'30%',editor:'text'},
-			{field:'resource_describe',title:'描述',width:'30%',editor:'text'},
+			{field:'RESOUCE_NAME',title:'名称',width:'30%',editor:'text'},
+			{field:'RESOURCE_ID',title:'编码',width:'30%',editor:'text'},
+			{field:'RESOURCE_DESCRIBE',title:'描述',width:'30%',editor:'text'},
 			{field:'action',title:'操作',width:'10%',align:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" onclick="featureDeleterow(this)">删除</a>';
@@ -890,7 +936,7 @@ $(document).ready(function () {
 			{field:'RESOURCE_ID',title:'资源唯一标识',width:'7%',editor:'text'},
 			{field:'RESOURCE_STATUS',title:'资源状态',width:'7%',editor:'text'},
 			{field:'RESOURCE_DESCRIBE',title:'资源描述',width:'7%',editor:'text'},
-			{field:'RESOURCE_REMARK',title:'备注',width:'7%',editor:'text'},
+			{field:'RMK',title:'备注',width:'7%',editor:'text'},
 			{field:'DELETE_STATUS',title:'删除状态',width:'7%',editor:'text'},			
 			{field:'resource_type',title:'资源类型',width:'7%',editor:'text'},
 // 			{field:'CLUE_DST_SYS',title:'目标地市',width:'7%',editor:'text'},
@@ -920,6 +966,22 @@ $(document).ready(function () {
 			$("#roleOrg_destcity").textbox('setValue',node.id);
 			$("#roleOrg_destcity").textbox('setText',node.text);
 			$('#org_query_win').window('close');
+	    }
+	});
+	
+	$('#resource_feature_query_tree').tree({
+	    loadFilter: function(data){
+	        if (data.treeNodes){
+	            return data.treeNodes;
+	        } else {
+	            return data;
+	        }
+	    },
+	    onClick: function(node){
+	    	//alert(node.id);
+	    	$("#resource_role_query_resource_feature_win_list_dg").datagrid('load',{
+				id: node.id
+			});
 	    }
 	});
 	

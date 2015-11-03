@@ -22,6 +22,9 @@
  		<action name="queryFeatureItems" class="com.pms.controller.ResourceAction" method="QueryFeatureItems" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryFeatureChildrenNodes" class="com.pms.controller.ResourceAction" method="QueryFeatureChildrenNodes" >
+ 			<result name="success" type="json" />
+ 		</action>
  		<action name="saveResourceFeature" class="com.pms.controller.ResourceAction" method="SaveResourceFeature" >
  		</action>
  		<action name="deleteResourceFeatures" class="com.pms.controller.ResourceAction" method="DeleteResourceFeatures" >
@@ -60,13 +63,29 @@
  		<action name="queryRoleResource" class="com.pms.controller.ResourceAction" method="QueryRoleResource" >
  			<result name="success" type="json" />
  		</action>		
- 		<action name="fileUpload" class="com.pms.controller.ResourceAction" method="FileUpload" >
+ 		<action name="fileUploadResourceData" class="com.pms.controller.ResourceAction" method="FileUploadResourceData" >
  			<interceptor-ref name="defaultStack">
 				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
 				<param name="fileUpload.maximumSize">52428800</param>
 				<!-- 设置允许上传文件的类型 -->
 				<param name="fileUpload.allowedExtensions">.xls</param>
 			</interceptor-ref>
- 		</action> 
+ 		</action>
+ 		<action name="fileUploadResourceFeature" class="com.pms.controller.ResourceAction" method="FileUploadResourceFeature" >
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action>
+ 		<action name="fileUploadRole" class="com.pms.controller.ResourceAction" method="FileUploadRole" >
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action>
 	</package>	
 </struts>    

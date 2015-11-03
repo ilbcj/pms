@@ -187,7 +187,7 @@ public class GroupManageService {
 //			auditGroupLogDescribe.setDescrib(str);
 			
 			auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
-			auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+//			auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
 		}
 	}
 	
@@ -254,7 +254,7 @@ public class GroupManageService {
 		
 	    auditGroupLogDescribe.setDescrib(Hibernate.createBlob(byteData));
 		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+//		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
 		
 		return ;
 	}
@@ -316,7 +316,7 @@ public class GroupManageService {
 //		auditGroupLogDescribe.setDescrib(str);
 		
 		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+//		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
 	}
 	
 }

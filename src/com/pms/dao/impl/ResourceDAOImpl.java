@@ -159,15 +159,14 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResFeature> GetFeatures(ResFeature criteria, int page, int rows)
-			throws Exception {
+	public List<ResFeature> GetFeatureNodeByParentId(String pid, ResFeature criteria) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResFeature> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where 1 = 1 and DELETE_STATUS =:DELETE_STATUS";
+		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where PARENT_RESOURCE = :PARENT_RESOURCE ";
 		if( criteria != null ) {
 			if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
 				sqlString += " and RESOUCE_NAME like :RESOUCE_NAME ";
@@ -175,6 +174,93 @@ public class ResourceDAOImpl implements ResourceDAO {
 			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
 				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
 			}
+			if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+				sqlString += " and SYSTEM_TYPE like :SYSTEM_TYPE ";
+			}
+			if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+				sqlString += " and APP_ID = :APP_ID ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+			q.setString("PARENT_RESOURCE", pid);
+			if( criteria != null ) {
+				if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+					q.setString( "RESOUCE_NAME", "%" + criteria.getRESOUCE_NAME() + "%" );
+				}
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					q.setString( "RESOURCE_ID",  criteria.getRESOURCE_ID());
+				}
+				if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+					q.setString( "SYSTEM_TYPE",  criteria.getSYSTEM_TYPE());
+				}
+				if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+					q.setString( "APP_ID",  criteria.getAPP_ID());
+				}
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public boolean FeatureHasChild(String pid) throws Exception {
+		int rs = GetFeatureNodeCountByParentId(pid);
+		return rs > 0;
+	}
+	
+	@Override
+	public int GetFeatureNodeCountByParentId(String pid) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) from WA_AUTHORITY_FUNC_RESOURCE where PARENT_RESOURCE = :PARENT_RESOURCE ";
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setString("PARENT_RESOURCE", pid);
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResFeature> GetAllFeatures(ResFeature criteria) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResFeature> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where DELETE_STATUS =:DELETE_STATUS";
+		if( criteria != null ) {
+			if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+				sqlString += " and RESOUCE_NAME like :RESOUCE_NAME ";
+			}
+			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
+			}
+			if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+				sqlString += " and SYSTEM_TYPE like :SYSTEM_TYPE ";
+			}
+			if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+				sqlString += " and APP_ID = :APP_ID ";
+			}
+			
 		}
 		
 		try {
@@ -186,6 +272,66 @@ public class ResourceDAOImpl implements ResourceDAO {
 				}
 				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
 					q.setString( "RESOURCE_ID",  criteria.getRESOURCE_ID());
+				}
+				if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+					q.setString( "SYSTEM_TYPE",  criteria.getSYSTEM_TYPE());
+				}
+				if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+					q.setString( "APP_ID",  criteria.getAPP_ID());
+				}
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResFeature> GetFeatures(String pid, ResFeature criteria, int page, int rows)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResFeature> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where 1 = 1 and DELETE_STATUS =:DELETE_STATUS and PARENT_RESOURCE =:PARENT_RESOURCE";
+		if( criteria != null ) {
+			if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+				sqlString += " and RESOUCE_NAME like :RESOUCE_NAME ";
+			}
+			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
+			}
+			if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+				sqlString += " and SYSTEM_TYPE like :SYSTEM_TYPE ";
+			}
+			if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+				sqlString += " and APP_ID = :APP_ID ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
+			q.setString("PARENT_RESOURCE", pid);
+			if( criteria != null ) {
+				if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+					q.setString( "RESOUCE_NAME", "%" + criteria.getRESOUCE_NAME() + "%" );
+				}
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					q.setString( "RESOURCE_ID",  criteria.getRESOURCE_ID());
+				}
+				if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+					q.setString( "SYSTEM_TYPE",  criteria.getSYSTEM_TYPE());
+				}
+				if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+					q.setString( "APP_ID",  criteria.getAPP_ID());
 				}
 			}
 			if( page > 0 && rows > 0) {
@@ -544,8 +690,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 			if(criteria.getRESOURCE_DESCRIBE() != null && criteria.getRESOURCE_DESCRIBE().length() > 0) {
 				sqlString += " and RESOURCE_DESCRIBE like :RESOURCE_DESCRIBE ";
 			}
-			if(criteria.getRESOURCE_REMARK() != null && criteria.getRESOURCE_REMARK().length() > 0) {
-				sqlString += " and RESOURCE_REMARK like :RESOURCE_REMARK ";
+			if(criteria.getRMK() != null && criteria.getRMK().length() > 0) {
+				sqlString += " and RMK like :RMK ";
 			}
 			if(resource_status != null) {
 				for (int i = 0; i < resource_status.size(); i++) {
@@ -618,8 +764,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 				if(criteria.getRESOURCE_DESCRIBE() != null && criteria.getRESOURCE_DESCRIBE().length() > 0) {
 					q.setString( "RESOURCE_DESCRIBE", "%" + criteria.getRESOURCE_DESCRIBE() + "%" );
 				}
-				if(criteria.getRESOURCE_REMARK() != null && criteria.getRESOURCE_REMARK().length() > 0) {
-					q.setString( "RESOURCE_REMARK", "%" + criteria.getRESOURCE_REMARK() + "%" );
+				if(criteria.getRMK() != null && criteria.getRMK().length() > 0) {
+					q.setString( "RMK", "%" + criteria.getRMK() + "%" );
 				}
 				if(resource_status != null) {
 					for (int i = 0; i < resource_status.size(); i++) {
@@ -1397,7 +1543,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return rs;
 	}
-
+	
 	@Override
 	public ResFeature GetFeatureByResId(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();

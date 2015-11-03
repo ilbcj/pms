@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>resource_data_import.html</title>
+    <title>resource_role_import.html</title>
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
@@ -14,7 +14,7 @@
   <body>
 	<div class="easyui-layout" data-options="fit:true,border:false">
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
-			<b>当前位置：<span style="color:blue">数据资源导入</span></b>
+			<b>当前位置：<span style="color:blue">角色导入</span></b>
 		</div>
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
 			<div class="easyui-panel" data-options="fit:true,border:false" >
@@ -40,7 +40,7 @@
 	function importFileSave(){
   		$.messager.progress();	// 显示进度条
 		$("#import_file_form").form('submit', {
-			url:'../resource/fileUploadResourceData.action',
+			url:'../resource/fileUploadRole.action',
 			success: function(message){
 				var retObj = $.parseJSON(message);
 				

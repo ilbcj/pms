@@ -17,6 +17,7 @@ import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.ResDataTemplateListItem;
 import com.pms.dto.RoleListItem;
+import com.pms.dto.TreeNode;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.AuditResLog;
@@ -32,16 +33,68 @@ import com.pms.util.ConfigHelper;
 
 public class ResourceManageService {
 
-	public int QueryAllFeatureItems(ResFeature criteria, int page, int rows, List<ResFeature> items) throws Exception {
+	public int QueryAllFeatureItems(String id, ResFeature criteria, int page, int rows, List<ResFeature> items) throws Exception {
 		criteria.setDELETE_STATUS(ResFeature.DELSTATUSNO);
-		ResourceDAO dao = new ResourceDAOImpl();
-		List<ResFeature> res = dao.GetFeatures( criteria, page, rows );
-		items.addAll(res);
-		int total = QueryAllFeaturesCount( criteria );
+		List<ResFeature> nodes = new ArrayList<ResFeature>();
+		queryAllChildrenNodesById(id, criteria, nodes);
+		int total = nodes.size();
+		items.addAll(nodes);
 		
 		AddResQueryLog(null, criteria, null);
 		
 		return total;
+	}
+	
+	public List<ResFeature> QueryFeatureChildrenNodes(String id, ResFeature criteria) throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResFeature> res = dao.GetFeatureNodeByParentId( id, criteria);
+		return res;
+	}
+	
+	public TreeNode ConvertFeatureToTreeNode(ResFeature feature) throws Exception {
+		TreeNode node = new TreeNode();
+		String state = hasChild(feature.getRESOURCE_ID()) ? "closed" : "open";
+		node.setState(state);
+		node.setId(feature.getRESOURCE_ID());
+		node.setText(feature.getRESOUCE_NAME());
+		
+		return node;
+	}
+	
+	private boolean hasChild(String pid) throws Exception
+	{
+		ResourceDAO dao = new ResourceDAOImpl();
+		return dao.FeatureHasChild( pid );
+	}
+	
+	public void queryAllChildrenNodesById(String pid, ResFeature criteria, List<ResFeature> children) throws Exception
+	{
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResFeature> func = null; 
+		if( pid.equals("0") ){	
+			func = dao.GetAllFeatures(criteria);
+			if(func == null || func.size() == 0) {
+				return;
+			}
+			else {
+				children.addAll(func);
+			}
+			return;
+		}else{
+			func = dao.GetFeatureNodeByParentId( pid, criteria );
+			if(func == null || func.size() == 0) {
+				return;
+			}
+			else {
+				children.addAll(func);
+			}
+				
+			for(int i=0; i<func.size(); i++)
+			{
+				queryAllChildrenNodesById(func.get(i).getRESOURCE_ID(), criteria, children);
+			}
+		}
+		return;
 	}
 	
 	private int QueryAllFeaturesCount(ResFeature criteria) throws Exception {
@@ -249,7 +302,7 @@ public class ResourceManageService {
 		item.setName(attr.getName());
 		item.setRESOURCE_ID(attr.getRESOURCE_ID());
 		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
-		item.setRESOURCE_REMARK(attr.getRESOURCE_REMARK());				
+		item.setRESOURCE_REMARK(attr.getRMK());				
 		item.setDATA_VERSION(attr.getDATA_VERSION());
 		
 		AttributeDAO attrdao = new AttributeDAOImpl();
@@ -690,7 +743,7 @@ public class ResourceManageService {
 			auditResLogDescribe.setDescrib(str);
 			
 			auditResLogDescribe.setLATEST_MOD_TIME(timenow);
-			auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+//			auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
 		}
 	}
 	
@@ -838,7 +891,7 @@ public class ResourceManageService {
 		auditResLogDescribe.setDescrib(str);
 		
 		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+//		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
 	}
 	
 	private void AddResDelLog(ResData resData, ResDataOrg resDataOrg, ResFeature resFeature, ResRole role, ResRoleOrg resRoleOrg) throws Exception {
@@ -970,7 +1023,7 @@ public class ResourceManageService {
 		auditResLogDescribe.setDescrib(str);
 		
 		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
-		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+//		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
 	}
 	
 }
