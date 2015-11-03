@@ -1,9 +1,16 @@
 package com.pms.webservice.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom2.Document;
@@ -11,6 +18,8 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.pms.util.ConfigHelper;
+import com.pms.util.FtpUtil;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.acquiredata.AcquiredataCondition;
 
@@ -28,15 +37,68 @@ public class SyncAcquireDataService extends SyncService {
 		}
 		
 		AcquiredataCondition files = null;
-		//files = sendFiles();
-		files = getAdc();
+		files = sendFiles();
 		
 		String result = generateAcquriedataResponseResult(files);
+		
 		return result;
 	}
 	
 	
 	
+	private AcquiredataCondition sendFiles() throws FileNotFoundException {
+		AcquiredataCondition files = getAdc();
+		AcquiredataCondition result = new AcquiredataCondition();
+		List<Item> allDataItems = new ArrayList<Item>();
+		List<Item> addDataItems = new ArrayList<Item>();
+		
+		String localFile = "";//"e:\\5416-010000-User-All-1445941888-00233.zip";
+		String exportPath = ConfigHelper.getSyncExportPath();
+		
+		String url = "15.6.22.2";
+		int port = 21;
+		String username = "jdzy";
+		String password = "123456";
+		String parentPath = "/home/tong/transfile/pms/send/";
+		String path = "";
+		String filename = "";//"5416-010000-User-All-1445941888-00233.zip";
+		InputStream input = null;
+		
+		// get all pms nodes
+		List<String> pmsNodes = new ArrayList<String>();
+		pmsNodes.add("110000");
+		
+		if( files.getAllDataItems() != null && files.getAllDataItems().size() > 0 ) {
+			for(Item allItem : files.getAllDataItems()) {
+				localFile = exportPath + "/" + allItem.getVal();
+				filename = allItem.getVal();
+				input = new FileInputStream(new File(localFile));
+				for(String pmsNode : pmsNodes) {
+					path = parentPath + pmsNode;
+					FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+				}
+				allDataItems.add(allItem);
+			}
+		}
+		result.setAllDataItems(allDataItems);
+		
+		if( files.getAddDataItems() != null && files.getAddDataItems().size() > 0 ) {
+			for(Item addItem : files.getAddDataItems()) {
+				localFile = exportPath + "/" + addItem.getVal();
+				filename = addItem.getVal();
+				input = new FileInputStream(new File(localFile));
+				for(String pmsNode : pmsNodes) {
+					path = parentPath + pmsNode;
+					FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+				}
+				addDataItems.add(addItem);
+			}
+		}
+		result.setAddDataItems(addDataItems);
+		
+		return result;
+	}
+
 	private String generateAcquriedataResponseResult(AcquiredataCondition files) throws IOException {
 		String result = null;
 		Document doc = null;

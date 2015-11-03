@@ -1,10 +1,14 @@
 package com.pms.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +19,8 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
@@ -26,7 +32,10 @@ import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
 import com.pms.model.SystemConfig;
 import com.pms.model.User;
+import com.pms.util.ConfigHelper;
+import com.pms.util.MD5Security;
 import com.pms.util.ZipUtil;
+import com.pms.webservice.service.client.SendSyncMessage;
 
 public class DataSyncService {
 	public String DownLoadRes(String amount, List<ResData> items) throws Exception {
@@ -652,10 +661,195 @@ public class DataSyncService {
 
 	    UpdateConfig(SystemConfigList, name);
 	    
+	    broadcastNotice(exportPath, zipNnme);
+	    
 		return exportPath +"/"+ zipNnme;
 	    
 	}
 	
+	private void broadcastNotice(String path, String fileName) throws Exception {
+		// 1. calculate checksum
+		File file = new File(path + "/" + fileName);
+		FileInputStream fi = new FileInputStream(file);
+		
+		String checksum = MD5Security.md5(fi);
+		
+		// 2. get notice list
+		List<String> sids = new ArrayList<String>();
+		//sids.add("S01000011000000009");//gab sync service
+		sids.add("S11000000000000009");//bj sync service
+			
+		// 3. notice other pms	
+		String address = ConfigHelper.getEsbAddr();
+		String rid = ConfigHelper.getRequestId();
+		
+		SendSyncMessage ssm = new SendSyncMessage(address, rid);
+//			if(sids == null) {
+//				return;
+//			}
+		for( String sid : sids) {
+			// 3.1 generate request content
+			String message = generateBroadcastRequestContent(sid, checksum, fileName);
+			
+			String result = ssm.SendMessage(sid, message);
+			System.out.println(result);
+		}
+		
+	
+		
+	}
+	private String generateBroadcastRequestContent(String sid, String checksum, String fileName) throws IOException {
+		String result = null;
+		org.jdom2.Document doc = null;
+		try{
+			org.jdom2.Element message = null;// dataset = null, data = null, condition = null, item = null;
+			message = new org.jdom2.Element("MESSAGE");
+			doc = new org.jdom2.Document(message);
+			
+			// 1- WA_COMMON_010000
+			org.jdom2.Element dataset010000 = null;
+			dataset010000 = new org.jdom2.Element("DATASET");
+			message.addContent(dataset010000);
+			dataset010000.setAttribute("name", "WA_COMMON_010000");
+			dataset010000.setAttribute("rmk", "数据交互通用信息");
+			
+			org.jdom2.Element data010000 = null;
+			data010000 = new org.jdom2.Element("DATA");
+			dataset010000.addContent(data010000);
+			
+			org.jdom2.Element item010000 = null;
+			item010000 = new org.jdom2.Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "H010006");
+			String from = ConfigHelper.getRegion();
+			itemSetAttribute(item010000, "val", from);
+			itemSetAttribute(item010000, "rmk", "发起节点的标识");
+			
+			item010000 = new org.jdom2.Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "H010007");
+			String to = sid.length() > 7 ? sid.substring(1, 7) : "";
+			itemSetAttribute(item010000, "val", to);
+			itemSetAttribute(item010000, "rmk", "目的节点的标识");
+			
+			item010000 = new org.jdom2.Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "I010014");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			String longtime = ("" + System.currentTimeMillis()).substring(0,10);
+			String mesgSn = from + timenow + longtime;
+			itemSetAttribute(item010000, "val", mesgSn);
+			itemSetAttribute(item010000, "rmk", "消息流水号");
+			
+			item010000 = new org.jdom2.Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "I010013");
+			itemSetAttribute(item010000, "val", "154161");
+			itemSetAttribute(item010000, "rmk", "消息类型（鉴权服务结果）");
+
+			item010000 = new org.jdom2.Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "I010010");
+			itemSetAttribute(item010000, "val", "07");
+			itemSetAttribute(item010000, "rmk", "业务服务类型（鉴权服务）");
+			
+			// 1- WA_COMMON_010001
+			org.jdom2.Element dataset010001 = null;
+			dataset010001 = new org.jdom2.Element("DATASET");
+			message.addContent(dataset010001);
+			dataset010001.setAttribute("name", "WA_COMMON_010001");
+			dataset010001.setAttribute("rmk", "用户认证和公共角色信息");
+
+			org.jdom2.Element data010001 = null;
+			data010001 = new org.jdom2.Element("DATA");
+			dataset010001.addContent(data010001);
+			
+			org.jdom2.Element item010001 = null;
+			item010001 = new org.jdom2.Element("ITEM");
+			data010001.addContent(item010001);
+			itemSetAttribute(item010001, "key", "A010001");
+			itemSetAttribute(item010001, "val", from);
+			itemSetAttribute(item010001, "eng", "GA_DEPARTMENT");
+			itemSetAttribute(item010001, "chn", "公安机关机构代码");
+			
+			item010001 = new org.jdom2.Element("ITEM");
+			data010001.addContent(item010001);
+			itemSetAttribute(item010001, "key", "I010026");
+			itemSetAttribute(item010001, "val", "");
+			itemSetAttribute(item010001, "eng", "ROLE_ID");
+			itemSetAttribute(item010001, "chn", "角色ID");
+			
+			item010001 = new org.jdom2.Element("ITEM");
+			data010001.addContent(item010001);
+			itemSetAttribute(item010001, "key", "J030014");
+			itemSetAttribute(item010001, "val", "");
+			itemSetAttribute(item010001, "eng", "CERTIFICATE_CODE_MD5");
+			itemSetAttribute(item010001, "chn", "身份证哈希值");
+			
+			item010001 = new org.jdom2.Element("ITEM");
+			data010001.addContent(item010001);
+			itemSetAttribute(item010001, "key", "I010025");
+			itemSetAttribute(item010001, "val", "");
+			itemSetAttribute(item010001, "eng", "ROLE_TYPE");
+			itemSetAttribute(item010001, "chn", "角色类型");
+			
+			item010001 = new org.jdom2.Element("ITEM");
+			data010001.addContent(item010001);
+			itemSetAttribute(item010001, "key", "I010027");
+			itemSetAttribute(item010001, "val", "");
+			itemSetAttribute(item010001, "eng", "COOKIES");
+			itemSetAttribute(item010001, "chn", "通行字");
+			
+			// 1- WA_COMMON_010045
+			org.jdom2.Element dataset010045 = null;
+			dataset010045 = new org.jdom2.Element("DATASET");
+			message.addContent(dataset010045);
+			dataset010045.setAttribute("name", "WA_COMMON_010045");
+			dataset010045.setAttribute("rmk", "");
+
+			org.jdom2.Element data010045 = null;
+			data010045 = new org.jdom2.Element("DATA");
+			dataset010045.addContent(data010045);
+						
+			org.jdom2.Element item010045 = null;
+			item010045 = new org.jdom2.Element("ITEM");
+			data010045.addContent(item010045);
+			String fileKey = fileName.indexOf("All") != -1 ? "H010019" : "H010020";
+			itemSetAttribute(item010045, "key", fileKey);
+			itemSetAttribute(item010045, "val", fileName);
+			itemSetAttribute(item010045, "eng", "FILE_NAME");
+			String fileChn = fileName.indexOf("All") != -1 ? "全量数据包文件名称" : "增量数据包文件名称";
+			itemSetAttribute(item010045, "chn", fileChn);
+			
+			item010045 = new org.jdom2.Element("ITEM");
+			data010045.addContent(item010045);
+			itemSetAttribute(item010045, "key", "H010028");
+			itemSetAttribute(item010045, "val", checksum);
+			itemSetAttribute(item010045, "eng", "checksum");
+			itemSetAttribute(item010045, "chn", "校验和");
+			itemSetAttribute(item010045, "fmt", "md5");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			XMLOutputter XMLOut = new XMLOutputter(Format.getPrettyFormat().setEncoding("utf-8"));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			PrintWriter writer = new PrintWriter(baos);
+			XMLOut.output(doc, writer);
+			writer.close();
+			result = baos.toString();
+			System.out.println(result);
+		}
+		return result;
+	}
+	
+	protected void itemSetAttribute(org.jdom2.Element item, String key, String value) {
+		item.setAttribute(key, value == null ? "" : value);
+	}
+
 	public SystemConfig UpdateConfig( List<SystemConfig> scList, String name ) throws Exception
 	{
 	    SystemConfig systemConfig=new SystemConfig();

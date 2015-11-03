@@ -20,6 +20,8 @@ public class SystemConfig {
 	public final static int SYSTEMCONFIGTYPESYSTEM = 2;
 	
 	public final static String SYSTEMCONFIG_ITEM_REGION = "system_region";
+	public final static String SYSTEMCONFIG_ITEM_REQUESTID = "system_requestId";
+	public final static String SYSTEMCONFIG_ITEM_ESBADDRESS = "system_esbAddress";
 	
 	private int id;
 	private String item;
