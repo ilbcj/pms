@@ -64,7 +64,7 @@ public class FtpUtil {
 //	        ftp.connect(url);//连接FTP服务器 
 	        //如果采用默认端口，可以使用ftp.connect(url)的方式直接连接FTP服务器 
 	        ftp.login(username, password);//登录 
-//	        ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+	        ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
 //	        ftp.setControlEncoding("UTF8");
 	        reply = ftp.getReplyCode();
 	        if (!FTPReply.isPositiveCompletion(reply)) {

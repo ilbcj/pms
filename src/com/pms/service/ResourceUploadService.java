@@ -47,6 +47,7 @@ import com.pms.model.ResColumnClassify;
 import com.pms.model.ResData;
 import com.pms.model.ResDataSet;
 import com.pms.model.ResDataSetSensitive;
+import com.pms.model.ResDataTemplate;
 import com.pms.model.ResRelationClassify;
 import com.pms.model.ResRelationColumn;
 import com.pms.model.ResRelationColumnClassify;
@@ -130,7 +131,29 @@ public class ResourceUploadService {
 	private final String SHEET_ROLE_RESOURCE_DATASET = "协议编码";
 	private final String SHEET_ROLE_RESOURCE_SECTION_CLASS = "字段分类编码";
 	
-	public void UploadResource(File inData) throws Exception {
+	public void UploadResourceFeature(File inData) throws Exception {
+		
+	}
+	
+	public void UploadResourceRole(File inData) throws Exception {
+		InputStream in=new FileInputStream(inData);
+        Workbook workbook = WorkbookFactory.create(in);
+        
+        int sheetCount = workbook.getNumberOfSheets();  //Sheet的数量  
+        for (int s = 0; s < sheetCount; s++) {
+        	Sheet sheet = workbook.getSheetAt(s);
+            String sheetName = sheet.getSheetName();
+			if ( SHEET_ROLE_RESOURCE.equals(sheetName) ) {
+	        	updateRoleResource(sheet);
+	        }
+        }
+        
+        in.close();
+        
+        updateRoleAndResourceRelatioinship();
+	}
+	
+	public void UploadResourceData(File inData) throws Exception {
 		InputStream in=new FileInputStream(inData);
         Workbook workbook = WorkbookFactory.create(in);
         
@@ -159,17 +182,13 @@ public class ResourceUploadService {
             	updateColumnRelation(sheet);
             } else if ( SHEET_CLASSIFY_RELATION.equals(sheetName) ) {
             	updateClassifyRelation(sheet);
-            } else if ( SHEET_ROLE_RESOURCE.equals(sheetName) ) {
-            	updateRoleResource(sheet);
             }
         }
         
         in.close();
         
         //update resource;
-        updateResources();
-        
-        updateRoleAndResourceRelatioinship();
+        updateResourceData();
         
         return;
 	}
@@ -978,7 +997,32 @@ public class ResourceUploadService {
         return cellValue;
 	}
 	
-	private void updateResources() throws Exception {
+	private void updateResourceData() throws Exception {
+		//0. perpare dataset 
+		ResDatasetDAO rdsdao = new ResDatasetDAOImpl();
+		List<ResDataSet> rdss = rdsdao.QueryAllDataSet();
+
+		Map<String, ResDataSet> rdsMap = new HashMap<String, ResDataSet>();
+		for(int i = 0; i<rdss.size(); i++) {
+			rdsMap.put(rdss.get(i).getDATA_SET(), rdss.get(i));
+		}
+
+		//1. switch resourcetemplate status to delete
+		ResDataDAO rdd = new ResDataDAOImpl();
+		rdd.UpdateResDataTemplateStatus(ResDataTemplate.DELSTATUSYES);
+		
+		//2. update resourcetemplate record
+		//2.1 updateRowRelation
+		ResRowRelationDAO rrrdao = new ResRowRelationDAOImpl();
+		List<ResRelationRow> rrrs = rrrdao.QueryAllResRelationRow();
+		
+		for(int i = 0; i<rrrs.size(); i++) {
+			updateResourceOfRelationRow( rrrs.get(i), rdsMap );
+		}
+
+	}
+	
+	private void updateResource() throws Exception {
 		//perpare dataset 
 		ResDatasetDAO rdsdao = new ResDatasetDAOImpl();
 		List<ResDataSet> rdss = rdsdao.QueryAllDataSet();
@@ -1065,9 +1109,7 @@ public class ResourceUploadService {
 		
 		rddao.ResDataOfRelationRowSave(rd, rrr.getCLUE_SRC_SYS());
 	}
-	
-	
-	
+		
 	private void updateResourceOfRelationClassify( ResRelationClassify rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
 		ResData rd = new ResData();

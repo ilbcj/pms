@@ -13,5 +13,6 @@ public interface ResDataDAO {
 	public void ResDataOfRelationClassifySave(ResData rd, String clue_SRC_SYS) throws Exception;
 
 //	public List<ResColumn> QueryAllColumn() throws Exception;
+	public void UpdateResDataTemplateStatus(int status) throws Exception;
 	
 }
