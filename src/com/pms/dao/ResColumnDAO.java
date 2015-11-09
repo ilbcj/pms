@@ -10,4 +10,5 @@ public interface ResColumnDAO {
 
 	public List<ResColumn> QueryAllColumn() throws Exception;
 	
+	public ResColumn QueryColumnByElement(String dataset, String element) throws Exception;
 }

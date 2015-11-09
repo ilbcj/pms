@@ -1015,72 +1015,89 @@ public class ResourceUploadService {
 		//2.1 updateRowRelation
 		ResRowRelationDAO rrrdao = new ResRowRelationDAOImpl();
 		List<ResRelationRow> rrrs = rrrdao.QueryAllResRelationRow();
-		
 		for(int i = 0; i<rrrs.size(); i++) {
 			updateResourceOfRelationRow( rrrs.get(i), rdsMap );
 		}
-
-	}
-	
-	private void updateResource() throws Exception {
-		//perpare dataset 
-		ResDatasetDAO rdsdao = new ResDatasetDAOImpl();
-		List<ResDataSet> rdss = rdsdao.QueryAllDataSet();
 		
-		Map<String, ResDataSet> rdsMap = new HashMap<String, ResDataSet>();
-		for(int i = 0; i<rdss.size(); i++) {
-			rdsMap.put(rdss.get(i).getDATA_SET(), rdss.get(i));
-		}
-		
-		//updateColumn
-		ResColumnDAO rcdao = new ResColumnDAOImpl();
-		List<ResColumn> rcs = rcdao.QueryAllColumn();
-		
-		for(int i = 0; i<rcs.size(); i++) {
-			updateResourceOfColumn( rcs.get(i), rdsMap );
-		}
-		
-		//updateColumnRelation
+		//2.2 updateColumnRelation
 		ResColumnRelationDAO rcrdao = new ResColumnRelationDAOImpl();
 		List<ResRelationColumn> rrcs = rcrdao.QueryAllResRelationColumn();
-		
 		for(int i = 0; i<rrcs.size(); i++) {
 			updateResourceOfRelationColumn( rrcs.get(i), rdsMap );
 		}
 		
-		//updateRowRelation
-		ResRowRelationDAO rrrdao = new ResRowRelationDAOImpl();
-		List<ResRelationRow> rrrs = rrrdao.QueryAllResRelationRow();
-		
-		for(int i = 0; i<rrrs.size(); i++) {
-			updateResourceOfRelationRow( rrrs.get(i), rdsMap );
-		}
-		
-		//updateClassifyRelation
+		//2.3 updateClassifyRelation
 		ResClassifyRelationDAO rclassrdao = new ResClassifyRelationDAOImpl();
 		List<ResRelationClassify> rrclasss = rclassrdao.QueryAllResRelationClassify();
-		
 		for(int i = 0; i<rrclasss.size(); i++) {
 			updateResourceOfRelationClassify( rrclasss.get(i), rdsMap );
 		}
+
+		//3 update resource record's status according to deleted records in resourcetemplate
+		rdd.DeleteResDataByDeletedRecordsInResDataTemplate();
 	}
 	
-	private void updateResourceOfColumn( ResColumn rc, Map<String, ResDataSet> rdsMap ) throws Exception {
-		ResDataDAO rddao = new ResDataDAOImpl();
-		ResData rd = new ResData();
-		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
-		rd.setRESOURCE_DESCRIBE("字段数据资源");
-		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
-		rd.setDATA_SET(rc.getDATA_SET());
-		rd.setELEMENT(rc.getELEMENT());
-		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
-		rd.setResource_type(ResData.RESTYPEPUBLIC);
-		rd.setName(rc.getCOLUMU_CN());
-		rddao.ResDataOfColumnSave(rd, rc.getCLUE_SRC_SYS());
-	}
+//	private void updateResource() throws Exception {
+//		//perpare dataset 
+//		ResDatasetDAO rdsdao = new ResDatasetDAOImpl();
+//		List<ResDataSet> rdss = rdsdao.QueryAllDataSet();
+//		
+//		Map<String, ResDataSet> rdsMap = new HashMap<String, ResDataSet>();
+//		for(int i = 0; i<rdss.size(); i++) {
+//			rdsMap.put(rdss.get(i).getDATA_SET(), rdss.get(i));
+//		}
+//		
+//		//updateColumn
+//		ResColumnDAO rcdao = new ResColumnDAOImpl();
+//		List<ResColumn> rcs = rcdao.QueryAllColumn();
+//		
+//		for(int i = 0; i<rcs.size(); i++) {
+//			updateResourceOfColumn( rcs.get(i), rdsMap );
+//		}
+//		
+//		//updateColumnRelation
+//		ResColumnRelationDAO rcrdao = new ResColumnRelationDAOImpl();
+//		List<ResRelationColumn> rrcs = rcrdao.QueryAllResRelationColumn();
+//		
+//		for(int i = 0; i<rrcs.size(); i++) {
+//			updateResourceOfRelationColumn( rrcs.get(i), rdsMap );
+//		}
+//		
+//		//updateRowRelation
+//		ResRowRelationDAO rrrdao = new ResRowRelationDAOImpl();
+//		List<ResRelationRow> rrrs = rrrdao.QueryAllResRelationRow();
+//		
+//		for(int i = 0; i<rrrs.size(); i++) {
+//			updateResourceOfRelationRow( rrrs.get(i), rdsMap );
+//		}
+//		
+//		//updateClassifyRelation
+//		ResClassifyRelationDAO rclassrdao = new ResClassifyRelationDAOImpl();
+//		List<ResRelationClassify> rrclasss = rclassrdao.QueryAllResRelationClassify();
+//		
+//		for(int i = 0; i<rrclasss.size(); i++) {
+//			updateResourceOfRelationClassify( rrclasss.get(i), rdsMap );
+//		}
+//	}
+	
+//	private void updateResourceOfColumn( ResColumn rc, Map<String, ResDataSet> rdsMap ) throws Exception {
+//		ResDataDAO rddao = new ResDataDAOImpl();
+//		ResData rd = new ResData();
+//		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+//		rd.setRESOURCE_DESCRIBE("字段数据资源");
+//		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
+//		rd.setDATA_SET(rc.getDATA_SET());
+//		rd.setELEMENT(rc.getELEMENT());
+//		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
+//		rd.setResource_type(ResData.RESTYPEPUBLIC);
+//		rd.setName(rc.getCOLUMU_CN());
+//		rddao.ResDataOfColumnSave(rd, rc.getCLUE_SRC_SYS());
+//	}
 	
 	private void updateResourceOfRelationColumn( ResRelationColumn rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
+		ResColumnDAO rcdao = new ResColumnDAOImpl();
+		ResColumn rc = rcdao.QueryColumnByElement(rrc.getDATA_SET(), rrc.getELEMENT());
 		ResData rd = new ResData();
 		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
 		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
@@ -1089,12 +1106,15 @@ public class ResourceUploadService {
 		rd.setDATA_SET(rrc.getDATA_SET());
 		rd.setELEMENT(rrc.getELEMENT());
 		rd.setSECTION_CLASS(rrc.getSECTION_CLASS());
+		rd.setName("列控资源-" + rc.getELEMENT() + "(" + rc.getCOLUMU_CN() + ")");
 		
-		rddao.ResDataOfRelationColumnSave(rd, rrc.getCLUE_SRC_SYS());
+		rddao.ImportResDataOfRelationColumn(rd);
 	}
 
 	private void updateResourceOfRelationRow( ResRelationRow rrr, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
+		ResColumnDAO rcdao = new ResColumnDAOImpl();
+		ResColumn rc = rcdao.QueryColumnByElement(rrr.getDATA_SET(), rrr.getELEMENT());
 		ResData rd = new ResData();
 		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
 		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
@@ -1104,10 +1124,10 @@ public class ResourceUploadService {
 		rd.setDATA_SET(rrr.getDATA_SET());
 		rd.setELEMENT(rrr.getELEMENT());
 		rd.setELEMENT_VALUE(rrr.getELEMENT_VALUE());
-		rd.setOPERATE_SYMBOL("等于");
-		rd.setName(rrr.getELEMENT());
+		rd.setOPERATE_SYMBOL(ResData.RES_OPERATE_SYMBOL_EQUAL);
+		rd.setName("行控资源-" + rc.getELEMENT() + "(" + rc.getCOLUMU_CN() + ":" + rrr.getELEMENT_VALUE() + ")");
 		
-		rddao.ResDataOfRelationRowSave(rd, rrr.getCLUE_SRC_SYS());
+		rddao.ImportResDataOfRelationRow(rd);
 	}
 		
 	private void updateResourceOfRelationClassify( ResRelationClassify rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
@@ -1120,9 +1140,9 @@ public class ResourceUploadService {
 		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
 		rd.setDATA_SET(rrc.getDATA_SET());
 		rd.setSECTION_RELATIOIN_CLASS(rrc.getSECTION_RELATIOIN_CLASS());
-		rd.setName("字段分类关系" + rrc.getSECTION_RELATIOIN_CLASS());
+		rd.setName("列分类关系资源-" + rrc.getSECTION_RELATIOIN_CLASS());
 		
-		rddao.ResDataOfRelationClassifySave(rd, rrc.getCLUE_SRC_SYS());
+		rddao.ImportResDataOfRelationClassify(rd);
 	}
 	
 //	private void sheetProcess(Sheet sheet){

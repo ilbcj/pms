@@ -8,6 +8,8 @@ public class ResData {
 	public final static int RESSTATUSDISABLE = 0;
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
+	public final static String RES_OPERATE_SYMBOL_EQUAL = "=";
+	
 	
 	private int id;
 	private String name;
