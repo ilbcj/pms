@@ -4,13 +4,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -59,6 +63,9 @@ import com.pms.model.ResValue;
 import com.pms.model.ResValueSensitive;
 
 public class ResourceUploadService {
+
+	private static Log logger = LogFactory.getLog(ResourceUploadService.class);
+	
 	private final String SHEET_DATASET_SENSITIVE = "数据集敏感度字典";
 	private final String SHEET_DATASET = "数据集定义";
 	private final String SHEET_COLUMN_CLASSIFY = "字段分类定义";
@@ -124,12 +131,12 @@ public class ResourceUploadService {
 	
 	
 	private final String SHEET_ROLE_RESOURCE = "关系对照";
-	private final String SHEET_ROLE_RESOURCE_ROLE_TYPE = "角色类型";
-	private final String SHEET_ROLE_RESOURCE_ROLE_CODE = "角色代码";
-	private final String SHEET_ROLE_RESOURCE_ELEMENT_B050016 = "数据来源";
-	private final String SHEET_ROLE_RESOURCE_ELEMENT_B050016_VALUE = "数据来源编码";
-	private final String SHEET_ROLE_RESOURCE_DATASET = "协议编码";
-	private final String SHEET_ROLE_RESOURCE_SECTION_CLASS = "字段分类编码";
+	private final String SHEET_ROLE_RESOURCE_COL_ROLE_TYPE = "角色类型";
+	private final String SHEET_ROLE_RESOURCE_COL_ROLE_CODE = "角色代码";
+	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016 = "数据来源";
+	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE = "数据来源编码";
+	private final String SHEET_ROLE_RESOURCE_COL_DATASET = "协议编码";
+	private final String SHEET_ROLE_RESOURCE_COL_SECTION_CLASS = "字段分类编码";
 	
 	public void UploadResourceFeature(File inData) throws Exception {
 		
@@ -441,7 +448,7 @@ public class ResourceUploadService {
             			idx.put(SHEET_VALUE_SENSITIVE_COL_CLUE_SRC_SYS, c);
             		} else if ( SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_NAME.equals(cellValue) ) {
             			idx.put(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_NAME, c);
-            		}          		
+            		}
             	} else {
             		if(idx.size() == 0) {
             			throw new Exception("导入数据文件格式不正确!");
@@ -452,7 +459,7 @@ public class ResourceUploadService {
             			vs.setCLUE_SRC_SYS(cellValue);
             		} else if ( c== idx.get(SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_NAME) ) {
             			vs.setVALUE_SENSITIVE_NAME(cellValue);
-            		}             		
+            		}
             	}
             }
             
@@ -470,7 +477,7 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResValue val = null;
 		ResValueDAO dao = new ResValueDAOImpl();
-		//遍历每一行  
+		//遍历每一行
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
         	if(row == null) {
@@ -794,45 +801,45 @@ public class ResourceUploadService {
 //            	}
             	
             	if(r == 0) {
-            		if ( SHEET_ROLE_RESOURCE_ROLE_TYPE.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_ROLE_TYPE, c);
-            		} else if ( SHEET_ROLE_RESOURCE_ROLE_CODE.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_ROLE_CODE, c);
-            		} else if ( SHEET_ROLE_RESOURCE_ELEMENT_B050016.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_ELEMENT_B050016, c);
-            		} else if ( SHEET_ROLE_RESOURCE_ELEMENT_B050016_VALUE.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_ELEMENT_B050016_VALUE, c);
-            		} else if ( SHEET_ROLE_RESOURCE_DATASET.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_DATASET, c);
-            		} else if ( SHEET_ROLE_RESOURCE_SECTION_CLASS.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_SECTION_CLASS, c);
+            		if ( SHEET_ROLE_RESOURCE_COL_ROLE_TYPE.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_ROLE_TYPE, c);
+            		} else if ( SHEET_ROLE_RESOURCE_COL_ROLE_CODE.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_ROLE_CODE, c);
+            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016, c);
+            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE, c);
+            		} else if ( SHEET_ROLE_RESOURCE_COL_DATASET.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_DATASET, c);
+            		} else if ( SHEET_ROLE_RESOURCE_COL_SECTION_CLASS.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_SECTION_CLASS, c);
             		}            		
             	} else {
             		if(idx.size() == 0) {
             			throw new Exception("导入数据文件格式不正确!");
             		}
-            		if( c == idx.get(SHEET_ROLE_RESOURCE_ROLE_TYPE) ) {
+            		if( c == idx.get(SHEET_ROLE_RESOURCE_COL_ROLE_TYPE) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
             				roleName = cellValue;
             			}
-            		} else if ( c == idx.get(SHEET_ROLE_RESOURCE_ROLE_CODE) ) {
+            		} else if ( c == idx.get(SHEET_ROLE_RESOURCE_COL_ROLE_CODE) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
             				roleId = cellValue;
             			}
-            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_ELEMENT_B050016) ) {
+            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
             				//save element name, so nothing to do
             			}
-            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_ELEMENT_B050016_VALUE) ) {
+            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
             				elemnetValue = cellValue;
             				dataset0SectionClasses = null;
             			}
-            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_DATASET) ) {
+            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_DATASET) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
                 			dataset = cellValue;
             			}
-            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_SECTION_CLASS) ) {
+            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_SECTION_CLASS) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
                 			sectionClass = cellValue;
             			}
@@ -882,7 +889,7 @@ public class ResourceUploadService {
 	private void updateRoleAndResourceRelatioinship() throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		// clear old resource and role relationship
-		dao.ClearPublicRoleAndDataResourceRelationship();
+		dao.ClearPublicRoleAndRelationship();
 		
 		List<ResRoleResourceImport> rrris = dao.GetResRoleResourceImport();
 		for(int i = 0; i < rrris.size(); i++) {
@@ -892,7 +899,7 @@ public class ResourceUploadService {
 			createOrUpdateRole(rrri.getRoleName(), rrri.getRoleId());
 			
 			// update role and resource relationship
-			updateRoleAndResourceRelationshipOfColumn(rrri.getRoleId(), rrri.getDataSet(), rrri.getElement());
+			//updateRoleAndResourceRelationshipOfColumn(rrri.getRoleId(), rrri.getDataSet(), rrri.getElement());
 			
 			updateRoleAndResourceRelationshipOfRelationRow(rrri.getRoleId(), rrri.getDataSet(), rrri.getElement(), rrri.getElemnetValue());
 			
@@ -905,9 +912,18 @@ public class ResourceUploadService {
 			String roleId, String dataSet, String sectionClass, String element) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		ResData resource = dao.GetDataByRelationColumn(dataSet, sectionClass, element);
-		if(resource != null) {
-			addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
+		
+		if(resource == null) {
+			ResDataTemplate resTemp = dao.GetDataTemplateByRelationColumn(dataSet, sectionClass, element);
+			if(resTemp == null) {
+				logger.warn("[IRRARD]no record found when search data resource template of column relation by condition of dataset:'" + dataSet + "', element:'" + element + "', sectionClass:'" + sectionClass + "'");
+				return;
+			}
+			
+			SaveResDataTemplate2ResData(resTemp);
 		}
+		
+		addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
 		return;
 	}
 
@@ -915,21 +931,57 @@ public class ResourceUploadService {
 			String dataSet, String element, String elemnetValue) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		ResData resource = dao.GetDataByRelationRow(dataSet, element, elemnetValue);
-		if(resource != null) {
-			addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
+		
+		if(resource == null) {
+			ResDataTemplate resTemp = dao.GetDataTemplateByRelationRow(dataSet, element, elemnetValue);
+			if(resTemp == null) {
+				logger.warn("[IRRARD]no record found when search data resource template of row relation by condition of dataset:'" + dataSet + "', element:'" + element + "', elementValue:'" + elemnetValue + "'");
+				return;
+			}
+			
+			SaveResDataTemplate2ResData(resTemp);
 		}
+		
+		addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
+		
 		return;
 	}
 
-	private void updateRoleAndResourceRelationshipOfColumn(String roleId,
-			String dataSet, String element) throws Exception {
+	private void SaveResDataTemplate2ResData(ResDataTemplate resTemp) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		ResData resource = dao.GetDataByColumn(dataSet, element);
-		if(resource != null) {
-			addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
-		}
+		ResData res = new ResData();
+		res.setDATA_SET(resTemp.getDATA_SET());
+		res.setDATA_VERSION(1);
+		res.setDATASET_SENSITIVE_LEVEL(resTemp.getDATASET_SENSITIVE_LEVEL());
+		res.setDELETE_STATUS(ResData.DELSTATUSNO);
+		res.setELEMENT(resTemp.getELEMENT());
+		res.setELEMENT_VALUE(resTemp.getELEMENT_VALUE());
+		res.setName(resTemp.getName());
+		res.setOPERATE_SYMBOL(resTemp.getOPERATE_SYMBOL());
+		res.setRESOURCE_DESCRIBE(resTemp.getRESOURCE_DESCRIBE());
+		res.setRESOURCE_ID(resTemp.getRESOURCE_ID());
+		res.setRESOURCE_STATUS(resTemp.getRESOURCE_STATUS());
+		res.setResource_type(resTemp.getResource_type());
+		res.setRMK(res.getRMK());
+		res.setSECTION_CLASS(resTemp.getSECTION_CLASS());
+		res.setSECTION_RELATIOIN_CLASS(resTemp.getSECTION_RELATIOIN_CLASS());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		res.setLATEST_MOD_TIME(timenow);
+		dao.DataAdd(res);
 		return;
 	}
+
+//	private void updateRoleAndResourceRelationshipOfColumn(String roleId,
+//			String dataSet, String element) throws Exception {
+//		ResourceDAO dao = new ResourceDAOImpl();
+//		ResData resource = dao.GetDataByColumn(dataSet, element);
+//		if(resource != null) {
+//			addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
+//		}
+//		return;
+//	}
 
 	private void addPublicRoleAndDataResourceRelationship(String roleId,
 			String resId) throws Exception {

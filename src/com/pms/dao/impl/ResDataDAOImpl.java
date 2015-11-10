@@ -121,7 +121,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 			if( rs != null && rs.size() > 1) {
 				String warnMesg = "[IRD]duplicate record found when search data resource of column relation by condition of dataset:'" + rd.getDATA_SET() + "', element:'" + rd.getELEMENT() + "', sectionClass:'" + rd.getSECTION_CLASS() + "' ";
 				logger.info(warnMesg);
-				throw new Exception("warnMesg");
+				throw new Exception(warnMesg);
 			} else if ( rs != null && rs.size() == 1) {
 				ResData exist = rs.get(0);
 				exist.setDELETE_STATUS(ResData.DELSTATUSNO);
@@ -184,7 +184,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 			if( rs != null && rs.size() > 1) {
 				String warnMesg = "[IRD]duplicate record found when search data resource of row relation by condition of dataset:'" + rd.getDATA_SET() + "', element:'" + rd.getELEMENT() + "', element_value:'" + rd.getELEMENT_VALUE() + "' ";
 				logger.info(warnMesg);
-				throw new Exception("warnMesg");
+				throw new Exception(warnMesg);
 			} else if ( rs != null && rs.size() == 1) {
 				ResData exist = rs.get(0);
 				exist.setDELETE_STATUS(ResData.DELSTATUSNO);
@@ -246,7 +246,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 			if( rs != null && rs.size() > 1) {
 				String warnMesg = "[IRD]duplicate record found when search data resource of classify relation by condition of dataset:'" + rd.getDATA_SET() + "', sectionRelationClass:'" + rd.getSECTION_RELATIOIN_CLASS() + "' ";
 				logger.info(warnMesg);
-				throw new Exception("warnMesg");
+				throw new Exception(warnMesg);
 			} else if ( rs != null && rs.size() == 1) {
 				ResData exist = rs.get(0);
 				exist.setDELETE_STATUS(ResData.DELSTATUSNO);

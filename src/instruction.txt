@@ -1,2 +1,4 @@
 [log]
 IRD = 导入数据资源
+	[IRD]duplicate record found when search data resource of column relation by condition of dataset:'" + rd.getDATA_SET() + "', element:'" + rd.getELEMENT() + "', sectionClass:'" + rd.getSECTION_CLASS() + "' 
+IRRARD = 导入角色资源对应关系
