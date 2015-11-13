@@ -8,13 +8,17 @@ import java.util.Locale;
 
 import org.hibernate.Hibernate;
 
+import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.GroupDAO;
+import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.GroupDAOImpl;
+import com.pms.dto.RuleListItem;
 import com.pms.dto.UserListItem;
+import com.pms.model.AttrDictionary;
 import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditGroupLogDescribe;
 import com.pms.model.Group;
@@ -56,7 +60,7 @@ public class GroupManageService {
 		return count;
 	}
 
-	public List<UserListItem> QueryGroupUsersByGroupId(int id) throws Exception {
+	public List<UserListItem> QueryGroupUsersByGroupId(String id) throws Exception {
 		GroupDAO dao = new GroupDAOImpl();
 		List<User> users = dao.GetGroupUsersByGroupId( id );
 		
@@ -110,7 +114,7 @@ public class GroupManageService {
 		
 		group = dao.GroupAdd(group);
 		
-		dao.UpdateGroupRules(group.getId(), rules);
+		dao.UpdateGroupRules(group.getCode(), rules);
 		return group;
 	}
 
@@ -132,12 +136,39 @@ public class GroupManageService {
 		return count;
 	}
 
-	public List<Rule> QueryGroupRulesByGroupId(int id) throws Exception {
+	public void QueryGroupRulesByGroupId(String id, List<RuleListItem> items) throws Exception {
 		GroupDAO dao = new GroupDAOImpl();
 		List<Rule> rules = dao.GetGroupRulesByGroupId( id );
-				
-		return rules;
+		
+		RuleListItem ruleListItem = null;
+		for (int i = 0; i < rules.size(); i++) {
+			 ruleListItem = ConvertRuleToListItem(rules.get(i));
+			 items.add(ruleListItem);
+		}
 	}
+	
+	public RuleListItem ConvertRuleToListItem(Rule rule) throws Exception {
+		RuleListItem item = new RuleListItem();
+		item.setId(rule.getId());
+		item.setAttrid(rule.getAttrid());
+		item.setGroupid(rule.getGroupid());
+		item.setRulename(rule.getRulename());
+		AttributeDAO attrdao = new AttributeDAOImpl();
+		String value="";
+		String str[]=rule.getRulevalue().split(",");
+		for(int j=0; j<str.length; j++) {     
+			AttrDictionary attr = attrdao.GetAttrDictionarysByAttrIdAndCode(rule.getAttrid(),str[j]);
+			if (attr != null) {	
+				value += attr.getValue()+",";
+			}
+		}
+		
+		item.setRulevalue(value);
+		item.setRulecode(rule.getRulevalue());
+		item.setRuletype(rule.getRuletype());
+		
+		return item;
+		}
 
 	public void DeleteGroupRules(List<Integer> groupIds) throws Exception {
 		if(groupIds == null)
@@ -235,7 +266,7 @@ public class GroupManageService {
 			}
 		}
 		GroupDAO dao = new GroupDAOImpl();
-		List<User> users = dao.GetGroupUsersByGroupId( group.getId() );
+		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
 				str += users.get(i).getNAME()+";";
@@ -281,7 +312,7 @@ public class GroupManageService {
 		auditGroupLogDescribe.setLogid(auditGroupLog.getId());
 		
 		GroupDAO dao = new GroupDAOImpl();
-		List<Group> groups = dao.GetGroupByGroupId(group.getId());
+		List<Group> groups = dao.GetGroupByGroupId( group.getCode() );
 		String str="";
 		for (int i = 0; i < groups.size(); i++) {
 			if(groups.get(i).getName() != null && groups.get(i).getName().length() > 0) {
@@ -295,7 +326,7 @@ public class GroupManageService {
 			}
 		}
 		
-		List<Rule> rules = dao.GetGroupRulesByGroupId(group.getId());
+		List<Rule> rules = dao.GetGroupRulesByGroupId( group.getCode() );
 		for(int i = 0; i<rules.size(); i++) {
 			if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
 				str += rules.get(i).getRulename()+";";
@@ -304,7 +335,7 @@ public class GroupManageService {
 				str += rules.get(i).getRulevalue();
 			}
 		}
-		List<User> users = dao.GetGroupUsersByGroupId( group.getId() );
+		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
 				str += users.get(i).getNAME()+";";

@@ -47,7 +47,7 @@
 					        </thead>
 					    </table>
 					    <div id="toolbar" style="background-color:#E7F0FF">
-					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addGroupAuth();">新增授权</a>
+<!-- 					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addGroupAuth();">新增授权</a> -->
 	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modGroupAuth()">维护授权</a>
 <!-- 	            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm9',iconCls:'icon-edit'" >导出授权</a> -->
 <!-- 						    <div id="mm9" style="width:100px;"> -->
@@ -132,9 +132,9 @@
 			return false;
 		}
 		var groupnames = rows[0].name;
-		var groupids = rows[0].id;
+		var groupids = rows[0].code;
 		for(var i=1; i<rows.length; i++){
-			groupids += "," + rows[i].id;
+			groupids += "," + rows[i].code;
 		    groupnames += "," + rows[i].name;
 		}
 		
@@ -165,7 +165,7 @@
 		var rows = $("#privilege_authorize_usergroup_detail_win_list_dg").datagrid('getSelections');
 		if(rows.length > 0){
 			for(var index=0; index < rows.length; index++) {
-				poststr += '&roleIds=' + rows[index].id;
+				poststr += '&roleIds=' + rows[index].BUSINESS_ROLE;
 			}
 		}
     	//alert(poststr);
@@ -196,7 +196,7 @@
 		}
 		
 		var groupnames = rows[0].name;
-		var groupids = rows[0].id;
+		var groupids = rows[0].code;
 		
 		var poststr = "ownerIds=" + groupids;
     	poststr += "&ownerType=3";//usergroup type
@@ -212,7 +212,7 @@
 		    	var priRows = $("#privilege_authorize_usergroup_detail_win_list_dg").datagrid('getRows');
 		    	for(var key in retObj.privileges) {
 		    		for(var index=0; index < priRows.length; index++ ) {
-		    			if( priRows[index].id == retObj.privileges[key].role_id) {
+		    			if( priRows[index].BUSINESS_ROLE == retObj.privileges[key].role_id) {
 		    				$("#privilege_authorize_usergroup_detail_win_list_dg").datagrid('selectRow', index);
 		    			}
 		    		}

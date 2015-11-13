@@ -5,17 +5,17 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.pms.model">
 	<!-- 每个class元素对应一个持久化对象 -->
-	<class name="Rule" table="rule">
+	<class name="UserRole" table="WA_AUTHORITY_POLICE_ROLE">
 		<!-- id元素定义持久化类的标识属性 -->
 		<id name="id" type="java.lang.Integer">
 			<generator class="identity"/>
 		</id>
 		<!-- property元素定义常规属性 -->
-		<property name="rulename" type="java.lang.String" length="64" not-null="true"/>
-		<property name="rulevalue" type="java.lang.String" length="64"/>
-		<property name="ruletype" type="java.lang.Integer"/>
-		<property name="groupid" type="java.lang.String" length="64"/>
-		<property name="attrid" type="java.lang.Integer"/>
-<!-- 		<property name="tstamp" type="java.lang.String" length="64"/> -->
+		<property name="CERTIFICATE_CODE_MD5" type="java.lang.String" length="64"/>
+		<property name="BUSINESS_ROLE" type="java.lang.String" length="64"/>
+		<property name="DELETE_STATUS" type="java.lang.Integer"/>
+		<property name="DATA_VERSION" type="java.lang.Integer"/>
+		<property name="LATEST_MOD_TIME" type="java.lang.String" length="64"/>
 	</class>
 </hibernate-mapping>
+

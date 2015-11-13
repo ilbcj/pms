@@ -98,7 +98,9 @@
 							<thead>
 					            <tr>
 					            	<th field="ck" checkbox="true"></th>
-					            	<th data-options="field:'rulevalue'" style="width:99%;">可选值</th>
+<!-- 					            	<th data-options="field:'rulevalue'" style="width:99%;">可选值</th> -->
+										<th data-options="field:'rulevalue'" style="width:99%;">可选值</th>
+										<th data-options="field:'rulecode'"></th>
 					            </tr>
 					        </thead>
 			            </table>
@@ -197,7 +199,7 @@
      	var convertArray = new Array();
     	
     	for(var index=0; index < rows.length; index++) {
-	    	var rule = new newRule(rows[index].attrid, rows[index].rulename, rows[index].ruletype, rows[index].rulevalue);
+	    	var rule = new newRule(rows[index].attrid, rows[index].rulename, rows[index].ruletype, rows[index].rulecode);
 	 		convertArray.push(rule);
     	}
     	var tmp = $.toJSON(convertArray);
@@ -269,7 +271,7 @@
 					
 					//check already exist attrvalue
 					var attrValuesListRows = $("#group_rule_edit_rule_win_attrvalue_list_dg").datagrid('getRows');
-					var currentValues = rows[editIndex].rulevalue.split("; ");
+					var currentValues = rows[editIndex].rulevalue.split(",");
 					
 					for( var index in attrValuesListRows ) {
 						for( var cvIndex in currentValues ) {
@@ -300,7 +302,7 @@
     	}
     	return -1;
     }
-	function insertRule( attrid, rulename, rulevalue ){
+	function insertRule( attrid, rulename, rulevalue, rulecode ){
 		var rows = $("#group_rule_list_dg").datagrid('getRows');
 		var index = rows.length;
 		
@@ -312,7 +314,8 @@
 					attrid:attrid, 
 					rulename:rulename, 
 					ruletype:1,//RULETYPEEQUAL
-					rulevalue:rulevalue
+					rulevalue:rulevalue,
+					rulecode:rulecode
 				}
 			});
 			return;
@@ -324,7 +327,8 @@
 				attrid:attrid, 
 				rulename:rulename, 
 				ruletype:1,//RULETYPEEQUAL
-				rulevalue:rulevalue
+				rulevalue:rulevalue,
+				rulecode:rulecode
 			}
 		});
 	}
@@ -355,10 +359,12 @@
 			if(attribute != null) {
 				var rulename = attribute.name;
 				var rulevalue = "";
+				var rulecode = "";
 				for( var index in rows) {
-					rulevalue += rows[index].rulevalue + "; ";//'; ' is separator
+					rulevalue += rows[index].rulevalue + ",";//',' is separator
+					rulecode += rows[index].rulecode + ",";
 				}
-				insertRule(attrid, rulename, rulevalue);
+				insertRule(attrid, rulename, rulevalue, rulecode);
 			}
 		}
 
@@ -383,14 +389,14 @@
 		
 		
 		//load datagrid's data
-		var poststr = "group.id=" + rows[0].id;
+		var poststr = "group.code=" + rows[0].code;
 		$.post("../group/queryGroupRules.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
  				var index;
- 				for( index=0; index < retObj.rules.length; index++) {
- 					insertRule( retObj.rules[index].attrid, retObj.rules[index].rulename, retObj.rules[index].rulevalue );
+ 				for( index=0; index < retObj.ruleItems.length; index++) {
+ 					insertRule( retObj.ruleItems[index].attrid, retObj.ruleItems[index].rulename, retObj.ruleItems[index].rulevalue, retObj.ruleItems[index].rulecode );
  				}
 			}
 			else
@@ -487,6 +493,7 @@ $(document).ready(function () {
 				}
 			},
 			{field:'rulevalue',title:'值',width:'30%',editor:'text'},
+			{field:'rulecode',hidden:'true'},
 			{field:'action',title:'操作',width:'10%',align:'center',
 				formatter:function(value,row,index){
 					var e = '<a href="#" onclick="openGroupDetailEditRuleWin(this)">修改</a> ';
@@ -504,7 +511,7 @@ $(document).ready(function () {
 			if( record.dictionary && record.dictionary.length > 0 ) {
 				var str = "[";
 				for(var index in record.dictionary){
-					str += '{"rulevalue":"' + record.dictionary[index].value + '"},';
+					str += '{"rulevalue":"' + record.dictionary[index].value + '","rulecode":"' + record.dictionary[index].code + '"},';
 				}
 				str = str.substring(0, str.lastIndexOf(',')) + "]";
 				var attrListValues = $.parseJSON(str);
