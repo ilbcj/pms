@@ -32,14 +32,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 	
 	@Override
 	public ResFeature FeatureAdd(ResFeature feature) throws Exception {
-		//打开线程安全的session对象
 		Session session = HibernateUtil.currentSession();
-		//打开事务
 		Transaction tx = session.beginTransaction();
-		try
-		{
+		
+		ResFeature rs = null;
+		String sqlString = "select * from wa_authority_func_resource where resource_id =:resource_id ";
+
+		feature.setDATA_VERSION(1);
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+			q.setString("resource_id", feature.getRESOURCE_ID());
+			rs = (ResFeature) q.uniqueResult();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			feature.setLATEST_MOD_TIME(timenow);
+			
+			if(rs != null) {
+				feature.setId(rs.getId());
+				feature.setDATA_VERSION(feature.getDATA_VERSION() + 1);
+			}
+
 			feature = (ResFeature) session.merge(feature);
 			if(feature.getRESOURCE_ID() == null || feature.getRESOURCE_ID().isEmpty()) {
+				logger.warn("[IRF]no resource id of feature resource which inner id is:" + feature.getId());
 				feature.setRESOURCE_ID(new Integer(feature.getId()).toString());
 				feature = (ResFeature) session.merge(feature);
 			}
@@ -1150,6 +1168,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
+		role.setDATA_VERSION(1);
+		
 		String sqlString = "SELECT * FROM wa_authority_role WHERE business_role =:business_role ";
 		List<ResRole> rs = null;
 		try
@@ -1899,7 +1919,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRoleResourceImport> GetResRoleResourceImport()
+	public List<ResRoleResourceImport> GetResRoleResourceImport(int start, int count)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -1908,6 +1928,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResourceImport.class);
+			q.setFirstResult(start);
+			q.setMaxResults(count);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

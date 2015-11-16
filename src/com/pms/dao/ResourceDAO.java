@@ -65,8 +65,8 @@ public interface ResourceDAO {
 	List<ResData> GetDatasByTime(String time) throws Exception;
 	List<ResData> GetColumnDatasByDataSet(String dataSet) throws Exception;
 	
-	ResRoleResourceImport ResRoleResourceImportAdd(ResRoleResourceImport rrri) throws Exception; 
-	List<ResRoleResourceImport> GetResRoleResourceImport() throws Exception;
+	ResRoleResourceImport ResRoleResourceImportAdd(ResRoleResourceImport rrri) throws Exception;
+	List<ResRoleResourceImport> GetResRoleResourceImport(int first, int count) throws Exception;
 	int ResRoleResourceImportClear() throws Exception;
 	int ClearPublicRoleAndRelationship() throws Exception;
 

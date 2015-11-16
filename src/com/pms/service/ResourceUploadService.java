@@ -52,6 +52,7 @@ import com.pms.model.ResData;
 import com.pms.model.ResDataSet;
 import com.pms.model.ResDataSetSensitive;
 import com.pms.model.ResDataTemplate;
+import com.pms.model.ResFeature;
 import com.pms.model.ResRelationClassify;
 import com.pms.model.ResRelationColumn;
 import com.pms.model.ResRelationColumnClassify;
@@ -138,8 +139,35 @@ public class ResourceUploadService {
 	private final String SHEET_ROLE_RESOURCE_COL_DATASET = "协议编码";
 	private final String SHEET_ROLE_RESOURCE_COL_SECTION_CLASS = "字段分类编码";
 	
+	private final String SHEET_REATURE_RESOURCE = "功能资源";
+	private final String SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE = "系统类型(J020012)";
+	private final String SHEET_REATURE_RESOURCE_COL_RESOURCE_ID = "资源唯一标识(J030006)";
+	private final String SHEET_REATURE_RESOURCE_COL_APP_ID = "所属业务系ID(J020013)";
+	private final String SHEET_REATURE_RESOURCE_COL_NAME = "名称(J030007)";
+	private final String SHEET_REATURE_RESOURCE_COL_PARENT = "父资源唯一标识(J030008)";
+	private final String SHEET_REATURE_RESOURCE_COL_URL = "URL(G010002)";
+	private final String SHEET_REATURE_RESOURCE_COL_ICON = "图标路径(J030009)";
+	private final String SHEET_REATURE_RESOURCE_COL_RESOURCE_STATUS = "资源状态(J030010)";
+	private final String SHEET_REATURE_RESOURCE_COL_ORDER = "顺序(J030011)";
+	private final String SHEET_REATURE_RESOURCE_COL_DESCRIBE = "资源描述(J030012)";
+	private final String SHEET_REATURE_RESOURCE_COL_REMARK = "备注(J030013)";
+	private final String SHEET_REATURE_RESOURCE_COL_RESOURCE_TYPE = "资源分类(J030035)";
+	
 	public void UploadResourceFeature(File inData) throws Exception {
-		
+		InputStream in=new FileInputStream(inData);
+        Workbook workbook = WorkbookFactory.create(in);
+        
+        int sheetCount = workbook.getNumberOfSheets();  //Sheet的数量  
+        for (int s = 0; s < sheetCount; s++) {
+        	Sheet sheet = workbook.getSheetAt(s);
+            String sheetName = sheet.getSheetName();
+			if ( SHEET_REATURE_RESOURCE.equals(sheetName) ) {
+	        	updateFeatureResource(sheet);
+	        }
+        }
+        
+        in.close();
+        return;
 	}
 	
 	public void UploadResourceRole(File inData) throws Exception {
@@ -198,6 +226,96 @@ public class ResourceUploadService {
         updateResourceData();
         
         return;
+	}
+	
+	private void updateFeatureResource(Sheet sheet) throws Exception {
+		int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数
+		Map<String, Integer> idx = new HashMap<String, Integer>();
+		ResFeature feature = null;
+		ResourceDAO dao = new ResourceDAOImpl();
+		//遍历每一行  
+        for (int r = 0; r < rowCount; r++) {
+        	Row row = sheet.getRow(r);
+        	if(row == null) {
+        		continue;
+        	}
+        	if( r > 0 ) {
+        		feature = new ResFeature();
+        	}
+        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	//遍历每一列  
+            for (int c = 0; c < cellCount; c++) {
+            	Cell cell = row.getCell(c);
+            	String cellValue = getCellValue(cell);
+
+            	if(r == 0) {
+            		if ( SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_RESOURCE_ID.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_RESOURCE_ID, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_APP_ID.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_APP_ID, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_NAME.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_NAME, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_PARENT.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_PARENT, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_URL.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_URL, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_ICON.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_ICON, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_RESOURCE_STATUS.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_RESOURCE_STATUS, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_ORDER.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_ORDER, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_DESCRIBE.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_DESCRIBE, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_REMARK.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_REMARK, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_RESOURCE_TYPE.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_RESOURCE_TYPE, c);
+            		}
+            	} else {
+            		if(idx.size() == 0) {
+            			String warnMsg = "[IRF]导入数据文件格式不正确!";
+            			logger.warn(warnMsg);
+            			throw new Exception(warnMsg);
+            		}
+            		if( c == idx.get(SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE) ) {
+            			feature.setSYSTEM_TYPE(cellValue);
+            		} else if ( c == idx.get(SHEET_REATURE_RESOURCE_COL_RESOURCE_ID) ) {
+            			feature.setRESOURCE_ID(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_APP_ID) ) {
+            			feature.setAPP_ID(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_NAME) ) {
+            			feature.setRESOUCE_NAME(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_PARENT) ) {
+            			feature.setPARENT_RESOURCE(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_URL) ) {
+            			feature.setURL(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_ICON) ) {
+            			feature.setRESOURCE_ICON_PATH(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_RESOURCE_STATUS) ) {
+            			feature.setRESOURCE_STATUS(Integer.parseInt(cellValue));
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_ORDER) ) {
+            			feature.setRESOURCE_ORDER(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_DESCRIBE) ) {
+            			feature.setRESOURCE_DESCRIBE(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_REMARK) ) {
+            			feature.setRMK(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_RESOURCE_TYPE) ) {
+            			feature.setFUN_RESOURCE_TYPE(Integer.parseInt(cellValue));
+            		}
+            	}
+            }
+            
+            if( r > 0 ) {
+            	if(feature.isValid()) {
+		            feature.setDELETE_STATUS(ResDataSetSensitive.DELSTATUSNO);
+		            dao.FeatureAdd(feature);
+            	}
+            }
+        }
+		
 	}
 	
 	private void updateDatasetSensitive(Sheet sheet) throws Exception {
@@ -591,6 +709,8 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResRelationRow rr = null;
 		ResRowRelationDAO dao = new ResRowRelationDAOImpl();
+		dao.ResRowRelationImportClear();
+		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -650,6 +770,7 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResRelationColumn rc = null;
 		ResColumnRelationDAO dao = new ResColumnRelationDAOImpl();
+		dao.ResColumnRelationImportClear();
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -709,6 +830,8 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResRelationClassify rc = null;
 		ResClassifyRelationDAO dao = new ResClassifyRelationDAOImpl();
+		dao.ResClassifyRelationImportClear();
+		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -891,20 +1014,27 @@ public class ResourceUploadService {
 		// clear old resource and role relationship
 		dao.ClearPublicRoleAndRelationship();
 		
-		List<ResRoleResourceImport> rrris = dao.GetResRoleResourceImport();
-		for(int i = 0; i < rrris.size(); i++) {
-			ResRoleResourceImport rrri = rrris.get(i);
-			
-			// update role
-			createOrUpdateRole(rrri.getRoleName(), rrri.getRoleId());
-			
-			// update role and resource relationship
-			//updateRoleAndResourceRelationshipOfColumn(rrri.getRoleId(), rrri.getDataSet(), rrri.getElement());
-			
-			updateRoleAndResourceRelationshipOfRelationRow(rrri.getRoleId(), rrri.getDataSet(), rrri.getElement(), rrri.getElemnetValue());
-			
-			updateRoleAndResourceRelationshipOfRelationColumn(rrri.getRoleId(), rrri.getDataSet(), rrri.getSectionClass(), rrri.getElement());
-		}
+		int start = 300000;
+		int rows = 10000;
+		List<ResRoleResourceImport> rrris = null;
+		rrris= dao.GetResRoleResourceImport(start, rows);
+		while(rrris != null && rrris.size() > 0) {
+			for(int i = 0; i < rrris.size(); i++) {
+				ResRoleResourceImport rrri = rrris.get(i);
+				
+				// update role
+				createOrUpdateRole(rrri.getRoleName(), rrri.getRoleId());
+				
+				// update role and resource relationship
+				//updateRoleAndResourceRelationshipOfColumn(rrri.getRoleId(), rrri.getDataSet(), rrri.getElement());
+				
+				updateRoleAndResourceRelationshipOfRelationRow(rrri.getRoleId(), rrri.getDataSet(), rrri.getElement(), rrri.getElemnetValue());
+				
+				updateRoleAndResourceRelationshipOfRelationColumn(rrri.getRoleId(), rrri.getDataSet(), rrri.getSectionClass(), rrri.getElement());
+			}
+			start += rrris.size();
+			rrris= dao.GetResRoleResourceImport(start, rows);
+		};
 		return;
 	}
 	
@@ -920,7 +1050,7 @@ public class ResourceUploadService {
 				return;
 			}
 			
-			SaveResDataTemplate2ResData(resTemp);
+			resource = SaveResDataTemplate2ResData(resTemp);
 		}
 		
 		addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
@@ -939,7 +1069,7 @@ public class ResourceUploadService {
 				return;
 			}
 			
-			SaveResDataTemplate2ResData(resTemp);
+			resource = SaveResDataTemplate2ResData(resTemp);
 		}
 		
 		addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
@@ -947,7 +1077,7 @@ public class ResourceUploadService {
 		return;
 	}
 
-	private void SaveResDataTemplate2ResData(ResDataTemplate resTemp) throws Exception {
+	private ResData SaveResDataTemplate2ResData(ResDataTemplate resTemp) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		ResData res = new ResData();
 		res.setDATA_SET(resTemp.getDATA_SET());
@@ -969,8 +1099,8 @@ public class ResourceUploadService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		res.setLATEST_MOD_TIME(timenow);
-		dao.DataAdd(res);
-		return;
+		res = dao.DataAdd(res);
+		return res;
 	}
 
 //	private void updateRoleAndResourceRelationshipOfColumn(String roleId,
@@ -1150,51 +1280,59 @@ public class ResourceUploadService {
 		ResDataDAO rddao = new ResDataDAOImpl();
 		ResColumnDAO rcdao = new ResColumnDAOImpl();
 		ResColumn rc = rcdao.QueryColumnByElement(rrc.getDATA_SET(), rrc.getELEMENT());
-		ResData rd = new ResData();
-		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
-		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
-		rd.setResource_type(ResData.RESTYPEPUBLIC);
-		rd.setRESOURCE_DESCRIBE("数据集-字段分类-字段数据资源");
-		rd.setDATA_SET(rrc.getDATA_SET());
-		rd.setELEMENT(rrc.getELEMENT());
-		rd.setSECTION_CLASS(rrc.getSECTION_CLASS());
-		rd.setName("列控资源-" + rc.getELEMENT() + "(" + rc.getCOLUMU_CN() + ")");
+		if( rc == null ) {
+			logger.warn("[IRD]column record not found when updata resource of column relation by condition of dataset:'" + rrc.getDATA_SET() + "', element:'" + rrc.getELEMENT() + "' ");
+			return;
+		}
+		ResDataTemplate rdt = new ResDataTemplate();
+		rdt.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rdt.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rdt.setResource_type(ResData.RESTYPEPUBLIC);
+		rdt.setRESOURCE_DESCRIBE("数据集-字段分类-字段数据资源");
+		rdt.setDATA_SET(rrc.getDATA_SET());
+		rdt.setELEMENT(rrc.getELEMENT());
+		rdt.setSECTION_CLASS(rrc.getSECTION_CLASS());
+		rdt.setName("列控资源-" + rc.getELEMENT() + "(" + rc.getCOLUMU_CN() + ")");
 		
-		rddao.ImportResDataOfRelationColumn(rd);
+		rddao.ImportResDataOfRelationColumn(rdt);
 	}
 
 	private void updateResourceOfRelationRow( ResRelationRow rrr, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
 		ResColumnDAO rcdao = new ResColumnDAOImpl();
 		ResColumn rc = rcdao.QueryColumnByElement(rrr.getDATA_SET(), rrr.getELEMENT());
-		ResData rd = new ResData();
-		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
-		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
-		rd.setResource_type(ResData.RESTYPEPUBLIC);
-		rd.setRESOURCE_DESCRIBE("数据集-字段-字段值数据资源");
-		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrr.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
-		rd.setDATA_SET(rrr.getDATA_SET());
-		rd.setELEMENT(rrr.getELEMENT());
-		rd.setELEMENT_VALUE(rrr.getELEMENT_VALUE());
-		rd.setOPERATE_SYMBOL(ResData.RES_OPERATE_SYMBOL_EQUAL);
-		rd.setName("行控资源-" + rc.getELEMENT() + "(" + rc.getCOLUMU_CN() + ":" + rrr.getELEMENT_VALUE() + ")");
+		if( rc == null ) {
+			logger.warn("[IRD]column record not found when updata resource of row relation by condition of dataset:'" + rrr.getDATA_SET() + "', element:'" + rrr.getELEMENT() + "' ");
+			return;
+		}
+		ResDataTemplate rdt = new ResDataTemplate();
+		rdt.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rdt.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rdt.setResource_type(ResData.RESTYPEPUBLIC);
+		rdt.setRESOURCE_DESCRIBE("数据集-字段-字段值数据资源");
+		rdt.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrr.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
+		rdt.setDATA_SET(rrr.getDATA_SET());
+		rdt.setELEMENT(rrr.getELEMENT());
+		rdt.setELEMENT_VALUE(rrr.getELEMENT_VALUE());
+		rdt.setOPERATE_SYMBOL(ResData.RES_OPERATE_SYMBOL_EQUAL);
+		rdt.setName("行控资源-" + rc.getELEMENT() + "(" + rc.getCOLUMU_CN() + ":" + rrr.getELEMENT_VALUE() + ")");
 		
-		rddao.ImportResDataOfRelationRow(rd);
+		rddao.ImportResDataOfRelationRow(rdt);
 	}
 		
 	private void updateResourceOfRelationClassify( ResRelationClassify rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
-		ResData rd = new ResData();
-		rd.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
-		rd.setDELETE_STATUS(ResData.DELSTATUSNO);
-		rd.setResource_type(ResData.RESTYPEPUBLIC);
-		rd.setRESOURCE_DESCRIBE("数据集-字段分类关系数据资源");
-		rd.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
-		rd.setDATA_SET(rrc.getDATA_SET());
-		rd.setSECTION_RELATIOIN_CLASS(rrc.getSECTION_RELATIOIN_CLASS());
-		rd.setName("列分类关系资源-" + rrc.getSECTION_RELATIOIN_CLASS());
+		ResDataTemplate rdt = new ResDataTemplate();
+		rdt.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rdt.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rdt.setResource_type(ResData.RESTYPEPUBLIC);
+		rdt.setRESOURCE_DESCRIBE("数据集-字段分类关系数据资源");
+		rdt.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
+		rdt.setDATA_SET(rrc.getDATA_SET());
+		rdt.setSECTION_RELATIOIN_CLASS(rrc.getSECTION_RELATIOIN_CLASS());
+		rdt.setName("列分类关系资源-" + rrc.getSECTION_RELATIOIN_CLASS());
 		
-		rddao.ImportResDataOfRelationClassify(rd);
+		rddao.ImportResDataOfRelationClassify(rdt);
 	}
 	
 //	private void sheetProcess(Sheet sheet){

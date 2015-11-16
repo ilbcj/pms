@@ -9,5 +9,7 @@ public interface ResClassifyRelationDAO {
 	public ResRelationClassify ResRelationClassifySave(ResRelationClassify rc) throws Exception;
 
 	public List<ResRelationClassify> QueryAllResRelationClassify() throws Exception;
+
+	public int ResClassifyRelationImportClear() throws Exception;
 	
 }

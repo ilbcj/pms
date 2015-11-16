@@ -103,39 +103,39 @@ public class ResDataDAOImpl implements ResDataDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void ImportResDataOfRelationColumn(ResData rd) throws Exception {
+	public void ImportResDataOfRelationColumn(ResDataTemplate rdt) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
-		rd.setDATA_VERSION(1);
+		rdt.setDATA_VERSION(1);
 		
-		List<ResData> rs = null;
+		List<ResDataTemplate> rs = null;
 		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and SECTION_CLASS = :SECTION_CLASS and ELEMENT_VALUE is null ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
-			q.setString("DATA_SET", rd.getDATA_SET());
-			q.setString("ELEMENT", rd.getELEMENT());
-			q.setString("SECTION_CLASS", rd.getSECTION_CLASS());
+			q.setString("DATA_SET", rdt.getDATA_SET());
+			q.setString("ELEMENT", rdt.getELEMENT());
+			q.setString("SECTION_CLASS", rdt.getSECTION_CLASS());
 			rs = q.list();
 			
 			if( rs != null && rs.size() > 1) {
-				String warnMesg = "[IRD]duplicate record found when search data resource of column relation by condition of dataset:'" + rd.getDATA_SET() + "', element:'" + rd.getELEMENT() + "', sectionClass:'" + rd.getSECTION_CLASS() + "' ";
+				String warnMesg = "[IRD]duplicate record found when search data resource of column relation by condition of dataset:'" + rdt.getDATA_SET() + "', element:'" + rdt.getELEMENT() + "', sectionClass:'" + rdt.getSECTION_CLASS() + "' ";
 				logger.info(warnMesg);
 				throw new Exception(warnMesg);
 			} else if ( rs != null && rs.size() == 1) {
-				ResData exist = rs.get(0);
-				exist.setDELETE_STATUS(ResData.DELSTATUSNO);
+				ResDataTemplate exist = rs.get(0);
+				exist.setDELETE_STATUS(ResDataTemplate.DELSTATUSNO);
 				session.merge(exist);
 			} else {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 						Locale.SIMPLIFIED_CHINESE);
 				String timenow = sdf.format(new Date());
-				rd.setLATEST_MOD_TIME(timenow);
+				rdt.setLATEST_MOD_TIME(timenow);
 				
-				rd = (ResData) session.merge(rd);
-				if( rd.getRESOURCE_ID() == null || rd.getRESOURCE_ID().length() == 0 ) {
-					rd.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rd.getId()) );
-					session.merge(rd);
+				rdt = (ResDataTemplate) session.merge(rdt);
+				if( rdt.getRESOURCE_ID() == null || rdt.getRESOURCE_ID().length() == 0 ) {
+					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rdt.getId()) );
+					session.merge(rdt);
 				}
 			}
 			tx.commit();
@@ -166,39 +166,39 @@ public class ResDataDAOImpl implements ResDataDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void ImportResDataOfRelationRow(ResData rd) throws Exception {
+	public void ImportResDataOfRelationRow(ResDataTemplate rdt) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
-		rd.setDATA_VERSION(1);
+		rdt.setDATA_VERSION(1);
 		
-		List<ResData> rs = null;
+		List<ResDataTemplate> rs = null;
 		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE =:ELEMENT_VALUE ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
-			q.setString("DATA_SET", rd.getDATA_SET());
-			q.setString("ELEMENT", rd.getELEMENT());
-			q.setString("ELEMENT_VALUE", rd.getELEMENT_VALUE());
+			q.setString("DATA_SET", rdt.getDATA_SET());
+			q.setString("ELEMENT", rdt.getELEMENT());
+			q.setString("ELEMENT_VALUE", rdt.getELEMENT_VALUE());
 			rs = q.list();
 			
 			if( rs != null && rs.size() > 1) {
-				String warnMesg = "[IRD]duplicate record found when search data resource of row relation by condition of dataset:'" + rd.getDATA_SET() + "', element:'" + rd.getELEMENT() + "', element_value:'" + rd.getELEMENT_VALUE() + "' ";
+				String warnMesg = "[IRD]duplicate record found when search data resource of row relation by condition of dataset:'" + rdt.getDATA_SET() + "', element:'" + rdt.getELEMENT() + "', element_value:'" + rdt.getELEMENT_VALUE() + "' ";
 				logger.info(warnMesg);
 				throw new Exception(warnMesg);
 			} else if ( rs != null && rs.size() == 1) {
-				ResData exist = rs.get(0);
-				exist.setDELETE_STATUS(ResData.DELSTATUSNO);
+				ResDataTemplate exist = rs.get(0);
+				exist.setDELETE_STATUS(ResDataTemplate.DELSTATUSNO);
 				session.merge(exist);
 			} else {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 						Locale.SIMPLIFIED_CHINESE);
 				String timenow = sdf.format(new Date());
-				rd.setLATEST_MOD_TIME(timenow);
+				rdt.setLATEST_MOD_TIME(timenow);
 				
-				rd = (ResData) session.merge(rd);
-				if( rd.getRESOURCE_ID() == null || rd.getRESOURCE_ID().length() == 0 ) {
-					rd.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rd.getId()) );
-					session.merge(rd);
+				rdt = (ResDataTemplate) session.merge(rdt);
+				if( rdt.getRESOURCE_ID() == null || rdt.getRESOURCE_ID().length() == 0 ) {
+					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rdt.getId()) );
+					session.merge(rdt);
 				}
 			}
 			tx.commit();
@@ -229,38 +229,38 @@ public class ResDataDAOImpl implements ResDataDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void ImportResDataOfRelationClassify(ResData rd) throws Exception {
+	public void ImportResDataOfRelationClassify(ResDataTemplate rdt) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
-		rd.setDATA_VERSION(1);
+		rdt.setDATA_VERSION(1);
 		
-		List<ResData> rs = null;
+		List<ResDataTemplate> rs = null;
 		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
-			q.setString("DATA_SET", rd.getDATA_SET());
-			q.setString("SECTION_RELATIOIN_CLASS", rd.getSECTION_RELATIOIN_CLASS());
+			q.setString("DATA_SET", rdt.getDATA_SET());
+			q.setString("SECTION_RELATIOIN_CLASS", rdt.getSECTION_RELATIOIN_CLASS());
 			rs = q.list();
 			
 			if( rs != null && rs.size() > 1) {
-				String warnMesg = "[IRD]duplicate record found when search data resource of classify relation by condition of dataset:'" + rd.getDATA_SET() + "', sectionRelationClass:'" + rd.getSECTION_RELATIOIN_CLASS() + "' ";
+				String warnMesg = "[IRD]duplicate record found when search data resource of classify relation by condition of dataset:'" + rdt.getDATA_SET() + "', sectionRelationClass:'" + rdt.getSECTION_RELATIOIN_CLASS() + "' ";
 				logger.info(warnMesg);
 				throw new Exception(warnMesg);
 			} else if ( rs != null && rs.size() == 1) {
-				ResData exist = rs.get(0);
-				exist.setDELETE_STATUS(ResData.DELSTATUSNO);
+				ResDataTemplate exist = rs.get(0);
+				exist.setDELETE_STATUS(ResDataTemplate.DELSTATUSNO);
 				session.merge(exist);
 			} else {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 						Locale.SIMPLIFIED_CHINESE);
 				String timenow = sdf.format(new Date());
-				rd.setLATEST_MOD_TIME(timenow);
+				rdt.setLATEST_MOD_TIME(timenow);
 				
-				rd = (ResData) session.merge(rd);
-				if( rd.getRESOURCE_ID() == null || rd.getRESOURCE_ID().length() == 0 ) {
-					rd.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rd.getId()) );
-					session.merge(rd);
+				rdt = (ResDataTemplate) session.merge(rdt);
+				if( rdt.getRESOURCE_ID() == null || rdt.getRESOURCE_ID().length() == 0 ) {
+					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rdt.getId()) );
+					session.merge(rdt);
 				}
 			}
 			tx.commit();

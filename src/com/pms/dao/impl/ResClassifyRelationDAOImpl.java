@@ -96,4 +96,28 @@ public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
 		return rs;
 	}
 
+	@Override
+	public int ResClassifyRelationImportClear() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		int rs = 0;
+		String sqlString = "delete from WA_CLASSIFY_RELATION ";
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			rs = q.executeUpdate();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
 }

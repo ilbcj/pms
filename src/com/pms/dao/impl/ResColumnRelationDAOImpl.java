@@ -95,4 +95,28 @@ public class ResColumnRelationDAOImpl implements ResColumnRelationDAO {
 		return rs;
 	}
 
+	@Override
+	public int ResColumnRelationImportClear() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		int rs = 0;
+		String sqlString = "delete from WA_COLUMN_RELATION ";
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			rs = q.executeUpdate();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
 }
