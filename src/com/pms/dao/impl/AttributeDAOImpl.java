@@ -338,4 +338,29 @@ public class AttributeDAOImpl implements AttributeDAO {
 		return rs;
 	}
 	
+	@Override
+	public AttrDictionary GetAttrDictionarysByAttrIdAndCode(int attrId, String code) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		AttrDictionary rs = null;
+		String sqlString = "SELECT * FROM attrdict WHERE attrid =:attrid AND code =:code";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("attrid", attrId);
+			q.setString("code", code);
+			rs = (AttrDictionary) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 }

@@ -1632,15 +1632,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRole> GetRoleById(int id) throws Exception {
+	public List<ResRole> GetRoleById(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRole> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_ROLE where id = :id ";
+		String sqlString = "select * from WA_AUTHORITY_ROLE WHERE business_role =:business_role ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
-			q.setInteger("id", id);
+			q.setString("business_role", id);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

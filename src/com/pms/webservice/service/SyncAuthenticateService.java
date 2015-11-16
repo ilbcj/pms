@@ -211,7 +211,7 @@ public class SyncAuthenticateService extends SyncService {
 		return result;
 	}
 	
-	private String getBusinessRoleByRoleId(int role_id) {
+	private String getBusinessRoleByRoleId(String role_id) {
 		String businessRole = "" + role_id;
 		return businessRole;
 	}

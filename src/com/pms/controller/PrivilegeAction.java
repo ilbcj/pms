@@ -24,17 +24,17 @@ public class PrivilegeAction extends ActionSupport {
 	
 	private List<AppRoleItem> items;
 //	private List<PrivilegeTemp> privilegesToSave;
-	private List<Integer> roleIds;
+	private List<String> roleIds;
 	private List<Privilege> privileges;
 	private String ownerIds;
 	private int ownerType;
 	private int saveType;
 	
-	public List<Integer> getRoleIds() {
+	public List<String> getRoleIds() {
 		return roleIds;
 	}
 
-	public void setRoleIds(List<Integer> roleIds) {
+	public void setRoleIds(List<String> roleIds) {
 		this.roleIds = roleIds;
 	}
 

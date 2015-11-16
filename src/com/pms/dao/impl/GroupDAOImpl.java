@@ -173,15 +173,15 @@ public class GroupDAOImpl implements GroupDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> GetGroupUsersByGroupId(int id) throws Exception {
+	public List<User> GetGroupUsersByGroupId(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<User> rs = null;
-		String sqlString = "SELECT * FROM WA_AUTHORITY_POLICE where id in (SELECT userid FROM group_user where groupid = :groupid) ";
+		String sqlString = "SELECT * FROM WA_AUTHORITY_POLICE where certificate_code_md5 in (SELECT userid FROM group_user where groupid = :groupid) ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
-			q.setInteger("groupid", id);
+			q.setString("groupid", id);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -316,7 +316,7 @@ public class GroupDAOImpl implements GroupDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void UpdateGroupRules(int id, List<Rule> rules) throws Exception {
+	public void UpdateGroupRules(String id, List<Rule> rules) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		String sqlString = "select * from group_rule where groupid = :groupid ";
@@ -324,7 +324,7 @@ public class GroupDAOImpl implements GroupDAO {
 		//sqlString = "delete from group_rule where groupid = :groupid ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(GroupRule.class);
-			q.setInteger("groupid", id);
+			q.setString("groupid", id);
 			rs = q.list();
 			//delete rules
 			Rule rule = null;
@@ -336,7 +336,7 @@ public class GroupDAOImpl implements GroupDAO {
 			
 			sqlString = "delete from group_rule where groupid = :groupid ";
 			q = session.createSQLQuery(sqlString);
-			q.setInteger("groupid", id);
+			q.setString("groupid", id);
 			q.executeUpdate();
 			
 			GroupRule gr;
@@ -451,7 +451,7 @@ public class GroupDAOImpl implements GroupDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Rule> GetGroupRulesByGroupId(int id) throws Exception {
+	public List<Rule> GetGroupRulesByGroupId(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Rule> rs = null;
@@ -459,7 +459,7 @@ public class GroupDAOImpl implements GroupDAO {
 				
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Rule.class);
-			q.setInteger("groupid", id);
+			q.setString("groupid", id);
 			
 			rs = q.list();
 			tx.commit();
@@ -476,15 +476,15 @@ public class GroupDAOImpl implements GroupDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Group> GetGroupByGroupId(int id) throws Exception {
+	public List<Group> GetGroupByGroupId(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<Group> rs = null;
-		String sqlString = "select * from groups where id = :id ";
+		String sqlString = "select * from groups where code = :code ";
 				
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Group.class);
-			q.setInteger("id", id);
+			q.setString("code", id);
 			
 			rs = q.list();
 			tx.commit();

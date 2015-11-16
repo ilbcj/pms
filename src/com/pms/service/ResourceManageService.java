@@ -621,7 +621,7 @@ public class ResourceManageService {
 	
 	public ResRole DeleteResourceRole(ResRole role) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		List<ResRole> roleNodes=dao.GetRoleById(role.getId());
+		List<ResRole> roleNodes=dao.GetRoleById(role.getBUSINESS_ROLE());
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);

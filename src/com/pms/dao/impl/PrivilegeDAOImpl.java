@@ -12,6 +12,8 @@ import com.pms.dao.PrivilegeDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.Privilege;
 import com.pms.model.ResRole;
+import com.pms.model.UserRole;
+import com.pms.model.UserRoleView;
 
 public class PrivilegeDAOImpl implements PrivilegeDAO {
 
@@ -239,6 +241,137 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRole.class);
 			q.setString("owner_id", groupid);
 			q.setInteger("owner_type", Privilege.OWNERTYPEUSERGROUP);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public UserRole UserRoleUpdate(UserRole  userRole) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();		
+		try 
+		{	
+			userRole = (UserRole) session.merge(userRole);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名用户。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return userRole;
+	}
+	
+	
+	@Override
+	public UserRole GetUserRoleByUserIdRoleID(String uid, String rid) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		UserRole rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE_ROLE where CERTIFICATE_CODE_MD5 = :CERTIFICATE_CODE_MD5 and BUSINESS_ROLE = :BUSINESS_ROLE";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(UserRole.class);
+			q.setString("CERTIFICATE_CODE_MD5", uid);
+			q.setString("BUSINESS_ROLE", rid);
+			rs = (UserRole) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public UserRoleView GetUserRoleViewByUserIdRoleID(String uid, String rid) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		UserRoleView rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE_ROLE_VIEW where CERTIFICATE_CODE_MD5 = :CERTIFICATE_CODE_MD5 and role_id = :role_id";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(UserRoleView.class);
+			q.setString("CERTIFICATE_CODE_MD5", uid);
+			q.setString("role_id", rid);
+			rs = (UserRoleView) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserRoleView> QueryUserRoleView() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<UserRoleView> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE_ROLE_VIEW";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(UserRoleView.class);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserRole> QueryUserRole() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<UserRole> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE_ROLE";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(UserRole.class);
+			
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

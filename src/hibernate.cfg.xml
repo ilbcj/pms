@@ -15,7 +15,9 @@
 	<property name="connection.driver_class">
 		com.mysql.jdbc.Driver
 	</property>
-	<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+	<property name="hibernate.connection.provider_class">
+		org.hibernate.connection.C3P0ConnectionProvider
+	</property>
 	<!-- 指定连接池里最大连接数 -->
 	<property name="hibernate.c3p0.max_size">20</property>
 	<!-- 指定连接池里最小连接数 -->
@@ -70,6 +72,7 @@
 	<mapping resource="com/pms/model/SyncConfig.hbm.xml" />
 	<mapping resource="com/pms/model/OrganizationImport.hbm.xml" />
 	<mapping resource="com/pms/model/UserImport.hbm.xml" />
+	<mapping resource="com/pms/model/UserRole.hbm.xml" />
 	<mapping resource="com/pms/model/AuditUserLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditUserLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditOrgLog.hbm.xml" />
@@ -80,6 +83,7 @@
 	<mapping resource="com/pms/model/AuditResLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditPrivLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditPrivLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/UserRoleView.hbm.xml" />
 
 </session-factory>
 

@@ -91,7 +91,7 @@
 							        </thead>
 							    </table>
 							    <div id="toolbar" style="background-color:#E7F0FF">
-							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addUserAuth();">新增授权</a>
+<!-- 							    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addUserAuth();">新增授权</a> -->
 			            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modUserAuth()">维护授权</a>
 <!-- 			            			<a href="javascript:void(0)" class="easyui-splitbutton" data-options="menu:'#mm8',iconCls:'icon-edit'" >导出授权</a> -->
 <!-- 								    <div id="mm8" style="width:100px;"> -->
@@ -251,9 +251,9 @@
 			return false;
 		}
 		var usernames = rows[0].name;
-		var userids = rows[0].id;
+		var userids = rows[0].certificate_code_md5;
 		for(var i=1; i<rows.length; i++){
-			userids += "," + rows[i].id;
+			userids += "," + rows[0].certificate_code_md5;
 		    usernames += "," + rows[i].name;
 		}
 		
@@ -286,7 +286,7 @@
 		var rows = $("#privilege_authorize_user_detail_win_list_dg").datagrid('getSelections');
 		if(rows.length > 0){
 			for(var index=0; index < rows.length; index++) {
-				poststr += '&roleIds=' + rows[index].id;
+				poststr += '&roleIds=' + rows[index].BUSINESS_ROLE;
 			}
 		}
     	//alert(poststr);
@@ -337,7 +337,7 @@
 		    	var priRows = $("#privilege_authorize_user_detail_win_list_dg").datagrid('getRows');
 		    	for(var key in retObj.privileges) {
 		    		for(var index=0; index < priRows.length; index++ ) {
-		    			if( priRows[index].id == retObj.privileges[key].role_id) {
+		    			if( priRows[index].BUSINESS_ROLE == retObj.privileges[key].role_id) {
 		    				$("#privilege_authorize_user_detail_win_list_dg").datagrid('selectRow', index);
 		    			}
 		    		}

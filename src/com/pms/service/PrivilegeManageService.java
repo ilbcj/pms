@@ -32,6 +32,8 @@ import com.pms.model.Group;
 import com.pms.model.Privilege;
 import com.pms.model.ResRole;
 import com.pms.model.User;
+import com.pms.model.UserRole;
+import com.pms.model.UserRoleView;
 
 
 
@@ -77,7 +79,7 @@ public class PrivilegeManageService {
 	}
 
 	public void SavePrivilege(String ownerids, int ownertype,
-			List<Integer> roleIds) throws Exception {
+			List<String> roleIds) throws Exception {
 		String orgs[] = ownerids.split(",");
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		for(int i = 0; i< orgs.length; i++) {
@@ -93,14 +95,17 @@ public class PrivilegeManageService {
 				String timenow = sdf.format(new Date());
 				priv.setTstamp(timenow);
 				dao.PrivilegeAdd(priv);
+				
+//				saveUserRole(orgs[i], ownertype, roleIds.get(j) );
 			}
+			saveUserRole();
 			//AddPrivilegeAddOrUpdateLog(Integer.parseInt(orgs[i]),ownertype,roleIds,"add");
 			AddPrivilegeAddOrUpdateLog(orgs[i],ownertype,roleIds,"add");
 		}
 	}
-
+	
 	public void UpdatePrivilege(String ownerid, int ownertype,
-			List<Integer> roleIds) throws Exception {
+			List<String> roleIds) throws Exception {
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		List<Privilege> privs = new ArrayList<Privilege>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
@@ -113,8 +118,12 @@ public class PrivilegeManageService {
 			priv.setRole_id(roleIds.get(i));
 			priv.setTstamp(timenow);
 			privs.add(priv);
+			
+//			saveUserRole(ownerid, ownertype, roleIds.get(i) );
 		}
 		dao.UpdatePrivilegeByOwnerId(ownerid, ownertype, privs);
+		
+		saveUserRole();
 		AddPrivilegeAddOrUpdateLog(ownerid,ownertype,roleIds,"update");
 	}
 
@@ -125,7 +134,59 @@ public class PrivilegeManageService {
 		return res;
 	}
 	
-	private void AddPrivilegeAddOrUpdateLog(String ownerid, int ownertype, List<Integer> roleIds, String flag) throws Exception {
+	private void saveUserRole() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		PrivilegeDAO dao = new PrivilegeDAOImpl();
+		
+		UserRole userRole =  new UserRole();
+		List<UserRole>  res = dao.QueryUserRole();
+		for (int i = 0; i < res.size(); i++) {
+			UserRoleView  nodeView = dao.GetUserRoleViewByUserIdRoleID( res.get(i).getCERTIFICATE_CODE_MD5(), res.get(i).getBUSINESS_ROLE());
+			if(nodeView == null && res.get(i).getDELETE_STATUS() != UserRole.DELSTATUSYES){
+				userRole.setId(res.get(i).getId());
+				userRole.setCERTIFICATE_CODE_MD5( res.get(i).getCERTIFICATE_CODE_MD5() );
+				userRole.setBUSINESS_ROLE(res.get(i).getBUSINESS_ROLE());
+				
+				userRole.setDELETE_STATUS(UserRole.DELSTATUSYES);
+				userRole.setDATA_VERSION(res.get(i).getDATA_VERSION()+1);
+				userRole.setLATEST_MOD_TIME(timenow);
+				dao.UserRoleUpdate(userRole);
+			}
+		}
+		
+		List<UserRoleView>  resView = dao.QueryUserRoleView();
+		for (int i = 0; i < resView.size(); i++) {
+			
+			UserRole  node = dao.GetUserRoleByUserIdRoleID( resView.get(i).getCERTIFICATE_CODE_MD5(), resView.get(i).getRole_id());
+			if(node == null){
+				userRole.setCERTIFICATE_CODE_MD5( resView.get(i).getCERTIFICATE_CODE_MD5() );
+				userRole.setBUSINESS_ROLE(resView.get(i).getRole_id());	
+				userRole.setDELETE_STATUS(UserRole.DELSTATUSNO);
+				userRole.setDATA_VERSION(1);
+				userRole.setLATEST_MOD_TIME(timenow);
+				dao.UserRoleUpdate(userRole);
+			}else{
+				
+				if( node.getDELETE_STATUS() == UserRole.DELSTATUSYES ){
+					userRole.setId(node.getId());
+					userRole.setCERTIFICATE_CODE_MD5( node.getCERTIFICATE_CODE_MD5() );
+					userRole.setBUSINESS_ROLE(node.getBUSINESS_ROLE());
+					
+					userRole.setDELETE_STATUS(UserRole.DELSTATUSNO);
+					userRole.setDATA_VERSION(node.getDATA_VERSION()+1);
+					userRole.setLATEST_MOD_TIME(timenow);
+					dao.UserRoleUpdate(userRole);
+				}
+				
+			}
+			
+		}
+		
+	}
+	
+	private void AddPrivilegeAddOrUpdateLog(String ownerid, int ownertype, List<String> roleIds, String flag) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
@@ -176,8 +237,8 @@ public class PrivilegeManageService {
 		else if(ownertype==Privilege.OWNERTYPEUSERGROUP){
 			GroupDAO dao = new GroupDAOImpl();
 			//List<Group> groupNodes = dao.GetGroupByGroupId(ownerid);
-			int gid = Integer.parseInt(ownerid);
-			List<Group> groupNodes = dao.GetGroupByGroupId(gid);
+			//int gid = Integer.parseInt(ownerid);
+			List<Group> groupNodes = dao.GetGroupByGroupId(ownerid);
 			for (int i = 0; i < groupNodes.size(); i++) {
 				if(groupNodes.get(i).getName() != null && groupNodes.get(i).getName().length() > 0) {
 					str += groupNodes.get(i).getName()+";";
