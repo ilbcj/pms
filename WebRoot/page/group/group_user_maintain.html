@@ -159,6 +159,7 @@
 									                <th data-options="field:'name'" style="width:25%;">姓名</th>
 									                <th data-options="field:'pname'" style="width:25%;">组织机构</th>
 									                <th data-options="field:'gname'" style="width:25%;">上级机构</th>
+									                <th data-options="field:'certificate_code_md5'" hidden="true">身份证哈希值</th>
 									                <th data-options="field:'status',formatter:formatStatus" style="width:25%;">状态</th>
 									            </tr>
 									        </thead>
@@ -329,7 +330,7 @@
      	var rows = $("#group_user_list_dg").datagrid('getRows');
      	var index = 0;
     	for(index=0; index < rows.length; index++) {
-	 		poststr += '&addUserIds=' + rows[index].id;
+	 		poststr += '&addUserIds=' + rows[index].certificate_code_md5;
     	}
 		
     	$.post("../group/saveGroupUser.action?rand=" + Math.random(), poststr, function(retObj) {
@@ -376,7 +377,8 @@
 				id:data.id, 
 				name:data.name, 
 				pname:data.pname, 
-				gname:data.gname
+				gname:data.gname,
+				certificate_code_md5:data.certificate_code_md5
 			}
 		});
 	}
@@ -418,7 +420,8 @@
 				id:data.id, 
 				name:data.name, 
 				pname:data.pname, 
-				gname:data.gname
+				gname:data.gname,
+				certificate_code_md5:data.certificate_code_md5
 			}
 		});
 	}
@@ -441,7 +444,7 @@
 		
 		
 		//load datagrid's data
-		var poststr = "group.id=" + rows[0].id;
+		var poststr = "group.code=" + rows[0].code;
 		$.post("../group/queryGroupUsers.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
@@ -586,6 +589,7 @@ $(document).ready(function () {
 			{field:'name',title:'姓名',width:'30%',editor:'text'},
 			{field:'pname',title:'组织机构',width:'30%',editor:'text'},
 			{field:'gname',title:'上级机构',width:'30%',editor:'text'},
+			{field:'certificate_code_md5',title:'身份证哈希值',editor:'text',hidden:'true'},
 			{field:'action',title:'操作',width:'10%',align:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" onclick="groupUserDeleterow(this)">删除</a>';

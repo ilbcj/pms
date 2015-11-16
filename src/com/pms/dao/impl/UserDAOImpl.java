@@ -347,6 +347,29 @@ public class UserDAOImpl implements UserDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<User> GetUsersById(String id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<User> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE where GA_DEPARTMENT = :GA_DEPARTMENT";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(User.class);
+			q.setString( "GA_DEPARTMENT", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<User> GetUsersByParentIdWithNoPage(String pid, User criteria)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();

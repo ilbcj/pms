@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.pms.model.Privilege;
 import com.pms.model.ResRole;
+import com.pms.model.UserRole;
+import com.pms.model.UserRoleView;
 
 public interface PrivilegeDAO {
 	public Privilege PrivilegeAdd(Privilege priv) throws Exception;
@@ -19,4 +21,10 @@ public interface PrivilegeDAO {
 	public List<ResRole> QueryPrivInfosByUserid(String userid) throws Exception;
 	public List<ResRole> QueryPrivInfosByUsersOrg(String userid) throws Exception;
 	public List<ResRole> QueryPrivInfosByUsersGroup(String groupid) throws Exception;
+	
+	UserRole UserRoleUpdate(UserRole userRole) throws Exception;
+	UserRole GetUserRoleByUserIdRoleID(String uid, String rid) throws Exception;
+	UserRoleView GetUserRoleViewByUserIdRoleID(String uid, String rid) throws Exception;
+	List<UserRoleView> QueryUserRoleView() throws Exception;
+	List<UserRole> QueryUserRole() throws Exception;
 }

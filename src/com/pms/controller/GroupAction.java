@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
+import com.pms.dto.RuleListItem;
 import com.pms.dto.UserListItem;
 import com.pms.model.Group;
 import com.pms.model.Rule;
@@ -30,6 +31,7 @@ public class GroupAction extends ActionSupport {
 	private List<UserListItem> users;
 	private List<Integer> delIds;
 	private List<Rule> rules;
+	private List<RuleListItem> ruleItems;
 	
 	public List<Rule> getRules() {
 		return rules;
@@ -149,6 +151,14 @@ public class GroupAction extends ActionSupport {
 	}
 
 
+	public List<RuleListItem> getRuleItems() {
+		return ruleItems;
+	}
+
+	public void setRuleItems(List<RuleListItem> ruleItems) {
+		this.ruleItems = ruleItems;
+	}
+
 	public String SaveGroupUser()
 	{
 		GroupManageService gms = new GroupManageService();
@@ -185,7 +195,7 @@ public class GroupAction extends ActionSupport {
 	{
 		GroupManageService gms = new GroupManageService();
 		try {
-			users = gms.QueryGroupUsersByGroupId(group.getId());
+			users = gms.QueryGroupUsersByGroupId(group.getCode());
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -258,8 +268,9 @@ public class GroupAction extends ActionSupport {
 	public String QueryGroupRules()
 	{
 		GroupManageService gms = new GroupManageService();
+		ruleItems = new ArrayList<RuleListItem>();
 		try {
-			rules = gms.QueryGroupRulesByGroupId(group.getId());
+			gms.QueryGroupRulesByGroupId(group.getCode(),ruleItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
