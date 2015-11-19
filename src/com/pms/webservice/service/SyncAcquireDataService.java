@@ -66,7 +66,8 @@ public class SyncAcquireDataService extends SyncService {
 		
 		// get all pms nodes
 		List<String> pmsNodes = new ArrayList<String>();
-		pmsNodes.add("110000");
+		//pmsNodes.add("110000");
+		pmsNodes.add("330200");
 		
 		if( files.getAllDataItems() != null && files.getAllDataItems().size() > 0 ) {
 			for(Item allItem : files.getAllDataItems()) {

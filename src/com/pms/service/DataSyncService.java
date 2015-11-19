@@ -677,7 +677,8 @@ public class DataSyncService {
 		// 2. get notice list
 		List<String> sids = new ArrayList<String>();
 		//sids.add("S01000011000000009");//gab sync service
-		sids.add("S11000000000000009");//bj sync service
+		//sids.add("S11000000000000009");//bj sync service
+		sids.add("S33020000000000009");//zhejiang_ningbo sync service          
 			
 		// 3. notice other pms	
 		String address = ConfigHelper.getEsbAddr();

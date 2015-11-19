@@ -535,12 +535,12 @@
      	var rows = $("#role_resource_feature_dg").datagrid('getRows');
      	var index = 0;
     	for(index=0; index < rows.length; index++) {
-	 		poststr += '&addFeatureIds=' + rows[index].id;
+	 		poststr += '&addFeatureIds=' + rows[index].RESOURCE_ID;
     	}
 
 		rows = $("#role_resource_data_dg").datagrid('getRows');
     	for(index=0; index < rows.length; index++) {
-	 		poststr += '&addDataIds=' + rows[index].id;
+	 		poststr += '&addDataIds=' + rows[index].RESOURCE_ID;
     	}
     	$.post("../resource/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
 		
