@@ -741,7 +741,7 @@ public class UserDAOImpl implements UserDAO {
 			if(ui.getCERTIFICATE_CODE_SUFFIX().equals(user.getCERTIFICATE_CODE_SUFFIX())
 					&& ui.getGA_DEPARTMENT().equals(user.getGA_DEPARTMENT())
 					&& org.getUNIT().equals(user.getUNIT())
-					&& org.getORG_LEVEL().equals(user.getORG_LEVEL())
+					&& org.getORG_LEVEL() == user.getORG_LEVEL()
 					&& ui.getNAME().equals(user.getNAME())
 					&& ui.getPOLICE_SORT().equals(user.getPOLICE_SORT())
 					&& ( ui.getSEXCODE().length() > 0 ? ui.getSEXCODE().equals(user.getSEXCODE()) : true )

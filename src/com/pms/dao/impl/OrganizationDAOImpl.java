@@ -196,7 +196,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 //			if(condition.getUid() != null && condition.getUid().length() > 0) {
 //				sqlString += " and uid = :uid ";
 //			}
-			if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+			if(condition.getORG_LEVEL() != 0) {
 				sqlString += " and ORG_LEVEL = :ORG_LEVEL ";
 			}
 		}
@@ -211,8 +211,8 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 //				if(condition.getUid() != null && condition.getUid().length() > 0) {
 //					q.setString( "uid", condition.getUid() );
 //				}
-				if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
-					q.setString( "ORG_LEVEL", condition.getORG_LEVEL() );
+				if(condition.getORG_LEVEL() != 0) {
+					q.setInteger( "ORG_LEVEL", condition.getORG_LEVEL() );
 				}
 			}
 			rs = q.list();
@@ -309,8 +309,8 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setString("PARENT_ORG", pid);
-			List<String> ORG_LEVEL =new ArrayList<String>();
-			ORG_LEVEL.add(Organization.ORG_LEVEL_DEPT);
+			List<Integer> ORG_LEVEL =new ArrayList<Integer>();
+			ORG_LEVEL.add(Organization.ORG_LEVEL_MINISTRY);
 			ORG_LEVEL.add(Organization.ORG_LEVEL_PROVINCE);
 			ORG_LEVEL.add(Organization.ORG_LEVEL_CITY);
 			q.setParameterList("ORG_LEVEL", ORG_LEVEL);
@@ -349,7 +349,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(Organization.class);
 			q.setInteger("DELETE_STATUS", condition.getDELETE_STATUS());
-			List<String> ORG_LEVEL =new ArrayList<String>();
+			List<Integer> ORG_LEVEL =new ArrayList<Integer>();
 			ORG_LEVEL.add(Organization.ORG_LEVEL_PROVINCE);
 			ORG_LEVEL.add(Organization.ORG_LEVEL_CITY);
 			q.setParameterList("ORG_LEVEL", ORG_LEVEL);
@@ -394,7 +394,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setInteger("DELETE_STATUS", condition.getDELETE_STATUS());
-			List<String> ORG_LEVEL =new ArrayList<String>();
+			List<Integer> ORG_LEVEL =new ArrayList<Integer>();
 			ORG_LEVEL.add(Organization.ORG_LEVEL_PROVINCE);
 			ORG_LEVEL.add(Organization.ORG_LEVEL_CITY);
 			q.setParameterList("ORG_LEVEL", ORG_LEVEL);
@@ -455,7 +455,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 //			if(condition.getUid() != null && condition.getUid().length() > 0) {
 //				sqlString += " and uid = :uid ";
 //			}
-			if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+			if(condition.getORG_LEVEL() != 0) {
 				sqlString += " and ORG_LEVEL = :ORG_LEVEL ";
 			}
 		}
@@ -470,8 +470,8 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 //				if(condition.getUid() != null && condition.getUid().length() > 0) {
 //					q.setString( "uid", condition.getUid() );
 //				}
-				if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
-					q.setString( "ORG_LEVEL", condition.getORG_LEVEL() );
+				if(condition.getORG_LEVEL() != 0) {
+					q.setInteger( "ORG_LEVEL", condition.getORG_LEVEL() );
 				}
 			}
 			rs = q.list();
@@ -564,7 +564,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			} 
 			else if (rs.size() == 1) {
 				node = rs.get(0);
-				if(oi.getUNIT().equals(node.getUNIT()) && oi.getORG_LEVEL().equals(node.getORG_LEVEL())
+				if(oi.getUNIT().equals(node.getUNIT()) && oi.getORG_LEVEL() == node.getORG_LEVEL()
 						&& oi.getPARENT_ORG().equals(node.getPARENT_ORG())) {
 					return;
 				}

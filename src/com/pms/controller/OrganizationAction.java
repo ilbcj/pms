@@ -26,6 +26,7 @@ public class OrganizationAction extends ActionSupport {
 	private List<Organization> childrenNodes;
 	private List<TreeNode> treeNodes;
 	private Organization orgNode;
+	private String orgNode_OrgLevel;
 	private int page;
 	private int rows;
 	private int total;
@@ -40,6 +41,13 @@ public class OrganizationAction extends ActionSupport {
 	private String message;
 	private String checkresult;
 	
+	public String getOrgNode_OrgLevel() {
+		return orgNode_OrgLevel;
+	}
+
+	public void setOrgNode_OrgLevel(String orgNode_OrgLevel) {
+		this.orgNode_OrgLevel = orgNode_OrgLevel;
+	}
 	private File fi;
 	private String fiFileName;
 	private String fiContentType;
@@ -242,6 +250,7 @@ public class OrganizationAction extends ActionSupport {
 	{
 		OrgManageService oms = new OrgManageService();
 		try {
+			orgNode.setORG_LEVEL(orgNode.queryOrgLevel(orgNode_OrgLevel));
 			orgNode = oms.SaveOrgNode(orgNode);
 		} catch (Exception e) {
 			message = e.getMessage();
@@ -308,7 +317,7 @@ public class OrganizationAction extends ActionSupport {
 				Organization condition = new Organization();
 				condition.setUNIT(orgName);
 //				condition.setUid(orgUid);
-				condition.setORG_LEVEL(orgLevel);
+				condition.setORG_LEVEL( condition.queryOrgLevel( orgLevel ) );
 				total = oms.QueryAllChildrenNodes( id, condition, page, rows, items );
 			} else {
 				

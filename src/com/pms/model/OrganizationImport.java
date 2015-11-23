@@ -6,11 +6,11 @@ public class OrganizationImport {
 	private final static int ORG_LEVEL_SHENG = 2;
 	private final static int ORG_LEVEL_SHI = 3;
 	private final static int ORG_LEVEL_XIAN = 4;
-	private final static int ORG_LEVEL_JICENGSUODUI = 5;
+	private final static int ORG_LEVEL_JICENGSUODUI = 9;
 	
 	private String GA_DEPARTMENT;//id
 	private String UNIT;//name
-	private String ORG_LEVEL;//org_level
+	private int ORG_LEVEL;//org_level
 	private String PARENT_ORG;//parent_id
 
 	public String getGA_DEPARTMENT() {
@@ -25,10 +25,10 @@ public class OrganizationImport {
 	public void setUNIT(String uNIT) {
 		UNIT = uNIT;
 	}
-	public String getORG_LEVEL() {
+	public int getORG_LEVEL() {
 		return ORG_LEVEL;
 	}
-	public void setORG_LEVEL(String oRG_LEVEL) {
+	public void setORG_LEVEL(int oRG_LEVEL) {
 		ORG_LEVEL = oRG_LEVEL;
 	}
 	public String getPARENT_ORG() {
@@ -40,46 +40,22 @@ public class OrganizationImport {
 	
 	public void MakeOrgLevel() {
 		if( GABID.equals(GA_DEPARTMENT) ) {
-			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_BU );
+			ORG_LEVEL = ORG_LEVEL_BU;
 		} 
 		else if (Long.parseLong(GA_DEPARTMENT.substring(6)) > 0) {
-			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_JICENGSUODUI );
+			ORG_LEVEL = ORG_LEVEL_JICENGSUODUI;
 		}
 		else if (Long.parseLong(GA_DEPARTMENT.substring(4)) > 0) {
-			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_XIAN );
+			ORG_LEVEL = ORG_LEVEL_XIAN;
 		}
 		else if (Long.parseLong(GA_DEPARTMENT.substring(2)) > 0) {
-			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_SHI );
+			ORG_LEVEL = ORG_LEVEL_SHI;
 		}
 		else {
-			ORG_LEVEL = queryOrgLevel( ORG_LEVEL_SHENG );
+			ORG_LEVEL = ORG_LEVEL_SHENG;
 		}
 
 		return;
-	}
-	
-	private String queryOrgLevel(int level) {
-		String result = null;
-		switch(level) {
-			case ORG_LEVEL_BU:
-				result = "部";
-				break;
-			case ORG_LEVEL_SHENG:
-				result = "省";
-				break;
-			case ORG_LEVEL_SHI:
-				result = "市";
-				break;
-			case ORG_LEVEL_XIAN:
-				result = "县";
-				break;
-			case ORG_LEVEL_JICENGSUODUI:
-				result = "基层所队";
-				break;
-			default:
-				break;
-		}
-		return result;
 	}
 	
 	public boolean isValid() {

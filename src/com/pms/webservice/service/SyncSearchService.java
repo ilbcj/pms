@@ -418,7 +418,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE.I010052");
-			itemSetAttribute(item, "val", user.getORG_LEVEL());
+			itemSetAttribute(item, "val", ""+user.getORG_LEVEL());
 			itemSetAttribute(item, "rmk", "公安组织机构级别");
 			
 			item = new Element("ITEM");
@@ -494,7 +494,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "WA_AUTHORITY_ORGNIZATION.I010052");
-			itemSetAttribute(item, "val", org.getORG_LEVEL());
+			itemSetAttribute(item, "val", "" + org.getORG_LEVEL());
 			itemSetAttribute(item, "rmk", "公安组织机构级别");
 			
 			item = new Element("ITEM");

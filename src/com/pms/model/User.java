@@ -13,7 +13,7 @@ public class User {
 	private String SEXCODE;//sex
 	private String GA_DEPARTMENT;//parent_id
 	private String UNIT;
-	private String ORG_LEVEL;
+	private int ORG_LEVEL;
 	private String POLICE_SORT;//police_type
 	private String POLICE_NO;//police_num
 	private String SENSITIVE_LEVEL;//max_sensitive_level
@@ -74,10 +74,10 @@ public class User {
 	public void setUNIT(String uNIT) {
 		UNIT = uNIT;
 	}
-	public String getORG_LEVEL() {
+	public int getORG_LEVEL() {
 		return ORG_LEVEL;
 	}
-	public void setORG_LEVEL(String oRG_LEVEL) {
+	public void setORG_LEVEL(int oRG_LEVEL) {
 		ORG_LEVEL = oRG_LEVEL;
 	}
 	public String getPOLICE_SORT() {

@@ -3,6 +3,7 @@ package com.pms.dto;
 import java.util.List;
 
 import com.pms.model.AttrDictionary;
+import com.pms.model.Organization;
 
 public class OrgListItem {
 	private String id;
@@ -51,6 +52,29 @@ public class OrgListItem {
 	}
 	public void setOrgLevel(String orgLevel) {
 		this.orgLevel = orgLevel;
+	}
+	public void setOrgLevel(int orgLevel) {
+		switch(orgLevel) {
+			case Organization.ORG_LEVEL_MINISTRY:
+				this.orgLevel = "部";
+				break;
+			case Organization.ORG_LEVEL_PROVINCE:
+				this.orgLevel = "省";
+				break;
+			case Organization.ORG_LEVEL_CITY:
+				this.orgLevel = "市";
+				break;
+			case Organization.ORG_LEVEL_COUNTY:
+				this.orgLevel = "县";
+				break;
+			case Organization.ORG_LEVEL_GRASSROOTS:
+				this.orgLevel = "基层所队";
+				break;
+			default:
+				this.orgLevel = "未知";
+				break;
+		}
+		return;
 	}
 	public String getOrgParent_org() {
 		return orgParent_org;

@@ -12,7 +12,7 @@
 		</id>
 		<!-- property元素定义常规属性 -->
 		<property name="UNIT" type="java.lang.String" length="64" />
-		<property name="ORG_LEVEL" type="java.lang.String" length="64"/>
+		<property name="ORG_LEVEL" type="java.lang.Integer"/>
 		<property name="PARENT_ORG" type="java.lang.String" length="64" />
 	</class>
 </hibernate-mapping>
