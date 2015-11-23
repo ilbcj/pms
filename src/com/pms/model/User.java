@@ -1,11 +1,87 @@
 package com.pms.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class User {
 	public final static int USERSTATUSINUSE = 0;
 	public final static int USERSTATUSREVOKE = 1;
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
 	
+	public final static String USER_SEXCODE_UNKNOWN = "0";
+	public final static String USER_SEXCODE_MALE = "1";
+	public final static String USER_SEXCODE_FEMALE = "2";
+	public final static String USER_SEXCODE_UNSPOKEN = "9";
+	
+	public final static Map<String, String> SexCode = new HashMap<String, String>();
+	static{
+		SexCode.put("未知的性别", USER_SEXCODE_UNKNOWN);
+		SexCode.put("男", USER_SEXCODE_MALE);
+		SexCode.put("女", USER_SEXCODE_FEMALE);
+		SexCode.put("", USER_SEXCODE_UNSPOKEN);
+	}
+	
+	public final static String USER_POLICE_SORT_GUOBAO = "1";//国保
+	public final static String USER_POLICE_SORT_JINGZHEN = "2";//经侦
+	public final static String USER_POLICE_SORT_ZHIAN = "3";//治安
+	public final static String USER_POLICE_SORT_XINGZHEN = "5";//刑侦
+	public final static String USER_POLICE_SORT_CHURUJING = "6";//出入境
+	public final static String USER_POLICE_SORT_TIEDAOGONGANJU = "10";//铁道公安局
+	public final static String USER_POLICE_SORT_WANGAN = "11";//网安
+	public final static String USER_POLICE_SORT_XINGDONGJISHU = "12";//行动技术
+	public final static String USER_POLICE_SORT_JINDU = "21";//禁毒
+	public final static String USER_POLICE_SORT_KEXIN = "22";//科信
+	public final static String USER_POLICE_SORT_FANXIEJIAO = "26";//反邪教
+	public final static String USER_POLICE_SORT_FANKONG = "27";//反恐
+	public final static String USER_POLICE_SORT_QINGBAOZHONGXIN = "28";//情报中心
+	public final static String USER_POLICE_SORT_JINGBAO = "81";//经保
+	public final static String USER_POLICE_SORT_WENBAO = "82";//文保
+	public final static String USER_POLICE_SORT_QITA = "99";//其他
+	
+	public final static Map<String, String> PoliceSort = new HashMap<String, String>();
+	static{
+		PoliceSort.put("国保", USER_POLICE_SORT_GUOBAO);
+		PoliceSort.put("经侦", USER_POLICE_SORT_JINGZHEN);
+		PoliceSort.put("治安", USER_POLICE_SORT_ZHIAN);
+		PoliceSort.put("刑侦", USER_POLICE_SORT_XINGZHEN);
+		PoliceSort.put("出入境", USER_POLICE_SORT_CHURUJING);
+		PoliceSort.put("铁道公安局", USER_POLICE_SORT_TIEDAOGONGANJU);
+		PoliceSort.put("网安", USER_POLICE_SORT_WANGAN);
+		PoliceSort.put("行动技术", USER_POLICE_SORT_XINGDONGJISHU);
+		PoliceSort.put("禁毒", USER_POLICE_SORT_JINDU);
+		PoliceSort.put("科信", USER_POLICE_SORT_KEXIN);
+		PoliceSort.put("反邪教", USER_POLICE_SORT_FANXIEJIAO);
+		PoliceSort.put("反恐", USER_POLICE_SORT_FANKONG);
+		PoliceSort.put("情报中心", USER_POLICE_SORT_QINGBAOZHONGXIN);
+		PoliceSort.put("经保", USER_POLICE_SORT_JINGBAO);
+		PoliceSort.put("文保", USER_POLICE_SORT_WENBAO);
+		PoliceSort.put("其他", USER_POLICE_SORT_QITA);
+	}
+
+	public final static String USER_BUSINESS_TYPE_GUANLI = "1";//管理类
+	public final static String USER_BUSINESS_TYPE_JIANKONG = "2";//监控类
+	public final static String USER_BUSINESS_TYPE_GUANKONG = "3";//管控类
+	public final static String USER_BUSINESS_TYPE_ZHENKONG = "4";//侦控类
+	public final static String USER_BUSINESS_TYPE_ZHENCHA = "5";//侦查类
+	public final static String USER_BUSINESS_TYPE_TEZHEN = "6";//特侦类
+	public final static String USER_BUSINESS_TYPE_ZHONGHE = "7";//综合类
+	public final static String USER_BUSINESS_TYPE_TONGYONG = "8";//通用类
+	public final static String USER_BUSINESS_TYPE_QITA = "99";//其他
+	
+	public final static Map<String, String> BusinessType = new HashMap<String, String>();
+	static{
+		BusinessType.put("管理类", USER_BUSINESS_TYPE_GUANLI);
+		BusinessType.put("监控类", USER_BUSINESS_TYPE_JIANKONG);
+		BusinessType.put("管控类", USER_BUSINESS_TYPE_GUANKONG);
+		BusinessType.put("侦控类", USER_BUSINESS_TYPE_ZHENKONG);
+		BusinessType.put("侦查类", USER_BUSINESS_TYPE_ZHENCHA);
+		BusinessType.put("特侦类", USER_BUSINESS_TYPE_TEZHEN);
+		BusinessType.put("综合类", USER_BUSINESS_TYPE_ZHONGHE);
+		BusinessType.put("通用类", USER_BUSINESS_TYPE_TONGYONG);
+		BusinessType.put("其他", USER_BUSINESS_TYPE_QITA);
+	}
+
 	private int id;
 	private String NAME="";//name
 	private String CERTIFICATE_CODE_MD5;//idnum
@@ -139,5 +215,20 @@ public class User {
 	}
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
-	}	
+	}
+	
+	public static String GetSexCode(String name) {
+		String result = SexCode.get(name);
+		return result;
+	}
+	
+	public static String GetPoliceSortCode(String name) {
+		String result = PoliceSort.get(name);
+		return result;
+	}
+	
+	public static String GetBusinessTypeCode(String name) {
+		String result = BusinessType.get(name);
+		return result;
+	}
 }

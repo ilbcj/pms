@@ -749,7 +749,6 @@ public class UserDAOImpl implements UserDAO {
 				return;
 			}
 			
-			
 			user.setUNIT(org.getUNIT());
 			user.setORG_LEVEL(org.getORG_LEVEL());
 			user.setGA_DEPARTMENT(ui.getGA_DEPARTMENT());
@@ -758,9 +757,10 @@ public class UserDAOImpl implements UserDAO {
 			user.setNAME(ui.getNAME());
 			user.setPOLICE_SORT(ui.getPOLICE_SORT());
 			user.setTAKE_OFFICE(ui.getTAKE_OFFICE());
-			if(ui.getSEXCODE().length() > 0) {
-				user.setSEXCODE(ui.getSEXCODE());
-			}
+//			if(ui.getSEXCODE().length() > 0) {
+//				user.setSEXCODE(ui.getSEXCODE());
+//			}
+			user.setSEXCODE(ui.getSEXCODE());
 			user.setDATA_VERSION(user.getDATA_VERSION() + 1);
 			user.setDELETE_STATUS(User.DELSTATUSNO);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",

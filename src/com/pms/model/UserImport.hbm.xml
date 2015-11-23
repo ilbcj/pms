@@ -14,7 +14,7 @@
 <!-- 		<property name="NAME" type="java.lang.String" length="64" not-null="true"/> -->
 		<property name="NAME" type="java.lang.String" length="64"/>
 		<property name="CERTIFICATE_CODE_SUFFIX" type="java.lang.String" length="32"/>
-		<property name="SEXCODE" type="java.lang.String" length="16"/>
+		<property name="SEXCODE" type="java.lang.String" length="32"/>
 		<property name="GA_DEPARTMENT" type="java.lang.String" length="64" />
 		<property name="POLICE_SORT" type="java.lang.String" length="64"/>
 		<property name="TAKE_OFFICE" type="java.lang.String" length="64"/>
