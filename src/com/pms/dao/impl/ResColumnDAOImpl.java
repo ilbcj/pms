@@ -97,10 +97,38 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		return rs;
 	}
 	
+	@Override
+	public ResColumn QueryColumnByElement(String dataset, String element)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		ResColumn rs = null;
+		String sqlString = "select * from WA_COLUMN where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
+			q.setString("DATA_SET", dataset);
+			q.setString("ELEMENT", element);
+			rs = (ResColumn) q.uniqueResult();
+			tx.commit();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResColumn> QueryRowColumn(String dataSet)
-			throws Exception {
+		throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
@@ -110,7 +138,6 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
 			q.setString("DATA_SET", dataSet);
 			rs = q.list();
-			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
 			tx.rollback();
