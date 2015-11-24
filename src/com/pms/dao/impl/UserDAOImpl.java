@@ -744,7 +744,7 @@ public class UserDAOImpl implements UserDAO {
 					&& org.getORG_LEVEL() == user.getORG_LEVEL()
 					&& ui.getNAME().equals(user.getNAME())
 					&& ui.getPOLICE_SORT().equals(user.getPOLICE_SORT())
-					&& ( ui.getSEXCODE().length() > 0 ? ui.getSEXCODE().equals(user.getSEXCODE()) : true )
+					&& ui.getSEXCODE().equals(user.getSEXCODE())
 					&& ui.getTAKE_OFFICE().equals(user.getTAKE_OFFICE()) ) {
 				return;
 			}

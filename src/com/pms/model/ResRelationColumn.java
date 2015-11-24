@@ -64,9 +64,9 @@ public class ResRelationColumn {
 	
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
-				&& (SECTION_CLASS == null || SECTION_CLASS.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
-				&& (ELEMENT == null || ELEMENT.isEmpty()) ) {
+				|| (SECTION_CLASS == null || SECTION_CLASS.isEmpty()) 
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
+				|| (ELEMENT == null || ELEMENT.isEmpty()) ) {
 			return false;
 		}
 		return true;

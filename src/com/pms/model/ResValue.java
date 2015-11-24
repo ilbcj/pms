@@ -71,10 +71,10 @@ public class ResValue {
 	
 	public boolean isValid() {
 		if( (ELEMENT_VALUE == null || ELEMENT_VALUE.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
-				&& (VALUE_NAME == null || VALUE_NAME.isEmpty())
-				&& (VALUE_SENSITIVE_ID == null || VALUE_SENSITIVE_ID.isEmpty())
-				&& (ELEMENT == null || ELEMENT.isEmpty()) ) {
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				|| (VALUE_NAME == null || VALUE_NAME.isEmpty())
+				|| (VALUE_SENSITIVE_ID == null || VALUE_SENSITIVE_ID.isEmpty())
+				|| (ELEMENT == null || ELEMENT.isEmpty()) ) {
 			return false;
 		}
 		return true;

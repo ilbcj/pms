@@ -57,8 +57,8 @@ public class ResColumnClassify {
 	
 	public boolean isValid() {
 		if( (SECTION_CLASS == null || SECTION_CLASS.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
-				&& (CLASSIFY_NAME == null || CLASSIFY_NAME.isEmpty()) ) {
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				|| (CLASSIFY_NAME == null || CLASSIFY_NAME.isEmpty()) ) {
 			return false;
 		}
 		return true;

@@ -7,15 +7,19 @@ import com.pms.model.AttrDictionary;
 
 public interface AttributeDAO {
 
-	List<AttrDefinition> GetAttrDefinitions(AttrDefinition criteria, int page, int rows) throws Exception;
-	int GetAttrDefinitionsCount(AttrDefinition criteria) throws Exception;
-	List<AttrDictionary> GetAttrDictionarysByAttrId(int attrId) throws Exception;
-	void UpdateAttrDictionary(int attrId, List<AttrDictionary> dictionary) throws Exception;
-	List<AttrDictionary> GetRolesDictionarys(int id) throws Exception;
-	List<AttrDictionary> GetDatasDictionarys(String id) throws Exception;
-	List<AttrDictionary> GetUsersDictionarys(int id) throws Exception;
-	List<AttrDictionary> GetDictsDatasNode(String name, String code, int id) throws Exception;
-	List<AttrDictionary> GetDictsDataTemplatesNode(String name, String code, int id) throws Exception;
-	List<AttrDictionary> GetOrgsDictionarys(String id) throws Exception;
-	AttrDictionary GetAttrDictionarysByAttrIdAndCode(int attrId, String code) throws Exception;
+	public List<AttrDefinition> GetAttrDefinitions(AttrDefinition criteria, int page, int rows) throws Exception;
+	public int GetAttrDefinitionsCount(AttrDefinition criteria) throws Exception;
+	public List<AttrDictionary> GetAttrDictionarysByAttrId(int attrId) throws Exception;
+	public void UpdateAttrDictionary(int attrId, List<AttrDictionary> dictionary) throws Exception;
+	public List<AttrDictionary> GetRolesDictionarys(int id) throws Exception;
+	public List<AttrDictionary> GetDatasDictionarys(String id) throws Exception;
+	public List<AttrDictionary> GetUsersDictionarys(int id) throws Exception;
+	public List<AttrDictionary> GetDictsDatasNode(String name, String code, int id) throws Exception;
+	public List<AttrDictionary> GetDictsDataTemplatesNode(String name, String code, int id) throws Exception;
+	public List<AttrDictionary> GetOrgsDictionarys(String id) throws Exception;
+	public AttrDictionary GetAttrDictionarysByAttrIdAndCode(int attrId, String code) throws Exception;
+	
+	public AttrDefinition GetAttrDefinitionByCode(String code) throws Exception;
+	public AttrDictionary AttrDictionaryAdd(AttrDictionary ad) throws Exception;
+	
 }

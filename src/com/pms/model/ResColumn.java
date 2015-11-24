@@ -78,11 +78,11 @@ public class ResColumn {
 	
 	public boolean isValid() {
 		if( (ELEMENT == null || ELEMENT.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
-				&& (DATA_SET == null || DATA_SET.isEmpty())
-				&& (COLUMU_CN == null || COLUMU_CN.isEmpty())
-				&& (COLUMN_NAME == null || COLUMN_NAME.isEmpty())
-				&& (RMK == null || RMK.isEmpty()) ) {
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				//|| (COLUMU_CN == null || COLUMU_CN.isEmpty())
+				//|| (COLUMN_NAME == null || COLUMN_NAME.isEmpty())
+				//|| (RMK == null || RMK.isEmpty())
+				|| (DATA_SET == null || DATA_SET.isEmpty()) ) {
 			return false;
 		}
 		return true;

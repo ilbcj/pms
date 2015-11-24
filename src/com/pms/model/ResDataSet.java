@@ -64,9 +64,9 @@ public class ResDataSet {
 	
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
-				&& (DATASET_NAME == null || DATASET_NAME.isEmpty())
-				&& (DATASET_SENSITIVE_LEVEL == null || DATASET_SENSITIVE_LEVEL.isEmpty()) ) {
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				|| (DATASET_NAME == null || DATASET_NAME.isEmpty())
+				|| (DATASET_SENSITIVE_LEVEL == null || DATASET_SENSITIVE_LEVEL.isEmpty()) ) {
 			return false;
 		}
 		return true;

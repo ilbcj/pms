@@ -57,8 +57,8 @@ public class ResValueSensitive {
 	
 	public boolean isValid() {
 		if( (VALUE_SENSITIVE_ID == null || VALUE_SENSITIVE_ID.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
-				&& (VALUE_SENSITIVE_NAME == null || VALUE_SENSITIVE_NAME.isEmpty()) ) {
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				|| (VALUE_SENSITIVE_NAME == null || VALUE_SENSITIVE_NAME.isEmpty()) ) {
 			return false;
 		}
 		return true;

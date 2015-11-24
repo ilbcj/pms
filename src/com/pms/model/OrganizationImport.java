@@ -60,8 +60,8 @@ public class OrganizationImport {
 	
 	public boolean isValid() {
 		if( (GA_DEPARTMENT == null || GA_DEPARTMENT.isEmpty()) 
-				&& (UNIT == null || UNIT.isEmpty()) 
-				&& (PARENT_ORG == null || PARENT_ORG.isEmpty()) ) {
+				|| (UNIT == null || UNIT.isEmpty()) 
+				|| (PARENT_ORG == null || PARENT_ORG.isEmpty()) ) {
 			return false;
 		}
 		return true;

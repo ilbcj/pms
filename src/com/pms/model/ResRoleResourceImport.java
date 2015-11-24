@@ -60,10 +60,10 @@ public class ResRoleResourceImport {
 	}
 	public boolean isValid() {
 		if( (roleId == null || roleId.isEmpty()) 
-				&& (element == null || element.isEmpty()) 
-				&& (elemnetValue == null || elemnetValue.isEmpty()) 
-				&& (dataSet == null || dataSet.isEmpty()) 
-				&& (sectionClass == null || sectionClass.isEmpty()) ) {
+				|| (element == null || element.isEmpty()) 
+				|| (elemnetValue == null || elemnetValue.isEmpty()) 
+				|| (dataSet == null || dataSet.isEmpty()) 
+				|| (sectionClass == null || sectionClass.isEmpty()) ) {
 			return false;
 		}
 		try{

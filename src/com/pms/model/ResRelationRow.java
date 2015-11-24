@@ -64,9 +64,9 @@ public class ResRelationRow {
 	
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
-				&& (ELEMENT == null || ELEMENT.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
-				&& (ELEMENT_VALUE == null || ELEMENT_VALUE.isEmpty()) ) {
+				|| (ELEMENT == null || ELEMENT.isEmpty()) 
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
+				|| (ELEMENT_VALUE == null || ELEMENT_VALUE.isEmpty()) ) {
 			return false;
 		}
 		return true;

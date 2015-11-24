@@ -72,10 +72,14 @@ public class UserUploadService {
 		OrganizationDAO odao = new OrganizationDAOImpl();
 		Organization org = null;
 		for(int i = 0; i < imports.size(); i++) {
-			UserImport oi = imports.get(i);
-			org = odao.GetOrgNodeById(oi.getGA_DEPARTMENT());
+			UserImport ui = imports.get(i);
+			org = odao.GetOrgNodeById(ui.getGA_DEPARTMENT());
 			if(org != null) {
-				udao.UserImport(oi, org);
+				udao.UserImport(ui, org);
+			}
+			else {
+				String warnMsg = "[IU]用户身所属机构不存在。[用户名:" + ui.getNAME() + ", 身份证号:" + ui.getCERTIFICATE_CODE_MD5() + ", 机构编号:" + ui.getGA_DEPARTMENT() + "]";
+    			logger.warn(warnMsg);
 			}
 		}
 		
@@ -137,9 +141,9 @@ public class UserUploadService {
             			//user code equals idcard
             		} else if ( c== idx.get(SHEET_USER_IDCARD) ) {
             			if( cellValue == null || (cellValue.length() != 15 && cellValue.length() != 18) ) {
-            				String warnMsg = "[IRF]导入数据文件格式不正确!";
+            				String warnMsg = "[IU]用户身份证号格式不正确。[用户名:" + ui.getNAME() + ", 身份证号:" + cellValue + "]";
                 			logger.warn(warnMsg);
-            				continue;
+            				break;
             			}
             			String md5 = getIDCardHash(cellValue);
             			
