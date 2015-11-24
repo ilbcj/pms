@@ -129,7 +129,7 @@
 		$("#attr_code").textbox('setValue',rows[0].code);
 		var dataArray = new Array();
 		for(var index=0; index < rows[0].dictionary.length; index++) {
-			var rowdata = new rowData( rows[0].dictionary[index].value,+rows[0].dictionary[index].code );
+			var rowdata = new rowData( rows[0].dictionary[index].value,rows[0].dictionary[index].code );
 			dataArray.push(rowdata);
 		}
 

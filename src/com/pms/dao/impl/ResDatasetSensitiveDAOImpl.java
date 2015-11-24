@@ -95,5 +95,32 @@ public class ResDatasetSensitiveDAOImpl implements ResDatasetSensitiveDAO {
 		}
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataSetSensitive> QueryDataSetSensitive(String dataSet)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResDataSetSensitive> rs = null;
+		String sqlString = "SELECT * FROM WA_DATASET_SENSITIVE WHERE DATASET_SENSITIVE_LEVEL IN (SELECT DATASET_SENSITIVE_LEVEL FROM WA_DATASET WHERE DATA_SET = :DATA_SET ) ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSetSensitive.class);
+			q.setString("DATA_SET", dataSet);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 
 }

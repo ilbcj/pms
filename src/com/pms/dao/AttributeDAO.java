@@ -21,5 +21,4 @@ public interface AttributeDAO {
 	
 	public AttrDefinition GetAttrDefinitionByCode(String code) throws Exception;
 	public AttrDictionary AttrDictionaryAdd(AttrDictionary ad) throws Exception;
-	
 }

@@ -286,19 +286,19 @@ public class AttributeDAOImpl implements AttributeDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<AttrDictionary> GetDictsDatasNode(String name, String code, int id) throws Exception
+	public List<AttrDictionary> GetDictsDatasNode(String name, String code, String id) throws Exception
 	{
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
 				" FROM WA_AUTHORITY_DATA_RESOURCE a,attrdict b,attrdef c " +
-				" WHERE b.attrid=c.id and c.name=:name and b.code=:code and a.id=:id ";
+				" WHERE b.attrid=c.id and c.name=:name and b.code=:code and a.RESOURCE_ID=:RESOURCE_ID ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
 			q.setString("name", name);
 			q.setString("code", code);
-			q.setInteger("id", id);
+			q.setString("RESOURCE_ID", id);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -314,19 +314,19 @@ public class AttributeDAOImpl implements AttributeDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<AttrDictionary> GetDictsDataTemplatesNode(String name, String code, int id) throws Exception
+	public List<AttrDictionary> GetDictsDataTemplatesNode(String name, String code, String id) throws Exception
 	{
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<AttrDictionary> rs = null;
 		String sqlString = "SELECT b.* " +
 				" FROM WA_AUTHORITY_DATA_RESOURCE_Template a,attrdict b,attrdef c " +
-				" WHERE b.attrid=c.id and c.name=:name and b.code=:code and a.id=:id ";
+				" WHERE b.attrid=c.id and c.name=:name and b.code=:code and a.RESOURCE_ID=:RESOURCE_ID ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
 			q.setString("name", name);
 			q.setString("code", code);
-			q.setInteger("id", id);
+			q.setString("RESOURCE_ID", id);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

@@ -29,7 +29,6 @@ import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
-import com.pms.util.ConfigHelper;
 
 public class ResourceManageService {
 
@@ -211,46 +210,46 @@ public class ResourceManageService {
 		item.setName(attr.getName());
 		item.setRESOURCE_ID(attr.getRESOURCE_ID());
 		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
-		item.setRESOURCE_REMARK(attr.getRMK());				
+		item.setRMK(attr.getRMK());				
 		item.setDATA_VERSION(attr.getDATA_VERSION());
 		
 		AttributeDAO attrdao = new AttributeDAOImpl();
-		List<AttrDictionary> resStatNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_STATUS, String.valueOf(attr.getRESOURCE_STATUS()), attr.getId());
+		List<AttrDictionary> resStatNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_STATUS, String.valueOf(attr.getRESOURCE_STATUS()), attr.getRESOURCE_ID());
 		for (int i = 0; i < resStatNode.size(); i++) {
 			item.setRESOURCE_STATUS(resStatNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> delStatNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_DELETE_STATUS, String.valueOf(attr.getDELETE_STATUS()), attr.getId());
+		List<AttrDictionary> delStatNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_DELETE_STATUS, String.valueOf(attr.getDELETE_STATUS()), attr.getRESOURCE_ID());
 		for (int i = 0; i < delStatNode.size(); i++) {
 			item.setDELETE_STATUS(delStatNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> resTypeNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_TYPE, String.valueOf(attr.getResource_type()), attr.getId());
+		List<AttrDictionary> resTypeNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_TYPE, String.valueOf(attr.getResource_type()), attr.getRESOURCE_ID());
 		for (int i = 0; i < resTypeNode.size(); i++) {
 			item.setResource_type(resTypeNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> dslNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL, attr.getDATASET_SENSITIVE_LEVEL(), attr.getId());
+		List<AttrDictionary> dslNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL, attr.getDATASET_SENSITIVE_LEVEL(), attr.getRESOURCE_ID());
 		for (int i = 0; i < dslNode.size(); i++) {
 			item.setDATASET_SENSITIVE_LEVEL(dslNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> datasetNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_DATA_SET, attr.getDATA_SET(), attr.getId());
+		List<AttrDictionary> datasetNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_DATA_SET, attr.getDATA_SET(), attr.getRESOURCE_ID());
 		for (int i = 0; i < datasetNode.size(); i++) {
 			item.setDATA_SET(datasetNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> sectionclassNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_CLASS, attr.getSECTION_CLASS(), attr.getId());
+		List<AttrDictionary> sectionclassNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_CLASS, attr.getSECTION_CLASS(), attr.getRESOURCE_ID());
 		for (int i = 0; i < sectionclassNode.size(); i++) {
 			item.setSECTION_CLASS(sectionclassNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> lementNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_LEMENT, attr.getELEMENT(), attr.getId());
+		List<AttrDictionary> lementNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_LEMENT, attr.getELEMENT(), attr.getRESOURCE_ID());
 		for (int i = 0; i < lementNode.size(); i++) {
 			item.setELEMENT(lementNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> secrelaclsNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_RELATION_CLASS, attr.getSECTION_RELATIOIN_CLASS(), attr.getId());
+		List<AttrDictionary> secrelaclsNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_RELATION_CLASS, attr.getSECTION_RELATIOIN_CLASS(), attr.getRESOURCE_ID());
 		for (int i = 0; i < secrelaclsNode.size(); i++) {
 			item.setSECTION_RELATIOIN_CLASS(secrelaclsNode.get(i).getValue());
 		}
@@ -302,46 +301,46 @@ public class ResourceManageService {
 		item.setName(attr.getName());
 		item.setRESOURCE_ID(attr.getRESOURCE_ID());
 		item.setRESOURCE_DESCRIBE(attr.getRESOURCE_DESCRIBE());
-		item.setRESOURCE_REMARK(attr.getRMK());				
+		item.setRMK(attr.getRMK());				
 		item.setDATA_VERSION(attr.getDATA_VERSION());
 		
 		AttributeDAO attrdao = new AttributeDAOImpl();
-		List<AttrDictionary> resStatNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_STATUS, String.valueOf(attr.getRESOURCE_STATUS()), attr.getId());
+		List<AttrDictionary> resStatNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_STATUS, String.valueOf(attr.getRESOURCE_STATUS()), attr.getRESOURCE_ID());
 		for (int i = 0; i < resStatNode.size(); i++) {
 			item.setRESOURCE_STATUS(resStatNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> delStatNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DELETE_STATUS, String.valueOf(attr.getDELETE_STATUS()), attr.getId());
+		List<AttrDictionary> delStatNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DELETE_STATUS, String.valueOf(attr.getDELETE_STATUS()), attr.getRESOURCE_ID());
 		for (int i = 0; i < delStatNode.size(); i++) {
 			item.setDELETE_STATUS(delStatNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> resTypeNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_TYPE, String.valueOf(attr.getResource_type()), attr.getId());
+		List<AttrDictionary> resTypeNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_RESOURCE_TYPE, String.valueOf(attr.getResource_type()), attr.getRESOURCE_ID());
 		for (int i = 0; i < resTypeNode.size(); i++) {
 			item.setResource_type(resTypeNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> dslNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL, attr.getDATASET_SENSITIVE_LEVEL(), attr.getId());
+		List<AttrDictionary> dslNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL, attr.getDATASET_SENSITIVE_LEVEL(), attr.getRESOURCE_ID());
 		for (int i = 0; i < dslNode.size(); i++) {
 			item.setDATASET_SENSITIVE_LEVEL(dslNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> datasetNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DATA_SET, attr.getDATA_SET(), attr.getId());
+		List<AttrDictionary> datasetNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_DATA_SET, attr.getDATA_SET(), attr.getRESOURCE_ID());
 		for (int i = 0; i < datasetNode.size(); i++) {
 			item.setDATA_SET(datasetNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> sectionclassNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_CLASS, attr.getSECTION_CLASS(), attr.getId());
+		List<AttrDictionary> sectionclassNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_CLASS, attr.getSECTION_CLASS(), attr.getRESOURCE_ID());
 		for (int i = 0; i < sectionclassNode.size(); i++) {
 			item.setSECTION_CLASS(sectionclassNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> lementNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_LEMENT, attr.getELEMENT(), attr.getId());
+		List<AttrDictionary> lementNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_LEMENT, attr.getELEMENT(), attr.getRESOURCE_ID());
 		for (int i = 0; i < lementNode.size(); i++) {
 			item.setELEMENT(lementNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> secrelaclsNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_RELATION_CLASS, attr.getSECTION_RELATIOIN_CLASS(), attr.getId());
+		List<AttrDictionary> secrelaclsNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_RELATION_CLASS, attr.getSECTION_RELATIOIN_CLASS(), attr.getRESOURCE_ID());
 		for (int i = 0; i < secrelaclsNode.size(); i++) {
 			item.setSECTION_RELATIOIN_CLASS(secrelaclsNode.get(i).getValue());
 		}
@@ -408,26 +407,42 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 		data.setLATEST_MOD_TIME(timenow);
 		data.setDATA_VERSION(data.getDATA_VERSION()+1);
+//		
+//		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
+//		
+//		data = dao.DataAdd(data);
+//		if(data.getRESOURCE_ID() == null || data.getRESOURCE_ID().length() == 0) {
+//			String resId = String.format("%s%010d", ConfigHelper.getRegion(), data.getId());
+//			data.setRESOURCE_ID(resId);
+//		}
+//		data = dao.DataAdd(data);
+		ResData resData = dao.GetData(data);
 		
-		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
+		if(resData == null){
+			ResDataTemplate resDataTemplate = dao.GetDataTemplate(data);
+			data.setRESOURCE_ID(resDataTemplate.getRESOURCE_ID());
+			data = dao.DataAdd(data);
 		
-		data = dao.DataAdd(data);
-		if(data.getRESOURCE_ID() == null || data.getRESOURCE_ID().length() == 0) {
-			String resId = String.format("%s%010d", ConfigHelper.getRegion(), data.getId());
-			data.setRESOURCE_ID(resId);
-		}
-		data = dao.DataAdd(data);
-		
-		if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
-			List<ResDataOrg> resDataOrgNodes=dao.GetResDataOrgByResId(data.getRESOURCE_ID());
-			for (int i = 0; i < resDataOrgNodes.size(); i++) {	
-				resDataOrg.setId(resDataOrgNodes.get(i).getId());
+			if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
+				List<ResDataOrg> resDataOrgNodes=dao.GetResDataOrgByResId(data.getRESOURCE_ID());
+				for (int i = 0; i < resDataOrgNodes.size(); i++) {	
+					resDataOrg.setId(resDataOrgNodes.get(i).getId());
+				}
+				resDataOrg.setRESOURCE_ID(data.getRESOURCE_ID());
+				resDataOrg.setCLUE_DST_SYS(resDataOrg.getCLUE_DST_SYS());
+				resDataOrg.setDATA_VERSION(resDataOrg.getDATA_VERSION()+1);
+				resDataOrg.setLATEST_MOD_TIME(timenow);
+				resDataOrg = dao.ResDataOrgAdd(resDataOrg);
 			}
-			resDataOrg.setRESOURCE_ID(data.getRESOURCE_ID());
-			resDataOrg.setCLUE_DST_SYS(resDataOrg.getCLUE_DST_SYS());
-			resDataOrg.setDATA_VERSION(resDataOrg.getDATA_VERSION()+1);
-			resDataOrg.setLATEST_MOD_TIME(timenow);
-			resDataOrg = dao.ResDataOrgAdd(resDataOrg);
+		}else{
+			
+			if( resData.getDELETE_STATUS() == ResData.DELSTATUSYES ){
+				resData.setRESOURCE_ID(resData.getRESOURCE_ID());
+				resData.setDELETE_STATUS(ResData.DELSTATUSNO);
+				resData.setDATA_VERSION(resData.getDATA_VERSION()+1);
+				data = dao.DataAdd(resData);
+			}
+			
 		}
 		
 		return data;
@@ -469,7 +484,7 @@ public class ResourceManageService {
 			data.setOPERATE_SYMBOL(nodes.get(i).getOPERATE_SYMBOL());
 			data.setELEMENT_VALUE(nodes.get(i).getELEMENT_VALUE());
 			data.setDELETE_STATUS(ResData.DELSTATUSYES);
-			data.setDATA_VERSION(nodes.get(i).getDATA_VERSION());	
+			data.setDATA_VERSION(nodes.get(i).getDATA_VERSION()+1);	
 			data.setLATEST_MOD_TIME(timenow);
 			data.setRMK(nodes.get(i).getRMK());
 		
@@ -482,7 +497,7 @@ public class ResourceManageService {
 				resDataOrg.setRESOURCE_ID(resDataOrgNodes.get(j).getRESOURCE_ID());
 				resDataOrg.setCLUE_DST_SYS(resDataOrgNodes.get(j).getCLUE_DST_SYS());
 				resDataOrg.setDELETE_STATUS(ResDataOrg.DELSTATUSYES);
-				resDataOrg.setDATA_VERSION(resDataOrgNodes.get(j).getDATA_VERSION());
+				resDataOrg.setDATA_VERSION(resDataOrgNodes.get(j).getDATA_VERSION()+1);
 				resDataOrg.setLATEST_MOD_TIME(timenow);
 				
 				resDataOrg = dao.ResDataOrgAdd(resDataOrg);
@@ -599,7 +614,7 @@ public class ResourceManageService {
 		
 		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds);
 		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds);
-		dao.UpdateDataResource(dataIds);
+//		dao.UpdateDataResource(dataIds);
 		
 		return role;
 	}
@@ -672,7 +687,7 @@ public class ResourceManageService {
 	}
 	
 	public void QueryRoleResource(String id, List<ResFeature> features,
-			List<ResDataTemplateListItem> items) throws Exception {
+			List<ResDataListItem> items) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(id);
 		
@@ -682,13 +697,19 @@ public class ResourceManageService {
 				features.add(feature);
 			}
 			else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
-				List<ResDataTemplate> dataTemplate = dao.GetDataTemplateByResId( rrs.get(i).getRESOURCE_ID() );
-				ResDataTemplateListItem resDataTemplateListItem = null;
-				for(int j=0; j<dataTemplate.size(); j++) {
-					resDataTemplateListItem = ConvertDatasDefinitonToResDataTemplateListItem( dataTemplate.get(j) );
-				}
-				items.add(resDataTemplateListItem);
+//				List<ResDataTemplate> dataTemplate = dao.GetDataTemplateByResId( rrs.get(i).getRESOURCE_ID() );
+//				ResDataTemplateListItem resDataTemplateListItem = null;
+//				for(int j=0; j<dataTemplate.size(); j++) {
+//					resDataTemplateListItem = ConvertDatasDefinitonToResDataTemplateListItem( dataTemplate.get(j) );
+//				}
+//				items.add(resDataTemplateListItem);
 				
+				List<ResData> data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
+				ResDataListItem resDataListItem = null;
+				for(int j=0; j<data.size(); j++) {
+					resDataListItem = ConvertDatasDefinitonToResDataListItem( data.get(j) );
+				}
+				items.add(resDataListItem);
 			}
 		}
 		

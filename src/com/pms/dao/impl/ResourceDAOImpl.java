@@ -448,6 +448,217 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return data;
 	}
+	
+	@Override
+	public ResData GetData(ResData data) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		ResData rs = null;
+		String sqlString = "SELECT * FROM wa_authority_data_resource WHERE 1=1";
+		if( data != null ) {
+			if(data.getDATA_SET() != null && data.getDATA_SET().length() > 0) {
+				sqlString += " and DATA_SET = :DATA_SET ";
+			}
+			if(data.getELEMENT() != null && data.getELEMENT().length() > 0) {
+				sqlString += " and ELEMENT = :ELEMENT ";
+			}
+			if(data.getSECTION_CLASS() != null && data.getSECTION_CLASS().length() > 0) {
+				sqlString += " and SECTION_CLASS = :SECTION_CLASS ";
+			}
+			if(data.getSECTION_RELATIOIN_CLASS() != null && data.getSECTION_RELATIOIN_CLASS().length() > 0) {
+				sqlString += " and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS ";
+			}
+			if(data.getOPERATE_SYMBOL() != null && data.getOPERATE_SYMBOL().length() > 0) {
+				sqlString += " and OPERATE_SYMBOL = :OPERATE_SYMBOL ";
+			}
+			if(data.getELEMENT_VALUE() != null && data.getELEMENT_VALUE().length() > 0) {
+				sqlString += " and ELEMENT_VALUE = :ELEMENT_VALUE ";
+			}
+		}
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			if( data != null ) {
+				if(data.getDATA_SET() != null && data.getDATA_SET().length() > 0) {
+					q.setString( "DATA_SET", data.getDATA_SET() );
+				}
+				if(data.getELEMENT() != null && data.getELEMENT().length() > 0) {
+					q.setString( "ELEMENT", data.getELEMENT());
+				}
+				if(data.getSECTION_CLASS() != null && data.getSECTION_CLASS().length() > 0) {
+					q.setString( "SECTION_CLASS", data.getSECTION_CLASS() );
+				}
+				if(data.getSECTION_RELATIOIN_CLASS() != null && data.getSECTION_RELATIOIN_CLASS().length() > 0) {
+					q.setString( "SECTION_RELATIOIN_CLASS", data.getSECTION_RELATIOIN_CLASS());
+				}
+				if(data.getOPERATE_SYMBOL() != null && data.getOPERATE_SYMBOL().length() > 0) {
+					q.setString( "OPERATE_SYMBOL", data.getOPERATE_SYMBOL() );
+				}
+				if(data.getELEMENT_VALUE() != null && data.getELEMENT_VALUE().length() > 0) {
+					q.setString( "ELEMENT_VALUE", data.getELEMENT_VALUE());
+				}
+			}
+			rs = (ResData) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public ResDataTemplate GetDataTemplate(ResData data) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		ResDataTemplate rs = null;
+		String sqlString = "SELECT * FROM wa_authority_data_resource_Template WHERE 1=1";
+		if( data != null ) {
+			if(data.getDATA_SET() != null && data.getDATA_SET().length() > 0) {
+				sqlString += " and DATA_SET = :DATA_SET ";
+			}
+			if(data.getELEMENT() != null && data.getELEMENT().length() > 0) {
+				sqlString += " and ELEMENT = :ELEMENT ";
+			}
+			if(data.getSECTION_CLASS() != null && data.getSECTION_CLASS().length() > 0) {
+				sqlString += " and SECTION_CLASS = :SECTION_CLASS ";
+			}
+			if(data.getSECTION_RELATIOIN_CLASS() != null && data.getSECTION_RELATIOIN_CLASS().length() > 0) {
+				sqlString += " and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS ";
+			}
+			if(data.getOPERATE_SYMBOL() != null && data.getOPERATE_SYMBOL().length() > 0) {
+				sqlString += " and OPERATE_SYMBOL = :OPERATE_SYMBOL ";
+			}
+			if(data.getELEMENT_VALUE() != null && data.getELEMENT_VALUE().length() > 0) {
+				sqlString += " and ELEMENT_VALUE = :ELEMENT_VALUE ";
+			}
+		}
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
+			if( data != null ) {
+				if(data.getDATA_SET() != null && data.getDATA_SET().length() > 0) {
+					q.setString( "DATA_SET", data.getDATA_SET() );
+				}
+				if(data.getELEMENT() != null && data.getELEMENT().length() > 0) {
+					q.setString( "ELEMENT", data.getELEMENT());
+				}
+				if(data.getSECTION_CLASS() != null && data.getSECTION_CLASS().length() > 0) {
+					q.setString( "SECTION_CLASS", data.getSECTION_CLASS() );
+				}
+				if(data.getSECTION_RELATIOIN_CLASS() != null && data.getSECTION_RELATIOIN_CLASS().length() > 0) {
+					q.setString( "SECTION_RELATIOIN_CLASS", data.getSECTION_RELATIOIN_CLASS());
+				}
+				if(data.getOPERATE_SYMBOL() != null && data.getOPERATE_SYMBOL().length() > 0) {
+					q.setString( "OPERATE_SYMBOL", data.getOPERATE_SYMBOL() );
+				}
+				if(data.getELEMENT_VALUE() != null && data.getELEMENT_VALUE().length() > 0) {
+					q.setString( "ELEMENT_VALUE", data.getELEMENT_VALUE());
+				}
+			}
+			rs = (ResDataTemplate) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public ResData DataAddTemplate(ResData data)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		String sqlString = "REPLACE INTO wa_authority_data_resource SELECT * FROM wa_authority_data_resource_template WHERE 1=1 ";
+		String sqlString2 = "update wa_authority_data_resource set LATEST_MOD_TIME =:LATEST_MOD_TIME  WHERE RESOURCE_ID =:RESOURCE_ID ";
+		
+		if( data != null ) {
+			if(data.getDATA_SET() != null && data.getDATA_SET().length() > 0) {
+				sqlString += " and DATA_SET = :DATA_SET ";
+			}
+			if(data.getELEMENT() != null && data.getELEMENT().length() > 0) {
+				sqlString += " and ELEMENT = :ELEMENT ";
+			}
+			if(data.getSECTION_CLASS() != null && data.getSECTION_CLASS().length() > 0) {
+				sqlString += " and SECTION_CLASS = :SECTION_CLASS ";
+			}
+			if(data.getSECTION_RELATIOIN_CLASS() != null && data.getSECTION_RELATIOIN_CLASS().length() > 0) {
+				sqlString += " and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS ";
+			}
+			if(data.getOPERATE_SYMBOL() != null && data.getOPERATE_SYMBOL().length() > 0) {
+				sqlString += " and OPERATE_SYMBOL = :OPERATE_SYMBOL ";
+			}
+			if(data.getELEMENT_VALUE() != null && data.getELEMENT_VALUE().length() > 0) {
+				sqlString += " and ELEMENT_VALUE = :ELEMENT_VALUE ";
+			}
+		}
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			Query q2 = session.createSQLQuery(sqlString2);
+			if( data != null ) {
+				if(data.getDATA_SET() != null && data.getDATA_SET().length() > 0) {
+					q.setString( "DATA_SET", data.getDATA_SET() );
+				}
+				if(data.getELEMENT() != null && data.getELEMENT().length() > 0) {
+					q.setString( "ELEMENT", data.getELEMENT());
+				}
+				if(data.getSECTION_CLASS() != null && data.getSECTION_CLASS().length() > 0) {
+					q.setString( "SECTION_CLASS", data.getSECTION_CLASS() );
+				}
+				if(data.getSECTION_RELATIOIN_CLASS() != null && data.getSECTION_RELATIOIN_CLASS().length() > 0) {
+					q.setString( "SECTION_RELATIOIN_CLASS", data.getSECTION_RELATIOIN_CLASS());
+				}
+				if(data.getOPERATE_SYMBOL() != null && data.getOPERATE_SYMBOL().length() > 0) {
+					q.setString( "OPERATE_SYMBOL", data.getOPERATE_SYMBOL() );
+				}
+				if(data.getELEMENT_VALUE() != null && data.getELEMENT_VALUE().length() > 0) {
+					q.setString( "ELEMENT_VALUE", data.getELEMENT_VALUE());
+				}
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			q2.setString("RESOURCE_ID", data.getRESOURCE_ID());
+			q2.setString("LATEST_MOD_TIME",timenow );
+			q.executeUpdate();
+			q2.executeUpdate();
+			
+//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+//					Locale.SIMPLIFIED_CHINESE);
+//			String timenow = sdf.format(new Date());
+			
+//			ResRoleResource rr;
+//			if(featureIds != null) {
+//				for(int i = 0; i<featureIds.size(); i++) {
+//					rr = new ResRoleResource();
+//					rr.setBUSINESS_ROLE(roleId);
+//					rr.setRESOURCE_ID(featureIds.get(i));
+//					rr.setLATEST_MOD_TIME(timenow);
+//					rr.setDATA_VERSION(1);
+//					rr.setRESOURCE_CLASS(ResRoleResource.RESCLASSFEATURE);
+//					session.merge(rr);
+//				}
+//			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return data;
+	}
 
 	@Override
 	public void DataDel(ResData res) throws Exception {
@@ -655,13 +866,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 		int rs;
 		String sqlString = "select count(*) from WA_AUTHORITY_DATA_RESOURCE where 1 = 1 and DELETE_STATUS =:DELETE_STATUS ";
 		if( criteria != null ) {
-			if( criteria != null ) {
-				if(criteria.getName() != null && criteria.getName().length() > 0) {
-					sqlString += " and name like :name ";
-				}
-				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
-					sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
-				}
+			if(criteria.getName() != null && criteria.getName().length() > 0) {
+				sqlString += " and name like :name ";
+			}
+			if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+				sqlString += " and RESOURCE_ID = :RESOURCE_ID ";
 			}
 		}
 		
@@ -669,13 +878,11 @@ public class ResourceDAOImpl implements ResourceDAO {
 			Query q = session.createSQLQuery(sqlString);
 			q.setInteger("DELETE_STATUS", criteria.getDELETE_STATUS());
 			if( criteria != null ) {
-				if( criteria != null ) {
-					if(criteria.getName() != null && criteria.getName().length() > 0) {
-						q.setString( "name", "%" + criteria.getName() + "%" );
-					}
-					if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
-						q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
-					}
+				if(criteria.getName() != null && criteria.getName().length() > 0) {
+					q.setString( "name", "%" + criteria.getName() + "%" );
+				}
+				if(criteria.getRESOURCE_ID() != null && criteria.getRESOURCE_ID().length() > 0) {
+					q.setString( "RESOURCE_ID", criteria.getRESOURCE_ID());
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
