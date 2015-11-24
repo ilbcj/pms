@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>resourcemanager.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+    <ul id="menu_app" class="easyui-tree" lines="true">
+        <li iconCls="icon-leaf" id="menu_resource_role_maintain">
+            <span>角色维护</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_resource_role_import">
+            <span>角色导入</span>
+        </li>
+    </ul>
+<script>
+$(document).ready(function () {
+	$('#menu_app').tree({
+		onClick: function(node){
+			if (node.id == 'menu_resource_role_maintain') {
+				$('body').layout('panel','center').panel('refresh','role/resource_role_maintain.html');
+			}
+			else if (node.id == 'menu_resource_role_import') {
+				$('body').layout('panel','center').panel('refresh','role/resource_role_import.html');
+			}
+		}
+	});
+});
+</script>     
+  </body>
+</html>
