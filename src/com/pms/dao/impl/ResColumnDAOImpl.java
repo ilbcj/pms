@@ -96,7 +96,7 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		}
 		return rs;
 	}
-
+	
 	@Override
 	public ResColumn QueryColumnByElement(String dataset, String element)
 			throws Exception {
@@ -111,6 +111,7 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 			q.setString("ELEMENT", element);
 			rs = (ResColumn) q.uniqueResult();
 			tx.commit();
+			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
 			tx.rollback();
@@ -124,4 +125,58 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		return rs;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResColumn> QueryRowColumn(String dataSet)
+		throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResColumn> rs = null;
+		String sqlString = "SELECT DISTINCT a.* FROM WA_COLUMN a,WA_ROW_RELATION b WHERE a.DATA_SET=b.DATA_SET AND a.element=b.element AND a.DATA_SET = :DATA_SET ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
+			q.setString("DATA_SET", dataSet);
+			rs = q.list();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResColumn> QueryColumnColumn(String dataSet,String sectionClass)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResColumn> rs = null;
+		String sqlString = "SELECT DISTINCT a.* FROM WA_COLUMN a, WA_COLUMN_RELATION b WHERE a.DATA_SET =b.DATA_SET AND a.ELEMENT = b.ELEMENT AND  b.DATA_SET = :DATA_SET AND b.SECTION_CLASS = :SECTION_CLASS ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
+			q.setString("DATA_SET", dataSet);
+			q.setString("SECTION_CLASS", sectionClass);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 }

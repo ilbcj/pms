@@ -11,7 +11,7 @@ public class ResDataListItem {
 	private String RESOURCE_ID;
 	private String RESOURCE_STATUS;
 	private String RESOURCE_DESCRIBE;
-	private String RESOURCE_REMARK;
+	private String RMK;
 	private String DELETE_STATUS;
 	private String resource_type;
 	private String CLUE_DST_SYS;
@@ -67,12 +67,12 @@ public class ResDataListItem {
 		RESOURCE_DESCRIBE = rESOURCEDESCRIBE;
 	}
 
-	public String getRESOURCE_REMARK() {
-		return RESOURCE_REMARK;
+	public String getRMK() {
+		return RMK;
 	}
 
-	public void setRESOURCE_REMARK(String rESOURCEREMARK) {
-		RESOURCE_REMARK = rESOURCEREMARK;
+	public void setRMK(String rMK) {
+		RMK = rMK;
 	}
 
 	public String getDELETE_STATUS() {

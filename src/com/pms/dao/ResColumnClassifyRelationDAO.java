@@ -9,5 +9,8 @@ public interface ResColumnClassifyRelationDAO {
 	public ResRelationColumnClassify ResRelationColumnClassifySave(ResRelationColumnClassify rcc) throws Exception;
 
 	public List<ResRelationColumnClassify> QueryAllResRelationColumnClassify() throws Exception;
+
+	List<ResRelationColumnClassify> QueryResRelationColumnClassify(
+			String dataSet) throws Exception;
 	
 }

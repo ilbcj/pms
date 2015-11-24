@@ -285,24 +285,24 @@
 						            </table>
 					            </div><!--   end of resource_role_query_resource_data_win_list_dg_tb_mouseButton --> 
 				    			
-								<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  
-							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
+								<table class="nodt" id="resource_role_query_resource_data_win_list_dg"  style="width: 100%"
+							            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true">
 							        <thead>
 							            <tr>
 							            	<th field="ck" checkbox="true"></th>
 							                <th data-options="field:'name'">名称</th>
 							                <th data-options="field:'RESOURCE_ID'">资源唯一标识</th>
-							                <th data-options="field:'RESOURCE_STATUS'">资源状态 </th>
+							                <th data-options="field:'RESOURCE_STATUS'">资源状态</th>
 							                <th data-options="field:'RESOURCE_DESCRIBE'">资源描述</th>
 							                <th data-options="field:'RMK'">备注</th>
-							                <th data-options="field:'DELETE_STATUS'">删除状态 </th>
+							                <th data-options="field:'DELETE_STATUS'">删除状态</th>
 							                <th data-options="field:'resource_type'">资源类型</th>
 <!-- 							                <th data-options="field:'CLUE_DST_SYS'">目标地市</th> -->
-							                <th data-options="field:'DATASET_SENSITIVE_LEVEL'">数据集敏感度编码 </th>					                
+							                <th data-options="field:'DATASET_SENSITIVE_LEVEL'">数据集敏感度编码</th>					                
 							                <th data-options="field:'DATA_SET'">数据集编码</th>
 							                <th data-options="field:'SECTION_CLASS'">字段分类编码</th>
 							                <th data-options="field:'ELEMENT'">字段编码</th>
-							                <th data-options="field:'SECTION_RELATIOIN_CLASS'">字段分类关系编码 </th>
+							                <th data-options="field:'SECTION_RELATIOIN_CLASS'">字段分类关系编码</th>
 							            </tr>
 							        </thead>
 							    </table>
@@ -535,12 +535,12 @@
      	var rows = $("#role_resource_feature_dg").datagrid('getRows');
      	var index = 0;
     	for(index=0; index < rows.length; index++) {
-	 		poststr += '&addFeatureIds=' + rows[index].id;
+	 		poststr += '&addFeatureIds=' + rows[index].RESOURCE_ID;
     	}
 
 		rows = $("#role_resource_data_dg").datagrid('getRows');
     	for(index=0; index < rows.length; index++) {
-	 		poststr += '&addDataIds=' + rows[index].id;
+	 		poststr += '&addDataIds=' + rows[index].RESOURCE_ID;
     	}
     	$.post("../resource/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
 		
@@ -632,8 +632,8 @@
  				for( index=0; index < retObj.features.length; index++) {
  					insertFeature( retObj.features[index]);
  				}
- 				for( index=0; index < retObj.dataTemplateItems.length; index++) {
- 					insertData( retObj.dataTemplateItems[index]);
+ 				for( index=0; index < retObj.dataItems.length; index++) {
+ 					insertData( retObj.dataItems[index]);
  				}
 		    	
 //  		    	for( index=0; index < retObj。datas.length; index++ ) {
@@ -659,7 +659,7 @@
 	    
     	$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
 			arr.push(retObj);
-			if( retObj.dataTemplateItems.length ==0 ){
+			if( retObj.dataItems.length ==0 ){
 				warningTip("提示", '没有可复制的资源！');
 				return;
 			}
@@ -679,13 +679,13 @@
     }
     
     function rolePasteResourceData(data){
-		if( data.dataTemplateItems.length ==0 ){
+		if( data.dataItems.length ==0 ){
 			warningTip("提示", '请先选择要粘贴的资源！');
 			return;
 		}
 		var index;
-	    for( index=0; index < data.dataTemplateItems.length; index++) {
-	    	insertData( data.dataTemplateItems[index]);
+	    for( index=0; index < data.dataItems.length; index++) {
+	    	insertData( data.dataItems[index]);
 	    }
     }
     
@@ -820,6 +820,23 @@
 				SECTION_RELATIOIN_CLASS:data.SECTION_RELATIOIN_CLASS
 			}
 		});
+		
+// 			var pager = $('#role_resource_data_dg').datagrid().datagrid('getPager');	// get the pager of datagrid
+// 			alert(rows.length);
+// 			pager.pagination({
+// 				total:rows.length,
+// 		        onSelectPage:function (pageNo, pageSize) { 
+// 					var start = (pageNo - 1) * pageSize; 
+// 		          	var end = start + pageSize; 
+// 		          	alert(start);alert(end);
+// 		          	$("#role_resource_data_dg").datagrid("loadData", data.slice(start, end)); 
+// 		          	pager.pagination('refresh', { 
+// 		            	total:rows.length, 
+// 		            	pageNumber:pageNo 
+// 		          	}); 
+// 		        } 
+			
+// 			});	
 	}
     //------------------for value edit datagrid-------
     function roleQueryResourceFeature(){
@@ -843,12 +860,12 @@
         
     function roleQueryResourceData(){
     	$("#resource_role_query_resource_data_win_list_dg").datagrid({
-			url:'../resource/queryDataTemplateItems.action',
+			url:'../resource/queryDataItems.action',
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
 					res.total = data.total;
-					res.rows = data.dataTemplateItems;
+					res.rows = data.dataItems;
 				} else {
 					res.total=0;
 					res.rows = [];
@@ -906,7 +923,7 @@ $(document).ready(function () {
 		height:'50%',
 		toolbar:'#featureToolbar',
 		singleSelect:true,
-		pagination:false,
+		pagination:true,
 		idField:'id',
 		//url:'data/datagrid_data.json',
 		columns:[[
@@ -928,12 +945,15 @@ $(document).ready(function () {
 		height:'50%',
 		toolbar:'#dataToolbar',
 		singleSelect:true,
-		pagination:false,
+		pagination:true,
+		pageSize:5,
+		pageNumber:0,
+		pageList:[5,10,20],
 		//idField:'id',
 		//url:'data/datagrid_data.json',
 		columns:[[
 			{field:'name',title:'名称',width:'7%',editor:'text'},
-			{field:'RESOURCE_ID',title:'资源唯一标识',width:'7%',editor:'text'},
+			{field:'RESOURCE_ID',title:'资源唯一标识',width:'10%',editor:'text'},
 			{field:'RESOURCE_STATUS',title:'资源状态',width:'7%',editor:'text'},
 			{field:'RESOURCE_DESCRIBE',title:'资源描述',width:'7%',editor:'text'},
 			{field:'RMK',title:'备注',width:'7%',editor:'text'},
@@ -942,7 +962,7 @@ $(document).ready(function () {
 // 			{field:'CLUE_DST_SYS',title:'目标地市',width:'7%',editor:'text'},
 			{field:'DATASET_SENSITIVE_LEVEL',title:'数据集敏感度编码 ',width:'10%',editor:'text'},
 			{field:'DATA_SET',title:'数据集编码',width:'7%',editor:'text'},
-			{field:'SECTION_CLASS',title:'字段分类编码',width:'7%',editor:'text'},
+			{field:'SECTION_CLASS',title:'字段分类编码',width:'8%',editor:'text'},
 			{field:'ELEMENT',title:'字段编码',width:'7%',editor:'text'},
 			{field:'SECTION_RELATIOIN_CLASS',title:'字段分类关系编码',width:'10%',editor:'text'},
 			{field:'action',title:'操作',width:'4%',
@@ -1056,7 +1076,7 @@ $(document).ready(function () {
  		var section_classData='([' + section_class.substring(0,section_class.length-1) + '])';
  		var section_classJSON = (new Function('return '+section_classData +';'))();
  		var elementData='([' + element.substring(0,element.length-1) + '])';
- 		var elementJSON = (new Function('return '+elementData +';'))(); 
+ 		var elementJSON = (new Function('return '+elementData +';'))();
  		var section_relatioin_classData='([' + section_relatioin_class.substring(0,section_relatioin_class.length-1) + '])';
  		var section_relatioin_classJSON = (new Function('return '+section_relatioin_classData +';'))(); 
  		
@@ -1100,16 +1120,17 @@ $(document).ready(function () {
 			textField:'text',
 			multiple:true,
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var datasetSensitive = $("#resource_data_query_dataset_sensitive_level").combobox("getValues");
-		    	if(datasetSensitive == ''){
-		    		$("#resource_data_query_data_set").textbox({value:""});
-					$('#resource_data_query_data_set').textbox({ disabled: true});
-    			}else{
-    				$('#resource_data_query_data_set').textbox({ disabled: false});
-    			}
-    		}
+			panelHeight:'auto'
+// 			,
+// 			onChange:function(){  
+// 		    	var datasetSensitive = $("#resource_data_query_dataset_sensitive_level").combobox("getValues");
+// 		    	if(datasetSensitive == ''){
+// 		    		$("#resource_data_query_data_set").textbox({value:""});
+// 					$('#resource_data_query_data_set').textbox({ disabled: true});
+//     			}else{
+//     				$('#resource_data_query_data_set').textbox({ disabled: false});
+//     			}
+//     		}
 		});
 		$('#resource_data_query_data_set').combobox({
 			data : data_setJSON,
@@ -1128,80 +1149,83 @@ $(document).ready(function () {
 			panelHeight:'auto'
 		});
 		$('#resource_data_query_element').combobox({
-			data : data_setJSON,
+			data : elementJSON,
 			valueField:'id',
 			textField:'text',
 			multiple:true,
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var element = $("#resource_data_query_element").combobox("getValues");
-		    	if(element != ''){
-		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
-					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
-    			}else{
-    				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
-    			}
-    		}
+			panelHeight:'auto'
+// 			,
+// 			onChange:function(){  
+// 		    	var element = $("#resource_data_query_element").combobox("getValues");
+// 		    	alert(element);
+// 		    	if(element != ''){
+// 		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
+// 					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
+//     			}else{
+//     				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
+//     			}
+//     		}
 		});
 		$('#resource_data_query_section_relatioin_class').combobox({
-			data : section_classJSON,
+			data : section_relatioin_classJSON,
 			valueField:'id',
 			textField:'text',
 			multiple:true,
 			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var secrelacls = $("#resource_data_query_section_relatioin_class").combobox("getValues");
-		    	if(secrelacls != ''){
-		    		$("#resource_data_query_element").textbox({value:""});
-					$('#resource_data_query_element').textbox({ disabled: true});
-					$('#resource_data_query_operatesymbol').textbox({ disabled: true});
-					$('#resource_data_query_elementvalue').textbox({ disabled: true});
-    			}else{
-    				$('#resource_data_query_element').textbox({ disabled: false});
-    				$('#resource_data_query_operatesymbol').textbox({ disabled: false});
-    				$('#resource_data_query_elementvalue').textbox({ disabled: false});
-    			}
-    		}
+			panelHeight:'auto'
+// 			,
+// 			onChange:function(){  alert(secrelacls);
+// 		    	var secrelacls = $("#resource_data_query_section_relatioin_class").combobox("getValues");
+// 		    	if(secrelacls != ''){
+// 		    		$("#resource_data_query_element").textbox({value:""});
+// 					$('#resource_data_query_element').textbox({ disabled: true});
+// 					$('#resource_data_query_operatesymbol').textbox({ disabled: true});
+// 					$('#resource_data_query_elementvalue').textbox({ disabled: true});
+//     			}else{
+//     				$('#resource_data_query_element').textbox({ disabled: false});
+//     				$('#resource_data_query_operatesymbol').textbox({ disabled: false});
+//     				$('#resource_data_query_elementvalue').textbox({ disabled: false});
+//     			}
+//     		}
 		});
-		$('#resource_data_query_operatesymbol').combobox({
-			data : section_classJSON,
-			valueField:'id',
-			textField:'text',
-			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var operatesymbol = $("#resource_data_query_operatesymbol").combobox("getValues");
-		    	var elementvalue = $("#resource_data_query_elementvalue").combobox("getValues");
-		    	if(operatesymbol != '' || elementvalue != ''){
-		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
-					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
-    			}else{
-    				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
+// 		$('#resource_data_query_operatesymbol').combobox({
+// 			data : section_classJSON,
+// 			valueField:'id',
+// 			textField:'text',
+// 			editable:false,
+// 			panelHeight:'auto',
+// 			onChange:function(){  
+// 		    	var operatesymbol = $("#resource_data_query_operatesymbol").combobox("getValues");
+// 		    	var elementvalue = $("#resource_data_query_elementvalue").combobox("getValues");
+// 		    	if(operatesymbol != '' || elementvalue != ''){
+// 		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
+// 					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
+//     			}else{
+//     				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
    
-    			}
-    		}
-		});
-		$('#resource_data_query_elementvalue').combobox({
-			data : section_classJSON,
-			valueField:'id',
-			textField:'text',
-			editable:false,
-			panelHeight:'auto',
-			onChange:function(){  
-		    	var operatesymbol = $("#resource_data_query_operatesymbol").combobox("getValues");
-		    	var elementvalue = $("#resource_data_query_elementvalue").combobox("getValues");
-		    	if(operatesymbol != '' || elementvalue != ''){
-		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
-					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
-    			}else{
-    				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
+//     			}
+//     		}
+// 		});
+// 		$('#resource_data_query_elementvalue').combobox({
+// 			data : section_classJSON,
+// 			valueField:'id',
+// 			textField:'text',
+// 			editable:false,
+// 			panelHeight:'auto',
+// 			onChange:function(){  
+// 		    	var operatesymbol = $("#resource_data_query_operatesymbol").combobox("getValues");
+// 		    	var elementvalue = $("#resource_data_query_elementvalue").combobox("getValues");
+// 		    	if(operatesymbol != '' || elementvalue != ''){
+// 		    		$("#resource_data_query_section_relatioin_class").textbox({value:""});
+// 					$('#resource_data_query_section_relatioin_class').textbox({ disabled: true});
+//     			}else{
+//     				$('#resource_data_query_section_relatioin_class').textbox({ disabled: false});
    
-    			}
-    		}
+//     			}
+//     		}
 			
-		});
+// 		});
 
 	}, "json");	
 	

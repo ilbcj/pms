@@ -72,4 +72,7 @@ public interface ResourceDAO {
 
 	List<ResRoleOrg> GetResRoleOrgByRoleid(String id) throws Exception;
 	List<ResDataOrg> GetResDataOrgByResId(String id) throws Exception;
+	ResData DataAddTemplate(ResData data) throws Exception;
+	ResData GetData(ResData data) throws Exception;
+	ResDataTemplate GetDataTemplate(ResData data) throws Exception;
 }

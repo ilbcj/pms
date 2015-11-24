@@ -9,5 +9,7 @@ public interface ResDatasetSensitiveDAO {
 	public ResDataSetSensitive ResDataSetSensitiveSave(ResDataSetSensitive dss) throws Exception;
 
 	public List<ResDataSetSensitive> QueryAllDataSetSensitive() throws Exception;
+
+	List<ResDataSetSensitive> QueryDataSetSensitive(String dataSet) throws Exception;
 	
 }

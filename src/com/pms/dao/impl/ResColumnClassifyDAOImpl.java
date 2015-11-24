@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Query;
@@ -67,6 +68,33 @@ public class ResColumnClassifyDAOImpl implements ResColumnClassifyDAO {
 			HibernateUtil.closeSession();
 		}
 		return cc;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResColumnClassify> QueryColumnClassify(String dataSet)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+				 
+		List<ResColumnClassify> rs = null;
+		String sqlString = "SELECT * FROM WA_COLUMN_CLASSIFY WHERE SECTION_CLASS IN (SELECT DISTINCT SECTION_CLASS FROM WA_COLUMN_RELATION WHERE DATA_SET = :DATA_SET ) ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumnClassify.class);
+			q.setString("DATA_SET", dataSet);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 
 }
