@@ -16,7 +16,6 @@ import com.pms.dao.AttributeDAO;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
-import com.pms.model.User;
 
 public class AttributeDAOImpl implements AttributeDAO {
 

@@ -14,8 +14,8 @@ public interface AttributeDAO {
 	public List<AttrDictionary> GetRolesDictionarys(int id) throws Exception;
 	public List<AttrDictionary> GetDatasDictionarys(String id) throws Exception;
 	public List<AttrDictionary> GetUsersDictionarys(int id) throws Exception;
-	public List<AttrDictionary> GetDictsDatasNode(String name, String code, int id) throws Exception;
-	public List<AttrDictionary> GetDictsDataTemplatesNode(String name, String code, int id) throws Exception;
+	public List<AttrDictionary> GetDictsDatasNode(String name, String code, String id) throws Exception;
+	public List<AttrDictionary> GetDictsDataTemplatesNode(String name, String code, String id) throws Exception;
 	public List<AttrDictionary> GetOrgsDictionarys(String id) throws Exception;
 	public AttrDictionary GetAttrDictionarysByAttrIdAndCode(int attrId, String code) throws Exception;
 	
