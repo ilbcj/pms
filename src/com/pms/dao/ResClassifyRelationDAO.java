@@ -13,4 +13,6 @@ public interface ResClassifyRelationDAO {
 	List<ResRelationClassify> QueryResRelationClassify(String dataSet)
 			throws Exception;
 	
+	public int ResClassifyRelationImportClear() throws Exception;
+	
 }

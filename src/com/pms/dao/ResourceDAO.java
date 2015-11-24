@@ -34,10 +34,12 @@ public interface ResourceDAO {
 			List<String> data_set, List<String> section_class, List<String> element, List<String> section_relatioin_class, 
 			ResDataTemplate criteria, int page, int rows) throws Exception;
 	int GetDataTemplatesCount(ResDataTemplate criteria) throws Exception;
-	ResData GetDataByColumn(String dataSet, String element) throws Exception;
+	//ResData GetDataByColumn(String dataSet, String element) throws Exception;
 	ResData GetDataByRelationRow(String dataSet, String element, String elemnetValue) throws Exception;
 	ResData GetDataByRelationColumn(String dataSet, String sectionClass, String element) throws Exception;
-		
+	ResDataTemplate GetDataTemplateByRelationRow(String dataSet, String element, String elemnetValue) throws Exception;
+	ResDataTemplate GetDataTemplateByRelationColumn(String dataSet, String sectionClass, String element) throws Exception;
+	
 	ResRole RoleAdd(ResRole role) throws Exception;
 	ResRole RoleImport(ResRole role) throws Exception;
 	void RoleDel(ResRole role) throws Exception;
@@ -63,10 +65,10 @@ public interface ResourceDAO {
 	List<ResData> GetDatasByTime(String time) throws Exception;
 	List<ResData> GetColumnDatasByDataSet(String dataSet) throws Exception;
 	
-	ResRoleResourceImport ResRoleResourceImportAdd(ResRoleResourceImport rrri) throws Exception; 
-	List<ResRoleResourceImport> GetResRoleResourceImport() throws Exception;
+	ResRoleResourceImport ResRoleResourceImportAdd(ResRoleResourceImport rrri) throws Exception;
+	List<ResRoleResourceImport> GetResRoleResourceImport(int first, int count) throws Exception;
 	int ResRoleResourceImportClear() throws Exception;
-	int ClearPublicRoleAndDataResourceRelationship() throws Exception;
+	int ClearPublicRoleAndRelationship() throws Exception;
 
 	List<ResRoleOrg> GetResRoleOrgByRoleid(String id) throws Exception;
 	List<ResDataOrg> GetResDataOrgByResId(String id) throws Exception;

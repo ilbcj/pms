@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -25,16 +27,37 @@ import com.pms.model.ResRoleResourceImport;
 
 
 public class ResourceDAOImpl implements ResourceDAO {
+	
+	private static Log logger = LogFactory.getLog(ResourceDAOImpl.class);
+	
 	@Override
 	public ResFeature FeatureAdd(ResFeature feature) throws Exception {
-		//打开线程安全的session对象
 		Session session = HibernateUtil.currentSession();
-		//打开事务
 		Transaction tx = session.beginTransaction();
-		try
-		{
+		
+		ResFeature rs = null;
+		String sqlString = "select * from wa_authority_func_resource where resource_id =:resource_id ";
+
+		feature.setDATA_VERSION(1);
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+			q.setString("resource_id", feature.getRESOURCE_ID());
+			rs = (ResFeature) q.uniqueResult();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			feature.setLATEST_MOD_TIME(timenow);
+			
+			if(rs != null) {
+				feature.setId(rs.getId());
+				feature.setDATA_VERSION(feature.getDATA_VERSION() + 1);
+			}
+
 			feature = (ResFeature) session.merge(feature);
 			if(feature.getRESOURCE_ID() == null || feature.getRESOURCE_ID().isEmpty()) {
+				logger.warn("[IRF]no resource id of feature resource which inner id is:" + feature.getId());
 				feature.setRESOURCE_ID(new Integer(feature.getId()).toString());
 				feature = (ResFeature) session.merge(feature);
 			}
@@ -1176,7 +1199,48 @@ public class ResourceDAOImpl implements ResourceDAO {
 				result = rs.get(0);
 			}
 			else {
-				throw new Exception("数据集-字段-字段值数据资源不唯一[dataset:" + dataSet + ", element:" + element + ", elementValue:" + elemnetValue + "]");
+				String warnMsg = "[IRRARD]duplicate record found when search data resource of row relation by condition of dataset:'" + dataSet + "', element:'" + element + "', elementValue:'" + elemnetValue + "'";
+				logger.warn(warnMsg);
+				throw new Exception(warnMsg);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ResDataTemplate GetDataTemplateByRelationRow(String dataSet, String element, String elemnetValue) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResDataTemplate> rs = null;
+		ResDataTemplate result = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where data_set =:data_set and element = :element and element_value = :element_value";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
+			q.setString("data_set", dataSet);
+			q.setString("element", element);
+			q.setString("element_value", elemnetValue);
+			rs = q.list();
+			tx.commit();
+			if(rs.size() == 0) {
+				result = null;
+			}
+			else if(rs.size() == 1) {
+				result = rs.get(0);
+			}
+			else {
+				String warnMsg = "[IRRARD]duplicate record found when search data resource template of row relation by condition of dataset:'" + dataSet + "', element:'" + element + "', elementValue:'" + elemnetValue + "'";
+				logger.warn(warnMsg);
+				throw new Exception(warnMsg);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1213,7 +1277,9 @@ public class ResourceDAOImpl implements ResourceDAO {
 				result = rs.get(0);
 			}
 			else {
-				throw new Exception("字段资源不唯一[dataset:" + dataSet + ", element:" + element + "]");
+				String warnMsg = "[IRRARD]duplicate record found when search data resource of column relation by condition of dataset:'" + dataSet + "', element:'" + element + "', sectionClass:'" + sectionClass + "'";
+				logger.warn(warnMsg);
+				throw new Exception(warnMsg);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1227,7 +1293,44 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public ResDataTemplate GetDataTemplateByRelationColumn(String dataSet, String sectionClass, String element) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResDataTemplate> rs = null;
+		ResDataTemplate result = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where data_set =:data_set and element = :element and section_class = :section_class";
 
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
+			q.setString("data_set", dataSet);
+			q.setString("element", element);
+			q.setString("section_class", sectionClass);
+			rs = q.list();
+			tx.commit();
+			if(rs.size() == 0) {
+				result = null;
+			}
+			else if(rs.size() == 1) {
+				result = rs.get(0);
+			}
+			else {
+				String warnMsg = "[IRRARD]duplicate record found when search data resource template of column relation by condition of dataset:'" + dataSet + "', element:'" + element + "', sectionClass:'" + sectionClass + "'";
+				logger.warn(warnMsg);
+				throw new Exception(warnMsg);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return result;
+	}
 	
 	@Override
 	public ResRole RoleAdd(ResRole role) throws Exception {
@@ -1272,6 +1375,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
+		role.setDATA_VERSION(1);
+		
 		String sqlString = "SELECT * FROM wa_authority_role WHERE business_role =:business_role ";
 		List<ResRole> rs = null;
 		try
@@ -1297,7 +1402,9 @@ public class ResourceDAOImpl implements ResourceDAO {
 				}
 			}
 			else if ( rs.size() > 1 ) {
-				throw new Exception("存在" + rs.size() + "条记录的角色代码为" + role.getBUSINESS_ROLE() );
+				String warnMesg = "[IRRARD]duplicate record found when search role by condition of business_role:'" + role.getBUSINESS_ROLE() + "' ";
+				logger.info(warnMesg);
+				throw new Exception(warnMesg);
 			}
 			
 			tx.commit();
@@ -1517,10 +1624,13 @@ public class ResourceDAOImpl implements ResourceDAO {
 				if(rs.get(0).getDELETE_STATUS() != ResRoleResource.DELSTATUSNO) {
 					resRoleResource.setId(rs.get(0).getId());
 					resRoleResource.setDATA_VERSION(rs.get(0).getDATA_VERSION() + 1);
+					resRoleResource = (ResRoleResource) session.merge(resRoleResource);
 				}
 			}
 			else {
-				throw new Exception("存在" + rs.size() + "条相同的角色资源对应关系记录[resId:" + resRoleResource.getRESOURCE_ID() + ", roleId:" + resRoleResource.getBUSINESS_ROLE() + "]" );
+				String warnMesg = "[IRRARD]duplicate record found when search role and resource relation by condition of business_role:'" + resRoleResource.getBUSINESS_ROLE() + "', resource_id:'" + resRoleResource.getRESOURCE_ID() + "' ";
+				logger.info(warnMesg);
+				throw new Exception(warnMesg);
 			}
 			tx.commit();
 		}
@@ -2016,7 +2126,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRoleResourceImport> GetResRoleResourceImport()
+	public List<ResRoleResourceImport> GetResRoleResourceImport(int start, int count)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
@@ -2025,6 +2135,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResourceImport.class);
+			q.setFirstResult(start);
+			q.setMaxResults(count);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -2086,16 +2198,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 
 	@Override
-	public int ClearPublicRoleAndDataResourceRelationship() throws Exception {
+	public int ClearPublicRoleAndRelationship() throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
+		int count = 0;
 		int rs = 0;
 		//SET SQL_SAFE_UPDATES = 0; 
-		String sqlString = "DELETE from WA_AUTHORITY_RESOURCE_ROLE where RESOURCE_CLASS = :RESOURCE_CLASS and BUSINESS_ROLE in (SELECT x.y FROM ( SELECT a.BUSINESS_ROLE as y FROM WA_AUTHORITY_RESOURCE_ROLE a, WA_AUTHORITY_ROLE b where a.BUSINESS_ROLE = b.BUSINESS_ROLE and b.BUSINESS_ROLE_TYPE = 0) x); ";
+		
 		try {
+			// 1. delete records from WA_AUTHORITY_RESOURCE_ROLE
+			String sqlString = "DELETE from WA_AUTHORITY_RESOURCE_ROLE where RESOURCE_CLASS = :RESOURCE_CLASS and BUSINESS_ROLE in (SELECT x.y FROM ( SELECT a.BUSINESS_ROLE as y FROM WA_AUTHORITY_RESOURCE_ROLE a, WA_AUTHORITY_ROLE b where a.BUSINESS_ROLE = b.BUSINESS_ROLE and b.BUSINESS_ROLE_TYPE = 0) x); ";
 			Query q = session.createSQLQuery(sqlString);
 			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
 			rs = q.executeUpdate();
+			count += rs;
+			
+			// 2. delete records from privilege
+			sqlString = "DELETE from privilege where role_id in (SELECT x.y FROM ( SELECT a.role_id as y FROM privilege a, WA_AUTHORITY_ROLE b where a.role_id = b.BUSINESS_ROLE and b.BUSINESS_ROLE_TYPE = 0) x); ";
+			q = session.createSQLQuery(sqlString);
+			rs = q.executeUpdate();
+			count +=rs;
+			
+			// 3. delete records from WA_AUTHORITY_ROLE
+			sqlString = "DELETE from WA_AUTHORITY_ROLE where BUSINESS_ROLE_TYPE = 0; ";
+			q = session.createSQLQuery(sqlString);
+			rs = q.executeUpdate();
+			count +=rs;
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2105,6 +2233,6 @@ public class ResourceDAOImpl implements ResourceDAO {
 		} finally {
 			HibernateUtil.closeSession();
 		}
-		return rs;
+		return count;
 	}
 }

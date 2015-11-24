@@ -687,7 +687,7 @@ public class ResourceAction extends ActionSupport {
 			if(fi.length()==0){
 				System.out.println("上传文件长度为0");
 			} else {
-				rus.UploadResource(fi);
+				rus.UploadResourceData(fi);
 			}
 			setResult(true);
 			return null;
@@ -716,11 +716,11 @@ public class ResourceAction extends ActionSupport {
 		setResult(false);
 		
 		try {
-//			ResourceUploadService rus = new ResourceUploadService();
+			ResourceUploadService rus = new ResourceUploadService();
 			if(fi.length()==0){
 				System.out.println("上传文件长度为0");
 			} else {
-//				rus.UploadResource(fi);
+				rus.UploadResourceFeature(fi);
 			}
 			setResult(true);
 			return null;
@@ -749,11 +749,11 @@ public class ResourceAction extends ActionSupport {
 		setResult(false);
 		
 		try {
-//			ResourceUploadService rus = new ResourceUploadService();
+			ResourceUploadService rus = new ResourceUploadService();
 			if(fi.length()==0){
 				System.out.println("上传文件长度为0");
 			} else {
-//				rus.UploadResource(fi);
+				rus.UploadResourceRole(fi);
 			}
 			setResult(true);
 			return null;

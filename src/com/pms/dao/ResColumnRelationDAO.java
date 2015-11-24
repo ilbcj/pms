@@ -9,5 +9,7 @@ public interface ResColumnRelationDAO {
 	public ResRelationColumn ResRelationColumnSave(ResRelationColumn rc) throws Exception;
 
 	public List<ResRelationColumn> QueryAllResRelationColumn() throws Exception;
+
+	public int ResColumnRelationImportClear() throws Exception;
 	
 }

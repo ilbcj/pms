@@ -15,6 +15,9 @@ public class ConfigHelper {
 	
 	private static ConfigHelper inst = null;
 	private static String region = null;
+	private static String requestId = null;
+	private static String esbAddr = null;
+	private static String syncExportPath = null;
 	
 	private ConfigHelper()
 	{
@@ -46,5 +49,68 @@ public class ConfigHelper {
 			}
 		}
 		return region;
+	}
+	
+	public static String getRequestId() {
+		if(requestId == null) {
+			try {
+				SystemConfigDAO dao = new SystemConfigDAOImpl();
+				List<SystemConfig> confItems = dao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYSTEM);
+				if(confItems != null) {
+					for( SystemConfig item : confItems) {
+						if( SystemConfig.SYSTEMCONFIG_ITEM_REQUESTID.equalsIgnoreCase(item.getItem()) ) {
+							requestId = item.getValue();
+						}
+					}
+				}
+			}
+			catch (Exception e) {
+				logger.info("Get requestId config from db failed, error info:" + e.getMessage() );
+				requestId = null;
+			}
+		}
+		return requestId;
+	}
+	
+	public static String getEsbAddr() {
+		if(esbAddr == null) {
+			try {
+				SystemConfigDAO dao = new SystemConfigDAOImpl();
+				List<SystemConfig> confItems = dao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYSTEM);
+				if(confItems != null) {
+					for( SystemConfig item : confItems) {
+						if( SystemConfig.SYSTEMCONFIG_ITEM_ESBADDRESS.equalsIgnoreCase(item.getItem()) ) {
+							esbAddr = item.getValue();
+						}
+					}
+				}
+			}
+			catch (Exception e) {
+				logger.info("Get esbAddr config from db failed, error info:" + e.getMessage() );
+				esbAddr = null;
+			}
+		}
+		return esbAddr;
+	}
+	
+	public static String getSyncExportPath() {
+		if(syncExportPath == null) {
+			try {
+				SystemConfigDAO dao = new SystemConfigDAOImpl();
+				List<SystemConfig> confItems = dao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
+				if(confItems != null) {
+					for( SystemConfig item : confItems) {
+						if( SystemConfig.SYSTEMCONFIG_ITEM_EXPORTPATH.equalsIgnoreCase(item.getItem()) ) {
+							syncExportPath = item.getValue();
+						}
+					}
+				}
+			}
+			catch (Exception e) {
+				logger.info("Get esbAddr config from db failed, error info:" + e.getMessage() );
+				syncExportPath = null;
+			}
+		}
+		return syncExportPath;
 	}
 }
