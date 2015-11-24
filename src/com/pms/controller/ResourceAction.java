@@ -644,10 +644,10 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		features = new ArrayList<ResFeature>();
-//		datas = new ArrayList<ResData>();
-		dataTemplateItems = new ArrayList<ResDataTemplateListItem>();
+		dataItems = new ArrayList<ResDataListItem>();
+//		dataTemplateItems = new ArrayList<ResDataTemplateListItem>();
 		try {
-			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, dataTemplateItems );
+			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, dataItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

@@ -95,5 +95,32 @@ public class ResColumnClassifyRelationDAOImpl implements ResColumnClassifyRelati
 		}
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRelationColumnClassify> QueryResRelationColumnClassify(String dataSet)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResRelationColumnClassify> rs = null;
+		String sqlString = " SELECT * FROM WA_COLUMN_CLASSIFY_REALTION WHERE SECTION_RELATIOIN_CLASS IN(SELECT SECTION_RELATIOIN_CLASS FROM WA_CLASSIFY_RELATION WHERE DATA_SET = :DATA_SET ) ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationColumnClassify.class);
+			q.setString("DATA_SET", dataSet);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 
 }

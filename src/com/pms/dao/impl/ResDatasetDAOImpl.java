@@ -95,5 +95,83 @@ public class ResDatasetDAOImpl implements ResDatasetDAO {
 		}
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataSet> QueryRowDataSet() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		List<ResDataSet> rs = null;
+		String sqlString = "SELECT * FROM WA_DATASET WHERE DATA_SET IN (SELECT DISTINCT DATA_SET FROM WA_ROW_RELATION) ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSet.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataSet> QueryColumnDataSet() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		List<ResDataSet> rs = null;
+		String sqlString = "SELECT * FROM WA_DATASET WHERE DATA_SET IN (SELECT DISTINCT DATA_SET FROM WA_COLUMN_RELATION) ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSet.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataSet> QueryClassifyDataSet() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		List<ResDataSet> rs = null;
+		String sqlString = "SELECT * FROM WA_DATASET WHERE DATA_SET IN (SELECT DISTINCT DATA_SET FROM WA_CLASSIFY_RELATION) ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSet.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 
 }

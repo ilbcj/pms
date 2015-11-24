@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.hibernate.Query;
@@ -69,4 +70,32 @@ public class ResValueDAOImpl implements ResValueDAO {
 		return val;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResValue> QueryRowResValue(String dataSet, String element)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+				 
+		List<ResValue> rs = null;
+		String sqlString = "SELECT DISTINCT a.* FROM WA_VALUE a, WA_ROW_RELATION b WHERE a.ELEMENT_VALUE = b.ELEMENT_VALUE AND a.ELEMENT=b.ELEMENT AND b.ELEMENT =:ELEMENT AND b.DATA_SET =:DATA_SET ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResValue.class);
+			q.setString("DATA_SET", dataSet);
+			q.setString("ELEMENT", element);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 }

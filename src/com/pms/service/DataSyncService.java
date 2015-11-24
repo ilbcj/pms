@@ -603,7 +603,7 @@ public class DataSyncService {
         FileStructures.addElement("ITEM").addAttribute("key", "I010025").addAttribute("eng", "BUSINESS _ROLE_TYPE").addAttribute("val", "").addAttribute("chn", "角色类型");
         FileStructures.addElement("ITEM").addAttribute("key", "I010054").addAttribute("eng", "BUSINESS _ROLE_NAME").addAttribute("val", "").addAttribute("chn", "角色名称");
         FileStructures.addElement("ITEM").addAttribute("key", "B050016").addAttribute("eng", "SYSTEM_TYPE").addAttribute("val", "").addAttribute("chn", "系统类型");
-        
+        FileStructures.addElement("ITEM").addAttribute("key", "H010006").addAttribute("eng", "CLUE_SRC_SYS").addAttribute("val", "").addAttribute("chn", "来源地市");
 //        FileStructures.addElement("ITEM").addAttribute("key", "").addAttribute("eng", "ROLE_DESC").addAttribute("val", "").addAttribute("chn", "");
         
         FileStructures.addElement("ITEM").addAttribute("key", "H010029").addAttribute("eng", "DELETE_STATUS").addAttribute("val", "").addAttribute("chn", "删除状态");

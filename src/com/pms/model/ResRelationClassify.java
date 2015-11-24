@@ -7,6 +7,7 @@ public class ResRelationClassify {
 	private int id;
 	private String DATA_SET;
 	private String SECTION_RELATIOIN_CLASS;
+	private String SECTION_RELATIOIN_CLASS_NAME;
 	private String CLUE_SRC_SYS;
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
@@ -54,9 +55,16 @@ public class ResRelationClassify {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
+	public String getSECTION_RELATIOIN_CLASS_NAME() {
+		return SECTION_RELATIOIN_CLASS_NAME;
+	}
+	public void setSECTION_RELATIOIN_CLASS_NAME(String sECTION_RELATIOIN_CLASS_NAME) {
+		SECTION_RELATIOIN_CLASS_NAME = sECTION_RELATIOIN_CLASS_NAME;
+	}
 	
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
+				&& (SECTION_RELATIOIN_CLASS_NAME == null || SECTION_RELATIOIN_CLASS_NAME.isEmpty())
 				&& (SECTION_RELATIOIN_CLASS == null || SECTION_RELATIOIN_CLASS.isEmpty()) 
 				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) ) {
 			return false;
