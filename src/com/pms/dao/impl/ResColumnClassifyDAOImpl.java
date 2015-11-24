@@ -97,4 +97,32 @@ public class ResColumnClassifyDAOImpl implements ResColumnClassifyDAO {
 		return rs;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResColumnClassify> QueryAllColumnClassify() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResColumnClassify> rs = null;
+		String sqlString = "select * from WA_COLUMN_CLASSIFY ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumnClassify.class);
+			rs = q.list();
+			
+			tx.commit();
+		} catch(org.hibernate.exception.SQLGrammarException e) {
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
 }

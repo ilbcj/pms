@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import com.pms.dao.AttributeDAO;
 import com.pms.dao.ResClassifyRelationDAO;
 import com.pms.dao.ResColumnClassifyDAO;
 import com.pms.dao.ResColumnClassifyRelationDAO;
@@ -34,6 +35,7 @@ import com.pms.dao.ResRowRelationDAO;
 import com.pms.dao.ResValueDAO;
 import com.pms.dao.ResValueSensitiveDAO;
 import com.pms.dao.ResourceDAO;
+import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dao.impl.ResClassifyRelationDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyRelationDAOImpl;
@@ -46,6 +48,8 @@ import com.pms.dao.impl.ResRowRelationDAOImpl;
 import com.pms.dao.impl.ResValueDAOImpl;
 import com.pms.dao.impl.ResValueSensitiveDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
+import com.pms.model.AttrDefinition;
+import com.pms.model.AttrDictionary;
 import com.pms.model.ResColumn;
 import com.pms.model.ResColumnClassify;
 import com.pms.model.ResData;
@@ -324,6 +328,10 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResDataSetSensitive dss = null;
 		ResDatasetSensitiveDAO dao = new ResDatasetSensitiveDAOImpl();
+		
+		AttributeDAO adao = new AttributeDAOImpl();
+		AttrDefinition attrDef = null;
+		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -365,6 +373,15 @@ public class ResourceUploadService {
             	if(dss.isValid()) {
 		            dss.setDELETE_STATUS(ResDataSetSensitive.DELSTATUSNO);
 		            dao.ResDataSetSensitiveSave(dss);
+		            
+		            attrDef = adao.GetAttrDefinitionByCode(AttrDefinition.ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL_CODE);
+					if(attrDef != null) {
+						AttrDictionary attrDict = new AttrDictionary();
+						attrDict.setAttrid(attrDef.getId());
+						attrDict.setValue(dss.getDATASET_SENSITIVE_NAME());
+						attrDict.setCode(dss.getDATASET_SENSITIVE_LEVEL());
+						adao.AttrDictionaryAdd(attrDict);
+					}
             	}
             }
         }
@@ -375,6 +392,10 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResDataSet ds = null;
 		ResDatasetDAO dao = new ResDatasetDAOImpl();
+		
+		AttributeDAO adao = new AttributeDAOImpl();
+		AttrDefinition attrDef = null;
+		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -422,6 +443,15 @@ public class ResourceUploadService {
             	if( ds.isValid() ) {
 		            ds.setDELETE_STATUS(ResDataSet.DELSTATUSNO);
 		            dao.ResDataSetSave(ds);
+		            
+		            attrDef = adao.GetAttrDefinitionByCode(AttrDefinition.ATTR_RESOURCEDATA_DATA_SET_CODE);
+					if(attrDef != null) {
+						AttrDictionary attrDict = new AttrDictionary();
+						attrDict.setAttrid(attrDef.getId());
+						attrDict.setValue(ds.getDATASET_NAME());
+						attrDict.setCode(ds.getDATA_SET());
+						adao.AttrDictionaryAdd(attrDict);
+					}
             	}
             }
         }
@@ -432,6 +462,10 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResColumnClassify cc = null;
 		ResColumnClassifyDAO dao = new ResColumnClassifyDAOImpl();
+		
+		AttributeDAO adao = new AttributeDAOImpl();
+		AttrDefinition attrDef = null;
+		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -473,6 +507,15 @@ public class ResourceUploadService {
             	if( cc.isValid() ) {
 		            cc.setDELETE_STATUS(ResColumnClassify.DELSTATUSNO);
 		            dao.ResColumnClassifySave(cc);
+		            
+		            attrDef = adao.GetAttrDefinitionByCode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_CLASS_CODE);
+					if(attrDef != null) {
+						AttrDictionary attrDict = new AttrDictionary();
+						attrDict.setAttrid(attrDef.getId());
+						attrDict.setValue(cc.getCLASSIFY_NAME());
+						attrDict.setCode(cc.getSECTION_CLASS());
+						adao.AttrDictionaryAdd(attrDict);
+					}
             	}
             }
         }
@@ -483,6 +526,10 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResColumn col = null;
 		ResColumnDAO dao = new ResColumnDAOImpl();
+		
+		AttributeDAO adao = new AttributeDAOImpl();
+		AttrDefinition attrDef = null;
+		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -535,6 +582,15 @@ public class ResourceUploadService {
             	if( col.isValid() ) {
 		            col.setDELETE_STATUS(ResColumn.DELSTATUSNO);
 		            dao.ResColumnSave(col);
+		            
+		            attrDef = adao.GetAttrDefinitionByCode(AttrDefinition.ATTR_RESOURCEDATA_ELEMENT_CODE);
+					if(attrDef != null) {
+						AttrDictionary attrDict = new AttrDictionary();
+						attrDict.setAttrid(attrDef.getId());
+						attrDict.setValue(col.getCOLUMU_CN());
+						attrDict.setCode(col.getELEMENT());
+						adao.AttrDictionaryAdd(attrDict);
+					}
             	}
             }
         }
@@ -655,6 +711,11 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResRelationColumnClassify rcc = null;
 		ResColumnClassifyRelationDAO dao = new ResColumnClassifyRelationDAOImpl();
+		
+		AttributeDAO adao = new AttributeDAOImpl();
+		AttrDefinition attrDef = null;
+		Map<String, String> columnClassifyMap = queryAllNameAndCodeOfColumnClassify();
+		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -700,9 +761,30 @@ public class ResourceUploadService {
             	if( rcc.isValid() ) {
 		            rcc.setDELETE_STATUS(ResRelationColumnClassify.DELSTATUSNO);
 		            dao.ResRelationColumnClassifySave(rcc);
+		            
+		            attrDef = adao.GetAttrDefinitionByCode(AttrDefinition.ATTR_RESOURCEDATA_SECTION_RELATION_CLASS_CODE);
+					if(attrDef != null) {
+						AttrDictionary attrDict = new AttrDictionary();
+						attrDict.setAttrid(attrDef.getId());
+						attrDict.setValue(columnClassifyMap.get(rcc.getSRC_CLASS_CODE()) + "->" + columnClassifyMap.get(rcc.getDST_CLASS_CODE()));
+						attrDict.setCode(rcc.getSECTION_RELATIOIN_CLASS());
+						adao.AttrDictionaryAdd(attrDict);
+					}
             	}
             }
         }
+	}
+
+	private Map<String, String> queryAllNameAndCodeOfColumnClassify() throws Exception {
+		Map<String, String> result = new HashMap<String, String>();
+		ResColumnClassifyDAO rccdao = new ResColumnClassifyDAOImpl();
+		List<ResColumnClassify> rccs = rccdao.QueryAllColumnClassify();
+		if( rccs != null ) {
+			for( ResColumnClassify rcc : rccs ) {
+				result.put(rcc.getSECTION_CLASS(), rcc.getCLASSIFY_NAME());
+			}
+		}
+		return result;
 	}
 
 	private void updateRowRelation(Sheet sheet) throws Exception {

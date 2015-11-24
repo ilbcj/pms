@@ -244,7 +244,7 @@ public class ResourceManageService {
 			item.setSECTION_CLASS(sectionclassNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> lementNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_LEMENT, attr.getELEMENT(), attr.getRESOURCE_ID());
+		List<AttrDictionary> lementNode = attrdao.GetDictsDatasNode(AttrDefinition.ATTR_RESOURCEDATA_ELEMENT, attr.getELEMENT(), attr.getRESOURCE_ID());
 		for (int i = 0; i < lementNode.size(); i++) {
 			item.setELEMENT(lementNode.get(i).getValue());
 		}
@@ -335,7 +335,7 @@ public class ResourceManageService {
 			item.setSECTION_CLASS(sectionclassNode.get(i).getValue());
 		}
 		
-		List<AttrDictionary> lementNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_LEMENT, attr.getELEMENT(), attr.getRESOURCE_ID());
+		List<AttrDictionary> lementNode = attrdao.GetDictsDataTemplatesNode(AttrDefinition.ATTR_RESOURCEDATA_ELEMENT, attr.getELEMENT(), attr.getRESOURCE_ID());
 		for (int i = 0; i < lementNode.size(); i++) {
 			item.setELEMENT(lementNode.get(i).getValue());
 		}

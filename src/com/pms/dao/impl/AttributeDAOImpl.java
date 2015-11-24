@@ -16,6 +16,7 @@ import com.pms.dao.AttributeDAO;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
+import com.pms.model.ResDataTemplate;
 
 public class AttributeDAOImpl implements AttributeDAO {
 
@@ -392,10 +393,33 @@ public class AttributeDAOImpl implements AttributeDAO {
 	public AttrDictionary AttrDictionaryAdd(AttrDictionary ad) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		try
-		{
+			
+		AttrDictionary rs = null;
+		String sqlString = "select * from attrdict where attrid = :attrid and value = :value and code = :code ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("attrid", ad.getAttrid());
+			q.setString("value", ad.getValue());
+			q.setString("code", ad.getCode());
+			rs = (AttrDictionary)q.uniqueResult();
+			
+			if( rs != null ) {
+				if( rs.getAttrid() == ad.getAttrid() && rs.getValue().equals(ad.getValue()) && rs.getCode().equals(ad.getCode()) ) {
+					return rs;
+				}
+				else {
+					ad.setId(rs.getId());
+				}
+			} 
+			
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			ad.setTstamp(timenow);
+			
 			ad = (AttrDictionary) session.merge(ad);
-			tx.commit();
+			tx.commit();	
 		}
 		catch(ConstraintViolationException cne){
 			tx.rollback();
