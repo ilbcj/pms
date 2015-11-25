@@ -36,4 +36,21 @@
     </trigger>
 </job>
 
+<job>
+    <job-detail>
+      <name>datasync_notice_timer</name>
+      <group>jGroup_datasync</group>
+      <job-class>com.pms.util.timer.DatasyncNoticTimer</job-class>
+    </job-detail>
+    
+    <trigger>
+      <cron>
+        <name>trigger_datasync_notice</name>
+        <group>tGroup_datasync</group>
+        <job-name>datasync_notice_timer</job-name>
+        <job-group>jGroup_datasync</job-group>
+        <cron-expression>0 0 23 * * ?</cron-expression>
+     </cron>
+    </trigger>
+</job>
 </quartz>

@@ -83,6 +83,7 @@
 	<mapping resource="com/pms/model/AuditPrivLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditPrivLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/UserRoleView.hbm.xml" />
+	<mapping resource="com/pms/model/SyncList.hbm.xml" />
 
 </session-factory>
 

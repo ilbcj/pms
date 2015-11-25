@@ -75,8 +75,7 @@ public class UserDAOImpl implements UserDAO {
 		{
 			HibernateUtil.closeSession();
 		}
-		return;	
-
+		return;
 	}
 
 	@Override

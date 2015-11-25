@@ -111,7 +111,6 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 			q.setString("ELEMENT", element);
 			rs = (ResColumn) q.uniqueResult();
 			tx.commit();
-			tx.commit();
 		} catch(Exception e) {
 			e.printStackTrace();
 			tx.rollback();

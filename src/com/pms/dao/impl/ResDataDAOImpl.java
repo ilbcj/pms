@@ -134,7 +134,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 				
 				rdt = (ResDataTemplate) session.merge(rdt);
 				if( rdt.getRESOURCE_ID() == null || rdt.getRESOURCE_ID().length() == 0 ) {
-					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rdt.getId()) );
+					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getInstance().getRegion(), rdt.getId()) );
 					session.merge(rdt);
 				}
 			}
@@ -197,7 +197,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 				
 				rdt = (ResDataTemplate) session.merge(rdt);
 				if( rdt.getRESOURCE_ID() == null || rdt.getRESOURCE_ID().length() == 0 ) {
-					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rdt.getId()) );
+					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getInstance().getRegion(), rdt.getId()) );
 					session.merge(rdt);
 				}
 			}
@@ -259,7 +259,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 				
 				rdt = (ResDataTemplate) session.merge(rdt);
 				if( rdt.getRESOURCE_ID() == null || rdt.getRESOURCE_ID().length() == 0 ) {
-					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getRegion(), rdt.getId()) );
+					rdt.setRESOURCE_ID( String.format("%s%010d", ConfigHelper.getInstance().getRegion(), rdt.getId()) );
 					session.merge(rdt);
 				}
 			}

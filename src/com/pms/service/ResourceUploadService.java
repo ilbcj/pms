@@ -203,23 +203,23 @@ public class ResourceUploadService {
             Sheet sheet = workbook.getSheetAt(s);
             String sheetName = sheet.getSheetName();
             if ( SHEET_DATASET_SENSITIVE.equals(sheetName) ) {
-            	updateDatasetSensitive(sheet);
+//            	updateDatasetSensitive(sheet);
             } else if ( SHEET_DATASET.equals(sheetName) ) {
-            	updateDataset(sheet);
+//            	updateDataset(sheet);
             } else if ( SHEET_COLUMN_CLASSIFY.equals(sheetName) ) {
-            	updateColumnClassify(sheet);
+//            	updateColumnClassify(sheet);
             } else if ( SHEET_COLUMN.equals(sheetName) ) {
-            	updateColumn(sheet);
+//            	updateColumn(sheet);
             } else if ( SHEET_VALUE_SENSITIVE.equals(sheetName) ) {
-            	updateValueSensitive(sheet);
+//            	updateValueSensitive(sheet);
             } else if ( SHEET_VALUE.equals(sheetName) ) {
-            	updateValue(sheet);
+//            	updateValue(sheet);
             } else if ( SHEET_COLUMN_ClASSIFY_REALTION.equals(sheetName) ) {
-            	updateColumnClassifyRelation(sheet);
+//            	updateColumnClassifyRelation(sheet);
             } else if ( SHEET_ROW_RELATION.equals(sheetName) ) {
-            	updateRowRelation(sheet);
+//            	updateRowRelation(sheet);
             } else if ( SHEET_COLUMN_RELATION.equals(sheetName) ) {
-            	updateColumnRelation(sheet);
+//            	updateColumnRelation(sheet);
             } else if ( SHEET_CLASSIFY_RELATION.equals(sheetName) ) {
             	updateClassifyRelation(sheet);
             }
@@ -929,7 +929,6 @@ public class ResourceUploadService {
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
             	String cellValue = getCellValue(cell);
-            		
             	if(r == 0) {
             		if ( SHEET_CLASSIFY_RELATION_COL_ID.equals(cellValue) ) {
             			idx.put(SHEET_CLASSIFY_RELATION_COL_ID, c);

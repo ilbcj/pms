@@ -53,7 +53,7 @@ public class SyncAcquireDataService extends SyncService {
 		List<Item> addDataItems = new ArrayList<Item>();
 		
 		String localFile = "";//"e:\\5416-010000-User-All-1445941888-00233.zip";
-		String exportPath = ConfigHelper.getSyncExportPath();
+		String exportPath = ConfigHelper.getInstance().getSyncExportPath();
 		
 		String url = "15.6.22.2";
 		int port = 21;
