@@ -110,6 +110,12 @@
 					    	</td></tr>									
 						</table>
 					</div>
+					<div>
+						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleCopyResourceData()">复制资源</a>
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" id="rolePasteResourceDataButton">粘贴资源</a>
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleSaveTemplate()">存储模板</a>
+				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleCopyTemplate()">获取模板</a>
+					</div>
 					
 					<table class="nodt" id="role_resource_feature_dg" >
 				    </table>
@@ -122,8 +128,6 @@
 				    
 				    <div id="dataToolbar" style="background-color:#E7F0FF">
 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceData()">添加</a>
-				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleCopyResourceData()">复制资源</a>
-				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" id="rolePasteResourceDataButton">粘贴资源</a>
 				    </div><!-- end of featureToolbar -->
 				    
 				    <div id="org_query_win" class="easyui-window" title="组织机构" style="width:90%;height:90%;"
@@ -218,6 +222,90 @@
 				    </div><!-- end of center -->
 				    </div><!--  end of resource_role_query_resource_feature_win_main -->
 				</div><!--   end of resource_role_query_resource_feature_win --> 	
+				
+				<div id="role_template_save" class="easyui-window" title="存储模板" style="width:90%;height:90%;"
+			    	data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
+				    <div id="role_template_save_main" class="easyui-layout" data-options="fit:true" >
+						<div class="easyui-panel" data-options="fit:true,footer:'#role_template_save_ft'">
+							<div style="height: 90%" >
+								<table class="nodt" id="role_template_save_list_dg"
+								            data-options="singleSelect:true,method:'post',nowrap:true,idField:'id',pagination:false,noheader:true,fit:true,onClickRow:clickTemplateRow">
+							        <thead>
+							            <tr>
+							            	<th data-options="field:'TEMPLATE_NAME',width:'50%'">模板名称</th>
+							            	<th data-options="field:'LATEST_MOD_TIME'" hidden="none;">更新时间</th>
+							                <th data-options="field:'action',width:'48%',formatter:rowFormatter">操作</th>
+							            </tr>
+							        </thead>
+							    </table>
+							  </div>
+							  
+							<input id="template_LateTime_save" type="hidden"/>
+							<table class="nodt" style="width: 100%;"
+								data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true">
+						        <thead>
+						            <tr>
+						            	<td>
+							            	模板名称:
+						            		<input id="template_name_save" class="form_value_mid easyui-textbox" data-options="prompt:'请输入模板名称',events:{blur: function(){ tnameChange(); }} "></input>
+						            	</td>
+						            </tr>
+						        </thead>
+							</table>
+						</div>
+					</div><!--   end of role_template_save_main -->
+					<div id="role_template_save_ft" style="padding:5px;text-align:center">
+					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="addResRoleResourceTemplateSave()">保存</a>
+	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleResourceTemplateSaveReturn()">返回</a>
+					</div>
+			    </div><!--   end of role_template_save -->
+			    
+			    <div id="role_template_copy" class="easyui-window" title="加载模板" style="width:90%;height:90%;"
+			    	data-options="iconCls:'icon-save',cache:false,draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
+				    <div id="role_template_copy_main" class="easyui-layout" data-options="fit:true" >
+						<div class="easyui-panel" data-options="fit:true,footer:'#role_template_copy_ft'">
+							<table class="nodt" style="width: 100%;"
+								data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true">
+						        <thead>
+						            <tr>
+						            	<td>
+							            	模板名称:
+							            	<input id="template_name_copy"  class="easyui-textbox query_value_mid"></input>
+						            	</td>
+						            </tr>
+						        </thead>
+							</table>
+							
+							<div style="height: 90%" >
+								<table class="nodt" id="role_template_copy_list_dg"
+								            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
+							        <thead>
+							            <tr>
+<!-- 							            	<th data-options="field:'LATEST_MOD_TIME'" hidden="none;">更新时间</th> -->
+							                <th data-options="field:'resAndfuncType',width:'34%'">资源类型</th>
+							                <th data-options="field:'name',width:'34%'">资源名称</th>
+							                <th data-options="field:'RESOURCE_ID',width:'34%'">资源唯一标识</th>
+<!-- 							                <th data-options="field:'RESOURCE_STATUS'">资源状态</th> -->
+<!-- 							                <th data-options="field:'RESOURCE_DESCRIBE'">资源描述</th> -->
+<!-- 							                <th data-options="field:'RMK'">备注</th> -->
+<!-- 							                <th data-options="field:'DELETE_STATUS'">删除状态</th> -->
+<!-- 							                <th data-options="field:'CLUE_DST_SYS'">目标地市</th> -->
+<!-- 							                <th data-options="field:'DATASET_SENSITIVE_LEVEL'">数据集敏感度编码</th>					                 -->
+<!-- 							                <th data-options="field:'DATA_SET'">数据集编码</th> -->
+<!-- 							                <th data-options="field:'SECTION_CLASS'">字段分类编码</th> -->
+<!-- 							                <th data-options="field:'ELEMENT'">字段编码</th> -->
+<!-- 							                <th data-options="field:'SECTION_RELATIOIN_CLASS'">字段分类关系编码</th> -->
+							            </tr>
+							        </thead>
+							    </table>
+							  </div> 
+						</div>
+					</div><!--   end of role_template_copy_main -->
+					<div id="role_template_copy_ft" style="padding:5px;text-align:center">
+					        <a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="addResRoleResourceTemplateCopy()">加载</a>
+	                    	<a href="javascript:void(0)" class="easyui-linkbutton" style="width:80px;" onclick="roleResourceTemplateCopyReturn()">返回</a>
+					</div>
+			    </div><!--   end of role_template_copy -->
 			    
 				<div id="resource_role_query_resource_data_win" class="easyui-window" title="数据资源" style="width:90%;height:90%;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
@@ -678,7 +766,7 @@
 		
     }
     
-    function rolePasteResourceData(data){
+	function rolePasteResourceData(data){
 		if( data.dataItems.length ==0 ){
 			warningTip("提示", '请先选择要粘贴的资源！');
 			return;
@@ -689,7 +777,186 @@
 	    }
     }
     
-    function delResourceRole(){
+	function roleSaveTemplate(){
+    	$("#role_template_save_list_dg").datagrid({
+			url:'../resource/queryAllResRoleResourceTemplate.action',
+			loadFilter: function(data){
+				var res = new Object();
+				if (data.result == true){
+					res.total = data.total;
+					res.rows = data.resRoleResourceTemplates;
+				} else {
+					res.total=0;
+					res.rows = [];
+				}
+				return res;
+			}
+		});
+	   	$('#role_template_save').window({title:'存储模板'}).window('open').window('center');
+    }
+    
+	function rowFormatter(value,row,index){
+		return "<a href='#' onclick='roleResourceTemplateDeleterow(this)'>删除</a>";
+	}
+	
+	function roleResourceTemplateDeleterow(){
+		var row = $("#role_template_save_list_dg").datagrid('getSelected');
+    	var poststr = "resRoleResourceTemplate.TEMPLATE_NAME=" + row.TEMPLATE_NAME;
+    	poststr += "&resRoleResourceTemplate.LATEST_MOD_TIME=" + row.LATEST_MOD_TIME;
+    	
+    	$.messager.confirm('提示框', '你确定要删除吗?',function(r){
+    		if(r){
+			    $.post("../resource/deleteResRoleResourceTemplate.action", poststr, function(retObj) {
+			
+					if(retObj.result == true)
+					{
+						$('#role_template_save_list_dg').datagrid('reload');
+						$("#template_LateTime_save").val("");
+						$("#template_name_save").textbox('setValue',"");
+						successTip("删除模板","操作成功");
+					}
+					else
+					{
+						warningTip("提示", "删除模板操作失败：" + retObj.message);
+					}
+				}, "json");
+			}
+    	});
+    }
+	
+	function clickTemplateRow(index, row){
+		$("#template_LateTime_save").val(row.LATEST_MOD_TIME);
+		$("#template_name_save").textbox('setValue',row.TEMPLATE_NAME);
+	}
+	
+	function roleResourceTemplateSaveReturn(){
+		$("#template_LateTime_save").val("");
+		$("#template_name_save").textbox('setValue',"");
+    	$("#role_template_save").window('close');
+ 		$('#role_template_save_list_dg').datagrid('unselectAll'); 
+    }
+	
+	function tnameChange(){
+		$("#template_LateTime_save").val("");
+		$('#role_template_save_list_dg').datagrid('unselectAll');
+	}
+	
+	function addResRoleResourceTemplateSave(){
+    	var templateName = $("#template_name_save").textbox('getValue');
+    	var poststr = "resRoleResourceTemplate.TEMPLATE_NAME=" + templateName;
+    	
+		var templateLateTime = $("#template_LateTime_save").val();
+    	poststr += "&resRoleResourceTemplate.LATEST_MOD_TIME=" + templateLateTime;
+    	
+    	var roleCode = $("#role_code").textbox('getValue');
+    	poststr += "&resRoleResourceTemplate.BUSINESS_ROLE=" + roleCode;
+    	
+     	var rows = $("#role_resource_feature_dg").datagrid('getRows');
+     	var index = 0;
+    	for(index=0; index < rows.length; index++) {
+	 		poststr += '&addFeatureIds=' + rows[index].RESOURCE_ID;
+    	}
+
+		rows = $("#role_resource_data_dg").datagrid('getRows');
+    	for(index=0; index < rows.length; index++) {
+	 		poststr += '&addDataIds=' + rows[index].RESOURCE_ID;
+    	}
+    	
+    	if(templateName == '' && templateName.length ==0){
+    		warningTip("提示", '请输入模板名称');
+    		return;
+    	}
+    	
+    	$.post("../resource/saveResRoleResourceTemplate.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				successTip("提示", '保存模板信息成功');
+			}
+			else
+			{
+				warningTip("提示", '保存模板信息失败');	
+			}
+			roleResourceTemplateSaveReturn();
+		}, "json");
+    }
+    
+    function roleCopyTemplate(){
+		$("#role_template_copy_list_dg").datagrid({data: []});
+		$.post("../resource/queryAllResRoleResourceTemplate.action", function(data) {
+			var tname="";				//模板名称
+			
+			for(var i=0;i<data.resRoleResourceTemplates.length;i++){
+				tname+= "{id:'"+data.resRoleResourceTemplates[i].LATEST_MOD_TIME+"',text:'"+data.resRoleResourceTemplates[i].TEMPLATE_NAME+"'},"; 
+			};
+			
+			var tnameData='([' + tname.substring(0,tname.length-1) + '])';
+			var tnameJSON = (new Function('return '+tnameData +';'))();
+			
+			tnameJSON.unshift({"id":"","text":"请选择","selected":true});
+			
+			$('#template_name_copy').combobox({
+				data : tnameJSON,
+				valueField:'id',
+				textField:'text',
+				onSelect: function(){   
+	            	$("#role_template_copy_list_dg").datagrid({
+						url:'../resource/queryResRoleResourceTemplate.action?resRoleResourceTemplate.TEMPLATE_NAME='+$('#template_name_copy').combobox('getText')+'&resRoleResourceTemplate.LATEST_MOD_TIME='+$('#template_name_copy').combobox('getValue'),
+						cache:false,
+						loadFilter: function(data){
+							var res = new Object();
+							if (data.result == true){
+								res.total = data.total;
+								res.rows = data.resRoleResourceTemplateListItems;
+							} else {
+								res.total=0;
+								res.rows = [];
+							}
+							return res;
+						}
+					});   
+		        }
+			});
+			
+		}, "json");
+    	$('#role_template_copy').window({title:'获取模板'}).window('open').window('center');
+    }
+    
+    function roleResourceTemplateCopyReturn(){
+    	$("#role_template_copy_list_dg").datagrid('loadData',{total:0,rows:[]});
+		$("#template_name_copy").textbox('setValue',"");
+ 		$("#role_template_copy").window('close');
+    }
+    
+    function addResRoleResourceTemplateCopy(){
+		var templateName = $('#template_name_copy').combobox('getText');
+    	var poststr = "resRoleResourceTemplate.TEMPLATE_NAME=" + templateName;
+    	
+		var templateLateTime = $('#template_name_copy').combobox('getValue');
+    	poststr += "&resRoleResourceTemplate.LATEST_MOD_TIME=" + templateLateTime;
+   		$.post("../resource/queryRoleResourceTemplate.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+			 	var index;
+ 				for( index=0; index < retObj.features.length; index++) {
+ 					insertFeature( retObj.features[index]);
+ 				}
+ 				for( index=0; index < retObj.dataItems.length; index++) {
+ 					insertData( retObj.dataItems[index]);
+ 				}
+				successTip("提示", '加载模板信息成功');
+			}
+			else
+			{
+				warningTip("提示", '加载模板信息失败');	
+			}
+			roleResourceTemplateCopyReturn();
+		}, "json");
+		
+    }
+    
+	function delResourceRole(){
 		var rows = $("#resource_role_manage_center_list_dg").datagrid('getSelections');
 		if(rows.length == 0) {
 			warningTip("提示", '请选择要删除的角色');
@@ -857,7 +1124,7 @@
 	   	$("#resource_role_query_resource_feature_win").window({title:'可用值'}).window('open').window('center');
 	   	//insertFlag = 'feature';
     }
-        
+    
     function roleQueryResourceData(){
     	$("#resource_role_query_resource_data_win_list_dg").datagrid({
 			url:'../resource/queryDataItems.action',
@@ -915,7 +1182,7 @@ $(document).ready(function () {
 //		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#resource_role_manage_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
-
+	
 	$("#role_resource_feature_dg").datagrid({
 		title:'功能资源',
 		iconCls:'icon-edit',
@@ -1272,6 +1539,7 @@ $(document).ready(function () {
 
 
 	}, "json");	
+		
 });
 </script>	
   </body>
