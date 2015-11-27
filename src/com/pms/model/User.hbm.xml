@@ -18,7 +18,7 @@
 		<property name="SEXCODE" type="java.lang.String" length="16"/>
 		<property name="GA_DEPARTMENT" type="java.lang.String" length="64" />
 		<property name="UNIT" type="java.lang.String" length="64" />
-		<property name="ORG_LEVEL" type="java.lang.String" length="64"/>
+		<property name="ORG_LEVEL" type="java.lang.Integer"/>
 		<property name="POLICE_SORT" type="java.lang.String" length="64"/>
 		<property name="POLICE_NO" type="java.lang.String" length="64"/>
 		<property name="SENSITIVE_LEVEL" type="java.lang.String" length="64"/>

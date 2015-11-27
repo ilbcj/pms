@@ -129,6 +129,7 @@ public class ResourceUploadService {
 	private final String SHEET_CLASSIFY_RELATION_COL_DATA_SET = "数据集编码";
 	private final String SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS = "字段分类关系编码";
 	private final String SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS = "所属节点编码";
+	private final String SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS_NAME = "字段分类关系";
 	
 	
 	private final String SHEET_ROLE_RESOURCE = "关系对照";
@@ -856,6 +857,8 @@ public class ResourceUploadService {
             			idx.put(SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS, c);
             		} else if ( SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS.equals(cellValue) ) {
             			idx.put(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS, c);
+            		} else if ( SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS_NAME.equals(cellValue) ) {
+            			idx.put(SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS_NAME, c);
             		}
             	} else {
             		if(idx.size() == 0) {
@@ -865,11 +868,13 @@ public class ResourceUploadService {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_CLASSIFY_RELATION_COL_DATA_SET) ) {
             			rc.setDATA_SET(cellValue);
-            		} else if ( c== idx.get(SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS) ) {
+            		} else if ( c == idx.get(SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS) ) {
             			rc.setSECTION_RELATIOIN_CLASS(cellValue);
-            		} else if ( c== idx.get(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS) ) {
+            		} else if ( c == idx.get(SHEET_CLASSIFY_RELATION_COL_CLUE_SRC_SYS) ) {
             			rc.setCLUE_SRC_SYS(cellValue);
-            		}       		
+            		} else if ( c == idx.get(SHEET_CLASSIFY_RELATION_COL_SECTION_RELATIOIN_CLASS_NAME) ) {
+            			rc.setSECTION_RELATIOIN_CLASS_NAME(cellValue);
+            		}
             	}
             }
             

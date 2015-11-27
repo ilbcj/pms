@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,10 +23,13 @@ import com.pms.dao.UserDAO;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.model.Organization;
+import com.pms.model.User;
 import com.pms.model.UserImport;
 import com.pms.util.MD5Security;
 
 public class UserUploadService {
+	
+	private static Log logger = LogFactory.getLog(UserUploadService.class);
 	
 	private final String SHEET_USER = "批量导出";
 	
@@ -67,10 +72,14 @@ public class UserUploadService {
 		OrganizationDAO odao = new OrganizationDAOImpl();
 		Organization org = null;
 		for(int i = 0; i < imports.size(); i++) {
-			UserImport oi = imports.get(i);
-			org = odao.GetOrgNodeById(oi.getGA_DEPARTMENT());
+			UserImport ui = imports.get(i);
+			org = odao.GetOrgNodeById(ui.getGA_DEPARTMENT());
 			if(org != null) {
-				udao.UserImport(oi, org);
+				udao.UserImport(ui, org);
+			}
+			else {
+				String warnMsg = "[IU]用户身所属机构不存在。[用户名:" + ui.getNAME() + ", 身份证号:" + ui.getCERTIFICATE_CODE_MD5() + ", 机构编号:" + ui.getGA_DEPARTMENT() + "]";
+    			logger.warn(warnMsg);
 			}
 		}
 		
@@ -131,15 +140,45 @@ public class UserUploadService {
             		} else if ( c== idx.get(SHEET_USER_USERCODE) ) {
             			//user code equals idcard
             		} else if ( c== idx.get(SHEET_USER_IDCARD) ) {
+            			if( cellValue == null || (cellValue.length() != 15 && cellValue.length() != 18) ) {
+            				String warnMsg = "[IU]用户身份证号格式不正确。[用户名:" + ui.getNAME() + ", 身份证号:" + cellValue + "]";
+                			logger.warn(warnMsg);
+            				break;
+            			}
             			String md5 = getIDCardHash(cellValue);
+            			
             			ui.setCERTIFICATE_CODE_MD5(md5);
             			ui.setCERTIFICATE_CODE_SUFFIX(cellValue.substring(cellValue.length() > 6 ? cellValue.length() - 6 : 0));
             		} else if ( c== idx.get(SHEET_USER_SEX) ) {
-            			ui.setSEXCODE(cellValue);
+//						String sex = null;
+//            			if(cellValue == null || cellValue.isEmpty()) {
+//            				sex = User.USER_SEXCODE_UNKNOWN;
+//            			}
+//            			else {
+//            				if( "男".equals(cellValue) ) {
+//                				sex = User.USER_SEXCODE_MALE;
+//                			}
+//                			else if( "女".equals(cellValue) ) {
+//                				sex = User.USER_SEXCODE_FEMALE;
+//                			}
+//                			else {
+//                				sex = User.USER_SEXCODE_UNSPOKEN;
+//                			}
+//            			}
+//            			ui.setSEXCODE(sex);
+            			String sex = User.GetSexCode(cellValue);
+            			if(sex == null) {
+            				sex = cellValue;
+            			}
+            			ui.setSEXCODE(sex);
             		} else if ( c== idx.get(SHEET_USER_POSITION) ) {
             			ui.setPosition(cellValue);
             		} else if ( c== idx.get(SHEET_USER_POLICESORT) ) {
-            			ui.setPOLICE_SORT(cellValue);
+            			String sort = User.GetPoliceSortCode(cellValue);
+            			if(sort == null) {
+            				sort = cellValue;
+            			}
+            			ui.setPOLICE_SORT(sort);
             		} else if ( c== idx.get(SHEET_USER_TAKE_OFFICE) ) {
             			ui.setTAKE_OFFICE(cellValue);
             		} else if ( c== idx.get(SHEET_USER_OFFICELEVEL) ) {

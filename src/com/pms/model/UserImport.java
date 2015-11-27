@@ -68,8 +68,8 @@ public class UserImport {
 	}
 	public boolean isValid() {
 		if( (GA_DEPARTMENT == null || GA_DEPARTMENT.isEmpty()) 
-				&& (NAME == null || NAME.isEmpty()) 
-				&& (CERTIFICATE_CODE_SUFFIX == null || CERTIFICATE_CODE_SUFFIX.isEmpty()) ) {
+				|| (NAME == null || NAME.isEmpty()) 
+				|| (CERTIFICATE_CODE_SUFFIX == null || CERTIFICATE_CODE_SUFFIX.isEmpty()) ) {
 			return false;
 		}
 		return true;

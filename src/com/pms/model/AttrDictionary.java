@@ -7,6 +7,7 @@ public class AttrDictionary {
 	private String value="";
 	private String code;
 	private String tstamp;
+	
 	public int getId() {
 		return id;
 	}

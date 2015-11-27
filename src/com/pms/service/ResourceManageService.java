@@ -98,12 +98,12 @@ public class ResourceManageService {
 		return;
 	}
 	
-	private int QueryAllFeaturesCount(ResFeature criteria) throws Exception {
-		criteria.setDELETE_STATUS(ResFeature.DELSTATUSNO);
-		ResourceDAO dao = new ResourceDAOImpl();
-		int count = dao.GetFeaturesCount( criteria );
-		return count;
-	}
+//	private int QueryAllFeaturesCount(ResFeature criteria) throws Exception {
+//		criteria.setDELETE_STATUS(ResFeature.DELSTATUSNO);
+//		ResourceDAO dao = new ResourceDAOImpl();
+//		int count = dao.GetFeaturesCount( criteria );
+//		return count;
+//	}
 
 	public ResFeature SaveResourceFeature(ResFeature feature) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();

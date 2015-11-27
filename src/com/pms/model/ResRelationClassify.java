@@ -64,9 +64,9 @@ public class ResRelationClassify {
 	
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
-				&& (SECTION_RELATIOIN_CLASS_NAME == null || SECTION_RELATIOIN_CLASS_NAME.isEmpty())
-				&& (SECTION_RELATIOIN_CLASS == null || SECTION_RELATIOIN_CLASS.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) ) {
+			//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty())
+			|| (SECTION_RELATIOIN_CLASS_NAME == null || SECTION_RELATIOIN_CLASS_NAME.isEmpty())
+			|| (SECTION_RELATIOIN_CLASS == null || SECTION_RELATIOIN_CLASS.isEmpty()) ) {
 			return false;
 		}
 		return true;

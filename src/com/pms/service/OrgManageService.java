@@ -302,7 +302,7 @@ public class OrgManageService {
 			if(condition.getGA_DEPARTMENT() != null && condition.getGA_DEPARTMENT().length() > 0) {
 				str += condition.getGA_DEPARTMENT()+";";
 			}
-			if(condition.getORG_LEVEL() != null && condition.getORG_LEVEL().length() > 0) {
+			if(condition.getORG_LEVEL() != 0) {
 				str += condition.getORG_LEVEL();
 			}
 			auditOrgLogDescribe.setDescrib(str);
@@ -345,7 +345,7 @@ public class OrgManageService {
 		if(org.getPARENT_ORG() != null && org.getPARENT_ORG().length() > 0) {
 			str += org.getPARENT_ORG()+";";
 		}
-		if(org.getORG_LEVEL() != null && org.getORG_LEVEL().length() > 0) {
+		if(org.getORG_LEVEL() != 0) {
 			str += org.getORG_LEVEL();
 		}
 		auditOrgLogDescribe.setDescrib(str);
@@ -387,7 +387,7 @@ public class OrgManageService {
 		if(org.getPARENT_ORG() != null && org.getPARENT_ORG().length() > 0) {
 			str += org.getPARENT_ORG()+";";
 		}
-		if(org.getORG_LEVEL() != null && org.getORG_LEVEL().length() > 0) {
+		if(org.getORG_LEVEL() != 0) {
 			str += org.getORG_LEVEL();
 		}
 		

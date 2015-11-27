@@ -57,8 +57,8 @@ public class ResDataSetSensitive {
 	
 	public boolean isValid() {
 		if( (DATASET_SENSITIVE_LEVEL == null || DATASET_SENSITIVE_LEVEL.isEmpty()) 
-				&& (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
-				&& (DATASET_SENSITIVE_NAME == null || DATASET_SENSITIVE_NAME.isEmpty()) ) {
+				//|| (CLUE_SRC_SYS == null || CLUE_SRC_SYS.isEmpty()) 
+				|| (DATASET_SENSITIVE_NAME == null || DATASET_SENSITIVE_NAME.isEmpty()) ) {
 			return false;
 		}
 		return true;

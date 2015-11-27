@@ -137,10 +137,10 @@ public class ResFeature {
 	
 	public boolean isValid() {
 		if( (SYSTEM_TYPE == null || SYSTEM_TYPE.isEmpty()) 
-				&& (RESOURCE_ID == null || RESOURCE_ID.isEmpty()) 
-				&& (APP_ID == null || APP_ID.isEmpty())
-				&& (RESOUCE_NAME == null || RESOUCE_NAME.isEmpty())				
-				&& (PARENT_RESOURCE == null || PARENT_RESOURCE.isEmpty()) ) {
+				|| (RESOURCE_ID == null || RESOURCE_ID.isEmpty()) 
+				|| (APP_ID == null || APP_ID.isEmpty())
+				|| (RESOUCE_NAME == null || RESOUCE_NAME.isEmpty())				
+				|| (PARENT_RESOURCE == null || PARENT_RESOURCE.isEmpty()) ) {
 			return false;
 		}
 		return true;

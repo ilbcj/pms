@@ -203,7 +203,7 @@ public class DataSyncService {
             for (int i = num; i < org.size(); i++)  {
             	str = str + nullConvertEmptyStr( org.get(i).getGA_DEPARTMENT() ) + "\t" 
             			+ nullConvertEmptyStr( org.get(i).getUNIT() ) + "\t" 
-            			+ ConvertOrgLevel( nullConvertEmptyStr( org.get(i).getORG_LEVEL() ) ) + "\t"
+            			+ org.get(i).getORG_LEVEL() + "\t"
             			+ nullConvertEmptyStr( org.get(i).getPARENT_ORG() ) + "\t" 
             			+ org.get(i).getDELETE_STATUS() + "\t" 
             			+ org.get(i).getDATA_VERSION() + "\t"
@@ -329,7 +329,7 @@ public class DataSyncService {
 	            		+ nullConvertEmptyStr( user.get(i).getSEXCODE() ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getGA_DEPARTMENT() ) + "\t"
 	            		+ nullConvertEmptyStr( user.get(i).getUNIT() ) + "\t" 
-	            		+ ConvertOrgLevel( nullConvertEmptyStr( user.get(i).getORG_LEVEL() ) ) + "\t" 
+	            		+ user.get(i).getORG_LEVEL() + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_SORT() ) + "\t"
 	            		+ nullConvertEmptyStr( user.get(i).getPOLICE_NO() ) + "\t" 
 	            		+ nullConvertEmptyStr( user.get(i).getSENSITIVE_LEVEL() ) + "\t" 
@@ -677,7 +677,8 @@ public class DataSyncService {
 		// 2. get notice list
 		List<String> sids = new ArrayList<String>();
 		//sids.add("S01000011000000009");//gab sync service
-		sids.add("S11000000000000009");//bj sync service
+		//sids.add("S11000000000000009");//bj sync service
+		sids.add("S33020000000000009");//zhejiang_ningbo sync service          
 			
 		// 3. notice other pms	
 		String address = ConfigHelper.getEsbAddr();

@@ -741,14 +741,13 @@ public class UserDAOImpl implements UserDAO {
 			if(ui.getCERTIFICATE_CODE_SUFFIX().equals(user.getCERTIFICATE_CODE_SUFFIX())
 					&& ui.getGA_DEPARTMENT().equals(user.getGA_DEPARTMENT())
 					&& org.getUNIT().equals(user.getUNIT())
-					&& org.getORG_LEVEL().equals(user.getORG_LEVEL())
+					&& org.getORG_LEVEL() == user.getORG_LEVEL()
 					&& ui.getNAME().equals(user.getNAME())
 					&& ui.getPOLICE_SORT().equals(user.getPOLICE_SORT())
-					&& ( ui.getSEXCODE().length() > 0 ? ui.getSEXCODE().equals(user.getSEXCODE()) : true )
+					&& ui.getSEXCODE().equals(user.getSEXCODE())
 					&& ui.getTAKE_OFFICE().equals(user.getTAKE_OFFICE()) ) {
 				return;
 			}
-			
 			
 			user.setUNIT(org.getUNIT());
 			user.setORG_LEVEL(org.getORG_LEVEL());
@@ -758,9 +757,10 @@ public class UserDAOImpl implements UserDAO {
 			user.setNAME(ui.getNAME());
 			user.setPOLICE_SORT(ui.getPOLICE_SORT());
 			user.setTAKE_OFFICE(ui.getTAKE_OFFICE());
-			if(ui.getSEXCODE().length() > 0) {
-				user.setSEXCODE(ui.getSEXCODE());
-			}
+//			if(ui.getSEXCODE().length() > 0) {
+//				user.setSEXCODE(ui.getSEXCODE());
+//			}
+			user.setSEXCODE(ui.getSEXCODE());
 			user.setDATA_VERSION(user.getDATA_VERSION() + 1);
 			user.setDELETE_STATUS(User.DELSTATUSNO);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",

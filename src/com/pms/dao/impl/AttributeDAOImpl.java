@@ -10,6 +10,7 @@ import java.util.Locale;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.AttributeDAO;
 import com.pms.model.AttrDefinition;
@@ -361,6 +362,64 @@ public class AttributeDAOImpl implements AttributeDAO {
 			HibernateUtil.closeSession();
 		}
 		return rs;
+	}
+
+	@Override
+	public AttrDefinition GetAttrDefinitionByCode(String code) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		AttrDefinition rs = null;
+		String sqlString = "select * from attrdef where code = :code ";
+				
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDefinition.class);
+			q.setString( "code", code );
+			
+			rs = (AttrDefinition)q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public AttrDictionary AttrDictionaryAdd(AttrDictionary ad) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			ad = (AttrDictionary) session.merge(ad);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名属性。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return ad;
 	}
 	
 }
