@@ -78,7 +78,13 @@ $(document).ready(function () {
 		href:'menu/group.html',
 		selected: false
 	});
-
+	
+	$('#mm').accordion('add', {
+		title: '角色管理',
+		href:'menu/role.html',
+		selected: false
+	});
+	
 	$('#mm').accordion('add', {
 		title: '资源管理',
 		href:'menu/resource.html',

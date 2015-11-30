@@ -53,7 +53,6 @@
  		<action name="deleteResourceRole" class="com.pms.controller.ResourceAction" method="DeleteResourceRole" >
  			<result name="success" type="json" />
  		</action>
- 		
 <!-- 		<action name="queryRoleItems" class="com.pms.controller.ResourceAction" method="QueryRoleItems" >-->
 <!-- 			<result name="success" type="json" />-->
 <!-- 		</action>-->
@@ -63,6 +62,23 @@
  		<action name="queryRoleResource" class="com.pms.controller.ResourceAction" method="QueryRoleResource" >
  			<result name="success" type="json" />
  		</action>		
+ 		
+ 		<action name="saveResRoleResourceTemplate" class="com.pms.controller.ResourceAction" method="SaveResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryAllResRoleResourceTemplate" class="com.pms.controller.ResourceAction" method="QueryAllResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryResRoleResourceTemplate" class="com.pms.controller.ResourceAction" method="QueryResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteResRoleResourceTemplate" class="com.pms.controller.ResourceAction" method="DeleteResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryRoleResourceTemplate" class="com.pms.controller.ResourceAction" method="QueryRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
  		<action name="fileUploadResourceData" class="com.pms.controller.ResourceAction" method="FileUploadResourceData" >
  			<interceptor-ref name="defaultStack">
 				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->

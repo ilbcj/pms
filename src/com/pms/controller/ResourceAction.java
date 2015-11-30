@@ -16,14 +16,15 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.ResDataTemplateListItem;
+import com.pms.dto.ResRoleResourceTemplateListItem;
 import com.pms.dto.RoleListItem;
 import com.pms.dto.TreeNode;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
-import com.pms.model.ResDataTemplate;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
+import com.pms.model.ResRoleResourceTemplate;
 import com.pms.service.ResourceManageService;
 import com.pms.service.ResourceUploadService;
 
@@ -44,6 +45,8 @@ public class ResourceAction extends ActionSupport {
 	private String resCode;
 	private String reSystemtType;
 	private String resAppid;
+	private String tName;
+	private String tLastTime;
 	private ResFeature feature;
 	private List<Integer> delIds;
 	private List<ResFeature> features;
@@ -58,6 +61,9 @@ public class ResourceAction extends ActionSupport {
 	private List<ResDataListItem> dataItems;
 	private List<ResDataTemplateListItem> dataTemplateItems;
 	private List<RoleListItem> roleItems;
+	private ResRoleResourceTemplate resRoleResourceTemplate;
+	private List<ResRoleResourceTemplate> resRoleResourceTemplates;
+	private List<ResRoleResourceTemplateListItem> resRoleResourceTemplateListItems;
 	
 	private String resource_id;
 	private List<String> resource_status;
@@ -103,6 +109,33 @@ public class ResourceAction extends ActionSupport {
 
 	public void setRoleItems(List<RoleListItem> roleItems) {
 		this.roleItems = roleItems;
+	}
+
+	public ResRoleResourceTemplate getResRoleResourceTemplate() {
+		return resRoleResourceTemplate;
+	}
+
+	public void setResRoleResourceTemplate(
+			ResRoleResourceTemplate resRoleResourceTemplate) {
+		this.resRoleResourceTemplate = resRoleResourceTemplate;
+	}
+
+	public List<ResRoleResourceTemplate> getResRoleResourceTemplates() {
+		return resRoleResourceTemplates;
+	}
+
+	public void setResRoleResourceTemplates(
+			List<ResRoleResourceTemplate> resRoleResourceTemplates) {
+		this.resRoleResourceTemplates = resRoleResourceTemplates;
+	}
+
+	public List<ResRoleResourceTemplateListItem> getResRoleResourceTemplateListItems() {
+		return resRoleResourceTemplateListItems;
+	}
+
+	public void setResRoleResourceTemplateListItems(
+			List<ResRoleResourceTemplateListItem> resRoleResourceTemplateListItems) {
+		this.resRoleResourceTemplateListItems = resRoleResourceTemplateListItems;
 	}
 
 	public String getResource_id() {
@@ -337,6 +370,22 @@ public class ResourceAction extends ActionSupport {
 		this.resAppid = resAppid;
 	}
 
+	public String gettName() {
+		return tName;
+	}
+
+	public void settName(String tName) {
+		this.tName = tName;
+	}
+
+	public String gettLastTime() {
+		return tLastTime;
+	}
+
+	public void settLastTime(String tLastTime) {
+		this.tLastTime = tLastTime;
+	}
+
 	public ResFeature getFeature() {
 		return feature;
 	}
@@ -527,19 +576,20 @@ public class ResourceAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String QueryDataTemplateItems()
+	public String QueryRoleTemplateItems()
 	{
 		ResourceManageService rms = new ResourceManageService();
-		dataTemplateItems = new ArrayList<ResDataTemplateListItem>();
+		dataItems = new ArrayList<ResDataListItem>();
 		try {
-			ResDataTemplate criteria = new ResDataTemplate();
+			ResData criteria = new ResData();
 			criteria.setName(resName);
 			criteria.setRESOURCE_ID(resCode);
+//			criteria.setRESOURCE_ID(resource_id);
 			criteria.setRESOURCE_DESCRIBE(resource_describe);
 			criteria.setRMK(resource_remark);
-			total = rms.QueryAllDataTemplateItems(resource_status, resource_type, dataset_sensitive_level,
+			total = rms.QueryAllDataItems(resource_status, resource_type, dataset_sensitive_level,
 					data_set, section_class, element,section_relatioin_class, 
-					criteria, page, rows, dataTemplateItems );
+					criteria, page, rows, dataItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -648,6 +698,81 @@ public class ResourceAction extends ActionSupport {
 //		dataTemplateItems = new ArrayList<ResDataTemplateListItem>();
 		try {
 			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, dataItems );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryResRoleResourceTemplate()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		resRoleResourceTemplateListItems = new ArrayList<ResRoleResourceTemplateListItem>();
+		try {
+			total = rms.QueryResRoleResourceTemplate(resRoleResourceTemplate, page, rows, resRoleResourceTemplateListItems );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String SaveResRoleResourceTemplate()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		try {
+			resRoleResourceTemplate = rms.SaveResRoleResourceTemplate(resRoleResourceTemplate, this.addFeatureIds, this.addDataIds);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllResRoleResourceTemplate()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		resRoleResourceTemplates = new ArrayList<ResRoleResourceTemplate>();
+		try {
+			
+			total = rms.QueryAllResRoleResourceTemplate(page, rows, resRoleResourceTemplates );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String DeleteResRoleResourceTemplate()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		try {
+			rms.DeleteRoleResourceTemplate(resRoleResourceTemplate);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryRoleResourceTemplate()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		features = new ArrayList<ResFeature>();
+		dataItems = new ArrayList<ResDataListItem>();
+		try {
+			rms.QueryRoleResourceTemplate(resRoleResourceTemplate, features, dataItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

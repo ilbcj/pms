@@ -24,6 +24,7 @@ import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
+import com.pms.model.ResRoleResourceTemplate;
 
 
 public class ResourceDAOImpl implements ResourceDAO {
@@ -122,42 +123,6 @@ public class ResourceDAOImpl implements ResourceDAO {
 			HibernateUtil.closeSession();
 		}
 		return resRoleOrg;
-	}
-	
-	@Override
-	public ResDataOrg ResDataOrgAdd(ResDataOrg resDataOrg) throws Exception {
-		//打开线程安全的session对象
-		Session session = HibernateUtil.currentSession();
-		//打开事务
-		Transaction tx = session.beginTransaction();
-		try
-		{
-			resDataOrg = (ResDataOrg) session.merge(resDataOrg);
-			tx.commit();
-		}
-		catch(ConstraintViolationException cne){
-			tx.rollback();
-			System.out.println(cne.getSQLException().getMessage());
-			throw new Exception("存在重名数据资源。");
-		}
-		catch(org.hibernate.exception.SQLGrammarException e)
-		{
-			tx.rollback();
-			System.out.println(e.getSQLException().getMessage());
-			throw e.getSQLException();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			tx.rollback();
-			System.out.println(e.getMessage());
-			throw e;
-		}
-		finally
-		{
-			HibernateUtil.closeSession();
-		}
-		return resDataOrg;
 	}
 	
 	@Override
@@ -1884,18 +1849,41 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return rs;
 	}
 	
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<ResFeature> GetFeatureById(int id) throws Exception {
+//		Session session = HibernateUtil.currentSession();
+//		Transaction tx = session.beginTransaction();
+//		List<ResFeature> rs = null;
+//		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where id = :id ";
+//		
+//		try {
+//			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+//			q.setInteger("id", id);
+//			rs = q.list();
+//			tx.commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			tx.rollback();
+//			System.out.println(e.getMessage());
+//			throw e;
+//		} finally {
+//			HibernateUtil.closeSession();
+//		}
+//		return rs;
+//	}
+	
 	@Override
-	public List<ResFeature> GetFeatureById(int id) throws Exception {
+	public ResData GetDataByResId(String resId) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		List<ResFeature> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where id = :id ";
+		ResData rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
 		
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
-			q.setInteger("id", id);
-			rs = q.list();
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("RESOURCE_ID", resId);
+			rs = (ResData) q.uniqueResult();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1908,29 +1896,29 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return rs;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ResData> GetDataByResId(String resId) throws Exception {
-		Session session = HibernateUtil.currentSession();
-		Transaction tx = session.beginTransaction();
-		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
-		
-		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
-			q.setString("RESOURCE_ID", resId);
-			rs = q.list();
-			tx.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			tx.rollback();
-			System.out.println(e.getMessage());
-			throw e;
-		} finally {
-			HibernateUtil.closeSession();
-		}
-		return rs;
-	}
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<ResData> GetDataByResId(String resId) throws Exception {
+//		Session session = HibernateUtil.currentSession();
+//		Transaction tx = session.beginTransaction();
+//		List<ResData> rs = null;
+//		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
+//		
+//		try {
+//			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+//			q.setString("RESOURCE_ID", resId);
+//			rs = q.list();
+//			tx.commit();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			tx.rollback();
+//			System.out.println(e.getMessage());
+//			throw e;
+//		} finally {
+//			HibernateUtil.closeSession();
+//		}
+//		return rs;
+//	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -2174,7 +2162,266 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return rs;
 	}
+	
+	@Override
+	public ResDataOrg ResDataOrgAdd(ResDataOrg resDataOrg) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			resDataOrg = (ResDataOrg) session.merge(resDataOrg);
+			tx.commit();
+		}
+		catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名数据资源。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return resDataOrg;
+	}
+	
+	@Override
+	public void UpdateFeatureRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, List<String> featureIds)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE_Template where TEMPLATE_NAME = :TEMPLATE_NAME and BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS and LATEST_MOD_TIME = :LATEST_MOD_TIME ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setString("TEMPLATE_NAME", resRoleResourceTemplate.getTEMPLATE_NAME());
+			q.setString("BUSINESS_ROLE", resRoleResourceTemplate.getBUSINESS_ROLE());
+			q.setInteger("RESOURCE_CLASS", ResRoleResourceTemplate.RESCLASSFEATURE);
+			q.setString("LATEST_MOD_TIME", resRoleResourceTemplate.getLATEST_MOD_TIME());
+			q.executeUpdate();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+			
+			ResRoleResourceTemplate rr;
+			if(featureIds != null) {
+				for(int i = 0; i<featureIds.size(); i++) {
+					rr = new ResRoleResourceTemplate();
+					rr.setTEMPLATE_NAME(resRoleResourceTemplate.getTEMPLATE_NAME());
+					rr.setBUSINESS_ROLE(resRoleResourceTemplate.getBUSINESS_ROLE());
+					rr.setRESOURCE_ID(featureIds.get(i));
+					rr.setLATEST_MOD_TIME(timenow);
+					rr.setDATA_VERSION(1);
+					rr.setRESOURCE_CLASS(ResRoleResourceTemplate.RESCLASSFEATURE);
+					session.merge(rr);
+				}
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return;
+	}
 
+	@Override
+	public void UpdateDataRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, List<String> dataIds)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE_Template where TEMPLATE_NAME = :TEMPLATE_NAME and BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS and LATEST_MOD_TIME = :LATEST_MOD_TIME ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setString("TEMPLATE_NAME", resRoleResourceTemplate.getTEMPLATE_NAME());
+			q.setString("BUSINESS_ROLE", resRoleResourceTemplate.getBUSINESS_ROLE());
+			q.setInteger("RESOURCE_CLASS", ResRoleResourceTemplate.RESCLASSDATA);
+			q.setString("LATEST_MOD_TIME", resRoleResourceTemplate.getLATEST_MOD_TIME());
+			q.executeUpdate();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.SIMPLIFIED_CHINESE);
+			String timenow = sdf.format(new Date());
+
+			ResRoleResourceTemplate rr;
+			if( dataIds != null) {
+				for(int i = 0; i<dataIds.size(); i++) {
+					rr = new ResRoleResourceTemplate();
+					rr.setTEMPLATE_NAME(resRoleResourceTemplate.getTEMPLATE_NAME());
+					rr.setBUSINESS_ROLE(resRoleResourceTemplate.getBUSINESS_ROLE());
+					rr.setRESOURCE_ID(dataIds.get(i));
+					rr.setLATEST_MOD_TIME(timenow);
+					rr.setDATA_VERSION(1);
+					rr.setRESOURCE_CLASS(ResRoleResourceTemplate.RESCLASSDATA);
+					session.merge(rr);
+				}
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return;		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRoleResourceTemplate> GetAllResRoleResourceTemplate(int page, int rows) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRoleResourceTemplate> rs = null;
+		String sqlString = "SELECT * FROM WA_AUTHORITY_RESOURCE_ROLE_TEMPLATE GROUP BY BUSINESS_ROLE,TEMPLATE_NAME,LATEST_MOD_TIME";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResourceTemplate.class);
+			if( page > 0 && rows > 0) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetAllResRoleResourceTemplateCount() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "SELECT count(*) FROM (SELECT * from WA_AUTHORITY_RESOURCE_ROLE_TEMPLATE GROUP BY BUSINESS_ROLE,TEMPLATE_NAME,LATEST_MOD_TIME) a ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public void RoleResourceTemplateDel(ResRoleResourceTemplate resRoleResourceTemplate) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE_TEMPLATE where TEMPLATE_NAME = :TEMPLATE_NAME and LATEST_MOD_TIME = :LATEST_MOD_TIME ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setString("TEMPLATE_NAME", resRoleResourceTemplate.getTEMPLATE_NAME());
+			q.setString("LATEST_MOD_TIME", resRoleResourceTemplate.getLATEST_MOD_TIME());
+			
+			q.executeUpdate();
+		
+			//TODO: delete role&resource first
+			session.delete(resRoleResourceTemplate);
+			tx.commit();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRoleResourceTemplate> GetResRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, int page, int rows) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResRoleResourceTemplate> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE_Template where TEMPLATE_NAME = :TEMPLATE_NAME and LATEST_MOD_TIME = :LATEST_MOD_TIME ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResourceTemplate.class);
+			q.setString("TEMPLATE_NAME", resRoleResourceTemplate.getTEMPLATE_NAME());
+			q.setString("LATEST_MOD_TIME", resRoleResourceTemplate.getLATEST_MOD_TIME());
+			if( page > 0 && rows > 0) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetResRoleResourceTemplateCount(ResRoleResourceTemplate resRoleResourceTemplate) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "SELECT count(*) from WA_AUTHORITY_RESOURCE_ROLE_Template where TEMPLATE_NAME = :TEMPLATE_NAME and LATEST_MOD_TIME = :LATEST_MOD_TIME ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setString("TEMPLATE_NAME", resRoleResourceTemplate.getTEMPLATE_NAME());
+			q.setString("LATEST_MOD_TIME", resRoleResourceTemplate.getLATEST_MOD_TIME());
+			
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@Override
 	public int ResRoleResourceImportClear() throws Exception {
 		Session session = HibernateUtil.currentSession();

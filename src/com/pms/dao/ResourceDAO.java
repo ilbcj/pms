@@ -10,6 +10,7 @@ import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
+import com.pms.model.ResRoleResourceTemplate;
 
 public interface ResourceDAO {
 	ResRoleResource ResRoleResourceAdd(ResRoleResource resRoleResource) throws Exception;
@@ -56,8 +57,9 @@ public interface ResourceDAO {
 	List<ResRoleResource> GetResRolesByTime(String time) throws Exception;
 	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
 	ResFeature GetFeatureByResId(String id) throws Exception;
-	List<ResFeature> GetFeatureById(int id) throws Exception;
-	List<ResData> GetDataByResId(String resId) throws Exception;
+//	List<ResFeature> GetFeatureById(int id) throws Exception;
+	ResData GetDataByResId(String resId) throws Exception;
+//	List<ResData> GetDataByResId(String resId) throws Exception;
 	List<ResDataTemplate> GetDataTemplateByResId(String resId) throws Exception;
 	List<ResData> GetDataById(int id) throws Exception;
 	
@@ -75,4 +77,12 @@ public interface ResourceDAO {
 	ResData DataAddTemplate(ResData data) throws Exception;
 	ResData GetData(ResData data) throws Exception;
 	ResDataTemplate GetDataTemplate(ResData data) throws Exception;
+	
+	void UpdateDataRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, List<String> dataIds) throws Exception;
+	void UpdateFeatureRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, List<String> featureIds) throws Exception;
+	List<ResRoleResourceTemplate> GetAllResRoleResourceTemplate(int page, int rows) throws Exception;
+	int GetAllResRoleResourceTemplateCount() throws Exception;
+	void RoleResourceTemplateDel(ResRoleResourceTemplate resRoleResourceTemplate) throws Exception;
+	List<ResRoleResourceTemplate> GetResRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, int page, int rows) throws Exception;
+	int GetResRoleResourceTemplateCount(ResRoleResourceTemplate resRoleResourceTemplate) throws Exception;
 }
