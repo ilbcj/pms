@@ -50,6 +50,7 @@
 	<mapping resource="com/pms/model/ResDataTemplate.hbm.xml" />
 	<mapping resource="com/pms/model/ResRole.hbm.xml" />
 	<mapping resource="com/pms/model/ResRoleResource.hbm.xml" />
+	<mapping resource="com/pms/model/ResRoleResourceTemplate.hbm.xml" />
 	<mapping resource="com/pms/model/Group.hbm.xml" />
 	<mapping resource="com/pms/model/GroupUser.hbm.xml" />
 	<mapping resource="com/pms/model/GroupRule.hbm.xml" />
