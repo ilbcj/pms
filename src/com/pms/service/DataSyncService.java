@@ -740,7 +740,15 @@ public class DataSyncService {
 				// 3. notice other pms
 				String sid = "S" + sl.getGA_DEPARTMENT().substring(0, 6) + "00000000009";
 				String message = generateBroadcastRequestContent(sid, checksum, fileName);
-				String result = ssm.SendMessage(sid, message);
+				String result = null;
+				try{
+					result = ssm.SendMessage(sid, message);
+				}
+				catch(Exception e) {
+					warnMsg = "[DSN]向PMS同步文件失败，目标SID:" + sid + ",错误信息:" + e.getMessage() + ".";
+					logger.warn(warnMsg);
+					continue;
+				}
 				logger.info(result);
 				if( SendSyncMessage.ParseResponse(result) ) {
 					sl.setStatus(SyncList.STATUS_NOTICED);

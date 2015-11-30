@@ -12,7 +12,7 @@
 		</id>
 		<!-- property元素定义常规属性 -->
 		<property name="name" type="java.lang.String" length="64" not-null="true"/>
-		<property name="code" type="java.lang.String" length="32"/>
+		<property name="code" type="java.lang.String" length="32" unique="true"/>
 		<property name="describ" type="java.lang.String" length="256"/>
 		<property name="type" type="java.lang.Integer"/>
 		<property name="tstamp" type="java.lang.String" length="64"/>

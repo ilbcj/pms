@@ -203,23 +203,23 @@ public class ResourceUploadService {
             Sheet sheet = workbook.getSheetAt(s);
             String sheetName = sheet.getSheetName();
             if ( SHEET_DATASET_SENSITIVE.equals(sheetName) ) {
-//            	updateDatasetSensitive(sheet);
+            	updateDatasetSensitive(sheet);
             } else if ( SHEET_DATASET.equals(sheetName) ) {
-//            	updateDataset(sheet);
+            	updateDataset(sheet);
             } else if ( SHEET_COLUMN_CLASSIFY.equals(sheetName) ) {
-//            	updateColumnClassify(sheet);
+            	updateColumnClassify(sheet);
             } else if ( SHEET_COLUMN.equals(sheetName) ) {
-//            	updateColumn(sheet);
+            	updateColumn(sheet);
             } else if ( SHEET_VALUE_SENSITIVE.equals(sheetName) ) {
-//            	updateValueSensitive(sheet);
+            	updateValueSensitive(sheet);
             } else if ( SHEET_VALUE.equals(sheetName) ) {
-//            	updateValue(sheet);
+            	updateValue(sheet);
             } else if ( SHEET_COLUMN_ClASSIFY_REALTION.equals(sheetName) ) {
-//            	updateColumnClassifyRelation(sheet);
+            	updateColumnClassifyRelation(sheet);
             } else if ( SHEET_ROW_RELATION.equals(sheetName) ) {
-//            	updateRowRelation(sheet);
+            	updateRowRelation(sheet);
             } else if ( SHEET_COLUMN_RELATION.equals(sheetName) ) {
-//            	updateColumnRelation(sheet);
+            	updateColumnRelation(sheet);
             } else if ( SHEET_CLASSIFY_RELATION.equals(sheetName) ) {
             	updateClassifyRelation(sheet);
             }
@@ -1100,7 +1100,7 @@ public class ResourceUploadService {
 		// clear old resource and role relationship
 		dao.ClearPublicRoleAndRelationship();
 		
-		int start = 300000;
+		int start = 0;
 		int rows = 10000;
 		List<ResRoleResourceImport> rrris = null;
 		rrris= dao.GetResRoleResourceImport(start, rows);
@@ -1127,19 +1127,38 @@ public class ResourceUploadService {
 	private void updateRoleAndResourceRelationshipOfRelationColumn(
 			String roleId, String dataSet, String sectionClass, String element) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		ResData resource = dao.GetDataByRelationColumn(dataSet, sectionClass, element);
+		List<ResData> resources = dao.GetDataByRelationColumnClassify(dataSet, sectionClass);
+		List<ResDataTemplate> resTemps = dao.GetDataTemplateByRelationColumnClassify(dataSet, sectionClass);
 		
-		if(resource == null) {
-			ResDataTemplate resTemp = dao.GetDataTemplateByRelationColumn(dataSet, sectionClass, element);
-			if(resTemp == null) {
-				logger.warn("[IRRARD]no record found when search data resource template of column relation by condition of dataset:'" + dataSet + "', element:'" + element + "', sectionClass:'" + sectionClass + "'");
-				return;
+		for( ResDataTemplate resTemp : resTemps ) {
+			boolean equal = false;
+			for( ResData res : resources ) {
+				if( resTemp.IsSameAsResData(res) ) {
+					equal = true;
+					break;
+				}
 			}
-			
-			resource = SaveResDataTemplate2ResData(resTemp);
+			if( !equal ) {
+				SaveResDataTemplate2ResData(resTemp);
+			}
 		}
 		
-		addPublicRoleAndDataResourceRelationship(roleId, resource.getRESOURCE_ID());
+		for( ResData res : resources ) {
+			boolean equal = false;
+			for( ResDataTemplate resTemp : resTemps ) {
+				if( resTemp.IsSameAsResData(res) ) {
+					equal = true;
+					break;
+				}
+			}
+			if( !equal ) {
+				logger.warn("[IRRARD]An data resource found which doesn't exist in data_resource_template by dataset:'" + res.getDATA_SET() + "', element:'" + res.getELEMENT() + "', sectionClass:'" + res.getSECTION_CLASS() + "'");
+			}
+		}
+		
+		for( ResDataTemplate resTemp : resTemps ) {
+			addPublicRoleAndDataResourceRelationship(roleId, resTemp.getRESOURCE_ID());
+		}
 		return;
 	}
 
@@ -1376,6 +1395,7 @@ public class ResourceUploadService {
 		rdt.setResource_type(ResData.RESTYPEPUBLIC);
 		rdt.setRESOURCE_DESCRIBE("数据集-字段分类-字段数据资源");
 		rdt.setDATA_SET(rrc.getDATA_SET());
+		rdt.setDATASET_SENSITIVE_LEVEL( rdsMap.get(rrc.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
 		rdt.setELEMENT(rrc.getELEMENT());
 		rdt.setSECTION_CLASS(rrc.getSECTION_CLASS());
 		rdt.setName("列控资源-" + rc.getELEMENT() + "(" + rc.getCOLUMU_CN() + ")");

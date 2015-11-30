@@ -212,7 +212,7 @@ public class SyncConfigDaoImpl implements SyncConfigDao{
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<SyncList> rs = null;
-		String sqlString = "select * from syncconfig where status = :status ";
+		String sqlString = "select * from synclist where status = :status ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(SyncList.class);
