@@ -52,8 +52,8 @@ public interface ResourceDAO {
 	List<ResRole> GetRoles(ResRole criteria, int page, int rows) throws Exception;
 	int GetRolesCount(ResRole criteria) throws Exception;
 	
-	void UpdateFeatureRoleResource(String roleId, List<String> featureIds) throws Exception;
-	void UpdateDataRoleResource(String roleId, List<String> dataIds) throws Exception;
+	void UpdateFeatureRoleResource(String roleId, List<String> featureIds, List<String> delFeatureIds) throws Exception;
+	void UpdateDataRoleResource(String roleId, List<String> dataIds, List<String> delFeatureIds) throws Exception;
 	void UpdateDataResource(List<String> dataIds) throws Exception;
 	List<ResRoleResource> GetAllResRoles() throws Exception;
 	List<ResRoleResource> GetResRolesByTime(String time) throws Exception;
@@ -87,4 +87,9 @@ public interface ResourceDAO {
 	void RoleResourceTemplateDel(ResRoleResourceTemplate resRoleResourceTemplate) throws Exception;
 	List<ResRoleResourceTemplate> GetResRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, int page, int rows) throws Exception;
 	int GetResRoleResourceTemplateCount(ResRoleResourceTemplate resRoleResourceTemplate) throws Exception;
+	
+	List<ResFeature> GetFuncByRoleid(String id, int page, int rows) throws Exception;
+	int GetFuncCountByRoleid(String id) throws Exception;
+	List<ResData> GetDataByRoleid(String id, int page, int rows) throws Exception;
+	int GetDataCountByRoleid(String id) throws Exception;
 }

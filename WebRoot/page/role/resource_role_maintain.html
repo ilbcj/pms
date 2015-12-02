@@ -102,14 +102,14 @@
 			                <td><input id="role_describe" class="form_value_mid easyui-textbox" data-options="prompt:'请输入描述'"></input></td>
 			            </tr>
 					</table>
-					<div class="easyui-window" id="dataLoad" style="width:20%;height:12%;"
-						data-options="title:'',draggable:false,inline:true,modal:true,resizable:false,closable:false,collapsible:false,minimizable:false,maximizable:false">
-						<table>	
-							<tr><td align=center>
-					    		<img src="../themes/default/images/loading.gif"/>正在处理，请稍后。。。
-					    	</td></tr>									
-						</table>
-					</div>
+<!-- 					<div class="easyui-window" id="dataLoad" style="width:20%;height:12%;" -->
+<!-- 						data-options="title:'',draggable:false,inline:true,modal:true,resizable:false,closable:false,collapsible:false,minimizable:false,maximizable:false"> -->
+<!-- 						<table>	 -->
+<!-- 							<tr><td align=center> -->
+<!-- 					    		<img src="../themes/default/images/loading.gif"/>正在处理，请稍后。。。 -->
+<!-- 					    	</td></tr>									 -->
+<!-- 						</table> -->
+<!-- 					</div> -->
 					<div>
 						<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleCopyResourceData()">复制资源</a>
 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" id="rolePasteResourceDataButton">粘贴资源</a>
@@ -281,20 +281,9 @@
 								            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
 							        <thead>
 							            <tr>
-<!-- 							            	<th data-options="field:'LATEST_MOD_TIME'" hidden="none;">更新时间</th> -->
 							                <th data-options="field:'resAndfuncType',width:'34%'">资源类型</th>
 							                <th data-options="field:'name',width:'34%'">资源名称</th>
 							                <th data-options="field:'RESOURCE_ID',width:'34%'">资源唯一标识</th>
-<!-- 							                <th data-options="field:'RESOURCE_STATUS'">资源状态</th> -->
-<!-- 							                <th data-options="field:'RESOURCE_DESCRIBE'">资源描述</th> -->
-<!-- 							                <th data-options="field:'RMK'">备注</th> -->
-<!-- 							                <th data-options="field:'DELETE_STATUS'">删除状态</th> -->
-<!-- 							                <th data-options="field:'CLUE_DST_SYS'">目标地市</th> -->
-<!-- 							                <th data-options="field:'DATASET_SENSITIVE_LEVEL'">数据集敏感度编码</th>					                 -->
-<!-- 							                <th data-options="field:'DATA_SET'">数据集编码</th> -->
-<!-- 							                <th data-options="field:'SECTION_CLASS'">字段分类编码</th> -->
-<!-- 							                <th data-options="field:'ELEMENT'">字段编码</th> -->
-<!-- 							                <th data-options="field:'SECTION_RELATIOIN_CLASS'">字段分类关系编码</th> -->
 							            </tr>
 							        </thead>
 							    </table>
@@ -581,7 +570,7 @@
     }
     
     function addResourceRole() {
-    	$('#dataLoad').window('close').window('center');
+//     	$('#dataLoad').window('close').window('center');
     	$("#resource_role_manage_center_main_wapper").panel('close');
     	$("#resource_role_manage_center_detail_wapper").panel('open');
     }
@@ -620,16 +609,47 @@
     	var roleDescrib = $("#role_describe").textbox('getValue');
     	poststr += "&role.ROLE_DESC=" + encodeURIComponent(roleDescrib);
     	
-     	var rows = $("#role_resource_feature_dg").datagrid('getRows');
-     	var index = 0;
-    	for(index=0; index < rows.length; index++) {
-	 		poststr += '&addFeatureIds=' + rows[index].RESOURCE_ID;
-    	}
-
-		rows = $("#role_resource_data_dg").datagrid('getRows');
-    	for(index=0; index < rows.length; index++) {
-	 		poststr += '&addDataIds=' + rows[index].RESOURCE_ID;
-    	}
+//      	var rows = $("#role_resource_feature_dg").datagrid('getRows');
+//      	var index = 0;
+//     	for(index=0; index < rows.length; index++) {
+// 	 		poststr += '&addFeatureIds=' + rows[index].RESOURCE_ID;
+//     	}
+    	
+// 		rows = $("#role_resource_data_dg").datagrid('getRows');
+//     	for(index=0; index < rows.length; index++) {
+// 	 		poststr += '&addDataIds=' + rows[index].RESOURCE_ID;
+//     	}
+    	var insertRows = $('#role_resource_feature_dg').datagrid('getChanges', 'inserted');
+    	if (insertRows.length > 0) {
+            for (var i = 0; i < insertRows.length; i++) {
+                alert(insertRows[i].RESOURCE_ID);
+                poststr += '&addFeatureIds=' + insertRows[i].RESOURCE_ID;
+            }
+        }
+        var deleteRows = $('#role_resource_feature_dg').datagrid('getChanges', 'deleted');
+    	if (deleteRows.length > 0) {
+            for (var i = 0; i < deleteRows.length; i++) {
+                alert(deleteRows[i].RESOURCE_ID);
+                poststr += '&delFeatureIds=' + deleteRows[i].RESOURCE_ID;
+            }
+        }
+        
+    	insertRows = $('#role_resource_data_dg').datagrid('getChanges', 'inserted');
+    	if (insertRows.length > 0) {
+            for (var i = 0; i < insertRows.length; i++) {
+                alert(insertRows[i].RESOURCE_ID);
+                poststr += '&addDataIds=' + insertRows[i].RESOURCE_ID;
+            }
+        }
+        deleteRows = $('#role_resource_data_dg').datagrid('getChanges', 'deleted');
+    	if (deleteRows.length > 0) {
+            for (var i = 0; i < deleteRows.length; i++) {
+                alert(deleteRows[i].RESOURCE_ID);
+                poststr += '&delDataIds=' + deleteRows[i].RESOURCE_ID;
+            }
+        }
+    	
+    	
     	$.post("../resource/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
@@ -711,30 +731,59 @@
 		//load datagrid's data
 		var poststr = "role.BUSINESS_ROLE=" + rows[0].BUSINESS_ROLE;
 		
-		$('#dataLoad').window('open').window('center');
-		$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
-			$('#dataLoad').window('close').window('center');
-			if(retObj.result == true)
-			{
- 				var index;
- 				for( index=0; index < retObj.features.length; index++) {
- 					insertFeature( retObj.features[index]);
- 				}
- 				for( index=0; index < retObj.dataItems.length; index++) {
- 					insertData( retObj.dataItems[index]);
- 				}
+		$("#role_resource_feature_dg").datagrid({
+			url:'../resource/queryRoleResourceFunc.action?role.BUSINESS_ROLE='+rows[0].BUSINESS_ROLE,
+			loadFilter: function(data){
+				var res = new Object();
+				if (data.result == true){
+					res.total = data.total;
+					res.rows = data.features;
+				} else {
+					res.total=0;
+					res.rows = [];
+				}
+				return res;
+			}
+		});
+		$("#role_resource_data_dg").datagrid({
+			url:'../resource/queryRoleResourceData.action?role.BUSINESS_ROLE='+rows[0].BUSINESS_ROLE,
+			loadFilter: function(data){
+				var res = new Object();
+				if (data.result == true){
+					res.total = data.total;
+					res.rows = data.dataItems;
+				} else {
+					res.total=0;
+					res.rows = [];
+				}
+				return res;
+			}
+		});
+
+// 		$('#dataLoad').window('open').window('center');
+// 		$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+// 			$('#dataLoad').window('close').window('center');
+// 			if(retObj.result == true)
+// 			{
+//  				var index;
+//  				for( index=0; index < retObj.features.length; index++) {
+//  					insertFeature( retObj.features[index]);
+//  				}
+//  				for( index=0; index < retObj.dataItems.length; index++) {
+//  					insertData( retObj.dataItems[index]);
+//  				}
 		    	
 //  		    	for( index=0; index < retObj。datas.length; index++ ) {
 //  		    		insertData(retObj。datas[index]);
 //  		    	}
-			}
-			else
-			{
-				warningTip("提示", '获取角色的资源信息失败');	
-				refreshDetailPage();
-				return;
-			}
-		}, "json");
+// 			}
+// 			else
+// 			{
+// 				warningTip("提示", '获取角色的资源信息失败');	
+// 				refreshDetailPage();
+// 				return;
+// 			}
+// 		}, "json");
 		
 		$("#resource_role_manage_center_main_wapper").panel('close');
    		$("#resource_role_manage_center_detail_wapper").panel('open');
@@ -1048,7 +1097,7 @@
 		
 		if( isExist( rows, data.id ) )
 			return;
-		//for(data.)
+		
     	$("#role_resource_feature_dg").datagrid('insertRow', {
 			index: index,
 			row:{
@@ -1087,23 +1136,6 @@
 				SECTION_RELATIOIN_CLASS:data.SECTION_RELATIOIN_CLASS
 			}
 		});
-		
-// 			var pager = $('#role_resource_data_dg').datagrid().datagrid('getPager');	// get the pager of datagrid
-// 			alert(rows.length);
-// 			pager.pagination({
-// 				total:rows.length,
-// 		        onSelectPage:function (pageNo, pageSize) { 
-// 					var start = (pageNo - 1) * pageSize; 
-// 		          	var end = start + pageSize; 
-// 		          	alert(start);alert(end);
-// 		          	$("#role_resource_data_dg").datagrid("loadData", data.slice(start, end)); 
-// 		          	pager.pagination('refresh', { 
-// 		            	total:rows.length, 
-// 		            	pageNumber:pageNo 
-// 		          	}); 
-// 		        } 
-			
-// 			});	
 	}
     //------------------for value edit datagrid-------
     function roleQueryResourceFeature(){
@@ -1187,10 +1219,12 @@ $(document).ready(function () {
 		title:'功能资源',
 		iconCls:'icon-edit',
 		nowrap:true,
-		height:'50%',
+		height:'60%',
 		toolbar:'#featureToolbar',
 		singleSelect:true,
 		pagination:true,
+		pageSize:5,
+		pageList:[5,10,15,20],
 		idField:'id',
 		//url:'data/datagrid_data.json',
 		columns:[[
@@ -1209,13 +1243,12 @@ $(document).ready(function () {
 		title:'数据资源',
 		iconCls:'icon-edit',
 		nowrap:true,
-		height:'50%',
+		height:'60%',
 		toolbar:'#dataToolbar',
 		singleSelect:true,
 		pagination:true,
 		pageSize:5,
-		pageNumber:0,
-		pageList:[5,10,20],
+		pageList:[5,10,15,20],
 		//idField:'id',
 		//url:'data/datagrid_data.json',
 		columns:[[
@@ -1232,7 +1265,7 @@ $(document).ready(function () {
 			{field:'SECTION_CLASS',title:'字段分类编码',width:'8%',editor:'text'},
 			{field:'ELEMENT',title:'字段编码',width:'7%',editor:'text'},
 			{field:'SECTION_RELATIOIN_CLASS',title:'字段分类关系编码',width:'10%',editor:'text'},
-			{field:'action',title:'操作',width:'4%',
+			{field:'action',title:'操作',width:'4%',align:'center',
 				formatter:function(value,row,index){
 					return '<a href="#" onclick="dataDeleterow(this)">删除</a>';
 				}
