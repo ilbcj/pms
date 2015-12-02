@@ -132,4 +132,16 @@ public class ResDataTemplate {
 	public void setRMK(String rMK) {
 		RMK = rMK;
 	}
+	
+	public boolean IsSameAsResData(ResData res){
+		if(res == null)
+			return false;
+		
+		return ( (DATA_SET == null && res.getDATA_SET() == null) || DATA_SET.equals(res.getDATA_SET()) )
+				&& ( (SECTION_CLASS == null && res.getSECTION_CLASS() == null) || (SECTION_CLASS.equals(res.getSECTION_CLASS())) )
+				&& ( (ELEMENT == null && res.getELEMENT() == null) || (ELEMENT.equals(res.getELEMENT())) )
+				&& ( (SECTION_RELATIOIN_CLASS == null && res.getSECTION_RELATIOIN_CLASS() == null) || (SECTION_RELATIOIN_CLASS.equals(res.getSECTION_RELATIOIN_CLASS())) )
+				&& ( (OPERATE_SYMBOL == null && res.getOPERATE_SYMBOL() == null) || (OPERATE_SYMBOL.equals(res.getOPERATE_SYMBOL())) )
+				&& ( (ELEMENT_VALUE == null && res.getELEMENT_VALUE() == null) || (ELEMENT_VALUE.equals(res.getELEMENT_VALUE())) );
+	}
 }

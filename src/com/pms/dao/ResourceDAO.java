@@ -38,8 +38,10 @@ public interface ResourceDAO {
 	//ResData GetDataByColumn(String dataSet, String element) throws Exception;
 	ResData GetDataByRelationRow(String dataSet, String element, String elemnetValue) throws Exception;
 	ResData GetDataByRelationColumn(String dataSet, String sectionClass, String element) throws Exception;
+	List<ResData> GetDataByRelationColumnClassify(String dataSet, String sectionClass) throws Exception;
 	ResDataTemplate GetDataTemplateByRelationRow(String dataSet, String element, String elemnetValue) throws Exception;
 	ResDataTemplate GetDataTemplateByRelationColumn(String dataSet, String sectionClass, String element) throws Exception;
+	List<ResDataTemplate> GetDataTemplateByRelationColumnClassify(String dataSet, String sectionClass) throws Exception;
 	
 	ResRole RoleAdd(ResRole role) throws Exception;
 	ResRole RoleImport(ResRole role) throws Exception;

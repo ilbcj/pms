@@ -12,9 +12,17 @@ public class AttrDefinition {
 	public final static String ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL = "数据集敏感度编码";
 	public final static String ATTR_RESOURCEDATA_DATA_SET = "数据集编码";
 	public final static String ATTR_RESOURCEDATA_SECTION_CLASS = "字段分类编码";
-	public final static String ATTR_RESOURCEDATA_LEMENT = "字段编码";
+	public final static String ATTR_RESOURCEDATA_ELEMENT = "字段编码";
 	public final static String ATTR_RESOURCEDATA_SECTION_RELATION_CLASS = "字段分类关系编码";
 	
+	public final static String ATTR_RESOURCEDATA_RESOURCE_TYPE_CODE = "resource_type";
+	public final static String ATTR_RESOURCEDATA_RESOURCE_STATUS_CODE = "RESOURCE_STATUS";
+	public final static String ATTR_RESOURCEDATA_DELETE_STATUS_CODE = "DELETE_STATUS";
+	public final static String ATTR_RESOURCEDATA_DATASET_SENSITIVE_LEVEL_CODE = "DATASET_SENSITIVE_LEVEL";
+	public final static String ATTR_RESOURCEDATA_DATA_SET_CODE = "DATA_SET";
+	public final static String ATTR_RESOURCEDATA_SECTION_CLASS_CODE = "SECTION_CLASS";
+	public final static String ATTR_RESOURCEDATA_ELEMENT_CODE = "ELEMENT";
+	public final static String ATTR_RESOURCEDATA_SECTION_RELATION_CLASS_CODE = "SECTION_RELATIOIN_CLASS";
 
 	private int id;
 	private String name="";

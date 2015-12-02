@@ -23,6 +23,13 @@ public class ConfigHelper {
 	{
 	}
 	
+	static {
+		ConfigHelper.getInstance().getEsbAddr();
+		ConfigHelper.getInstance().getRegion();
+		ConfigHelper.getInstance().getRequestId();
+		ConfigHelper.getInstance().getSyncExportPath();
+	}
+	
 	public static ConfigHelper getInstance() {
 		if( inst == null ) {
 			inst = new ConfigHelper();
@@ -30,7 +37,7 @@ public class ConfigHelper {
 		return inst;
 	}
 	
-	public static String getRegion() {
+	public String getRegion() {
 		if(region == null) {
 			try {
 				SystemConfigDAO dao = new SystemConfigDAOImpl();
@@ -51,7 +58,7 @@ public class ConfigHelper {
 		return region;
 	}
 	
-	public static String getRequestId() {
+	public String getRequestId() {
 		if(requestId == null) {
 			try {
 				SystemConfigDAO dao = new SystemConfigDAOImpl();
@@ -72,7 +79,7 @@ public class ConfigHelper {
 		return requestId;
 	}
 	
-	public static String getEsbAddr() {
+	public String getEsbAddr() {
 		if(esbAddr == null) {
 			try {
 				SystemConfigDAO dao = new SystemConfigDAOImpl();
@@ -93,7 +100,7 @@ public class ConfigHelper {
 		return esbAddr;
 	}
 	
-	public static String getSyncExportPath() {
+	public String getSyncExportPath() {
 		if(syncExportPath == null) {
 			try {
 				SystemConfigDAO dao = new SystemConfigDAOImpl();

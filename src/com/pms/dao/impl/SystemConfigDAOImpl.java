@@ -35,7 +35,6 @@ public class SystemConfigDAOImpl implements SystemConfigDAO{
 			HibernateUtil.closeSession();
 		}
 		return rs;
-		
 	}
 	
 	@Override

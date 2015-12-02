@@ -8,7 +8,8 @@ public interface ResColumnClassifyDAO {
 	
 	public ResColumnClassify ResColumnClassifySave(ResColumnClassify cc) throws Exception;
 
-	List<ResColumnClassify> QueryColumnClassify(String dataSet)
-			throws Exception;
+	public List<ResColumnClassify> QueryColumnClassify(String dataSet) throws Exception;
+
+	public List<ResColumnClassify> QueryAllColumnClassify() throws Exception;
 	
 }

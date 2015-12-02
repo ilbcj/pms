@@ -3,6 +3,7 @@
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.service.AuthService;
+import com.pms.util.ConfigHelper;
 
 @SuppressWarnings("serial")
 public class LoginAction extends ActionSupport {
@@ -91,6 +92,7 @@ public class LoginAction extends ActionSupport {
 	
 	public String Jump()
 	{
+		ConfigHelper.getInstance();
 		return SUCCESS;
 	}
 	

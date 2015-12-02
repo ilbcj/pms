@@ -10,9 +10,9 @@ public class ClientTest {
 	public static void main(String[] args) {
 		try{
 			String address = "http://15.6.22.2:7879/prjServiceEntry_dplServiceEntry/services/ServiceEntry/";
-			address = ConfigHelper.getEsbAddr();
+			address = ConfigHelper.getInstance().getEsbAddr();
 			String rid = "Q11000000000000000";
-			rid = ConfigHelper.getRequestId();
+			rid = ConfigHelper.getInstance().getRequestId();
 			
 			SendSyncMessage ssm = new SendSyncMessage(address, rid);
 			String sid = "S01000011000000009";

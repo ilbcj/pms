@@ -1260,6 +1260,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ResData> GetDataByRelationColumnClassify(String dataSet, String sectionClass) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where data_set =:data_set and section_class = :section_class";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("data_set", dataSet);
+			q.setString("section_class", sectionClass);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public ResDataTemplate GetDataTemplateByRelationColumn(String dataSet, String sectionClass, String element) throws Exception
 	{
 		Session session = HibernateUtil.currentSession();
@@ -1296,6 +1322,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResDataTemplate> GetDataTemplateByRelationColumnClassify(String dataSet, String sectionClass) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResDataTemplate> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where data_set =:data_set and section_class = :section_class";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
+			q.setString("data_set", dataSet);
+			q.setString("section_class", sectionClass);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return rs;
 	}
 	
 	@Override

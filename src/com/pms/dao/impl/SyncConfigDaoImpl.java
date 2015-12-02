@@ -6,11 +6,11 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 
 import com.pms.dao.SyncConfigDao;
 import com.pms.model.HibernateUtil;
 import com.pms.model.SyncConfig;
+import com.pms.model.SyncList;
 
 public class SyncConfigDaoImpl implements SyncConfigDao{
 	@Override
@@ -23,11 +23,6 @@ public class SyncConfigDaoImpl implements SyncConfigDao{
 		{
 			syncConfig = (SyncConfig) session.merge(syncConfig);
 			tx.commit();
-		}
-		catch(ConstraintViolationException cne){
-			tx.rollback();
-			System.out.println(cne.getSQLException().getMessage());
-			throw new Exception("存在重名数据资源。");
 		}
 		catch(org.hibernate.exception.SQLGrammarException e)
 		{
@@ -134,5 +129,104 @@ public class SyncConfigDaoImpl implements SyncConfigDao{
 		}
 		return rs;
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SyncConfig> GetAllSyncConfigs() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<SyncConfig> rs = null;
+		String sqlString = "select * from syncconfig ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(SyncConfig.class);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
+	@Override
+	public SyncList SyncListAdd(SyncList syncList) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			syncList = (SyncList) session.merge(syncList);
+			tx.commit();
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return syncList;
+	}
+
+	@Override
+	public void SyncListMod(SyncList syncList) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		try
+		{
+			session.update(syncList);
+			tx.commit();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return;	
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SyncList> GetAllSyncList(int status) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<SyncList> rs = null;
+		String sqlString = "select * from synclist where status = :status ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(SyncList.class);
+			q.setInteger("status", status);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 }

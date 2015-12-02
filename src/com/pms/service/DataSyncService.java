@@ -3,17 +3,19 @@ package com.pms.service;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -22,14 +24,18 @@ import org.dom4j.io.XMLWriter;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.pms.dao.SyncConfigDao;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
+import com.pms.dao.impl.SyncConfigDaoImpl;
 import com.pms.dao.impl.SystemConfigDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
 import com.pms.model.Organization;
 import com.pms.model.ResData;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
+import com.pms.model.SyncConfig;
+import com.pms.model.SyncList;
 import com.pms.model.SystemConfig;
 import com.pms.model.User;
 import com.pms.util.ConfigHelper;
@@ -38,6 +44,8 @@ import com.pms.util.ZipUtil;
 import com.pms.webservice.service.client.SendSyncMessage;
 
 public class DataSyncService {
+	private static Log logger = LogFactory.getLog(DataSyncService.class);
+	
 	public String DownLoadRes(String amount, List<ResData> items) throws Exception {
 		SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
@@ -265,22 +273,24 @@ public class DataSyncService {
         
         return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
 	}
-	private String ConvertOrgLevel(String level){
-		String res=null;
-		if("部".endsWith(level)){
-			res="1";
-		}else if("省".endsWith(level)){
-			res="2";
-		}else if("市".endsWith(level)){
-			res="3";
-		}else if("县".endsWith(level)){
-			res="4";
-		}else if("基层所队".endsWith(level)){
-			res="9";
-		}
-		return res;
-				
-	}
+	
+//	private String ConvertOrgLevel(String level){
+//		String res=null;
+//		if("部".endsWith(level)){
+//			res="1";
+//		}else if("省".endsWith(level)){
+//			res="2";
+//		}else if("市".endsWith(level)){
+//			res="3";
+//		}else if("县".endsWith(level)){
+//			res="4";
+//		}else if("基层所队".endsWith(level)){
+//			res="9";
+//		}
+//		return res;
+//				
+//	}
+	
 	public String DownLoadUser(String amount, List<User> items) throws Exception {
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss");
         Date date = timeFormat.parse("1970-01-01 00:00:00");
@@ -668,37 +678,94 @@ public class DataSyncService {
 	}
 	
 	private void broadcastNotice(String path, String fileName) throws Exception {
-		// 1. calculate checksum
-		File file = new File(path + "/" + fileName);
-		FileInputStream fi = new FileInputStream(file);
-		
-		String checksum = MD5Security.md5(fi);
-		
-		// 2. get notice list
-		List<String> sids = new ArrayList<String>();
-		//sids.add("S01000011000000009");//gab sync service
-		//sids.add("S11000000000000009");//bj sync service
-		sids.add("S33020000000000009");//zhejiang_ningbo sync service          
-			
-		// 3. notice other pms	
-		String address = ConfigHelper.getEsbAddr();
-		String rid = ConfigHelper.getRequestId();
-		
-		SendSyncMessage ssm = new SendSyncMessage(address, rid);
-//			if(sids == null) {
-//				return;
-//			}
-		for( String sid : sids) {
-			// 3.1 generate request content
-			String message = generateBroadcastRequestContent(sid, checksum, fileName);
-			
-			String result = ssm.SendMessage(sid, message);
-			System.out.println(result);
+		// 1. get notice address list
+		SyncConfigDao scdao = new SyncConfigDaoImpl();
+		List<SyncConfig> scs = scdao.GetAllSyncConfigs();
+		if( scs == null || scs.size() == 0 ) {
+			String warnMsg = "[DE]当前不存在需要同步数据的地址";
+			logger.warn(warnMsg);
+			return;
 		}
 		
-	
+		// 2. add notice list
+		SyncList sl = null;
+		String fullPath = path + "/" + fileName;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		for( SyncConfig sc : scs ) {
+			sl = new SyncList();
+			sl.setGA_DEPARTMENT(sc.getGA_DEPARTMENT());
+			sl.setFilename(fullPath);
+			sl.setStatus(SyncList.STATUS_GENERATED);
+			sl.setTstamp(timenow);
+			scdao.SyncListAdd(sl);
+		}
 		
+		// 3. broadcast notice
+		NotificationPush();
 	}
+	
+	public void NotificationPush(){
+		String warnMsg = null;
+		try {
+			// 1. get notice list
+			SyncConfigDao scdao = new SyncConfigDaoImpl();
+			List<SyncList> sls = scdao.GetAllSyncList(SyncList.STATUS_GENERATED);
+			if( sls == null || sls.size() == 0 ) {
+				warnMsg = "[DSN]当前不存在需要同步数据文件的结点.";
+				logger.warn(warnMsg);
+				return;
+			}
+
+			String address = ConfigHelper.getInstance().getEsbAddr();
+			String rid = ConfigHelper.getInstance().getRequestId();
+			SendSyncMessage ssm = new SendSyncMessage(address, rid);
+			String fileName = null;
+			String checksum = null;
+			for( SyncList sl : sls ) {
+				// 2. calculate checksum
+				if( fileName == null || fileName != sl.getFilename() ) {
+					try{
+						fileName = sl.getFilename();
+						File file = new File(fileName);
+						FileInputStream fi = new FileInputStream(file);
+						checksum = MD5Security.md5(fi);
+					} catch (FileNotFoundException e) {
+						warnMsg = "[DSN]加载文件失败，文件:" + fileName + ";错误信息:" + e.getMessage() + ".";
+						logger.warn(warnMsg);
+					}
+				}
+				
+				// 3. notice other pms
+				String sid = "S" + sl.getGA_DEPARTMENT().substring(0, 6) + "00000000009";
+				String message = generateBroadcastRequestContent(sid, checksum, fileName);
+				String result = null;
+				try{
+					result = ssm.SendMessage(sid, message);
+				}
+				catch(Exception e) {
+					warnMsg = "[DSN]向PMS同步文件失败，目标SID:" + sid + ",错误信息:" + e.getMessage() + ".";
+					logger.warn(warnMsg);
+					continue;
+				}
+				logger.info(result);
+				if( SendSyncMessage.ParseResponse(result) ) {
+					sl.setStatus(SyncList.STATUS_NOTICED);
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+							Locale.SIMPLIFIED_CHINESE);
+					String timenow = sdf.format(new Date());
+					sl.setTstamp(timenow);
+					scdao.SyncListMod(sl);
+				}
+			}
+		} catch(Exception e) {
+			warnMsg = "[DSN]同步文件失败，错误信息:" + e.getMessage() + ".";
+			logger.warn(warnMsg);
+		}
+		return;
+	}
+	
 	private String generateBroadcastRequestContent(String sid, String checksum, String fileName) throws IOException {
 		String result = null;
 		org.jdom2.Document doc = null;
@@ -722,7 +789,7 @@ public class DataSyncService {
 			item010000 = new org.jdom2.Element("ITEM");
 			data010000.addContent(item010000);
 			itemSetAttribute(item010000, "key", "H010006");
-			String from = ConfigHelper.getRegion();
+			String from = ConfigHelper.getInstance().getRegion();
 			itemSetAttribute(item010000, "val", from);
 			itemSetAttribute(item010000, "rmk", "发起节点的标识");
 			
