@@ -61,7 +61,14 @@
 <!-- 		</action>-->
  		<action name="queryRoleResource" class="com.pms.controller.ResourceAction" method="QueryRoleResource" >
  			<result name="success" type="json" />
- 		</action>		
+ 		</action>
+ 		
+ 		<action name="queryRoleResourceData" class="com.pms.controller.ResourceAction" method="QueryRoleResourceData" >
+ 			<result name="success" type="json" />
+ 		</action>	
+ 		<action name="queryRoleResourceFunc" class="com.pms.controller.ResourceAction" method="QueryRoleResourceFunc" >
+ 			<result name="success" type="json" />
+ 		</action>	
  		
  		<action name="saveResRoleResourceTemplate" class="com.pms.controller.ResourceAction" method="SaveResRoleResourceTemplate" >
  			<result name="success" type="json" />

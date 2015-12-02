@@ -2,6 +2,7 @@ package com.pms.dao.impl;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -1677,15 +1678,23 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 	
 	@Override
-	public void UpdateFeatureRoleResource(String roleId, List<String> featureIds)
+	public void UpdateFeatureRoleResource(String roleId, List<String> featureIds, List<String> delFeatureIds)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
+//		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
 		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("BUSINESS_ROLE", roleId);
+			if(delFeatureIds != null) {
+				q.setParameterList("RESOURCE_ID", delFeatureIds);
+			}else{
+				List<String> list =new ArrayList<String>();
+				list.add("");
+				q.setParameterList("RESOURCE_ID", list);
+			}
 			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSFEATURE);
 			q.executeUpdate();
 			
@@ -1718,15 +1727,22 @@ public class ResourceDAOImpl implements ResourceDAO {
 	}
 
 	@Override
-	public void UpdateDataRoleResource(String roleId, List<String> dataIds)
+	public void UpdateDataRoleResource(String roleId, List<String> dataIds, List<String> delDataIds)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_ID in (:RESOURCE_ID) and RESOURCE_CLASS = :RESOURCE_CLASS ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("BUSINESS_ROLE", roleId);
+			if(dataIds != null) {
+				q.setParameterList("RESOURCE_ID", dataIds);
+			}else{
+				List<String> list =new ArrayList<String>();
+				list.add("");
+				q.setParameterList("RESOURCE_ID", list);
+			}
 			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
 			q.executeUpdate();
 			
@@ -1842,6 +1858,116 @@ public class ResourceDAOImpl implements ResourceDAO {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
 			q.setString("BUSINESS_ROLE", id);
 			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResFeature> GetFuncByRoleid(String id, int page, int rows)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResFeature> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where RESOURCE_ID in (SELECT RESOURCE_ID FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS)";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+			q.setString("BUSINESS_ROLE", id);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSFEATURE);
+			if( page > 0 && rows > 0) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetFuncCountByRoleid(String id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setString("BUSINESS_ROLE", id);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSFEATURE);
+			
+			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResData> GetDataByRoleid(String id, int page, int rows)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResData> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID in (SELECT RESOURCE_ID FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS)";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("BUSINESS_ROLE", id);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
+			if( page > 0 && rows > 0) {
+				q.setFirstResult((page-1) * rows);   
+				q.setMaxResults(rows);
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public int GetDataCountByRoleid(String id) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		int rs;
+		String sqlString = "select count(*) FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setString("BUSINESS_ROLE", id);
+			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
+			
+			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

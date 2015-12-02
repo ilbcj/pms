@@ -58,6 +58,8 @@ public class ResourceAction extends ActionSupport {
 	private List<ResRole> roles;
 	private List<String> addFeatureIds;
 	private List<String> addDataIds;
+	private List<String> delFeatureIds;
+	private List<String> delDataIds;
 	private List<ResDataListItem> dataItems;
 	private List<ResDataTemplateListItem> dataTemplateItems;
 	private List<RoleListItem> roleItems;
@@ -248,6 +250,22 @@ public class ResourceAction extends ActionSupport {
 
 	public void setAddDataIds(List<String> addDataIds) {
 		this.addDataIds = addDataIds;
+	}
+
+	public List<String> getDelFeatureIds() {
+		return delFeatureIds;
+	}
+
+	public void setDelFeatureIds(List<String> delFeatureIds) {
+		this.delFeatureIds = delFeatureIds;
+	}
+
+	public List<String> getDelDataIds() {
+		return delDataIds;
+	}
+
+	public void setDelDataIds(List<String> delDataIds) {
+		this.delDataIds = delDataIds;
 	}
 
 	public ResRole getRole() {
@@ -666,7 +684,7 @@ public class ResourceAction extends ActionSupport {
 	{
 		ResourceManageService rms = new ResourceManageService();
 		try {
-			role = rms.SaveResourceRole(role, resRoleOrg, this.addFeatureIds, this.addDataIds);
+			role = rms.SaveResourceRole(role, resRoleOrg, this.addFeatureIds, this.addDataIds, this.delDataIds, this.delFeatureIds);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -698,6 +716,36 @@ public class ResourceAction extends ActionSupport {
 //		dataTemplateItems = new ArrayList<ResDataTemplateListItem>();
 		try {
 			rms.QueryRoleResource( role.getBUSINESS_ROLE(), features, dataItems );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryRoleResourceData()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		dataItems = new ArrayList<ResDataListItem>();
+		try {
+			total = rms.QueryRoleResourceData( role.getBUSINESS_ROLE(), page, rows, dataItems );
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryRoleResourceFunc()
+	{
+		ResourceManageService rms = new ResourceManageService();
+		features = new ArrayList<ResFeature>();
+		try {
+			total = rms.QueryRoleResourceFunc( role.getBUSINESS_ROLE(), page, rows, features );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
