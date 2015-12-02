@@ -153,6 +153,26 @@ public class User {
 	public int getORG_LEVEL() {
 		return ORG_LEVEL;
 	}
+	public void setORG_LEVEL(String oRG_LEVEL) {
+		if("部".equals(oRG_LEVEL)) {
+			ORG_LEVEL = Organization.ORG_LEVEL_MINISTRY;
+		}
+		else if("省".equals(oRG_LEVEL)) {
+			ORG_LEVEL = Organization.ORG_LEVEL_PROVINCE;
+		}
+		else if("市".equals(oRG_LEVEL)) {
+			ORG_LEVEL = Organization.ORG_LEVEL_CITY;
+		}
+		else if("县".equals(oRG_LEVEL)) {
+			ORG_LEVEL = Organization.ORG_LEVEL_COUNTY;
+		}
+		else if("基层所队".equals(oRG_LEVEL)) {
+			ORG_LEVEL = Organization.ORG_LEVEL_GRASSROOTS;
+		}
+		else {
+			ORG_LEVEL = 0;
+		}
+	}
 	public void setORG_LEVEL(int oRG_LEVEL) {
 		ORG_LEVEL = oRG_LEVEL;
 	}
