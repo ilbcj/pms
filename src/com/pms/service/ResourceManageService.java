@@ -588,7 +588,8 @@ public class ResourceManageService {
 		return count;
 	}
 	
-	public ResRole SaveResourceRole(ResRole role, ResRoleOrg resRoleOrg, List<String> featureIds, List<String> dataIds) throws Exception {
+	public ResRole SaveResourceRole(ResRole role, ResRoleOrg resRoleOrg, List<String> featureIds, List<String> dataIds, 
+			List<String> delDataIds, List<String> delFeatureIds) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
@@ -613,8 +614,8 @@ public class ResourceManageService {
 			resRoleOrg = dao.ResRoleOrgAdd(resRoleOrg);
 		}
 		
-		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds);
-		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds);
+		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds, delFeatureIds);
+		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds, delDataIds);
 //		dao.UpdateDataResource(dataIds);
 		
 		return role;
@@ -698,13 +699,6 @@ public class ResourceManageService {
 				features.add(feature);
 			}
 			else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
-//				List<ResDataTemplate> dataTemplate = dao.GetDataTemplateByResId( rrs.get(i).getRESOURCE_ID() );
-//				ResDataTemplateListItem resDataTemplateListItem = null;
-//				for(int j=0; j<dataTemplate.size(); j++) {
-//					resDataTemplateListItem = ConvertDatasDefinitonToResDataTemplateListItem( dataTemplate.get(j) );
-//				}
-//				items.add(resDataTemplateListItem);
-				
 				ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
 				ResDataListItem resDataListItem = null;
 				resDataListItem = ConvertDatasDefinitonToResDataListItem( data );
@@ -713,6 +707,43 @@ public class ResourceManageService {
 			}
 		}
 		
+	}
+	
+	public int QueryRoleResourceFunc(String id, int page, int rows, List<ResFeature> features) throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResFeature> feature = dao.GetFuncByRoleid(id, page, rows);
+		features.addAll(feature);
+		
+		int total = QueryRoleResourceFuncCount( id );
+		
+		return total;
+	}
+	
+	private int QueryRoleResourceFuncCount(String id)throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		int count = dao.GetFuncCountByRoleid( id );
+		return count;
+	}
+	
+	public int QueryRoleResourceData(String id, int page, int rows, List<ResDataListItem> items) throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		List<ResData> data = dao.GetDataByRoleid(id, page, rows);
+		
+		ResDataListItem resDataListItem = null;
+		for (int j = 0; j < data.size(); j++) {
+			resDataListItem = ConvertDatasDefinitonToResDataListItem( data.get(j) );
+			items.add(resDataListItem);
+		}
+		
+		int total = QueryRoleResourceDataCount( id );
+		
+		return total;
+	}
+	
+	private int QueryRoleResourceDataCount(String id)throws Exception {
+		ResourceDAO dao = new ResourceDAOImpl();
+		int count = dao.GetDataCountByRoleid( id );
+		return count;
 	}
 	
 	public int QueryResRoleResourceTemplate(ResRoleResourceTemplate resRoleResourceTemplate, int page, int rows,
