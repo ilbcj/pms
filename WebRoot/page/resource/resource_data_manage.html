@@ -236,7 +236,7 @@
     function addResourceData() {
     	$('#permissionControl_resource_data_manage_center_detail_wapper').window({});
     	$("#resource_data_manage_center_main_wapper").panel('close');
-    	$("#res_status").combobox('select', '启动');
+    	$("#res_status").combobox('select', '开启');
     	$("#res_status").textbox({ disabled: true});
     	$("#res_delstatus").combobox('select', '未删除');
     	$("#res_delstatus").textbox({ disabled: true});
@@ -267,7 +267,7 @@
      	$("#res_delstatus").textbox('setValue',"");
      	$("#res_type").textbox('setValue',"");
      	$("#res_type").textbox({ disabled: false});
-		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
+		$("#openOrgSelectWin_linkbutton").linkbutton({ disabled: true});
      	$("#resOrg_dest").textbox('setValue',"");
      	$("#res_dsl").textbox('setValue',"");
      	$("#res_dsl").textbox({ disabled: true});
@@ -788,33 +788,37 @@ $(document).ready(function () {
 // 		var dataset_sensitive_level="";		//数据集敏感度编码
 // 		var data_set="";					//数据集编码
 // 		var section_class="";				//字段分类编码
-// 		var lement="";						//字段编码
+// 		var element="";						//字段编码
 // 		var section_relation_class="";		//字段分类关系编码
-	
-		for(var i=0;i<data.items[0].dictionary.length;i++){
-			resource_status+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[1].dictionary.length;i++){
-			delete_status+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[2].dictionary.length;i++){
-			resource_type+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
-		};
-// 		for(var i=0;i<data.items[3].dictionary.length;i++){
-// 			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
-// 		};
-// 		for(var i=0;i<data.items[4].dictionary.length;i++){
-// 			data_set+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
-// 		};
-// 		for(var i=0;i<data.items[5].dictionary.length;i++){
-// 			section_class+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
-// 		};
-// 		for(var i=0;i<data.items[6].dictionary.length;i++){
-// 			lement+= "{id:'"+data.items[6].dictionary[i].code+"',text:'"+data.items[6].dictionary[i].value+"'},"; 
-// 		};
-// 		for(var i=0;i<data.items[7].dictionary.length;i++){
-// 			section_relation_class+= "{id:'"+data.items[7].dictionary[i].code+"',text:'"+data.items[7].dictionary[i].value+"'},"; 
-// 		};
+
+		for( var index in data.items ) {
+			for(var i=0;i<data.items[index].dictionary.length;i++){
+				if( "RESOURCE_STATUS" == data.items[index].code ) {
+					resource_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+				}
+				else if( "DELETE_STATUS" == data.items[index].code ) {
+					delete_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+				}
+				else if( "resource_type" == data.items[index].code ) {
+					resource_type+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+				}
+// 				else if( "DATASET_SENSITIVE_LEVEL" == data.items[index].code ) {
+// 					dataset_sensitive_level+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+// 				}
+// 				else if( "DATA_SET" == data.items[index].code ) {
+// 					data_set+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+// 				}
+// 				else if( "SECTION_CLASS" == data.items[index].code ) {
+// 					section_class+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+// 				}
+// 				else if( "ELEMENT" == data.items[index].code ) {
+// 					element+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+// 				}
+// 				else if( "SECTION_RELATIOIN_CLASS" == data.items[index].code ) {
+// 					section_relation_class+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+// 				}
+			}
+		}
 
 		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';
  		var resource_statusJSON = (new Function('return '+resource_statusData +';'))();
@@ -828,8 +832,8 @@ $(document).ready(function () {
 //  		var data_setJSON = (new Function('return '+data_setData +';'))(); 
 //  		var section_classData='([' + section_class.substring(0,section_class.length-1) + '])';
 //  		var section_classJSON = (new Function('return '+section_classData +';'))();
-//  		var lementData='([' + lement.substring(0,lement.length-1) + '])';
-//  		var lementJSON = (new Function('return '+lementData +';'))(); 
+//  		var elementData='([' + element.substring(0,element.length-1) + '])';
+//  		var elementJSON = (new Function('return '+ elementData +';'))(); 
 //  		var section_relation_classData='([' + section_relation_class.substring(0,section_relation_class.length-1) + '])';
 //  		var section_relation_classJSON = (new Function('return '+section_relation_classData +';'))(); 
  		
@@ -839,7 +843,7 @@ $(document).ready(function () {
 // 		dataset_sensitive_levelJSON.unshift({"id":"","text":"请选择","selected":true});
 // 		data_setJSON.unshift({"id":"","text":"请选择","selected":true});
 // 		section_classJSON.unshift({"id":"","text":"请选择","selected":true});
-// 		lementJSON.unshift({"id":"","text":"请选择","selected":true});
+// 		elementJSON.unshift({"id":"","text":"请选择","selected":true});
 // 		section_relation_classJSON.unshift({"id":"","text":"请选择","selected":true});
 		
  		//添加部分

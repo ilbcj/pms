@@ -277,7 +277,7 @@
 							</table>
 							
 							<div style="height: 90%" >
-								<table class="nodt" id="role_template_copy_list_dg"
+								<table class="nodt easyui-datagrid" id="role_template_copy_list_dg"
 								            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
 							        <thead>
 							            <tr>
@@ -692,6 +692,8 @@
      	$("#role_resource_data_dg").datagrid({data: []});
     }
     
+    var attridBusinessRoleType;
+    var attridDeleteStatus;
     function modResourceRole(){
     	var rows = $("#resource_role_manage_center_list_dg").datagrid('getSelections');
 		if(rows.length == 0) {
@@ -712,7 +714,7 @@
 		$('#openOrgSelectWin_linkbutton').linkbutton({ disabled: true});
 		$("#role_type").textbox('setValue',rows[0].BUSINESS_ROLE_TYPE);
 		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 16 && rows[0].dictionary[i].code == rows[0].BUSINESS_ROLE_TYPE){//角色类型BUSINESS_ROLE_TYPE==16
+			if(rows[0].dictionary[i].attrid == attridBusinessRoleType && rows[0].dictionary[i].code == rows[0].BUSINESS_ROLE_TYPE){//角色类型BUSINESS_ROLE_TYPE==16
 				$("#role_type").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
@@ -723,7 +725,7 @@
 		$("#role_srccity").textbox('setValue',rows[0].CLUE_SRC_SYS);
 		$("#role_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
 		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 17 && rows[0].dictionary[i].code == rows[0].DELETE_STATUS){//删除状态DELETE_STATUS==17
+			if(rows[0].dictionary[i].attrid == attridDeleteStatus && rows[0].dictionary[i].code == rows[0].DELETE_STATUS){//删除状态DELETE_STATUS==17
 				$("#role_delstatus").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
@@ -931,7 +933,7 @@
     }
     
     function roleCopyTemplate(){
-		$("#role_template_copy_list_dg").datagrid({data: []});
+    	$("#role_template_copy_list_dg").datagrid('loadData',{total:0,rows:[]});
 		$.post("../resource/queryAllResRoleResourceTemplate.action", function(data) {
 			var tname="";				//模板名称
 			
@@ -1337,31 +1339,34 @@ $(document).ready(function () {
 		var section_class="";				//字段分类编码
 		var element="";						//字段编码
 		var section_relatioin_class="";		//字段分类关系编码
-		
-		for(var i=0;i<data.items[0].dictionary.length;i++){
-			resource_status+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[1].dictionary.length;i++){
-			delete_status+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[2].dictionary.length;i++){
-			resource_type+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[3].dictionary.length;i++){
-			dataset_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[4].dictionary.length;i++){
-			data_set+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[5].dictionary.length;i++){
-			section_class+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[6].dictionary.length;i++){
-			element+= "{id:'"+data.items[6].dictionary[i].code+"',text:'"+data.items[6].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[7].dictionary.length;i++){
-			section_relatioin_class+= "{id:'"+data.items[7].dictionary[i].code+"',text:'"+data.items[7].dictionary[i].value+"'},"; 
-		};
+		for( var index in data.items ) {
+			for(var i=0;i<data.items[index].dictionary.length;i++){
+				if( "RESOURCE_STATUS" == data.items[index].code ) {
+					resource_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+				else if( "DELETE_STATUS" == data.items[index].code ) {
+					delete_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+				else if( "resource_type" == data.items[index].code ) {
+					resource_type+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+				else if( "DATASET_SENSITIVE_LEVEL" == data.items[index].code ) {
+					dataset_sensitive_level+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+				else if( "DATA_SET" == data.items[index].code ) {
+					data_set+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+				else if( "SECTION_CLASS" == data.items[index].code ) {
+					section_class+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+				else if( "ELEMENT" == data.items[index].code ) {
+					element+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+				else if( "SECTION_RELATIOIN_CLASS" == data.items[index].code ) {
+					section_relatioin_class+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+				}
+			}
+		}
 
 		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';
  		var resource_statusJSON = (new Function('return '+resource_statusData +';'))();
@@ -1533,12 +1538,18 @@ $(document).ready(function () {
 		var business_role_type="";				//角色类型
 		var delete_status="";					//删除状态
 		
-		for(var i=0;i<data.items[0].dictionary.length;i++){
-			business_role_type+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[1].dictionary.length;i++){
-			delete_status+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
-		};
+		for( var index in data.items ) {
+			for(var i=0;i<data.items[index].dictionary.length;i++){
+				if( "BUSINESS_ROLE_TYPE" == data.items[index].code ) {
+					business_role_type+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+					attridBusinessRoleType = data.items[index].dictionary[i].attrid;
+				}
+				else if( "DELETE_STATUS" == data.items[index].code ) {
+					delete_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+					attridDeleteStatus = data.items[index].dictionary[i].attrid;
+				}
+			}
+		}
 		
 		var business_role_typeData='([' + business_role_type.substring(0,business_role_type.length-1) + '])';
 		var business_role_typeJSON = (new Function('return '+business_role_typeData +';'))();
