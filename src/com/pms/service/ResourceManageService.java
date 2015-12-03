@@ -37,7 +37,7 @@ public class ResourceManageService {
 	public int QueryAllFeatureItems(String id, ResFeature criteria, int page, int rows, List<ResFeature> items) throws Exception {
 		criteria.setDELETE_STATUS(ResFeature.DELSTATUSNO);
 		List<ResFeature> nodes = new ArrayList<ResFeature>();
-		queryAllChildrenNodesById(id, criteria, nodes);
+		queryAllChildrenNodesById(id, criteria, nodes, 0);
 		int total = nodes.size();
 		items.addAll(nodes);
 		
@@ -68,10 +68,11 @@ public class ResourceManageService {
 		return dao.FeatureHasChild( pid );
 	}
 	
-	public void queryAllChildrenNodesById(String pid, ResFeature criteria, List<ResFeature> children) throws Exception
+	public void queryAllChildrenNodesById(String pid, ResFeature criteria, List<ResFeature> children, int num) throws Exception
 	{
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResFeature> func = null; 
+		List<ResFeature> funcRoot = null; 
 		if( pid.equals("0") ){	
 			func = dao.GetAllFeatures(criteria);
 			if(func == null || func.size() == 0) {
@@ -82,17 +83,37 @@ public class ResourceManageService {
 			}
 			return;
 		}else{
+			if(num == 0){
+				funcRoot = dao.GetFeatureNodeById( pid, criteria );
+			}
 			func = dao.GetFeatureNodeByParentId( pid, criteria );
 			if(func == null || func.size() == 0) {
-				return;
+				
+				if(funcRoot == null || funcRoot.size() == 0) {
+					return;
+				}
+				else {
+					children.addAll(funcRoot);
+				}
+				
 			}
 			else {
-				children.addAll(func);
+				
+				if(funcRoot == null || funcRoot.size() == 0) {
+					children.addAll(func);
+				}
+				else {
+					funcRoot.addAll(func);
+					children.addAll(funcRoot);
+				}
+				
 			}
 				
 			for(int i=0; i<func.size(); i++)
 			{
-				queryAllChildrenNodesById(func.get(i).getRESOURCE_ID(), criteria, children);
+				int n=0;
+				n++;
+				queryAllChildrenNodesById(func.get(i).getRESOURCE_ID(), criteria, children, n);
 			}
 		}
 		return;
