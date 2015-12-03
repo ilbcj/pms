@@ -1,3 +1,12 @@
+/**   
+ * @ClassName:     ${SyncService}   
+ * @Description:   ${鉴权服务父类}   
+ * 
+ * @ProductName:   ${中盈集中授权平台}
+ * @author         ${北京中盈网信科技有限公司}  
+ * @version        V1.0     
+ * @Date           ${2014.9.16} 
+*/
 package com.pms.webservice.service;
 
 import java.util.ArrayList;

@@ -1,3 +1,12 @@
+/**   
+ * @ClassName:     ${ResourceManageService}   
+ * @Description:   ${资源管理功能}   
+ * 
+ * @ProductName:   ${中盈集中授权平台}
+ * @author         ${北京中盈网信科技有限公司}  
+ * @version        V1.0     
+ * @Date           ${2014.8.21} 
+*/
 package com.pms.service;
 
 import java.text.SimpleDateFormat;

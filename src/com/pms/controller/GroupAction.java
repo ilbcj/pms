@@ -1,3 +1,12 @@
+/**   
+ * @ClassName:     ${GroupAction}   
+ * @Description:   ${群体管理control}   
+ * 
+ * @ProductName:   ${中盈集中授权平台}
+ * @author         ${北京中盈网信科技有限公司}  
+ * @version        V1.0     
+ * @Date           ${2014.8.12} 
+*/
 package com.pms.controller;
 
 import java.util.ArrayList;
