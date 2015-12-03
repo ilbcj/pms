@@ -201,6 +201,52 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResFeature> GetFeatureNodeById(String pid, ResFeature criteria) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<ResFeature> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where RESOURCE_ID = :RESOURCE_ID ";
+		if( criteria != null ) {
+			if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+				sqlString += " and RESOUCE_NAME like :RESOUCE_NAME ";
+			}
+			if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+				sqlString += " and SYSTEM_TYPE like :SYSTEM_TYPE ";
+			}
+			if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+				sqlString += " and APP_ID = :APP_ID ";
+			}
+		}
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+			q.setString("RESOURCE_ID", pid);
+			if( criteria != null ) {
+				if(criteria.getRESOUCE_NAME() != null && criteria.getRESOUCE_NAME().length() > 0) {
+					q.setString( "RESOUCE_NAME", "%" + criteria.getRESOUCE_NAME() + "%" );
+				}
+				if(criteria.getSYSTEM_TYPE() != null && criteria.getSYSTEM_TYPE().length() > 0) {
+					q.setString( "SYSTEM_TYPE",  criteria.getSYSTEM_TYPE());
+				}
+				if(criteria.getAPP_ID() != null && criteria.getAPP_ID().length() > 0) {
+					q.setString( "APP_ID",  criteria.getAPP_ID());
+				}
+			}
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@Override
 	public boolean FeatureHasChild(String pid) throws Exception {
 		int rs = GetFeatureNodeCountByParentId(pid);
