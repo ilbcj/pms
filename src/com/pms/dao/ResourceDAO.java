@@ -92,4 +92,5 @@ public interface ResourceDAO {
 	int GetFuncCountByRoleid(String id) throws Exception;
 	List<ResData> GetDataByRoleid(String id, int page, int rows) throws Exception;
 	int GetDataCountByRoleid(String id) throws Exception;
+	List<ResFeature> GetFeatureNodeById(String pid, ResFeature criteria) throws Exception;
 }
