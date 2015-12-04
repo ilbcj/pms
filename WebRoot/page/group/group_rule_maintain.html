@@ -184,10 +184,14 @@
     }
     function addGroupRuleSave() {
     	var groupId = $("#group_rule_id").val();
-    	var poststr = "group.id=" + groupId;
-    	
     	var groupName = $("#group_rule_name").textbox('getValue');
-    	poststr += "&group.name=" + groupName;
+    	
+    	if(groupId.length == 0){
+    		var poststr = "group.name=" + groupName;
+    	}else{
+	    	var poststr = "group.id=" + groupId;
+	    	poststr += "&group.name=" + groupName;
+    	}
     	
     	var groupCode = $("#group_rule_code").textbox('getValue');
     	poststr += "&group.code=" + groupCode;
@@ -204,7 +208,7 @@
     	}
     	var tmp = $.toJSON(convertArray);
     	poststr += '&rules='+ tmp;
-
+    	
     	$.post("../group/saveGroupRule.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)

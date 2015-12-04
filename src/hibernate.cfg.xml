@@ -55,6 +55,7 @@
 	<mapping resource="com/pms/model/GroupUser.hbm.xml" />
 	<mapping resource="com/pms/model/GroupRule.hbm.xml" />
 	<mapping resource="com/pms/model/Rule.hbm.xml" />
+	<mapping resource="com/pms/model/RuleAttr.hbm.xml" />
 	<mapping resource="com/pms/model/ResRoleOrg.hbm.xml" />
 	<mapping resource="com/pms/model/ResDataOrg.hbm.xml" />
 	<mapping resource="com/pms/model/ResDataSetSensitive.hbm.xml" />
