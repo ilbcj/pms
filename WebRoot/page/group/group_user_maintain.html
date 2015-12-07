@@ -316,10 +316,14 @@
     
     function addGroupUserSave() {
     	var groupId = $("#group_user_id").val();
-    	var poststr = "group.id=" + groupId;
-    	
     	var groupName = $("#group_user_name").textbox('getValue');
-    	poststr += "&group.name=" + groupName;
+    	
+    	if(groupId.length == 0){
+    		var poststr = "group.name=" + groupName;
+    	}else{
+	    	var poststr = "group.id=" + groupId;
+	    	poststr += "&group.name=" + groupName;
+    	}
     	
     	var groupCode = $("#group_user_code").textbox('getValue');
     	poststr += "&group.code=" + groupCode;
