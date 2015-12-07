@@ -7,7 +7,6 @@ public class Rule {
 	private String groupid;
 	private int attrid;
 	private String rulename = "";
-	private String rulevalue;
 	private int ruletype;
 	
 	public int getAttrid() {
@@ -33,12 +32,6 @@ public class Rule {
 	}
 	public void setRulename(String rulename) {
 		this.rulename = rulename;
-	}
-	public String getRulevalue() {
-		return rulevalue;
-	}
-	public void setRulevalue(String rulevalue) {
-		this.rulevalue = rulevalue;
 	}
 	public int getRuletype() {
 		return ruletype;

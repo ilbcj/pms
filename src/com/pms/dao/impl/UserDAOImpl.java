@@ -136,9 +136,7 @@ public class UserDAOImpl implements UserDAO {
 			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 				sqlString += " and NAME like :NAME ";
 			}
-//			if(criteria.getUSER_STATUS() != User.STATUSNONE) {
-//				sqlString += " and status = :status ";
-//			}
+			sqlString += " and USER_STATUS = :USER_STATUS ";
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
 				sqlString += " and BUSINESS_TYPE = :BUSINESS_TYPE ";
 			}
@@ -175,10 +173,7 @@ public class UserDAOImpl implements UserDAO {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
 				}
-//				if(criteria.getStatus() != User.STATUSNONE) {
-//					q.setInteger( "status", criteria.getStatus() );
-//				}
-	
+				q.setInteger( "USER_STATUS", criteria.getUSER_STATUS() );
 				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
 					q.setString( "BUSINESS_TYPE", criteria.getBUSINESS_TYPE() );
 				}
@@ -232,9 +227,7 @@ public class UserDAOImpl implements UserDAO {
 			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 				sqlString += " and NAME like :NAME ";
 			}
-//			if(criteria.getUSER_STATUS() != User.STATUSNONE) {
-//				sqlString += " and status = :status ";
-//			}
+			sqlString += " and USER_STATUS = :USER_STATUS ";
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
 				sqlString += " and BUSINESS_TYPE = :BUSINESS_TYPE ";
 			}
@@ -271,10 +264,7 @@ public class UserDAOImpl implements UserDAO {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
 				}
-//				if(criteria.getStatus() != User.STATUSNONE) {
-//					q.setInteger( "status", criteria.getStatus() );
-//				}
-	
+				q.setInteger( "USER_STATUS", criteria.getUSER_STATUS() );
 				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
 					q.setString( "BUSINESS_TYPE", criteria.getBUSINESS_TYPE() );
 				}
@@ -379,9 +369,7 @@ public class UserDAOImpl implements UserDAO {
 			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 				sqlString += " and NAME like :NAME ";
 			}
-//			if(criteria.getUSER_STATUS() != User.STATUSNONE) {
-//				sqlString += " and status = :status ";
-//			}
+			sqlString += " and USER_STATUS = :USER_STATUS ";
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
 				sqlString += " and BUSINESS_TYPE = :BUSINESS_TYPE ";
 			}
@@ -419,10 +407,7 @@ public class UserDAOImpl implements UserDAO {
 				if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
 					q.setString( "NAME", "%" + criteria.getNAME() + "%" );
 				}
-//				if(criteria.getStatus() != User.STATUSNONE) {
-//					q.setInteger( "status", criteria.getStatus() );
-//				}
-	
+				q.setInteger( "USER_STATUS", criteria.getUSER_STATUS() );
 				if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
 					q.setString( "BUSINESS_TYPE", criteria.getBUSINESS_TYPE() );
 				}

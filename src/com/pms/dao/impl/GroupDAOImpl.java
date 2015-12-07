@@ -317,7 +317,7 @@ public class GroupDAOImpl implements GroupDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void UpdateGroupRules(String id, List<Rule> rules) throws Exception {
+	public void UpdateGroupRules(String id, List<String> ruleValue, List<Rule> rules) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		String sqlString = "select * from group_rule where groupid = :groupid ";
@@ -356,11 +356,11 @@ public class GroupDAOImpl implements GroupDAO {
 					rule = (Rule)session.merge(rule);
 					
 					ruleAttr = new RuleAttr();
-					String[] strArray = null;   
-					strArray = rules.get(i).getRulevalue().split(","); 
-					for (int j = 0; j < strArray.length; j++) {
+					String[] strArray = null;
+					strArray = ruleValue.get(i).split(",");
+					for (int z = 0; z < strArray.length; z++) {
 						ruleAttr.setRuleid(rule.getId());
-						ruleAttr.setRulevalue(strArray[j]);
+						ruleAttr.setRulevalue(strArray[z]);
 						session.merge(ruleAttr);
 					}
 					
@@ -560,5 +560,30 @@ public class GroupDAOImpl implements GroupDAO {
 			HibernateUtil.closeSession();
 		}
 		return;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<RuleAttr> GetRuleAttrByRuleId(int ruleid) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<RuleAttr> rs = null;
+		String sqlString = "select * from rule_attr where ruleid = :ruleid ";
+				
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(RuleAttr.class);
+			q.setInteger("ruleid", ruleid);
+			
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
 	}
 }
