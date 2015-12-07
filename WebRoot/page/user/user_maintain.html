@@ -406,7 +406,7 @@
 			$("#user_unit").val(rows[0].pname);
 			$("#user_orglevel").val(rows[0].orgLevel);
 			$("#user_pid").textbox('setText',rows[0].pname);
-			$("#user_sex").textbox('setValue',rows[0].user_sex);
+			$("#user_sex").textbox('setValue',rows[0].sex);
 			for(var i=0;i<rows[0].dictionary.length;i++){
 				if(rows[0].dictionary[i].attrid == attridSex && rows[0].dictionary[i].code == rows[0].sex){//性别attrid==1
 					$("#user_sex").textbox('setText',rows[0].dictionary[i].value);

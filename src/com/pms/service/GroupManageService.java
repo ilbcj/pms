@@ -32,6 +32,7 @@ import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditGroupLogDescribe;
 import com.pms.model.Group;
 import com.pms.model.Rule;
+import com.pms.model.RuleAttr;
 import com.pms.model.User;
 
 public class GroupManageService {
@@ -111,7 +112,7 @@ public class GroupManageService {
 		return total;
 	}
 
-	public Group SaveGroupRule(Group group, List<Rule> rules) throws Exception {
+	public Group SaveGroupRule(Group group, List<String> ruleValue, List<Rule> rules) throws Exception {
 		GroupDAO dao = new GroupDAOImpl();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
@@ -123,7 +124,7 @@ public class GroupManageService {
 		
 		group = dao.GroupAdd(group);
 		
-		dao.UpdateGroupRules(group.getCode(), rules);
+		dao.UpdateGroupRules(group.getCode(),ruleValue, rules);
 		return group;
 	}
 
@@ -163,17 +164,20 @@ public class GroupManageService {
 		item.setGroupid(rule.getGroupid());
 		item.setRulename(rule.getRulename());
 		AttributeDAO attrdao = new AttributeDAOImpl();
-		String value="";
-		String str[]=rule.getRulevalue().split(",");
-		for(int j=0; j<str.length; j++) {     
-			AttrDictionary attr = attrdao.GetAttrDictionarysByAttrIdAndCode(rule.getAttrid(),str[j]);
+		String value = "";
+		String code = "";
+		GroupDAO dao = new GroupDAOImpl();
+		List<RuleAttr> ruleAttr = dao.GetRuleAttrByRuleId(rule.getId());
+		for(int i=0; i<ruleAttr.size(); i++) {     
+			AttrDictionary attr = attrdao.GetAttrDictionarysByAttrIdAndCode(rule.getAttrid(), ruleAttr.get(i).getRulevalue());
 			if (attr != null) {	
 				value += attr.getValue()+",";
+				code += attr.getCode()+",";
 			}
 		}
 		
 		item.setRulevalue(value);
-		item.setRulecode(rule.getRulevalue());
+		item.setRulecode(code);
 		item.setRuletype(rule.getRuletype());
 		
 		return item;
@@ -236,6 +240,8 @@ public class GroupManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		AuditGroupLog auditGroupLog = new AuditGroupLog();
+		GroupDAO dao = new GroupDAOImpl();
+		AttributeDAO attrdao = new AttributeDAOImpl();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
 		
@@ -264,17 +270,25 @@ public class GroupManageService {
 		if(group.getDescrib() != null && group.getDescrib().length() > 0) {
 			str += group.getDescrib()+";";
 		}
+		
+		List<Rule> rule = dao.GetGroupRulesByGroupId( group.getCode() );
 		if (rules != null) {
 			for(int i = 0; i<rules.size(); i++) {
 				if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
 					str += rules.get(i).getRulename()+";";
 				}
-				if(rules.get(i).getRulevalue() != null && rules.get(i).getRulevalue().length() > 0) {
-					str += rules.get(i).getRulevalue()+";";
+				String value = "";
+				List<RuleAttr> ruleAttr = dao.GetRuleAttrByRuleId(rule.get(i).getId());
+				for(int z=0; z<ruleAttr.size(); z++) {     
+					AttrDictionary attr = attrdao.GetAttrDictionarysByAttrIdAndCode(rule.get(i).getAttrid(), ruleAttr.get(z).getRulevalue());
+					if (attr != null) {	
+						value += attr.getValue()+",";
+					}
 				}
+				str += value+";";
 			}
 		}
-		GroupDAO dao = new GroupDAOImpl();
+		
 		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
@@ -285,7 +299,6 @@ public class GroupManageService {
 			}
 		}
 	    byte[] byteData = str.getBytes("UTF-8");
-	    
 //	    Blob b=Hibernate.createBlob(byteData);
 //	    ByteArrayInputStream out = (ByteArrayInputStream) b.getBinaryStream();		
 //		byte[] byteData2 = new byte[out.available()];		
@@ -305,6 +318,8 @@ public class GroupManageService {
 		String timenow = sdf.format(new Date());
 		
 		AuditGroupLog auditGroupLog = new AuditGroupLog();
+		GroupDAO dao = new GroupDAOImpl();
+		AttributeDAO attrdao = new AttributeDAOImpl();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
 		
@@ -320,7 +335,6 @@ public class GroupManageService {
 		
 		auditGroupLogDescribe.setLogid(auditGroupLog.getId());
 		
-		GroupDAO dao = new GroupDAOImpl();
 		List<Group> groups = dao.GetGroupByGroupId( group.getCode() );
 		String str="";
 		for (int i = 0; i < groups.size(); i++) {
@@ -340,10 +354,18 @@ public class GroupManageService {
 			if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
 				str += rules.get(i).getRulename()+";";
 			}
-			if(rules.get(i).getRulevalue() != null && rules.get(i).getRulevalue().length() > 0) {
-				str += rules.get(i).getRulevalue();
+			
+			String value = "";
+			List<RuleAttr> ruleAttr = dao.GetRuleAttrByRuleId(rules.get(i).getId());
+			for(int z=0; z<ruleAttr.size(); z++) {     
+				AttrDictionary attr = attrdao.GetAttrDictionarysByAttrIdAndCode(rules.get(i).getAttrid(), ruleAttr.get(z).getRulevalue());
+				if (attr != null) {	
+					value += attr.getValue()+",";
+				}
 			}
+			str += value+";";
 		}
+		
 		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
