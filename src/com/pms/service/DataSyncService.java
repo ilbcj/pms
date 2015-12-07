@@ -531,7 +531,12 @@ public class DataSyncService {
         String rootPath = System.getProperty("java.io.tmpdir")+"/" + second + "/";
         File DirFile = new File(rootPath);		
         if(!DirFile.exists()){
-     	   DirFile.mkdir();
+     	   boolean isCreatDirSuccess = DirFile.mkdir();
+     	   if( !isCreatDirSuccess ) {
+     		   String errMsg = "[EDR] create temp dir failed. dir path:" + rootPath;
+     		   logger.error(errMsg);
+     		   return null;
+     	   }
         }	
         
         ResourceDAOImpl dao = new ResourceDAOImpl();
