@@ -45,7 +45,7 @@ public class OrganizationAction extends ActionSupport {
 	private boolean queryAll;
 	private String orgName;
 	private String orgUid;
-	private String orgLevel;
+	private int orgLevel;
 	private boolean result;
 	private String message;
 	private String checkresult;
@@ -93,11 +93,11 @@ public class OrganizationAction extends ActionSupport {
 		this.orgUid = orgUid;
 	}
 
-	public String getOrgLevel() {
+	public int getOrgLevel() {
 		return orgLevel;
 	}
 
-	public void setOrgLevel(String orgLevel) {
+	public void setOrgLevel(int orgLevel) {
 		this.orgLevel = orgLevel;
 	}
 
@@ -259,7 +259,7 @@ public class OrganizationAction extends ActionSupport {
 	{
 		OrgManageService oms = new OrgManageService();
 		try {
-			orgNode.setORG_LEVEL(orgNode.queryOrgLevel(orgNode_OrgLevel));
+//			orgNode.setORG_LEVEL(orgNode.queryOrgLevel(orgNode_OrgLevel));
 			orgNode = oms.SaveOrgNode(orgNode);
 		} catch (Exception e) {
 			message = e.getMessage();
@@ -326,7 +326,7 @@ public class OrganizationAction extends ActionSupport {
 				Organization condition = new Organization();
 				condition.setUNIT(orgName);
 //				condition.setUid(orgUid);
-				condition.setORG_LEVEL( condition.queryOrgLevel( orgLevel ) );
+				condition.setORG_LEVEL( orgLevel );
 				total = oms.QueryAllChildrenNodes( id, condition, page, rows, items );
 			} else {
 				

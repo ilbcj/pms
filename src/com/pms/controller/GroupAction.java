@@ -41,6 +41,7 @@ public class GroupAction extends ActionSupport {
 	private List<Integer> delIds;
 	private List<Rule> rules;
 	private List<RuleListItem> ruleItems;
+	private List<String> ruleValue;
 	
 	public List<Rule> getRules() {
 		return rules;
@@ -168,6 +169,14 @@ public class GroupAction extends ActionSupport {
 		this.ruleItems = ruleItems;
 	}
 
+	public List<String> getRuleValue() {
+		return ruleValue;
+	}
+
+	public void setRuleValue(List<String> ruleValue) {
+		this.ruleValue = ruleValue;
+	}
+
 	public String SaveGroupUser()
 	{
 		GroupManageService gms = new GroupManageService();
@@ -246,7 +255,7 @@ public class GroupAction extends ActionSupport {
 	{
 		GroupManageService gms = new GroupManageService();
 		try {
-			group = gms.SaveGroupRule(group, rules);
+			group = gms.SaveGroupRule(group, ruleValue, rules);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -279,7 +288,7 @@ public class GroupAction extends ActionSupport {
 		GroupManageService gms = new GroupManageService();
 		ruleItems = new ArrayList<RuleListItem>();
 		try {
-			gms.QueryGroupRulesByGroupId(group.getCode(),ruleItems);
+			gms.QueryGroupRulesByGroupId(group.getCode(), ruleItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

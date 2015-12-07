@@ -233,8 +233,8 @@
     		maxSensitiveLevel = $("#user_query_max_sensitive_level").combobox("getValue");
     		position = $("#user_query_position").val();
     		dept = $("#user_query_dept").val();
-    		title = $("#user_query_title").combobox("getValue");
-    		policeNum = $("#user_query_police_num").combobox("getValue");
+    		title = $("#user_query_title").val();
+    		policeNum = $("#user_query_police_num").val();
     	}
     	$("#user_query_center_list_dg").datagrid('load',{
     		queryAll: true,
@@ -283,40 +283,40 @@
 		$("#user_pid").textbox('setValue',rows[0].pname);
 		$("#user_idnum").textbox('setValue',rows[0].idnum);
 		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 1 && rows[0].dictionary[i].code == rows[0].sex){//性别attrid==1
+			if(rows[0].dictionary[i].attrid == attridSex && rows[0].dictionary[i].code == rows[0].sex){//性别attrid==1
 				$("#user_sex").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
 		$("#user_police_type").textbox('setValue',rows[0].police_type);
 		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 2 && rows[0].dictionary[i].code == rows[0].police_type){//警种attrid==2
+			if(rows[0].dictionary[i].attrid == attridPoliceSort && rows[0].dictionary[i].code == rows[0].police_type){//警种attrid==2
 				$("#user_police_type").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
-		$("#user_police_num").textbox('setValue',rows[0].police_num);
-		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 3 && rows[0].dictionary[i].code == rows[0].police_num){//警号attrid==3
-				$("#user_police_num").textbox('setText',rows[0].dictionary[i].value);
-			}
-		};
+			$("#user_police_num").textbox('setValue',rows[0].police_num);
+// 		for(var i=0;i<rows[0].dictionary.length;i++){
+// 			if(rows[0].dictionary[i].attrid == 3 && rows[0].dictionary[i].code == rows[0].police_num){//警号attrid==3
+// 				$("#user_police_num").textbox('setText',rows[0].dictionary[i].value);
+// 			}
+// 		};
 		$("#user_max_sensitive_level").textbox('setValue',rows[0].max_sensitive_level);
 		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 4 && rows[0].dictionary[i].code == rows[0].max_sensitive_level){//最高敏感级别attrid==4
+			if(rows[0].dictionary[i].attrid == attridMaxSensitiveLevel && rows[0].dictionary[i].code == rows[0].max_sensitive_level){//最高敏感级别attrid==4
 				$("#user_max_sensitive_level").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
 		$("#user_businesstype").textbox('setValue',rows[0].business_type);
 		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 5 && rows[0].dictionary[i].code == rows[0].business_type){//业务部门类别attrid==5
+			if(rows[0].dictionary[i].attrid == attridBusinessType && rows[0].dictionary[i].code == rows[0].business_type){//业务部门类别attrid==5
 				$("#user_businesstype").textbox('setText',rows[0].dictionary[i].value);
 			}
 		};
 		$("#user_title").textbox('setValue',rows[0].title);
-		for(var i=0;i<rows[0].dictionary.length;i++){
-			if(rows[0].dictionary[i].attrid == 6 && rows[0].dictionary[i].code == rows[0].title){//职务/职称attrid==6
-				$("#user_title").textbox('setText',rows[0].dictionary[i].value);
-			}
-		};
+// 		for(var i=0;i<rows[0].dictionary.length;i++){
+// 			if(rows[0].dictionary[i].attrid == 6 && rows[0].dictionary[i].code == rows[0].title){//职务/职称attrid==6
+// 				$("#user_title").textbox('setText',rows[0].dictionary[i].value);
+// 			}
+// 		};
 		$("#user_position").textbox('setValue',rows[0].position);
 		$("#user_dept").textbox('setValue',rows[0].dept);
 			
@@ -385,50 +385,58 @@ $(document).ready(function () {
 	$.post("../system/queryUserAttrs.action", function(data) {
 		var sex="";						//性别
 		var police_type="";				//警种
-		var police_num="";				//警号
+		//var police_num="";				//警号
 		var max_sensitive_level="";		//最高敏感级别
-		var dept="";					//业务部门类别
-		var title="";					//职务/职称
+		var businesstype="";			//业务部门类别
+		//var title="";					//职务/职称
 		
-		for(var i=0;i<data.items[0].dictionary.length;i++){
-			sex+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[1].dictionary.length;i++){
-			police_type+= "{id:'"+data.items[1].dictionary[i].code+"',text:'"+data.items[1].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[2].dictionary.length;i++){
-			police_num+= "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[3].dictionary.length;i++){
-			max_sensitive_level+= "{id:'"+data.items[3].dictionary[i].code+"',text:'"+data.items[3].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[4].dictionary.length;i++){
-			dept+= "{id:'"+data.items[4].dictionary[i].code+"',text:'"+data.items[4].dictionary[i].value+"'},"; 
-		};
-		for(var i=0;i<data.items[5].dictionary.length;i++){
-			title+= "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},"; 
-		};
+		for( var index in data.items ) {
+			for(var i=0;i<data.items[index].dictionary.length;i++){
+				if( "SEXCODE" == data.items[index].code ) {
+					sex += "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+					attridSex = data.items[index].dictionary[i].attrid;
+				}
+				else if( "POLICE_SORT" == data.items[index].code ) {
+					police_type += "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+					attridPoliceSort = data.items[index].dictionary[i].attrid;
+				}
+				else if( "SENSITIVE_LEVEL" == data.items[index].code ) {
+					max_sensitive_level += "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+					attridMaxSensitiveLevel = data.items[index].dictionary[i].attrid;
+				}
+				else if( "BUSINESS_TYPE" == data.items[index].code ) {
+					businesstype += "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+					attridBusinessType = data.items[index].dictionary[i].attrid;
+				}
+// 				else if( "POLICE_NO" == data.items[index].code ) {
+// 					police_num += "{id:'"+data.items[2].dictionary[i].code+"',text:'"+data.items[2].dictionary[i].value+"'},"; 
+// 				}
+// 				else if( "TAKE_OFFICE" == data.items[index].code ) {
+// 					title += "{id:'"+data.items[5].dictionary[i].code+"',text:'"+data.items[5].dictionary[i].value+"'},";
+// 				}
+			};
+			
+		}
 		
 		var sexData='([' + sex.substring(0,sex.length-1) + '])';
  		var sexJSON = (new Function('return '+sexData +';'))();
  		var police_typeData='([' + police_type.substring(0,police_type.length-1) + '])';
  		var police_typeJSON = (new Function('return '+police_typeData +';'))(); 
- 		var police_numData='([' + police_num.substring(0,police_num.length-1) + '])';
- 		var police_numJSON = (new Function('return '+police_numData +';'))(); 
+//  		var police_numData='([' + police_num.substring(0,police_num.length-1) + '])';
+//  		var police_numJSON = (new Function('return '+police_numData +';'))(); 
  		var max_sensitive_levelData='([' + max_sensitive_level.substring(0,max_sensitive_level.length-1) + '])';
  		var max_sensitive_levelJSON = (new Function('return '+max_sensitive_levelData +';'))(); 
- 		var deptData='([' + dept.substring(0,dept.length-1) + '])';
- 		var deptJSON = (new Function('return '+deptData +';'))(); 
- 		var titleData='([' + title.substring(0,title.length-1) + '])';
- 		var titleJSON = (new Function('return '+titleData +';'))(); 
+ 		var businesstypeData='([' + businesstype.substring(0,businesstype.length-1) + '])';
+ 		var businesstypeJSON = (new Function('return '+businesstypeData +';'))(); 
+//  		var titleData='([' + title.substring(0,title.length-1) + '])';
+//  		var titleJSON = (new Function('return '+titleData +';'))();
  		
- 		sexJSON.unshift({ "id": "", "text": "请选择" });
+  		sexJSON.unshift({ "id": "", "text": "请选择" });
 		police_typeJSON.unshift({ "id": "", "text": "请选择" });
-		police_numJSON.unshift({ "id": "", "text": "请选择" });
+//		police_numJSON.unshift({ "id": "", "text": "请选择" });
 		max_sensitive_levelJSON.unshift({ "id": "", "text": "请选择" });
-		deptJSON.unshift({ "id": "", "text": "请选择" });
-		titleJSON.unshift({ "id": "", "text": "请选择" });
-		
+		businesstypeJSON.unshift({ "id": "", "text": "请选择" });
+//		titleJSON.unshift({ "id": "", "text": "请选择" });
  		//查询部分
 		$('#user_query_sex').combobox({
 			data : sexJSON,
@@ -440,26 +448,26 @@ $(document).ready(function () {
 			valueField:'id',
 			textField:'text'
 		});
-		$('#user_query_police_num').combobox({
-			data : police_numJSON,
-			valueField:'id',
-			textField:'text'
-		});
+// 		$('#user_query_police_num').combobox({
+// 			data : police_numJSON,
+// 			valueField:'id',
+// 			textField:'text'
+// 		});
 		$('#user_query_max_sensitive_level').combobox({
 			data : max_sensitive_levelJSON,
 			valueField:'id',
 			textField:'text'
 		});
 		$('#user_query_businesstype').combobox({
-			data : deptJSON,
+			data : businesstypeJSON,
 			valueField:'id',
 			textField:'text'
 		});
-		$('#user_query_title').combobox({
-			data : titleJSON,
-			valueField:'id',
-			textField:'text'
-		});
+// 		$('#user_query_title').combobox({
+// 			data : titleJSON,
+// 			valueField:'id',
+// 			textField:'text'
+// 		});
 		
 	}, "json");	
 });

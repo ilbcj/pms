@@ -193,9 +193,9 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 				sqlString += " and UNIT like :UNIT ";
 			}
-//			if(condition.getUid() != null && condition.getUid().length() > 0) {
-//				sqlString += " and uid = :uid ";
-//			}
+			if(condition.getGA_DEPARTMENT() != null && condition.getGA_DEPARTMENT().length() > 0) {
+				sqlString += " and GA_DEPARTMENT = :GA_DEPARTMENT ";
+			}
 			if(condition.getORG_LEVEL() != 0) {
 				sqlString += " and ORG_LEVEL = :ORG_LEVEL ";
 			}
@@ -208,9 +208,9 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
 				}
-//				if(condition.getUid() != null && condition.getUid().length() > 0) {
-//					q.setString( "uid", condition.getUid() );
-//				}
+				if(condition.getGA_DEPARTMENT() != null && condition.getGA_DEPARTMENT().length() > 0) {
+					q.setString( "GA_DEPARTMENT", condition.getGA_DEPARTMENT() );
+				}
 				if(condition.getORG_LEVEL() != 0) {
 					q.setInteger( "ORG_LEVEL", condition.getORG_LEVEL() );
 				}
@@ -452,9 +452,9 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 				sqlString += " and UNIT like :UNIT ";
 			}
-//			if(condition.getUid() != null && condition.getUid().length() > 0) {
-//				sqlString += " and uid = :uid ";
-//			}
+			if(condition.getGA_DEPARTMENT() != null && condition.getGA_DEPARTMENT().length() > 0) {
+				sqlString += " and GA_DEPARTMENT = :GA_DEPARTMENT ";
+			}
 			if(condition.getORG_LEVEL() != 0) {
 				sqlString += " and ORG_LEVEL = :ORG_LEVEL ";
 			}
@@ -467,9 +467,9 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 				if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
 					q.setString( "UNIT", "%" + condition.getUNIT() + "%" );
 				}
-//				if(condition.getUid() != null && condition.getUid().length() > 0) {
-//					q.setString( "uid", condition.getUid() );
-//				}
+				if(condition.getGA_DEPARTMENT() != null && condition.getGA_DEPARTMENT().length() > 0) {
+					q.setString( "GA_DEPARTMENT", condition.getGA_DEPARTMENT() );
+				}
 				if(condition.getORG_LEVEL() != 0) {
 					q.setInteger( "ORG_LEVEL", condition.getORG_LEVEL() );
 				}

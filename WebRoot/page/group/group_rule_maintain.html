@@ -203,8 +203,9 @@
      	var convertArray = new Array();
     	
     	for(var index=0; index < rows.length; index++) {
-	    	var rule = new newRule(rows[index].attrid, rows[index].rulename, rows[index].ruletype, rows[index].rulecode);
+	    	var rule = new newRule(rows[index].attrid, rows[index].rulename, rows[index].ruletype);
 	 		convertArray.push(rule);
+	 		poststr += "&ruleValue=" + rows[index].rulecode;
     	}
     	var tmp = $.toJSON(convertArray);
     	poststr += '&rules='+ tmp;
