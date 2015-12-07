@@ -14,6 +14,7 @@ import com.pms.model.GroupRule;
 import com.pms.model.GroupUser;
 import com.pms.model.HibernateUtil;
 import com.pms.model.Rule;
+import com.pms.model.RuleAttr;
 import com.pms.model.User;
 
 
@@ -332,6 +333,11 @@ public class GroupDAOImpl implements GroupDAO {
 				rule = new Rule();
 				rule.setId(rs.get(i).getRuleid());
 				session.delete(rule);
+				
+				sqlString = "delete from rule_attr where ruleid = :ruleid ";
+				q = session.createSQLQuery(sqlString);
+				q.setInteger("ruleid", rs.get(i).getRuleid());
+				q.executeUpdate();
 			}
 			
 			sqlString = "delete from group_rule where groupid = :groupid ";
@@ -339,13 +345,24 @@ public class GroupDAOImpl implements GroupDAO {
 			q.setString("groupid", id);
 			q.executeUpdate();
 			
+			
 			GroupRule gr;
+			RuleAttr ruleAttr;
 			rule = null;
 			if(rules != null) {
 				for(int i = 0; i<rules.size(); i++) {
 					rule = rules.get(i);
 					rule.setGroupid(id);
 					rule = (Rule)session.merge(rule);
+					
+					ruleAttr = new RuleAttr();
+					String[] strArray = null;   
+					strArray = rules.get(i).getRulevalue().split(","); 
+					for (int j = 0; j < strArray.length; j++) {
+						ruleAttr.setRuleid(rule.getId());
+						ruleAttr.setRulevalue(strArray[j]);
+						session.merge(ruleAttr);
+					}
 					
 					gr = new GroupRule();
 					gr.setGroupid(id);
@@ -499,6 +516,7 @@ public class GroupDAOImpl implements GroupDAO {
 		return rs;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void GroupOfRuleDel(Group group) throws Exception {
 		Session session = HibernateUtil.currentSession();
@@ -514,6 +532,18 @@ public class GroupDAOImpl implements GroupDAO {
 			q = session.createSQLQuery(sqlString);
 			q.setInteger("groupid", group.getId());
 			q.executeUpdate();
+			
+			sqlString = "select * from group_rule where groupid = :groupid ";
+			List<GroupRule> rs = null;
+			q = session.createSQLQuery(sqlString).addEntity(GroupRule.class);
+			q.setInteger("groupid", group.getId());
+			rs = q.list();
+			for(int i = 0; i<rs.size(); i++) {
+				sqlString = "delete from rule_attr where ruleid = :ruleid ";
+				q = session.createSQLQuery(sqlString);
+				q.setInteger("ruleid", rs.get(i).getRuleid());
+				q.executeUpdate();
+			}
 		
 			session.delete(group);
 			tx.commit();
