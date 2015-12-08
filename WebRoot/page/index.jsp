@@ -54,6 +54,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <div data-options="region:'center',noheader:true, border:true" style="padding:5px;background:#E6EEF8;"></div>
 
 <script>
+$(document).keydown(function(e){
+	if ((event.keyCode==8) ) //屏蔽退格删除键    
+	{     
+	    if (window.event.srcElement.tagName.toUpperCase()!="INPUT" && 
+	    		window.event.srcElement.tagName.toUpperCase()!="TEXTAREA" && 
+	    		window.event.srcElement.tagName.toUpperCase()!="TEXT")
+	    {    
+			event.keyCode=0;     
+			event.returnValue=false;    
+		}     
+	}     
+});
 $(document).ready(function () {
 	
 	$('#mm').accordion('add', {
