@@ -1729,7 +1729,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 //		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
-		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
+		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_ID in (:RESOURCE_ID) and RESOURCE_CLASS = :RESOURCE_CLASS ";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);

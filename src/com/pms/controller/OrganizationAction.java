@@ -255,19 +255,38 @@ public class OrganizationAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String SaveOrgNode()
+	public String SaveOrgNode() throws IOException
 	{
 		OrgManageService oms = new OrgManageService();
+		
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
 		try {
 //			orgNode.setORG_LEVEL(orgNode.queryOrgLevel(orgNode_OrgLevel));
+			System.out.println(orgNode.getORG_LEVEL());
 			orgNode = oms.SaveOrgNode(orgNode);
+			setResult(true);
+			return SUCCESS;
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
 			return SUCCESS;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
 		}
-		setResult(true);
-		return SUCCESS;
+//		setResult(true);
+//		return SUCCESS;
 	}
 	
 	public String ModifyOrgNodeName()

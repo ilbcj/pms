@@ -55,16 +55,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <script>
 $(document).keydown(function(e){
-	if ((event.keyCode==8) ) //屏蔽退格删除键    
-	{     
-	    if (window.event.srcElement.tagName.toUpperCase()!="INPUT" && 
-	    		window.event.srcElement.tagName.toUpperCase()!="TEXTAREA" && 
-	    		window.event.srcElement.tagName.toUpperCase()!="TEXT")
-	    {    
-			event.keyCode=0;     
-			event.returnValue=false;    
-		}     
-	}     
+// 	if ((event.keyCode==8) ) //屏蔽退格删除键    
+// 	{     
+// 	    if (window.event.srcElement.tagName.toUpperCase()!="INPUT" && 
+// 	    		window.event.srcElement.tagName.toUpperCase()!="TEXTAREA" && 
+// 	    		window.event.srcElement.tagName.toUpperCase()!="TEXT")
+// 	    {    
+// 			event.keyCode=0;     
+// 			event.returnValue=false;    
+// 		}     
+// 	}     
+	var doPrevent; 
+	if (e.keyCode == 8) { 
+		var d = e.srcElement || e.target; 
+		if (d.tagName.toUpperCase() == 'INPUT' || d.tagName.toUpperCase() == 'TEXTAREA' || d.tagName.toUpperCase() == 'TEXT') 
+		{ 
+			doPrevent = d.readOnly || d.disabled; 
+		} 
+		else 
+			doPrevent = true; 
+	} 
+	else 
+		doPrevent = false; 
+
+	if (doPrevent) e.preventDefault();   
 });
 $(document).ready(function () {
 	

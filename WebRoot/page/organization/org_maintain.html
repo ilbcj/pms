@@ -208,9 +208,14 @@
     	}
     	var name = $("#org_query_name").val();
     	var uid = $("#org_query_uid").val();
-    	var level = "";
+    	var level = 0;
     	if( isDetailQuery ) {
-    		level = $("#org_query_level").combobox("getValue");
+    		var queryLevel = $("#org_query_level").combobox("getValue");
+	    	if(queryLevel == "" || queryLevel.length == 0){
+	    		level = 0;
+	    	}else{
+	    		level = $("#org_query_level").combobox("getValue");
+	    	}
     	}
     	$("#org_maintain_center_list_dg").datagrid('load',{
     		queryAll: true,
@@ -376,6 +381,8 @@
 			$('#org_mod_name_win').window('close');
 		}, "json");
 	}
+	
+	var attridOrgLevel;
 	function orgModDetail(){
 		if( orgPreMod() ) {
 			var rows = $('#org_maintain_center_list_dg').datagrid('getSelections');
@@ -389,7 +396,7 @@
 				$("#org_pid").textbox('setText',rows[0].pname);
 				$("#org_level").textbox('setValue',rows[0].orgLevel);
 				for(var i=0;i<rows[0].dictionary.length;i++){
-					if(rows[0].dictionary[i].attrid == 15 && rows[0].dictionary[i].code == rows[0].orgLevel){//公安组织机构级别attrid==15
+					if(rows[0].dictionary[i].attrid == attridOrgLevel && rows[0].dictionary[i].code == rows[0].orgLevel){//公安组织机构级别attrid==15
 						$("#org_level").textbox('setText',rows[0].dictionary[i].value);
 					}
 				};
@@ -509,10 +516,15 @@ $(document).ready(function () {
 	$.post("../system/queryOrgAttrs.action", function(data) {
 		var org_level="";				//公安组织机构级别
 		
-		for(var i=0;i<data.items[0].dictionary.length;i++){
-			org_level+= "{id:'"+data.items[0].dictionary[i].code+"',text:'"+data.items[0].dictionary[i].value+"'},"; 
-		};
-		
+		for( var index in data.items ) {
+			for(var i=0;i<data.items[index].dictionary.length;i++){
+				if( "ORG_LEVEL" == data.items[index].code ) {
+					org_level += "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+					attridOrgLevel = data.items[index].dictionary[i].attrid;
+				}
+			};
+			
+		}
 		var org_levelData='([' + org_level.substring(0,org_level.length-1) + '])';
 		var org_levelJSON = (new Function('return '+org_levelData +';'))();
 		
