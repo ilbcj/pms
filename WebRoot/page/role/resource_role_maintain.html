@@ -64,7 +64,7 @@
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 					<input id="role_id" type="hidden"/>
 					<input id="role_data_version" type="hidden"/>
-					<input id="roleOrg_data_version" value="0" type="hidden"/>
+					<input id="roleOrg_data_version" type="hidden"/>
 			        <table class="nodt" style="width:100%">
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 角色名称</td>
@@ -577,13 +577,19 @@
     
     function addRoleSave(){
 		var roleId = $("#role_id").val();
-    	var poststr = "role.id=" + roleId;
+		if(roleId != "" || roleId.length != 0){
+    		var poststr = "role.id=" + roleId;
+    	}
     	
     	var roleDataVersion = $("#role_data_version").val();
-    	poststr += "&role.DATA_VERSION=" + roleDataVersion;
+    	if(roleDataVersion != "" || roleDataVersion.length != 0){
+    		poststr += "&role.DATA_VERSION=" + roleDataVersion;
+    	}
     	
     	var roleOrgDataVersion = $("#roleOrg_data_version").val();
-    	poststr += "&resRoleOrg.DATA_VERSION=" + roleOrgDataVersion;
+    	if(roleOrgDataVersion != "" || roleOrgDataVersion.length != 0){
+    		poststr += "&resRoleOrg.DATA_VERSION=" + roleOrgDataVersion;
+    	}
     	
     	var roleName = $("#role_name").textbox('getValue');
     	poststr += "&role.BUSINESS_ROLE_NAME=" + encodeURIComponent(roleName);
@@ -592,8 +598,9 @@
     	poststr += "&role.BUSINESS_ROLE=" + encodeURIComponent(roleCode);
     	
     	var roleType = $("#role_type").combobox('getValue');
-    	poststr += "&role.BUSINESS_ROLE_TYPE=" + encodeURIComponent(roleType);
-    	
+    	if(roleType != "" || roleType.length != 0){
+    		poststr += "&role.BUSINESS_ROLE_TYPE=" + encodeURIComponent(roleType);
+    	}
     	var roleDestcity = $("#roleOrg_destcity").textbox('getValue');
     	poststr += "&resRoleOrg.CLUE_DST_SYS=" + encodeURIComponent(roleDestcity);
     	
@@ -604,7 +611,9 @@
     	poststr += "&role.CLUE_SRC_SYS=" + encodeURIComponent(roleSrccity);
     	
     	var roleDelstatus = $("#role_delstatus").combobox('getValue');
-    	poststr += "&role.DELETE_STATUS=" + encodeURIComponent(roleDelstatus);
+    	if(roleDelstatus != "" || roleDelstatus.length != 0){
+    		poststr += "&role.DELETE_STATUS=" + encodeURIComponent(roleDelstatus);
+    	}
     	
     	var roleDescrib = $("#role_describe").textbox('getValue');
     	poststr += "&role.ROLE_DESC=" + encodeURIComponent(roleDescrib);
@@ -952,6 +961,8 @@
 				data : tnameJSON,
 				valueField:'id',
 				textField:'text',
+				editable:false,
+				panelHeight:'auto',
 				onSelect: function(){   
 	            	$("#role_template_copy_list_dg").datagrid({
 						url:'../resource/queryResRoleResourceTemplate.action?resRoleResourceTemplate.TEMPLATE_NAME='+$('#template_name_copy').combobox('getText')+'&resRoleResourceTemplate.LATEST_MOD_TIME='+$('#template_name_copy').combobox('getValue'),
@@ -992,6 +1003,8 @@
 			if(retObj.result == true)
 			{
 			 	var index;
+			 	$("#role_resource_feature_dg").datagrid('loadData',{total:0,rows:[]});
+	     		$("#role_resource_data_dg").datagrid('loadData',{total:0,rows:[]});
  				for( index=0; index < retObj.features.length; index++) {
  					insertFeature( retObj.features[index]);
  				}
@@ -1566,6 +1579,8 @@ $(document).ready(function () {
 			data : business_role_typeJSON,
 			valueField:'id',
 			textField:'text',
+			editable:false,
+			panelHeight:'auto',
 			onChange:function(){  
 		    	var roleType = $("#role_type").combobox("getValue");
 		    	if(roleType != 2){
@@ -1580,7 +1595,9 @@ $(document).ready(function () {
 		$('#role_delstatus').combobox({
 			data : delete_statusJSON,
 			valueField:'id',
-			textField:'text'
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
 		});
 
 

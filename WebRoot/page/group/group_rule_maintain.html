@@ -259,7 +259,9 @@
 		    			readonly:false,
 						data : currentComboData,
 						valueField:'id',
-						textField:'name'
+						textField:'name',
+						editable:false,
+						panelHeight:'auto'
 					});
 		    	}
 		    	else {
@@ -270,7 +272,9 @@
 		    			readonly:true,
 						data : attrValues,
 						valueField:'id',
-						textField:'name'
+						textField:'name',
+						editable:false,
+						panelHeight:'auto'
 					});
 					$("#group_rule_edit_rule_win_attribute").combobox('select', rows[editIndex].attrid);
 					

@@ -534,14 +534,18 @@ $(document).ready(function () {
 		$('#org_query_level').combobox({
 			data : org_levelJSON,
 			valueField:'id',
-			textField:'text'
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
 		});
 		
  		//添加部分
 		$('#org_level').combobox({
 			data : org_levelJSON,
 			valueField:'id',
-			textField:'text'
+			textField:'text',
+			editable:false,
+			panelHeight:'auto'
 		});
 	}, "json");
 		
