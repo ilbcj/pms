@@ -64,7 +64,7 @@
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 					<input id="role_id" type="hidden"/>
 					<input id="role_data_version" type="hidden"/>
-					<input id="roleOrg_data_version" type="hidden"/>
+					<input id="roleOrg_data_version" value="0" type="hidden"/>
 			        <table class="nodt" style="width:100%">
 			            <tr>
 			                <td class="form_name_small text_right"><span style="color:red;">*</span> 角色名称</td>
@@ -117,13 +117,13 @@
 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleCopyTemplate()">获取模板</a>
 					</div>
 					
-					<table class="nodt" id="role_resource_feature_dg" >
+					<table class="nodt easyui-datagrid" id="role_resource_feature_dg" >
 				    </table>
 				    <div id="featureToolbar" style="background-color:#E7F0FF">
 				    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="roleQueryResourceFeature()">添加</a>
 				    </div><!-- end of featureToolbar -->
 				    
-				    <table class="nodt" id="role_resource_data_dg" >
+				    <table class="nodt easyui-datagrid" id="role_resource_data_dg" >
 				    </table>
 				    
 				    <div id="dataToolbar" style="background-color:#E7F0FF">
@@ -622,14 +622,14 @@
     	var insertRows = $('#role_resource_feature_dg').datagrid('getChanges', 'inserted');
     	if (insertRows.length > 0) {
             for (var i = 0; i < insertRows.length; i++) {
-                alert(insertRows[i].RESOURCE_ID);
+//                 alert(insertRows[i].RESOURCE_ID);
                 poststr += '&addFeatureIds=' + insertRows[i].RESOURCE_ID;
             }
         }
         var deleteRows = $('#role_resource_feature_dg').datagrid('getChanges', 'deleted');
     	if (deleteRows.length > 0) {
             for (var i = 0; i < deleteRows.length; i++) {
-                alert(deleteRows[i].RESOURCE_ID);
+//                 alert(deleteRows[i].RESOURCE_ID);
                 poststr += '&delFeatureIds=' + deleteRows[i].RESOURCE_ID;
             }
         }
@@ -637,14 +637,14 @@
     	insertRows = $('#role_resource_data_dg').datagrid('getChanges', 'inserted');
     	if (insertRows.length > 0) {
             for (var i = 0; i < insertRows.length; i++) {
-                alert(insertRows[i].RESOURCE_ID);
+//                 alert(insertRows[i].RESOURCE_ID);
                 poststr += '&addDataIds=' + insertRows[i].RESOURCE_ID;
             }
         }
         deleteRows = $('#role_resource_data_dg').datagrid('getChanges', 'deleted');
     	if (deleteRows.length > 0) {
             for (var i = 0; i < deleteRows.length; i++) {
-                alert(deleteRows[i].RESOURCE_ID);
+//                 alert(deleteRows[i].RESOURCE_ID);
                 poststr += '&delDataIds=' + deleteRows[i].RESOURCE_ID;
             }
         }
@@ -688,8 +688,10 @@
      	$("#role_describe").textbox('setValue',"");
      	
      	//clear datagrid's data
-     	$("#role_resource_feature_dg").datagrid({data: []});
-     	$("#role_resource_data_dg").datagrid({data: []});
+//      	$("#role_resource_feature_dg").datagrid({data: []});
+//      	$("#role_resource_data_dg").datagrid({data: []});
+     	$("#role_resource_feature_dg").datagrid('loadData',{total:0,rows:[]});
+     	$("#role_resource_data_dg").datagrid('loadData',{total:0,rows:[]});
     }
     
     var attridBusinessRoleType;
