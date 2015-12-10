@@ -264,6 +264,45 @@ $(document).ready(function () {
 	        }
 	    }
 	});
+	
+		$.post("../system/queryResourceDataAttrs.action", function(data) {
+		var resource_status="";				//资源状态
+		var delete_status="";				//删除状态
+
+		for( var index in data.items ) {
+			for(var i=0;i<data.items[index].dictionary.length;i++){
+				if( "RESOURCE_STATUS" == data.items[index].code ) {
+					resource_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+				}
+				else if( "DELETE_STATUS" == data.items[index].code ) {
+					delete_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+				}
+			}
+		}
+
+		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';
+ 		var resource_statusJSON = (new Function('return '+resource_statusData +';'))();
+ 		var delete_statusData='([' + delete_status.substring(0,delete_status.length-1) + '])';
+ 		var delete_statusJSON = (new Function('return '+delete_statusData +';'))();
+ 		
+ 		resource_statusJSON.unshift({"id":"","text":"请选择","selected":true});
+		delete_statusJSON.unshift({"id":"","text":"请选择","selected":true});
+		
+ 		//添加部分
+		$('#res_status').combobox({
+			data : resource_statusJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false
+		});
+		$('#res_delstatus').combobox({
+			data : delete_statusJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false
+		});
+		
+	}, "json");	
 });
 </script>	
   </body>
