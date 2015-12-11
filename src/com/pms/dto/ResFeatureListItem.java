@@ -12,6 +12,7 @@ public class ResFeatureListItem {
 	private String APP_ID;
 	private String RESOUCE_NAME;
 	private String PARENT_RESOURCE;
+	private String pname;
 	private String URL;
 	private String RESOURCE_ICON_PATH;
 	private int RESOURCE_STATUS;
@@ -71,6 +72,14 @@ public class ResFeatureListItem {
 
 	public void setPARENT_RESOURCE(String pARENT_RESOURCE) {
 		PARENT_RESOURCE = pARENT_RESOURCE;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
 	}
 
 	public String getURL() {

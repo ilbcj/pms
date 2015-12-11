@@ -85,6 +85,10 @@ public class ResourceManageService {
 		item.setDELETE_STATUS(attr.getDELETE_STATUS());
 		item.setLATEST_MOD_TIME(attr.getLATEST_MOD_TIME());
 		
+		ResourceDAO dao = new ResourceDAOImpl();
+		ResFeature parent = dao.GetFeatureByResId(attr.getPARENT_RESOURCE());
+		item.setPname(parent == null ? "" : parent.getRESOUCE_NAME());
+		
 		AttributeDAO attrdao = new AttributeDAOImpl();	
 		List<AttrDictionary> attrDicts = attrdao.GetFeaturesDictionarys(attr.getRESOURCE_ID());
 		List<AttrDictionary> data = new ArrayList<AttrDictionary>();
