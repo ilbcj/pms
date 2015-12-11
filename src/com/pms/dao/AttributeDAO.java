@@ -13,6 +13,7 @@ public interface AttributeDAO {
 	public void UpdateAttrDictionary(int attrId, List<AttrDictionary> dictionary) throws Exception;
 	public List<AttrDictionary> GetRolesDictionarys(int id) throws Exception;
 	public List<AttrDictionary> GetDatasDictionarys(String id) throws Exception;
+	List<AttrDictionary> GetFeaturesDictionarys(String id) throws Exception;
 	public List<AttrDictionary> GetUsersDictionarys(int id) throws Exception;
 	public List<AttrDictionary> GetDictsDatasNode(String name, String code, String id) throws Exception;
 	public List<AttrDictionary> GetDictsDataTemplatesNode(String name, String code, String id) throws Exception;

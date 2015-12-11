@@ -179,13 +179,13 @@
 				<div id="resource_role_query_resource_feature_win" class="easyui-window" title="功能资源" style="width:90%;height:90%;"
 						data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
 					<div id="resource_role_query_resource_feature_win_main" class="easyui-layout" data-options="fit:true" >
-						 <div data-options="region:'west',split:false" style="width:200px">
-				            	<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+						<div data-options="region:'west',split:false" style="width:200px">
+				        	<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
 						        <ul id="resource_feature_query_tree" class="easyui-tree" data-options="url:'../resource/queryFeatureChildrenNodes.action'">
 						        </ul><!-- end of resource_feature_query_tree -->
 						        </div>
-				            </div><!-- end of west -->
-				            <div data-options="region:'center'">
+				        </div><!-- end of west -->
+						<div data-options="region:'center'">
 				            
 						<div class="easyui-panel" data-options="fit:true,footer:'#resource_role_query_resource_feature_win_ft'">				
 				    		<div id="resource_role_query_resource_feature_win_main_query">
@@ -203,7 +203,7 @@
 					            </table>
 					        </div><!--   end of resource_role_query_resource_feature_win_main_query --> 
 							<table class="nodt" id="resource_role_query_resource_feature_win_list_dg"  
-						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',pagination:true,noheader:true,fit:true">
+						            data-options="singleSelect:false,method:'post',nowrap:true,idField:'id',toolbar:'#resource_role_query_resource_feature_win_main_query',pagination:true,noheader:true,fit:true">
 						        <thead>
 						            <tr>
 						            	<th field="ck" checkbox="true"></th>
@@ -1161,7 +1161,7 @@
 				var res = new Object();
 				if (data.result == true){
 					res.total = data.total;
-					res.rows = data.features;
+					res.rows = data.featureItems;
 				} else {
 					res.total=0;
 					res.rows = [];

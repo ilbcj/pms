@@ -66,11 +66,19 @@
              <li> 
                  <span>角色策略</span> 
                  <ul> 
+ 		            <li iconCls="icon-leaf" id="menu_system_role_dictionary">
+ 		                <span>角色属性字典</span> 
+ 		            </li>  
+                 </ul> 
+             </li>
+             <li> 
+                 <span>资源策略</span> 
+                 <ul> 
                      <li iconCls="icon-leaf" id="menu_system_resource_data_dictionary">
  		                <span>数据资源属性字典</span> 
  		            </li>
- 		            <li iconCls="icon-leaf" id="menu_system_role_dictionary">
- 		                <span>角色属性字典</span> 
+ 		            <li iconCls="icon-leaf" id="menu_system_resource_feature_dictionary">
+ 		                <span>功能资源属性字典</span> 
  		            </li>  
                  </ul> 
              </li>
@@ -105,6 +113,9 @@ $(document).ready(function () {
 // 			}
  			else if (node.id == 'menu_system_resource_data_dictionary') {
  				$('body').layout('panel','center').panel('refresh','system/system_resource_data_dictionary.html');
+ 			}
+ 			else if (node.id == 'menu_system_resource_feature_dictionary') {
+ 				$('body').layout('panel','center').panel('refresh','system/system_resource_feature_dictionary.html');
  			}
  			else if (node.id == 'menu_system_role_dictionary') {
  				$('body').layout('panel','center').panel('refresh','system/system_role_dictionary.html');
