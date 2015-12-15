@@ -25,6 +25,7 @@ import org.apache.struts2.ServletActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.ResDataTemplateListItem;
+import com.pms.dto.ResFeatureListItem;
 import com.pms.dto.ResRoleResourceTemplateListItem;
 import com.pms.dto.RoleListItem;
 import com.pms.dto.TreeNode;
@@ -70,6 +71,7 @@ public class ResourceAction extends ActionSupport {
 	private List<String> delFeatureIds;
 	private List<String> delDataIds;
 	private List<ResDataListItem> dataItems;
+	private List<ResFeatureListItem> featureItems;
 	private List<ResDataTemplateListItem> dataTemplateItems;
 	private List<RoleListItem> roleItems;
 	private ResRoleResourceTemplate resRoleResourceTemplate;
@@ -104,6 +106,14 @@ public class ResourceAction extends ActionSupport {
 
 	public void setDataItems(List<ResDataListItem> dataItems) {
 		this.dataItems = dataItems;
+	}
+
+	public List<ResFeatureListItem> getFeatureItems() {
+		return featureItems;
+	}
+
+	public void setFeatureItems(List<ResFeatureListItem> featureItems) {
+		this.featureItems = featureItems;
 	}
 
 	public List<ResDataTemplateListItem> getDataTemplateItems() {
@@ -489,7 +499,7 @@ public class ResourceAction extends ActionSupport {
 	public String QueryFeatureItems()
 	{
 		ResourceManageService rms = new ResourceManageService();
-		features = new ArrayList<ResFeature>();
+		featureItems = new ArrayList<ResFeatureListItem>();
 		if( id == null || id.length() == 0) {
 			id = "0";
 		}
@@ -500,7 +510,7 @@ public class ResourceAction extends ActionSupport {
 				criteria.setRESOURCE_ID(resCode);
 				criteria.setSYSTEM_TYPE(reSystemtType);
 				criteria.setAPP_ID(resAppid);
-				total = rms.QueryAllFeatureItems( id, criteria, page, rows, features );
+				total = rms.QueryAllFeatureItems( id, criteria, page, rows, featureItems );
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

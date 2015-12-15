@@ -29,6 +29,9 @@
  		<action name="queryResourceDataAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryResourceDataAttrs" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryResourceFeatureAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryResourceFeatureAttrs" >
+ 			<result name="success" type="json" />
+ 		</action>
  		 <action name="queryOrgAttrs" class="com.pms.controller.SystemAttrUserAction" method="QueryOrgAttrs" >
  			<result name="success" type="json" />
  		</action>

@@ -204,6 +204,33 @@ public class AttributeDAOImpl implements AttributeDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<AttrDictionary> GetFeaturesDictionarys(String id) throws Exception
+	{
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AttrDictionary> rs = null;
+		String sqlString = "SELECT b.* " +
+				" FROM WA_AUTHORITY_FUNC_RESOURCE a,attrdict b,attrdef c " +
+				" WHERE b.attrid=c.id and c.type =:type and a.RESOURCE_ID=:RESOURCE_ID ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AttrDictionary.class);
+			q.setInteger("type", AttrDefinition.ATTRTYPEFUNCDATA);
+			q.setString("RESOURCE_ID", id);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<AttrDictionary> GetRolesDictionarys(int id) throws Exception
 	{
 		Session session = HibernateUtil.currentSession();

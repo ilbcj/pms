@@ -39,6 +39,20 @@ public class AttrDictionaryService {
 		return total;
 	}
 	
+	public int QueryAttrDictionaryOfResourceFeature(AttrDefinition criteria, int page,
+			int rows, ArrayList<AttrDictItem> items) throws Exception {
+		criteria.setType(AttrDefinition.ATTRTYPEFUNCDATA);
+		AttributeDAO dao = new AttributeDAOImpl();
+		List<AttrDefinition> res = dao.GetAttrDefinitions( criteria, page, rows );
+		AttrDictItem attrDictItem = null;
+		for(int i=0; i<res.size(); i++) {
+			attrDictItem = ConvertAttrDefinitonToAttrDictItem(res.get(i));
+			items.add(attrDictItem);
+		}
+		int total = dao.GetAttrDefinitionsCount( criteria );
+		return total;
+	}
+	
 	public int QueryAttrDictionaryOfOrg(AttrDefinition criteria, int page,
 			int rows, ArrayList<AttrDictItem> items) throws Exception {
 		criteria.setType(AttrDefinition.ATTRTYPEORG);

@@ -268,6 +268,10 @@
     	$("#user_query_police_num").textbox({value:""});
     }
     
+    var attridSex;
+	var attridPoliceSort;
+	var attridMaxSensitiveLevel;
+	var attridBusinessType;
     function userDetail(){
     	var rows = $('#user_query_center_list_dg').datagrid('getSelections');
 		if(rows.length == 0) {
@@ -353,6 +357,7 @@ $(document).ready(function () {
 	$("#user_query_status").combobox({
 		valueField: 'value',
 		textField: 'label',
+		editable:false,
 		data:[{
 			label: '请选择',
 			value: '',
@@ -441,12 +446,14 @@ $(document).ready(function () {
 		$('#user_query_sex').combobox({
 			data : sexJSON,
 			valueField:'id',
-			textField:'text'
+			textField:'text',
+			editable:false
 		});
 		$('#user_query_police_type').combobox({
 			data : police_typeJSON,
 			valueField:'id',
-			textField:'text'
+			textField:'text',
+			editable:false
 		});
 // 		$('#user_query_police_num').combobox({
 // 			data : police_numJSON,
@@ -456,12 +463,14 @@ $(document).ready(function () {
 		$('#user_query_max_sensitive_level').combobox({
 			data : max_sensitive_levelJSON,
 			valueField:'id',
-			textField:'text'
+			textField:'text',
+			editable:false
 		});
 		$('#user_query_businesstype').combobox({
 			data : businesstypeJSON,
 			valueField:'id',
-			textField:'text'
+			textField:'text',
+			editable:false
 		});
 // 		$('#user_query_title').combobox({
 // 			data : titleJSON,

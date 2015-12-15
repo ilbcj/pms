@@ -96,7 +96,10 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 父资源唯一标识</td>
-				                <td><input id="res_pid" name="feature.PARENT_RESOURCE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入父资源唯一标识'"></input></td>
+				                <td>
+				                	<input id="res_pid" name="feature.PARENT_RESOURCE" class="form_value_mid easyui-textbox" data-options="prompt:'请输入父资源唯一标识',editable:false"></input>
+				                	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="openOrgSelectWin()">选择</a>
+				                	</td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 顺序</td>
@@ -109,6 +112,46 @@
 				        </table>
 				    </form>
 				    
+				     <div id="func_query_resource_feature_win" class="easyui-window" title="功能资源" style="width:90%;height:90%;"
+				    		data-options="iconCls:'icon-save',draggable:false,inline:true,modal:true,closed:true,collapsible:false,minimizable:false,maximizable:false" >
+				        <div class="easyui-layout" data-options="fit:true">
+				            <div data-options="region:'west',split:false" style="width:200px">
+				            	<div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+						        <ul id="resource_feature_query_tree" class="easyui-tree" data-options="url:'../resource/queryFeatureChildrenNodes.action'">
+						        </ul><!-- end of func_query_resource_feature_tree -->
+						        </div>
+				            </div><!-- end of west -->
+				            <div data-options="region:'center'">
+				                <div class="easyui-panel" data-options="fit:true,border:true,noheader:true">
+				                	<table class="nodt" id="func_query_resource_feature_win_list_dg"  
+								            data-options="singleSelect:true,method:'post',nowrap:true,toolbar:'#func_query_resource_feature_list_dg_tb',pagination:true,noheader:true,fit:true">
+								        <thead>
+								            <tr>
+								                <th data-options="field:'RESOUCE_NAME'" style="width:33%;">名称</th>
+								                <th data-options="field:'RESOURCE_ID'" style="width:33%;">编码</th>
+								                <th data-options="field:'RESOURCE_DESCRIBE'" style="width:33%;">描述</th>
+								            </tr>
+								        </thead>
+								    </table>
+								    <div id="func_query_resource_feature_list_dg_tb" style="background-color:#E7F0FF">
+								    	<table class="nodt" style="width:100%">
+							                <tr>
+								                <td class="query_name_small text_right"> 系统类型</td>
+								                <td class="query_value_small"><input id="resource_feature_query_systemtype" class="easyui-textbox"></input></td>	
+								                <td class="query_name_small text_right"> 所属业务系统ID</td>
+								                <td class="query_value_small"><input id="resource_feature_query_appid" class="easyui-textbox"></input></td>	
+							                	<td>
+							                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="RoleQueryResourceFeature()">查询</a>
+							                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryResourceFeatureCondition()">重置</a>
+							                    </td>					                
+								            </tr>
+							            </table>
+								    </div><!-- end of toolbar -->
+				                </div>
+				            </div><!-- end of center -->
+				        </div>
+				    </div><!-- end of func_query_resource_feature_win -->
+				
 				</div><!-- end of resource_feature_manage_center_detail -->
 				<div id="resource_feature_manage_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
 					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addFeatureSave();">保存</a>
@@ -166,6 +209,8 @@
      	$("#res_type").textbox('setValue',"");
     }
     
+	var attridResStatus;
+    var attridDelStatus;
     function modResourceFeature(){
     	var rows = $("#resource_feature_manage_center_list_dg").datagrid('getSelections');
 		if(rows.length == 0) {
@@ -181,16 +226,48 @@
 		$("#res_name").textbox('setValue',rows[0].RESOUCE_NAME);
 		$("#res_resid").textbox('setValue',rows[0].RESOURCE_ID);
 		$("#res_status").textbox('setValue',rows[0].RESOURCE_STATUS);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == attridResStatus && rows[0].dictionary[i].code == rows[0].RESOURCE_STATUS){
+				$("#res_status").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
 		$("#res_desc").textbox('setValue',rows[0].RESOURCE_DESCRIBE);
 		$("#res_memo").textbox('setValue',rows[0].RMK);
 		$("#res_delstatus").textbox('setValue',rows[0].DELETE_STATUS);
+		for(var i=0;i<rows[0].dictionary.length;i++){
+			if(rows[0].dictionary[i].attrid == attridDelStatus && rows[0].dictionary[i].code == rows[0].DELETE_STATUS){
+				$("#res_delstatus").textbox('setText',rows[0].dictionary[i].value);
+			}
+		};
 		$("#res_appid").textbox('setValue',rows[0].APP_ID);
 		$("#res_pid").textbox('setValue',rows[0].PARENT_RESOURCE);
+		$("#res_pid").textbox('setText',rows[0].pname);
 		$("#res_order").textbox('setValue',rows[0].RESOURCE_ORDER);
 		$("#res_type").textbox('setValue',rows[0].SYSTEM_TYPE);
 		
 		$("#resource_feature_manage_center_main_wapper").panel('close');
    		$("#resource_feature_manage_center_detail_wapper").panel('open');
+    }
+    
+    function RoleQueryResourceFeature(){
+    	var systemtype = $("#resource_feature_query_systemtype").val();
+    	var appid = $("#resource_feature_query_appid").val();
+    	
+    	$("#resource_feature_query_tree").tree({
+    		onBeforeLoad:function(node, param){
+	    		param.reSystemtType=systemtype,
+	    		param.resAppid=appid;
+    		}
+		});
+		$("#func_query_resource_feature_win_list_dg").datagrid('load',{
+    		queryAll: true,
+			reSystemtType: systemtype,
+			resAppid: appid
+		});
+    }
+    
+    function openOrgSelectWin(){
+	   	$("#func_query_resource_feature_win").window('open').window('center');
     }
     
     function delResourceFeature(){
@@ -229,6 +306,43 @@
 	}
     
 $(document).ready(function () { 
+	$('#resource_feature_query_tree').tree({
+	    loadFilter: function(data){
+	        if (data.treeNodes){
+	            return data.treeNodes;
+	        } else {
+	            return data;
+	        }
+	    },
+	    onClick: function(node){
+	    	//alert(node.id);
+			$("#res_pid").textbox('setValue',node.id);
+			$("#res_pid").textbox('setText',node.text);
+			$('#func_query_resource_feature_win').window('close');
+	    }
+	});
+	
+	$("#func_query_resource_feature_win_list_dg").datagrid({
+		url:'../resource/queryFeatureItems.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.featureItems;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+		onSelect: function(index,row) {
+// 		alert(index);
+			$("#res_pid").textbox('setValue',row.RESOURCE_ID);
+			$("#res_pid").textbox('setText',row.RESOUCE_NAME);
+			$('#func_query_resource_feature_win').window('close');
+		},
+		onLoadError: function() { $("#func_query_resource_feature_win_list_dg").layout('resize',{width:'100%',height:'100%'}); }
+	});
 	
 	$("#resource_feature_manage_center_list_dg").datagrid({
 		url:'../resource/queryFeatureItems.action',
@@ -236,7 +350,7 @@ $(document).ready(function () {
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.features;
+				res.rows = data.featureItems;
 			} else {
 				res.total=0;
 				res.rows = [];
@@ -264,6 +378,47 @@ $(document).ready(function () {
 	        }
 	    }
 	});
+	
+	$.post("../system/queryResourceFeatureAttrs.action", function(data) {
+		var resource_status="";				//资源状态
+		var delete_status="";				//删除状态
+
+		for( var index in data.items ) {
+			for(var i=0;i<data.items[index].dictionary.length;i++){
+				if( "RESOURCE_STATUS" == data.items[index].code ) {
+					resource_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+					attridResStatus = data.items[index].dictionary[i].attrid;
+				}
+				else if( "DELETE_STATUS" == data.items[index].code ) {
+					delete_status+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},"; 
+					attridDelStatus = data.items[index].dictionary[i].attrid;
+				}
+			}
+		}
+
+		var resource_statusData='([' + resource_status.substring(0,resource_status.length-1) + '])';
+ 		var resource_statusJSON = (new Function('return '+resource_statusData +';'))();
+ 		var delete_statusData='([' + delete_status.substring(0,delete_status.length-1) + '])';
+ 		var delete_statusJSON = (new Function('return '+delete_statusData +';'))();
+ 		
+ 		resource_statusJSON.unshift({"id":"","text":"请选择","selected":true});
+		delete_statusJSON.unshift({"id":"","text":"请选择","selected":true});
+		
+ 		//添加部分
+		$('#res_status').combobox({
+			data : resource_statusJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false
+		});
+		$('#res_delstatus').combobox({
+			data : delete_statusJSON,
+			valueField:'id',
+			textField:'text',
+			editable:false
+		});
+		
+	}, "json");	
 });
 </script>	
   </body>
