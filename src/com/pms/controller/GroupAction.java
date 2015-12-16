@@ -38,7 +38,7 @@ public class GroupAction extends ActionSupport {
 	private List<Group> items;
 	private List<String> addUserIds;
 	private List<UserListItem> users;
-	private List<Integer> delIds;
+	private List<String> delIds;
 	private List<Rule> rules;
 	private List<RuleListItem> ruleItems;
 	private List<String> ruleValue;
@@ -51,11 +51,11 @@ public class GroupAction extends ActionSupport {
 		this.rules = rules;
 	}
 
-	public List<Integer> getDelIds() {
+	public List<String> getDelIds() {
 		return delIds;
 	}
 
-	public void setDelIds(List<Integer> delIds) {
+	public void setDelIds(List<String> delIds) {
 		this.delIds = delIds;
 	}
 

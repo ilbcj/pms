@@ -1,11 +1,10 @@
 package com.pms.model;
 
-import java.sql.Blob;
 
 public class AuditGroupLogDescribe {
 	private int id;
 	private int logid;
-	private Blob describ;
+	private String describ;
 	private String LATEST_MOD_TIME;
 	
 	public int getId() {
@@ -20,10 +19,10 @@ public class AuditGroupLogDescribe {
 	public void setLogid(int logid) {
 		this.logid = logid;
 	}
-	public Blob getDescrib() {
+	public String getDescrib() {
 		return describ;
 	}
-	public void setDescrib(Blob describ) {
+	public void setDescrib(String describ) {
 		this.describ = describ;
 	}
 	public String getLATEST_MOD_TIME() {

@@ -43,8 +43,9 @@ public class UserManageService {
 			user.setCERTIFICATE_CODE_MD5( generateHash(idNum) );
 			user.setCERTIFICATE_CODE_SUFFIX( generateSuffix(idNum) );
 		}
-		AddUserAddOrUpdateLog(user);
 		user = dao.UserAdd(user);
+		
+		AddUserAddOrUpdateLog(user);
 		
 		return user;
 	}
@@ -250,14 +251,14 @@ public class UserManageService {
 		return total;
 	}
 	
-	public void DeleteUserNodes(List<Integer> nodeIds) throws Exception
+	public void DeleteUserNodes(List<String> nodeIds) throws Exception
 	{	
 		if(nodeIds == null)
 			return;
-		User user;
+		User user;System.out.println(nodeIds.size());
 		for(int i = 0; i< nodeIds.size(); i++) {
 			user = new User();
-			user.setId(nodeIds.get(i));
+			user.setCERTIFICATE_CODE_MD5(nodeIds.get(i));
 			
 			DeleteUserNode(user);
 		}
@@ -266,37 +267,14 @@ public class UserManageService {
 	}
 	public User DeleteUserNode(User user) throws Exception
 	{
-		UserDAO dao = new UserDAOImpl();
-		//List<User> nodes = dao.GetUserByCertificateCodeMd5(user.getCERTIFICATE_CODE_MD5());
+		UserDAO dao = new UserDAOImpl();System.out.println(user.getCERTIFICATE_CODE_MD5());
 		User node = dao.GetUserByCertificateCodeMd5(user.getCERTIFICATE_CODE_MD5());
 	
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		
-//		for(int i = 0; i< nodes.size(); i++) {
-//			user.setNAME(nodes.get(i).getNAME());
-//			user.setCERTIFICATE_CODE_MD5(nodes.get(i).getCERTIFICATE_CODE_MD5());
-//			user.setCERTIFICATE_CODE_SUFFIX(nodes.get(i).getCERTIFICATE_CODE_SUFFIX());
-//			user.setSEXCODE(nodes.get(i).getSEXCODE());
-//			user.setGA_DEPARTMENT(nodes.get(i).getGA_DEPARTMENT());
-//			user.setUNIT(nodes.get(i).getUNIT());
-//			user.setORG_LEVEL(nodes.get(i).getORG_LEVEL());
-//			user.setPOLICE_SORT(nodes.get(i).getPOLICE_SORT());
-//			user.setPOLICE_NO(nodes.get(i).getPOLICE_NO());
-//			user.setSENSITIVE_LEVEL(nodes.get(i).getSENSITIVE_LEVEL());
-//			user.setBUSINESS_TYPE(nodes.get(i).getBUSINESS_TYPE());
-//			user.setTAKE_OFFICE(nodes.get(i).getTAKE_OFFICE());
-//			user.setUSER_STATUS(nodes.get(i).getUSER_STATUS());
-//			user.setPosition(nodes.get(i).getPosition());
-//			user.setDept(nodes.get(i).getDept());
-//			user.setDELETE_STATUS(User.DELSTATUSYES);
-//			user.setDATA_VERSION(nodes.get(i).getDATA_VERSION());
-//			user.setLATEST_MOD_TIME(timenow);
-//			
-//			user = dao.UserAdd(user);
-//			AddUserDelLog(user);
-//		}
+		user.setId(node.getId());
 		user.setNAME(node.getNAME());
 		user.setCERTIFICATE_CODE_MD5(node.getCERTIFICATE_CODE_MD5());
 		user.setCERTIFICATE_CODE_SUFFIX(node.getCERTIFICATE_CODE_SUFFIX());
@@ -313,7 +291,7 @@ public class UserManageService {
 		user.setPosition(node.getPosition());
 		user.setDept(node.getDept());
 		user.setDELETE_STATUS(User.DELSTATUSYES);
-		user.setDATA_VERSION(node.getDATA_VERSION());
+		user.setDATA_VERSION(node.getDATA_VERSION()+1);
 		user.setLATEST_MOD_TIME(timenow);
 		
 		user = dao.UserAdd(user);
@@ -398,7 +376,7 @@ public class UserManageService {
 			auditUserLogDescribe.setDescrib(str);
 			
 			auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
-//			auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
+			auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 		}
 	}
 	
@@ -466,7 +444,7 @@ public class UserManageService {
 		auditUserLogDescribe.setDescrib(str);
 		
 		auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
-//		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
+		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 		
 		return ;
 	}
@@ -533,6 +511,6 @@ public class UserManageService {
 		auditUserLogDescribe.setDescrib(str);
 		
 		auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
-//		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
+		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 	}
 }

@@ -15,7 +15,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.hibernate.Hibernate;
 
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
@@ -45,11 +44,11 @@ public class GroupManageService {
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPEUSER);
 		
-		AddGroupAddOrUpdateLog(group, null);
-		
 		group = dao.GroupAdd(group);
 		
 		dao.UpdateGroupUsers(group.getCode(), userIds);
+		
+		AddGroupAddOrUpdateLog(group, null);
 		return group;
 	}
 
@@ -85,7 +84,7 @@ public class GroupManageService {
 		return res;
 	}
 
-	public void DeleteGroupUsers(List<Integer> groupIds) throws Exception {
+	public void DeleteGroupUsers(List<String> groupIds) throws Exception {
 		if(groupIds == null)
 			return;
 		
@@ -93,7 +92,7 @@ public class GroupManageService {
 		GroupDAO dao = new GroupDAOImpl();
 		for(int i = 0; i< groupIds.size(); i++) {
 			target = new Group();
-			target.setId(groupIds.get(i));
+			target.setCode(groupIds.get(i));
 			
 			AddGroupDelLog(target);
 			
@@ -120,11 +119,11 @@ public class GroupManageService {
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPERULE);
 		
-		AddGroupAddOrUpdateLog(group, rules);
-		
 		group = dao.GroupAdd(group);
 		
 		dao.UpdateGroupRules(group.getCode(),ruleValue, rules);
+		
+		AddGroupAddOrUpdateLog(group, rules);
 		return group;
 	}
 
@@ -183,7 +182,7 @@ public class GroupManageService {
 		return item;
 		}
 
-	public void DeleteGroupRules(List<Integer> groupIds) throws Exception {
+	public void DeleteGroupRules(List<String> groupIds) throws Exception {
 		if(groupIds == null)
 			return;
 		
@@ -191,7 +190,7 @@ public class GroupManageService {
 		GroupDAO dao = new GroupDAOImpl();
 		for(int i = 0; i< groupIds.size(); i++) {
 			target = new Group();
-			target.setId(groupIds.get(i));
+			target.setCode(groupIds.get(i));
 			
 			AddGroupDelLog(target);
 			
@@ -228,10 +227,10 @@ public class GroupManageService {
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
 				str += criteria.getCode();
 			}
-//			auditGroupLogDescribe.setDescrib(str);
+			auditGroupLogDescribe.setDescrib(str);
 			
 			auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
-//			auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+			auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
 		}
 	}
 	
@@ -298,16 +297,10 @@ public class GroupManageService {
 				str += users.get(i).getUNIT()+";";
 			}
 		}
-	    byte[] byteData = str.getBytes("UTF-8");
-//	    Blob b=Hibernate.createBlob(byteData);
-//	    ByteArrayInputStream out = (ByteArrayInputStream) b.getBinaryStream();		
-//		byte[] byteData2 = new byte[out.available()];		
-//		out.read(byteData2, 0,byteData2.length);
-//		System.out.println(new String(byteData2,"utf-8"));
 		
-	    auditGroupLogDescribe.setDescrib(Hibernate.createBlob(byteData));
+		auditGroupLogDescribe.setDescrib(str);
 		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
-//		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
 		
 		return ;
 	}
@@ -375,10 +368,10 @@ public class GroupManageService {
 				str += users.get(i).getUNIT();
 			}
 		}
-//		auditGroupLogDescribe.setDescrib(str);
+		auditGroupLogDescribe.setDescrib(str);
 		
 		auditGroupLogDescribe.setLATEST_MOD_TIME(timenow);
-//		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
+		auditGroupLogDescribe = logDescdao.AuditGroupLogDescribeAdd(auditGroupLogDescribe);
 	}
 	
 }

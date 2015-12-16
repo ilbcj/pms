@@ -204,10 +204,14 @@ public class GroupDAOImpl implements GroupDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("groupid", group.getId());
+			q.setString("groupid", group.getCode());
 			q.executeUpdate();
-		
-			session.delete(group);
+			
+			sqlString = "delete from groups where code = :code ";
+			q = session.createSQLQuery(sqlString);
+			q.setString("code", group.getCode());
+			q.executeUpdate();
+			
 			tx.commit();
 		}
 		catch(Exception e)
@@ -521,23 +525,29 @@ public class GroupDAOImpl implements GroupDAO {
 	public void GroupOfRuleDel(Group group) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		String sqlString = "delete from group_rule where groupid = :groupid ";
+		String  sqlString = "select * from group_rule where groupid = :groupid ";
+		List<GroupRule> rs = null;
 		
 		try {
-			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("groupid", group.getId());
+			Query q = session.createSQLQuery(sqlString).addEntity(GroupRule.class);
+			q.setString("groupid", group.getCode());
+			rs = q.list();
+			
+			sqlString = "delete from groups where code = :code ";
+			q = session.createSQLQuery(sqlString);
+			q.setString("code", group.getCode());
+			q.executeUpdate();
+			
+			sqlString = "delete from group_rule where groupid = :groupid ";
+			q = session.createSQLQuery(sqlString);
+			q.setString("groupid", group.getCode());
 			q.executeUpdate();
 			
 			sqlString = "delete from rule where groupid = :groupid ";
 			q = session.createSQLQuery(sqlString);
-			q.setInteger("groupid", group.getId());
+			q.setString("groupid", group.getCode());
 			q.executeUpdate();
 			
-			sqlString = "select * from group_rule where groupid = :groupid ";
-			List<GroupRule> rs = null;
-			q = session.createSQLQuery(sqlString).addEntity(GroupRule.class);
-			q.setInteger("groupid", group.getId());
-			rs = q.list();
 			for(int i = 0; i<rs.size(); i++) {
 				sqlString = "delete from rule_attr where ruleid = :ruleid ";
 				q = session.createSQLQuery(sqlString);
@@ -545,7 +555,6 @@ public class GroupDAOImpl implements GroupDAO {
 				q.executeUpdate();
 			}
 		
-			session.delete(group);
 			tx.commit();
 		}
 		catch(Exception e)

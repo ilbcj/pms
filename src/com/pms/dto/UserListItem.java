@@ -3,7 +3,7 @@ package com.pms.dto;
 import java.util.List;
 
 import com.pms.model.AttrDictionary;
-import com.pms.model.Organization;
+//import com.pms.model.Organization;
 
 public class UserListItem {
 	private int id;
@@ -13,7 +13,7 @@ public class UserListItem {
 	private String pname;
 	private String gname;
 	private String unit;
-	private String orgLevel;
+	private int orgLevel;
 	private String police_type;
 	private String sex;
 	private String idnum;
@@ -71,35 +71,35 @@ public class UserListItem {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-	public String getOrgLevel() {
+	public int getOrgLevel() {
 		return orgLevel;
 	}
-	public void setOrgLevel(String orgLevel) {
+	public void setOrgLevel(int orgLevel) {
 		this.orgLevel = orgLevel;
 	}
-	public void setOrgLevel(int orgLevel) {
-		switch(orgLevel) {
-			case Organization.ORG_LEVEL_MINISTRY:
-				this.orgLevel = "部";
-				break;
-			case Organization.ORG_LEVEL_PROVINCE:
-				this.orgLevel = "省";
-				break;
-			case Organization.ORG_LEVEL_CITY:
-				this.orgLevel = "市";
-				break;
-			case Organization.ORG_LEVEL_COUNTY:
-				this.orgLevel = "县";
-				break;
-			case Organization.ORG_LEVEL_GRASSROOTS:
-				this.orgLevel = "基层所队";
-				break;
-			default:
-				this.orgLevel = "未知";
-				break;
-		}
-		return;
-	}
+//	public void setOrgLevel(int orgLevel) {
+//		switch(orgLevel) {
+//			case Organization.ORG_LEVEL_MINISTRY:
+//				this.orgLevel = "部";
+//				break;
+//			case Organization.ORG_LEVEL_PROVINCE:
+//				this.orgLevel = "省";
+//				break;
+//			case Organization.ORG_LEVEL_CITY:
+//				this.orgLevel = "市";
+//				break;
+//			case Organization.ORG_LEVEL_COUNTY:
+//				this.orgLevel = "县";
+//				break;
+//			case Organization.ORG_LEVEL_GRASSROOTS:
+//				this.orgLevel = "基层所队";
+//				break;
+//			default:
+//				this.orgLevel = "未知";
+//				break;
+//		}
+//		return;
+//	}
 	public String getPolice_type() {
 		return police_type;
 	}
