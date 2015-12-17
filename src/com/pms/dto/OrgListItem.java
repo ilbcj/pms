@@ -3,7 +3,7 @@ package com.pms.dto;
 import java.util.List;
 
 import com.pms.model.AttrDictionary;
-import com.pms.model.Organization;
+//import com.pms.model.Organization;
 
 public class OrgListItem {
 	private String id;

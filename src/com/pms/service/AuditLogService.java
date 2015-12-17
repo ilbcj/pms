@@ -14,6 +14,7 @@ import com.pms.dto.LogOrgItem;
 import com.pms.dto.LogPrivItem;
 import com.pms.dto.LogResItem;
 import com.pms.dto.LogRoleItem;
+import com.pms.dto.LogSystemItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.Admin;
 import com.pms.model.AuditGroupLog;
@@ -26,6 +27,8 @@ import com.pms.model.AuditResLog;
 import com.pms.model.AuditResLogDescribe;
 import com.pms.model.AuditRoleLog;
 import com.pms.model.AuditRoleLogDescribe;
+import com.pms.model.AuditSystemLog;
+import com.pms.model.AuditSystemLogDescribe;
 import com.pms.model.AuditUserLog;
 import com.pms.model.AuditUserLogDescribe;
 
@@ -170,6 +173,43 @@ public class AuditLogService {
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditRoleLogDescribe> logdesc = dao.GetRoleLogDescByLogId(auditRoleLog.getId());
+		for (int i = 0; i < logdesc.size(); i++) {
+			item.setDesc(logdesc.get(i).getDescrib());
+		}
+		
+		return item;
+		
+	}
+	
+	public int QuerySystemLogItems(AuditSystemLog criteria, int page, int rows, List<LogSystemItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditSystemLog> res = dao.GetAllAuditSystemLogs(criteria, page, rows );
+		LogSystemItem logSystemItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logSystemItem = ConvertSystemLogToListItem(res.get(i));
+			items.add(logSystemItem);
+		}
+		int total = QuerySystemLogsCount( criteria );
+		return total;
+	}
+	
+	private int QuerySystemLogsCount(AuditSystemLog criteria) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		int count = dao.GetAuditSystemLogsCount( criteria );
+		return count;
+	}
+	
+	public LogSystemItem ConvertSystemLogToListItem(AuditSystemLog auditSystemLog) throws Exception {
+		LogSystemItem item = new LogSystemItem();
+		item.setLogid(auditSystemLog.getId());
+		item.setAdminId(auditSystemLog.getAdminId());
+		item.setIpAddr(auditSystemLog.getIpAddr());
+		item.setFlag(auditSystemLog.getFlag());
+		item.setResult(auditSystemLog.getResult());
+		item.setLATEST_MOD_TIME(auditSystemLog.getLATEST_MOD_TIME());
+		
+		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
+		List<AuditSystemLogDescribe> logdesc = dao.GetSystemLogDescByLogId(auditSystemLog.getId());
 		for (int i = 0; i < logdesc.size(); i++) {
 			item.setDesc(logdesc.get(i).getDescrib());
 		}

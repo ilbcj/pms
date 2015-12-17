@@ -158,6 +158,12 @@
 		var attrId = $("#attr_id").val();
     	var poststr = "attrItem.id=" + attrId;
     	
+    	var attrName = $("#attr_name").val();
+    	poststr += "&attrItem.name=" + attrName;
+    	
+    	var attrCode = $("#attr_code").val();
+    	poststr += "&attrItem.code=" + attrCode;
+    	
     	var rows = $("#attr_dict_user_maintain_center_detail_value_dg").datagrid('getRows');
     	var convertArray = new Array();
     	

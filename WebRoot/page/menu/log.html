@@ -31,6 +31,9 @@
         <li iconCls="icon-leaf" id="menu_privilegelog_operation">
             <span>授权操作日志</span>
         </li>
+        <li iconCls="icon-leaf" id="menu_systemlog_operation">
+            <span>系统操作日志</span>
+        </li>
     </ul>
 <script>
 $(document).ready(function () {
@@ -53,6 +56,9 @@ $(document).ready(function () {
 			}
 			else if( node.id == 'menu_privilegelog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/privilegelog_operation.html');
+			}
+			else if( node.id == 'menu_systemlog_operation') {
+				$('body').layout('panel','center').panel('refresh','log/systemlog_operation.html');
 			}
 		}
 	});

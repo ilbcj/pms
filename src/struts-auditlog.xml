@@ -30,6 +30,9 @@
  		<action name="queryAllAuditRoleLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditRoleLog" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryAllAuditSystemLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditSystemLog" >
+ 			<result name="success" type="json" />
+ 		</action>
  		<action name="queryAllAuditPrivLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditPrivLog" >
  			<result name="success" type="json" />
  		</action>

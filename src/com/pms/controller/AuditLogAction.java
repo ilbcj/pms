@@ -10,12 +10,14 @@ import com.pms.dto.LogOrgItem;
 import com.pms.dto.LogPrivItem;
 import com.pms.dto.LogResItem;
 import com.pms.dto.LogRoleItem;
+import com.pms.dto.LogSystemItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditResLog;
 import com.pms.model.AuditRoleLog;
+import com.pms.model.AuditSystemLog;
 import com.pms.model.AuditUserLog;
 import com.pms.service.AuditLogService;
 
@@ -33,6 +35,7 @@ public class AuditLogAction extends ActionSupport {
 	private List<LogGroupItem> logGroupItems;
 	private List<LogResItem> logResItems;
 	private List<LogRoleItem> logRoleItems;
+	private List<LogSystemItem> logSystemItems;
 	private List<LogPrivItem> logPrivItems;
 	
 	private String flag;
@@ -102,6 +105,12 @@ public class AuditLogAction extends ActionSupport {
 	}
 	public void setLogRoleItems(List<LogRoleItem> logRoleItems) {
 		this.logRoleItems = logRoleItems;
+	}
+	public List<LogSystemItem> getLogSystemItems() {
+		return logSystemItems;
+	}
+	public void setLogSystemItems(List<LogSystemItem> logSystemItems) {
+		this.logSystemItems = logSystemItems;
 	}
 	public List<LogPrivItem> getLogPrivItems() {
 		return logPrivItems;
@@ -192,6 +201,23 @@ public class AuditLogAction extends ActionSupport {
 			AuditRoleLog criteria=new AuditRoleLog();
 			criteria.setFlag(flag);
 			total = oms.QueryRoleLogItems(criteria, page, rows, logRoleItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllAuditSystemLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logSystemItems = new ArrayList<LogSystemItem>();
+		try {
+			AuditSystemLog criteria=new AuditSystemLog();
+			criteria.setFlag(flag);
+			total = oms.QuerySystemLogItems(criteria, page, rows, logSystemItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
