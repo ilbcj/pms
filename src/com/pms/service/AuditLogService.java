@@ -13,6 +13,7 @@ import com.pms.dto.LogGroupItem;
 import com.pms.dto.LogOrgItem;
 import com.pms.dto.LogPrivItem;
 import com.pms.dto.LogResItem;
+import com.pms.dto.LogRoleItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.Admin;
 import com.pms.model.AuditGroupLog;
@@ -23,6 +24,8 @@ import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditPrivLogDescribe;
 import com.pms.model.AuditResLog;
 import com.pms.model.AuditResLogDescribe;
+import com.pms.model.AuditRoleLog;
+import com.pms.model.AuditRoleLogDescribe;
 import com.pms.model.AuditUserLog;
 import com.pms.model.AuditUserLogDescribe;
 
@@ -130,6 +133,43 @@ public class AuditLogService {
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditGroupLogDescribe> logdesc = dao.GetGroupLogDescByLogId(auditGroupLog.getId());
+		for (int i = 0; i < logdesc.size(); i++) {
+			item.setDesc(logdesc.get(i).getDescrib());
+		}
+		
+		return item;
+		
+	}
+	
+	public int QueryRoleLogItems(AuditRoleLog criteria, int page, int rows, List<LogRoleItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditRoleLog> res = dao.GetAllAuditRoleLogs(criteria, page, rows );
+		LogRoleItem logRoleItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logRoleItem = ConvertRoleLogToListItem(res.get(i));
+			items.add(logRoleItem);
+		}
+		int total = QueryRoleLogsCount( criteria );
+		return total;
+	}
+	
+	private int QueryRoleLogsCount(AuditRoleLog criteria) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		int count = dao.GetAuditRoleLogsCount( criteria );
+		return count;
+	}
+	
+	public LogRoleItem ConvertRoleLogToListItem(AuditRoleLog auditRoleLog) throws Exception {
+		LogRoleItem item = new LogRoleItem();
+		item.setLogid(auditRoleLog.getId());
+		item.setAdminId(auditRoleLog.getAdminId());
+		item.setIpAddr(auditRoleLog.getIpAddr());
+		item.setFlag(auditRoleLog.getFlag());
+		item.setResult(auditRoleLog.getResult());
+		item.setLATEST_MOD_TIME(auditRoleLog.getLATEST_MOD_TIME());
+		
+		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
+		List<AuditRoleLogDescribe> logdesc = dao.GetRoleLogDescByLogId(auditRoleLog.getId());
 		for (int i = 0; i < logdesc.size(); i++) {
 			item.setDesc(logdesc.get(i).getDescrib());
 		}

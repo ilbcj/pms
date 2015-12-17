@@ -1034,9 +1034,9 @@
 			});
 			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选角色？', function(r){
                 if (r){
-                	var poststr = "delIds=" + rows[0].id;
+                	var poststr = "delIds=" + rows[0].BUSINESS_ROLE;
                 	for(var i=1; i<rows.length; i++){
-					    poststr += "&delIds=" + rows[i].id;
+					    poststr += "&delIds=" + rows[i].BUSINESS_ROLE;
 					}
 
                     $.post("../resource/deleteResourceRole.action", poststr, function(retObj) {

@@ -255,7 +255,7 @@ public class UserManageService {
 	{	
 		if(nodeIds == null)
 			return;
-		User user;System.out.println(nodeIds.size());
+		User user;
 		for(int i = 0; i< nodeIds.size(); i++) {
 			user = new User();
 			user.setCERTIFICATE_CODE_MD5(nodeIds.get(i));
@@ -267,7 +267,7 @@ public class UserManageService {
 	}
 	public User DeleteUserNode(User user) throws Exception
 	{
-		UserDAO dao = new UserDAOImpl();System.out.println(user.getCERTIFICATE_CODE_MD5());
+		UserDAO dao = new UserDAOImpl();
 		User node = dao.GetUserByCertificateCodeMd5(user.getCERTIFICATE_CODE_MD5());
 	
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",

@@ -9,11 +9,13 @@ import com.pms.dto.LogGroupItem;
 import com.pms.dto.LogOrgItem;
 import com.pms.dto.LogPrivItem;
 import com.pms.dto.LogResItem;
+import com.pms.dto.LogRoleItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditResLog;
+import com.pms.model.AuditRoleLog;
 import com.pms.model.AuditUserLog;
 import com.pms.service.AuditLogService;
 
@@ -30,7 +32,9 @@ public class AuditLogAction extends ActionSupport {
 	private List<LogOrgItem> logOrgItems;
 	private List<LogGroupItem> logGroupItems;
 	private List<LogResItem> logResItems;
+	private List<LogRoleItem> logRoleItems;
 	private List<LogPrivItem> logPrivItems;
+	
 	private String flag;
 	
 	public int getPage() {
@@ -92,6 +96,12 @@ public class AuditLogAction extends ActionSupport {
 	}
 	public void setLogResItems(List<LogResItem> logResItems) {
 		this.logResItems = logResItems;
+	}
+	public List<LogRoleItem> getLogRoleItems() {
+		return logRoleItems;
+	}
+	public void setLogRoleItems(List<LogRoleItem> logRoleItems) {
+		this.logRoleItems = logRoleItems;
 	}
 	public List<LogPrivItem> getLogPrivItems() {
 		return logPrivItems;
@@ -165,6 +175,23 @@ public class AuditLogAction extends ActionSupport {
 			AuditResLog criteria=new AuditResLog();
 			criteria.setFlag(flag);
 			total = oms.QueryResLogItems(criteria, page, rows, logResItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllAuditRoleLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logRoleItems = new ArrayList<LogRoleItem>();
+		try {
+			AuditRoleLog criteria=new AuditRoleLog();
+			criteria.setFlag(flag);
+			total = oms.QueryRoleLogItems(criteria, page, rows, logRoleItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

@@ -2170,15 +2170,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResData> GetDataById(int id) throws Exception {
+	public List<ResData> GetDataById(String id) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where id = :id";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID = :RESOURCE_ID";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
-			q.setInteger("id", id);
+			q.setString("RESOURCE_ID", id);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

@@ -63,7 +63,7 @@ public interface ResourceDAO {
 	ResData GetDataByResId(String resId) throws Exception;
 //	List<ResData> GetDataByResId(String resId) throws Exception;
 	List<ResDataTemplate> GetDataTemplateByResId(String resId) throws Exception;
-	List<ResData> GetDataById(int id) throws Exception;
+	List<ResData> GetDataById(String id) throws Exception;
 	
 	List<ResData> GetDatasByRole(String roleId) throws Exception;
 	List<ResData> GetDatasByTime(String time) throws Exception;

@@ -64,7 +64,7 @@
 								data-options="fit:true,border:false,title:'基本信息',footer:'#resource_feature_manage_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 				    <form id="resource_feature_manage_center_detail_form" method="post">
-				    	<input id="res_id" name="feature.id" type="hidden"/> 
+				    	<input id="res_id" name="feature.id" value="0" type="hidden"/> 
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 名称</td>
@@ -76,7 +76,7 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 资源状态</td>
-				                <td><input id="res_status" name="feature.RESOURCE_STATUS" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
+				                <td><input id="res_status" name="feature.RESOURCE_STATUS" value="0" class="form_value_mid easyui-textbox" data-options="prompt:'请输资源状态'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 资源描述</td>
@@ -88,7 +88,7 @@
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 删除状态</td>
-				                <td><input id="res_delstatus" name="feature.DELETE_STATUS" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
+				                <td><input id="res_delstatus" name="feature.DELETE_STATUS" value="0" class="form_value_mid easyui-textbox" data-options="prompt:'请选择删除状态'"></input></td>
 				            </tr>
 				            <tr>
 				                <td class="form_name_small text_right"> 所属业务系统</td>
@@ -283,9 +283,9 @@
 			});
 			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选资源？', function(r){
                 if (r){
-                	var poststr = "delIds=" + rows[0].id;
+                	var poststr = "delIds=" + rows[0].RESOURCE_ID;
                 	for(var i=1; i<rows.length; i++){
-					    poststr += "&delIds=" + rows[i].id;
+					    poststr += "&delIds=" + rows[i].RESOURCE_ID;
 					}
 
                     $.post("../resource/deleteResourceFeatures.action", poststr, function(retObj) {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>reslog_operation.html</title>
+    <title>rolelog_operation.html</title>
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
@@ -14,29 +14,29 @@
   <body>
 	<div class="easyui-layout" data-options="fit:true,border:false">
 		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
-			<b>当前位置：<span style="color:blue">资源操作日志</span></b>
+			<b>当前位置：<span style="color:blue">角色操作日志</span></b>
 		</div>
 		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
-			<div id="reslog_operation_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
-				<div id="reslog_operation_maintain_center_main" class="easyui-layout" data-options="fit:true" >
-					<div id="reslog_operation_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+			<div id="rolelog_operation_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+				<div id="rolelog_operation_maintain_center_main" class="easyui-layout" data-options="fit:true" >
+					<div id="rolelog_operation_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
 		    			<table class="nodt" style="width:100%">
 			                <tr>
 			                    <td class="query_name_small text_right">操作类型</td>
-			                    <td class="query_value_small"><input id="reslog_operation_query_flag" class="easyui-textbox"></input></td>
+			                    <td class="query_value_small"><input id="rolelog_operation_query_flag" class="easyui-textbox"></input></td>
 <!-- 			                    <td class="query_name_small text_right">编码</td> -->
-<!-- 			                    <td class="query_value_small"><input id="reslog_operation_query_code" class="easyui-textbox"></input></td> -->
+<!-- 			                    <td class="query_value_small"><input id="rolelog_operation_query_code" class="easyui-textbox"></input></td> -->
 			                    <td>
-			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryReslogOperation()">查询</a>
-	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryReslogOperationCondition()">重置</a>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryRolelogOperation()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryRolelogOperationCondition()">重置</a>
 			                    </td>
 			                </tr>
 			            </table>
-		    		</div><!-- end of reslog_operation_maintain_center_query -->
+		    		</div><!-- end of rolelog_operation_maintain_center_query -->
 		    		
-		    		<div id="reslog_operation_maintain_center_list" region="center" data-options="border:false,noheader:true" >
-		    			<table class="nodt" id="reslog_operation_maintain_center_list_dg"  
-					            data-options="singleSelect:false,method:'post',nowrap:true,toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+		    		<div id="rolelog_operation_maintain_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="rolelog_operation_maintain_center_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,pagination:true,noheader:true,fit:true">
 					        <thead>
 					            <tr>
 					            	<th field="ck" checkbox="true"></th>
@@ -50,34 +50,28 @@
 					            </tr>
 					        </thead>
 					    </table>
-					    <div id="toolbar" style="background-color:#E7F0FF">
-					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addGroupOfUser()">添加</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modGroupOfUser()">修改</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delGroupOfUser()">删除</a>
-	            			
-					    </div><!-- end of toolbar -->
-		    		</div><!-- end of reslog_operation_maintain_center_list -->
-		    	</div><!-- end of reslog_operation_maintain_center_main -->
-			</div><!-- reslog_operation_maintain_center_main_wapper -->			
+		    		</div><!-- end of rolelog_operation_maintain_center_list -->
+		    	</div><!-- end of rolelog_operation_maintain_center_main -->
+			</div><!-- rolelog_operation_maintain_center_main_wapper -->			
 	    			
 		</div><!-- end of center -->
 	</div><!-- end of layout -->
 	
 <script type="text/javascript">	
-	function queryReslogOperation(){
-    	var flag = $("#reslog_operation_query_flag").combobox("getValue");
+	function queryRolelogOperation(){
+    	var flag = $("#rolelog_operation_query_flag").combobox("getValue");
     	
-    	$("#reslog_operation_maintain_center_list_dg").datagrid('load',{
+    	$("#rolelog_operation_maintain_center_list_dg").datagrid('load',{
     		queryAll: true,
 			flag: flag
 		});
     }
     
-    function clearQueryReslogOperationCondition(){
-    	$("#reslog_operation_query_flag").combobox("setValue","");
+    function clearQueryRolelogOperationCondition(){
+    	$("#rolelog_operation_query_flag").combobox("setValue","");
     }
     
-    $("#reslog_operation_query_flag").combobox({
+    $("#rolelog_operation_query_flag").combobox({
 		valueField: 'value',
 		textField: 'label',
 		data:[{
@@ -98,14 +92,14 @@
 		}]
 	});
 	
-	$("#reslog_operation_maintain_center_list_dg").datagrid({
-		url:'../auditlog/queryAllAuditResLog.action',
+	$("#rolelog_operation_maintain_center_list_dg").datagrid({
+		url:'../auditlog/queryAllAuditRoleLog.action',
 		queryParams:{queryAll: true},
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
 				res.total = data.total;
-				res.rows = data.logResItems;
+				res.rows = data.logRoleItems;
 			} else {
 				res.total=0;
 				res.rows = [];
@@ -123,7 +117,7 @@
 			}
 		},
 //		onLoadSuccess: function() {alert("success");},
-		onLoadError: function() { $("#reslog_operation_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
+		onLoadError: function() { $("#rolelog_operation_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
 	});
 </script>
   </body>

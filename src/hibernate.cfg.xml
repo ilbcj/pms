@@ -82,6 +82,8 @@
 	<mapping resource="com/pms/model/AuditGroupLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditResLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditResLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditRoleLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditRoleLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditPrivLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditPrivLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/UserRoleView.hbm.xml" />

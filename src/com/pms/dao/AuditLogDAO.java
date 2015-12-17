@@ -6,6 +6,7 @@ import com.pms.model.AuditGroupLog;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditResLog;
+import com.pms.model.AuditRoleLog;
 import com.pms.model.AuditUserLog;
 
 public interface AuditLogDAO {
@@ -18,6 +19,9 @@ public interface AuditLogDAO {
 	List<AuditGroupLog> GetAllAuditGroupLogs(AuditGroupLog criteria, int page, int rows) throws Exception;
 	AuditGroupLog AuditGroupLogAdd(AuditGroupLog auditGroupLog) throws Exception;
 	int GetAuditGroupLogsCount(AuditGroupLog criteria) throws Exception;
+	List<AuditRoleLog> GetAllAuditRoleLogs(AuditRoleLog criteria, int page, int rows) throws Exception;
+	AuditRoleLog AuditRoleLogAdd(AuditRoleLog auditRoleLog) throws Exception;
+	int GetAuditRoleLogsCount(AuditRoleLog criteria) throws Exception;
 	List<AuditResLog> GetAllAuditResLogs(AuditResLog criteria, int page, int rows) throws Exception;
 	AuditResLog AuditResLogAdd(AuditResLog auditResLog) throws Exception;
 	int GetAuditResLogsCount(AuditResLog criteria) throws Exception;

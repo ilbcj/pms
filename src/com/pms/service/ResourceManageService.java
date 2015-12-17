@@ -23,7 +23,6 @@ import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
-import com.pms.dto.OrgListItem;
 import com.pms.dto.ResDataListItem;
 import com.pms.dto.ResDataTemplateListItem;
 import com.pms.dto.ResFeatureListItem;
@@ -33,6 +32,8 @@ import com.pms.dto.TreeNode;
 import com.pms.model.AttrDictionary;
 import com.pms.model.AuditResLog;
 import com.pms.model.AuditResLogDescribe;
+import com.pms.model.AuditRoleLog;
+import com.pms.model.AuditRoleLogDescribe;
 import com.pms.model.ResData;
 import com.pms.model.ResDataOrg;
 import com.pms.model.ResDataTemplate;
@@ -189,23 +190,21 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 		feature.setLATEST_MOD_TIME(timenow);
 		
-		AddResAddOrUpdateLog(null, null, feature, null, null);
-		System.out.println(feature.getId());
-		System.out.println(feature.getDELETE_STATUS());
-		System.out.println(feature.getRESOURCE_STATUS());
 		feature = dao.FeatureAdd(feature);
+		
+		AddResAddOrUpdateLog(null, null, feature, null, null);
 		
 		return feature;
 	}
 
-	public void DeleteResourceFeatures(List<Integer> resourceIds) throws Exception {
+	public void DeleteResourceFeatures(List<String> resourceIds) throws Exception {
 		if(resourceIds == null)
 			return;
 		
 		ResFeature target;
 		for(int i = 0; i< resourceIds.size(); i++) {
 			target = new ResFeature();
-			target.setId(resourceIds.get(i));
+			target.setRESOURCE_ID(resourceIds.get(i));
 
 			DeleteResourceFeature(target);
 		}
@@ -220,10 +219,13 @@ public class ResourceManageService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
-
+		
+		feature.setId(nodes.getId());
 		feature.setRESOUCE_NAME(nodes.getRESOUCE_NAME());
 		feature.setRESOURCE_ID(nodes.getRESOURCE_ID());
 		feature.setRESOURCE_STATUS(nodes.getRESOURCE_STATUS());
+		feature.setURL(nodes.getURL());
+		feature.setRESOURCE_ICON_PATH(nodes.getRESOURCE_ICON_PATH());
 		feature.setRESOURCE_DESCRIBE(nodes.getRESOURCE_DESCRIBE());
 		feature.setRMK(nodes.getRMK());
 		feature.setDELETE_STATUS(ResFeature.DELSTATUSYES);
@@ -231,6 +233,8 @@ public class ResourceManageService {
 		feature.setPARENT_RESOURCE(nodes.getPARENT_RESOURCE());
 		feature.setRESOURCE_ORDER(nodes.getRESOURCE_ORDER());
 		feature.setSYSTEM_TYPE(nodes.getSYSTEM_TYPE());
+		feature.setFUN_RESOURCE_TYPE(nodes.getFUN_RESOURCE_TYPE());
+		feature.setDATA_VERSION(nodes.getDATA_VERSION()+1);
 		feature.setLATEST_MOD_TIME(timenow);
 	
 		feature = dao.FeatureAdd(feature);
@@ -502,8 +506,7 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 		data.setLATEST_MOD_TIME(timenow);
 		data.setDATA_VERSION(data.getDATA_VERSION()+1);
-//		
-//		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
+		
 //		
 //		data = dao.DataAdd(data);
 //		if(data.getRESOURCE_ID() == null || data.getRESOURCE_ID().length() == 0) {
@@ -540,17 +543,19 @@ public class ResourceManageService {
 			
 		}
 		
+		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
+		
 		return data;
 	}
 	
-	public void DeleteResourceDatas(List<Integer> resourceIds) throws Exception {
+	public void DeleteResourceDatas(List<String> resourceIds) throws Exception {
 		if(resourceIds == null)
 			return;
 		
 		ResData target;
 		for(int i = 0; i< resourceIds.size(); i++) {
 			target = new ResData();
-			target.setId(resourceIds.get(i));
+			target.setRESOURCE_ID(resourceIds.get(i));
 			DeleteResourceData(target);
 		}
 		
@@ -559,13 +564,14 @@ public class ResourceManageService {
 
 	public ResData DeleteResourceData(ResData data) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		List<ResData> nodes=dao.GetDataById(data.getId());
+		List<ResData> nodes=dao.GetDataById(data.getRESOURCE_ID());
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		
 		for(int i = 0; i< nodes.size(); i++) {
+			data.setId(nodes.get(i).getId());
 			data.setName(nodes.get(i).getName());
 			data.setResource_type(nodes.get(i).getResource_type());
 			data.setRESOURCE_ID(nodes.get(i).getRESOURCE_ID());
@@ -693,8 +699,6 @@ public class ResourceManageService {
 		role.setLATEST_MOD_TIME(timenow);
 		role.setDATA_VERSION(role.getDATA_VERSION()+1);
 		
-		AddResAddOrUpdateLog(null, null, null, role, resRoleOrg);
-		
 		role = dao.RoleAdd(role);
 		
 		if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
@@ -712,18 +716,19 @@ public class ResourceManageService {
 		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds, delFeatureIds);
 		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds, delDataIds);
 //		dao.UpdateDataResource(dataIds);
+		AddResAddOrUpdateLog(null, null, null, role, resRoleOrg);
 		
 		return role;
 	}
 
-	public void DeleteResourceRoles(List<Integer> roleIds) throws Exception {
+	public void DeleteResourceRoles(List<String> roleIds) throws Exception {
 		if(roleIds == null)
 			return;
 		
 		ResRole target;
 		for(int i = 0; i< roleIds.size(); i++) {
 			target = new ResRole();
-			target.setId(roleIds.get(i));
+			target.setBUSINESS_ROLE(roleIds.get(i));
 			
 			DeleteResourceRole(target);
 		}
@@ -740,6 +745,7 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 
 		for(int i = 0; i< roleNodes.size(); i++) {
+			role.setId(roleNodes.get(i).getId());
 			role.setBUSINESS_ROLE(roleNodes.get(i).getBUSINESS_ROLE());
 			role.setBUSINESS_ROLE_TYPE(roleNodes.get(i).getBUSINESS_ROLE_TYPE());
 			role.setBUSINESS_ROLE_NAME(roleNodes.get(i).getBUSINESS_ROLE_NAME());
@@ -747,19 +753,20 @@ public class ResourceManageService {
 			role.setCLUE_SRC_SYS(roleNodes.get(i).getCLUE_SRC_SYS());
 			role.setROLE_DESC(roleNodes.get(i).getROLE_DESC());
 			role.setDELETE_STATUS(ResRole.DELSTATUSYES);
-			role.setDATA_VERSION(roleNodes.get(i).getDATA_VERSION());
+			role.setDATA_VERSION(roleNodes.get(i).getDATA_VERSION()+1);
 			role.setLATEST_MOD_TIME(timenow);
-		
+			
 			role = dao.RoleAdd(role);
 			
 			List<ResRoleResource> roleResNodes=dao.GetRoleResourcesByRoleid(roleNodes.get(i).getBUSINESS_ROLE());
 			ResRoleResource resRole=new ResRoleResource();
 			for (int j = 0; j < roleResNodes.size(); j++) {
+				resRole.setId(roleResNodes.get(i).getId());
 				resRole.setRESOURCE_ID(roleResNodes.get(j).getRESOURCE_ID());
 				resRole.setBUSINESS_ROLE(roleResNodes.get(j).getBUSINESS_ROLE());
 				resRole.setRESOURCE_CLASS(roleResNodes.get(j).getRESOURCE_CLASS());
 				resRole.setDELETE_STATUS(ResRoleResource.DELSTATUSYES);
-				resRole.setDATA_VERSION(roleResNodes.get(j).getDATA_VERSION());
+				resRole.setDATA_VERSION(roleResNodes.get(j).getDATA_VERSION()+1);
 				resRole.setLATEST_MOD_TIME(timenow);
 				
 				resRole = dao.ResRoleResourceAdd(resRole);
@@ -772,7 +779,7 @@ public class ResourceManageService {
 				resRoleOrg.setBUSINESS_ROLE(resRoleOrgNodes.get(j).getBUSINESS_ROLE());
 				resRoleOrg.setCLUE_DST_SYS(resRoleOrgNodes.get(j).getCLUE_DST_SYS());
 				resRoleOrg.setDELETE_STATUS(ResRoleOrg.DELSTATUSYES);
-				resRoleOrg.setDATA_VERSION(resRoleOrgNodes.get(j).getDATA_VERSION());
+				resRoleOrg.setDATA_VERSION(resRoleOrgNodes.get(j).getDATA_VERSION()+1);
 				resRoleOrg.setLATEST_MOD_TIME(timenow);
 				
 				resRoleOrg = dao.ResRoleOrgAdd(resRoleOrg);
@@ -941,6 +948,7 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 		
 		AuditResLog auditResLog = new AuditResLog();
+		AuditRoleLog auditRoleLog = new AuditRoleLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
 		
@@ -950,6 +958,13 @@ public class ResourceManageService {
 		auditResLog.setResult(AuditResLog.LOGRESULTSUCCESS);
 		auditResLog.setLATEST_MOD_TIME(timenow);
 		auditResLog = logdao.AuditResLogAdd(auditResLog);
+		
+		auditRoleLog.setAdminId(als.adminLogin());
+		auditRoleLog.setIpAddr("");
+		auditRoleLog.setFlag(AuditRoleLog.LOGFLAGQUERY);
+		auditRoleLog.setResult(AuditRoleLog.LOGRESULTSUCCESS);
+		auditRoleLog.setLATEST_MOD_TIME(timenow);
+		auditRoleLog = logdao.AuditRoleLogAdd(auditRoleLog);
 		
 		if( resData != null || resFeature != null || resRole != null) {
 			AuditResLogDescribe auditResLogDescribe = new AuditResLogDescribe();
@@ -973,18 +988,27 @@ public class ResourceManageService {
 					str += resFeature.getRESOURCE_ID();
 				}
 			}
+			auditResLogDescribe.setDescrib(str);
+			
+			auditResLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+			
 			if( resRole != null){
+				AuditRoleLogDescribe auditRoleLogDescribe = new AuditRoleLogDescribe();
+				
+				auditRoleLogDescribe.setLogid(auditRoleLog.getId());
 				if(resRole.getBUSINESS_ROLE_NAME() != null && resRole.getBUSINESS_ROLE_NAME().length() > 0) {
 					str += resRole.getBUSINESS_ROLE_NAME()+";";
 				}
 				if(resRole.getBUSINESS_ROLE() != null && resRole.getBUSINESS_ROLE().length() > 0) {
 					str += resRole.getBUSINESS_ROLE();
 				}
+				auditRoleLogDescribe.setDescrib(str);
+				
+				auditRoleLogDescribe.setLATEST_MOD_TIME(timenow);
+				auditRoleLogDescribe = logDescdao.AuditRoleLogDescribeAdd(auditRoleLogDescribe);
 			}
-			auditResLogDescribe.setDescrib(str);
 			
-			auditResLogDescribe.setLATEST_MOD_TIME(timenow);
-//			auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
 		}
 	}
 	
@@ -993,6 +1017,7 @@ public class ResourceManageService {
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		AuditResLog auditResLog = new AuditResLog();
+		AuditRoleLog auditRoleLog = new AuditRoleLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
 		
@@ -1012,16 +1037,29 @@ public class ResourceManageService {
 				auditResLog.setFlag(AuditResLog.LOGFLAGUPDATE);
 			}
 		}
-		if( role != null) {
-			if(role.getId() == 0 ){
-				auditResLog.setFlag(AuditResLog.LOGFLAGADD);
-			}else{
-				auditResLog.setFlag(AuditResLog.LOGFLAGUPDATE);
-			}
-		}
+//		if( role != null) {
+//			if(role.getId() == 0 ){
+//				auditResLog.setFlag(AuditResLog.LOGFLAGADD);
+//			}else{
+//				auditResLog.setFlag(AuditResLog.LOGFLAGUPDATE);
+//			}
+//		}
 		auditResLog.setResult(AuditResLog.LOGRESULTSUCCESS);
 		auditResLog.setLATEST_MOD_TIME(timenow);
 		auditResLog = logdao.AuditResLogAdd(auditResLog);
+		
+		if( role != null) {
+			if(role.getId() == 0 ){
+				auditRoleLog.setFlag(AuditRoleLog.LOGFLAGADD);
+			}else{
+				auditRoleLog.setFlag(AuditRoleLog.LOGFLAGUPDATE);
+			}
+		}
+		auditRoleLog.setAdminId(als.adminLogin());
+		auditRoleLog.setIpAddr("");
+		auditRoleLog.setResult(AuditRoleLog.LOGRESULTSUCCESS);
+		auditRoleLog.setLATEST_MOD_TIME(timenow);
+		auditRoleLog = logdao.AuditRoleLogAdd(auditRoleLog);
 		
 		AuditResLogDescribe auditResLogDescribe = new AuditResLogDescribe();
 		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
@@ -1090,7 +1128,52 @@ public class ResourceManageService {
 				str += resFeature.getSYSTEM_TYPE();
 			}
 		}	
+//		if( role != null){
+//			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
+//				str += role.getBUSINESS_ROLE_NAME()+";";
+//			}
+//			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
+//				str += role.getBUSINESS_ROLE()+";";
+//			}
+//			str += role.getBUSINESS_ROLE_TYPE()+";";
+//			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
+//				str += resRoleOrg.getCLUE_DST_SYS()+";";
+//			}
+//			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
+//				str += role.getSYSTEM_TYPE()+";";
+//			}
+//			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
+//				str += role.getCLUE_SRC_SYS()+";";
+//			}
+//			str += role.getDELETE_STATUS()+";";
+//			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
+//				str += role.getROLE_DESC();
+//			}
+//			
+//			ResourceDAO dao = new ResourceDAOImpl();
+//			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
+//			
+//			for(int i=0; i<rrs.size(); i++) {
+//				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
+//					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
+//					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
+//				}
+//				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
+//					ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
+//					str += ";"+data.getName()+";"+data.getRESOURCE_ID();
+//					
+//				}
+//			}
+//		}
+		auditResLogDescribe.setDescrib(str);
+		
+		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+		
 		if( role != null){
+			AuditRoleLogDescribe auditRoleLogDescribe = new AuditRoleLogDescribe();
+			
+			auditRoleLogDescribe.setLogid(auditRoleLog.getId());
 			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
 				str += role.getBUSINESS_ROLE_NAME()+";";
 			}
@@ -1126,11 +1209,11 @@ public class ResourceManageService {
 					
 				}
 			}
+			auditRoleLogDescribe.setDescrib(str);
+			
+			auditRoleLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditRoleLogDescribe = logDescdao.AuditRoleLogDescribeAdd(auditRoleLogDescribe);
 		}
-		auditResLogDescribe.setDescrib(str);
-		
-		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
-//		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
 	}
 	
 	private void AddResDelLog(ResData resData, ResDataOrg resDataOrg, ResFeature resFeature, ResRole role, ResRoleOrg resRoleOrg) throws Exception {
@@ -1139,6 +1222,7 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 		
 		AuditResLog auditResLog = new AuditResLog();
+		AuditRoleLog auditRoleLog = new AuditRoleLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
 		
@@ -1148,6 +1232,13 @@ public class ResourceManageService {
 		auditResLog.setResult(AuditResLog.LOGRESULTSUCCESS);
 		auditResLog.setLATEST_MOD_TIME(timenow);
 		auditResLog = logdao.AuditResLogAdd(auditResLog);
+		
+		auditRoleLog.setAdminId(als.adminLogin());
+		auditRoleLog.setIpAddr("");
+		auditRoleLog.setFlag(AuditRoleLog.LOGFLAGDELETE);
+		auditRoleLog.setResult(AuditRoleLog.LOGRESULTSUCCESS);
+		auditRoleLog.setLATEST_MOD_TIME(timenow);
+		auditRoleLog = logdao.AuditRoleLogAdd(auditRoleLog);
 		
 		AuditResLogDescribe auditResLogDescribe = new AuditResLogDescribe();
 		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
@@ -1220,7 +1311,52 @@ public class ResourceManageService {
 			}
 		}
 		
+//		if( role != null){
+//			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
+//				str += role.getBUSINESS_ROLE_NAME()+";";
+//			}
+//			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
+//				str += role.getBUSINESS_ROLE()+";";
+//			}
+//			str += role.getBUSINESS_ROLE_TYPE()+";";
+//			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
+//				str += resRoleOrg.getCLUE_DST_SYS()+";";
+//			}
+//			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
+//				str += role.getSYSTEM_TYPE()+";";
+//			}
+//			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
+//				str += role.getCLUE_SRC_SYS()+";";
+//			}
+//			str += role.getDELETE_STATUS()+";";
+//			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
+//				str += role.getROLE_DESC();
+//			}
+//			
+//			ResourceDAO dao = new ResourceDAOImpl();
+//			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
+//			
+//			for(int i=0; i<rrs.size(); i++) {
+//				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
+//					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
+//					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
+//				}
+//				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
+//					ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
+//					str += ";"+data.getName()+";"+data.getRESOURCE_ID();
+//					
+//				}
+//			}
+//		}
+		auditResLogDescribe.setDescrib(str);
+		
+		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+		
 		if( role != null){
+			AuditRoleLogDescribe auditRoleLogDescribe = new AuditRoleLogDescribe();
+			
+			auditRoleLogDescribe.setLogid(auditRoleLog.getId());
 			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
 				str += role.getBUSINESS_ROLE_NAME()+";";
 			}
@@ -1256,11 +1392,11 @@ public class ResourceManageService {
 					
 				}
 			}
+			auditRoleLogDescribe.setDescrib(str);
+			
+			auditRoleLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditRoleLogDescribe = logDescdao.AuditRoleLogDescribeAdd(auditRoleLogDescribe);
 		}
-		auditResLogDescribe.setDescrib(str);
-		
-		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
-//		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
 	}
 	
 }
