@@ -36,26 +36,19 @@
 		    		
 		    		<div id="grouplog_operation_maintain_center_list" region="center" data-options="border:false,noheader:true" >
 		    			<table class="nodt" id="grouplog_operation_maintain_center_list_dg"  
-					            data-options="singleSelect:false,method:'post',nowrap:true,toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+					            data-options="singleSelect:false,method:'post',nowrap:true,pagination:true,noheader:true,fit:true">
 					        <thead>
 					            <tr>
 					            	<th field="ck" checkbox="true"></th>
-					                <th data-options="field:'logid'" style="width:;">LogID</th>
-					                <th data-options="field:'adminId'" style="width:;">管理员ID</th>
+					                <th data-options="field:'logid'" style="width:20%;">LogID</th>
+					                <th data-options="field:'adminId'" style="width:20%;">管理员ID</th>
 <!-- 					                <th data-options="field:'ipAddr'" style="width:;">管理员登录IP地址</th> -->
-					                <th data-options="field:'flag'" style="width:;">操作类型</th>
-					                <th data-options="field:'result'" style="width:;">结果</th>
-<!-- 					                <th data-options="field:'desc'" style="width:;">描述</th> -->
-					                <th data-options="field:'LATEST_MOD_TIME'" style="width:;">操作时间</th>
+					                <th data-options="field:'flag'" style="width:20%;">操作类型</th>
+					                <th data-options="field:'result'" style="width:20%;">结果</th>
+					                <th data-options="field:'LATEST_MOD_TIME'" style="width:20%;">操作时间</th>
 					            </tr>
 					        </thead>
 					    </table>
-					    <div id="toolbar" style="background-color:#E7F0FF">
-					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addGroupOfUser()">添加</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modGroupOfUser()">修改</a>
-	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delGroupOfUser()">删除</a>
-	            			
-					    </div><!-- end of toolbar -->
 		    		</div><!-- end of grouplog_operation_maintain_center_list -->
 		    	</div><!-- end of grouplog_operation_maintain_center_main -->
 			</div><!-- grouplog_operation_maintain_center_main_wapper -->			
