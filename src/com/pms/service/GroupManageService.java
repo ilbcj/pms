@@ -59,7 +59,7 @@ public class GroupManageService {
 		items.addAll(res);
 		int total = QueryAllGroupsUsersCount( criteria );
 		
-		AddGroupQueryLog(criteria);
+		AddGroupQueryLog(criteria, "离散群体;");
 		return total;
 	}
 
@@ -134,7 +134,7 @@ public class GroupManageService {
 		items.addAll(res);
 		int total = QueryAllGroupsRulesCount( criteria );
 		
-		AddGroupQueryLog(criteria);
+		AddGroupQueryLog(criteria, "规则群体;");
 		
 		return total;
 	}
@@ -199,7 +199,7 @@ public class GroupManageService {
 		
 		return ;
 	}
-	private void AddGroupQueryLog(Group criteria) throws Exception {
+	private void AddGroupQueryLog(Group criteria, String groupType) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
@@ -221,6 +221,7 @@ public class GroupManageService {
 			
 			auditGroupLogDescribe.setLogid(auditGroupLog.getId());
 			String str="";
+			str += groupType;
 			if(criteria.getName() != null && criteria.getName().length() > 0) {
 				str += criteria.getName()+";";
 			}
@@ -260,6 +261,13 @@ public class GroupManageService {
 		
 		auditGroupLogDescribe.setLogid(auditGroupLog.getId());
 		String str="";
+		List<Rule> rule = dao.GetGroupRulesByGroupId( group.getCode() );
+		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
+		if (rules != null) {
+			str += "规则群体;";
+		}else if(users.size() > 0){
+			str += "离散群体;";
+		}
 		if(group.getName() != null && group.getName().length() > 0) {
 			str += group.getName()+";";
 		}
@@ -270,7 +278,6 @@ public class GroupManageService {
 			str += group.getDescrib()+";";
 		}
 		
-		List<Rule> rule = dao.GetGroupRulesByGroupId( group.getCode() );
 		if (rules != null) {
 			for(int i = 0; i<rules.size(); i++) {
 				if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
@@ -288,7 +295,6 @@ public class GroupManageService {
 			}
 		}
 		
-		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
 				str += users.get(i).getNAME()+";";
@@ -330,6 +336,13 @@ public class GroupManageService {
 		
 		List<Group> groups = dao.GetGroupByGroupId( group.getCode() );
 		String str="";
+		List<Rule> rules = dao.GetGroupRulesByGroupId( group.getCode() );
+		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
+		if (rules.size() > 0) {
+			str += "规则群体;";
+		}else if(users.size() > 0){
+			str += "离散群体;";
+		}
 		for (int i = 0; i < groups.size(); i++) {
 			if(groups.get(i).getName() != null && groups.get(i).getName().length() > 0) {
 				str += groups.get(i).getName()+";";
@@ -342,7 +355,6 @@ public class GroupManageService {
 			}
 		}
 		
-		List<Rule> rules = dao.GetGroupRulesByGroupId( group.getCode() );
 		for(int i = 0; i<rules.size(); i++) {
 			if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
 				str += rules.get(i).getRulename()+";";
@@ -359,7 +371,6 @@ public class GroupManageService {
 			str += value+";";
 		}
 		
-		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
 				str += users.get(i).getNAME()+";";

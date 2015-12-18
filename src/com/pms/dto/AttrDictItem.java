@@ -8,6 +8,7 @@ public class AttrDictItem {
 	private int id;
 	private String name;
 	private String code;
+	private int type;
 	private List<AttrDictionary> dictionary;
 	public int getId() {
 		return id;
@@ -27,7 +28,13 @@ public class AttrDictItem {
 	public void setCode(String code) {
 		this.code = code;
 	}
-//	public List<String> getDictionary() {
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
+	//	public List<String> getDictionary() {
 //		return dictionary;
 //	}
 //	public void setDictionary(List<String> dictionary) {

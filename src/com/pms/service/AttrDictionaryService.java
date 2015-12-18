@@ -32,7 +32,7 @@ public class AttrDictionaryService {
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
 		
-		AddSystemQueryLog(criteria);
+		AddSystemQueryLog(criteria, "用户属性字典;");
 		return total;
 	}
 	
@@ -48,7 +48,7 @@ public class AttrDictionaryService {
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
 		
-		AddSystemQueryLog(criteria);
+		AddSystemQueryLog(criteria, "数据资源属性字典;");
 		return total;
 	}
 	
@@ -64,7 +64,7 @@ public class AttrDictionaryService {
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
 		
-		AddSystemQueryLog(criteria);
+		AddSystemQueryLog(criteria, "功能资源属性字典;");
 		return total;
 	}
 	
@@ -80,7 +80,7 @@ public class AttrDictionaryService {
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
 		
-		AddSystemQueryLog(criteria);
+		AddSystemQueryLog(criteria, "机构属性字典;");
 		return total;
 	}
 	
@@ -96,7 +96,7 @@ public class AttrDictionaryService {
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
 		
-		AddSystemQueryLog(criteria);
+		AddSystemQueryLog(criteria, "角色属性字典;");
 		return total;
 	}
 	
@@ -106,6 +106,7 @@ public class AttrDictionaryService {
 		item.setId(attr.getId());
 		item.setName(attr.getName());
 		item.setCode(attr.getCode());
+		item.setType(attr.getType());
 		
 		AttributeDAO dao = new AttributeDAOImpl();
 		List<AttrDictionary> attrDicts = dao.GetAttrDictionarysByAttrId(attr.getId());
@@ -132,7 +133,7 @@ public class AttrDictionaryService {
 		AddSystemAddOrUpdateLog(attrItem);
 	}
 	
-	private void AddSystemQueryLog(AttrDefinition criteria) throws Exception {
+	private void AddSystemQueryLog(AttrDefinition criteria, String attrType) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
@@ -154,6 +155,7 @@ public class AttrDictionaryService {
 			
 			auditSystemLogDescribe.setLogid(auditSystemLog.getId());
 			String str="";
+			str += attrType;
 			if(criteria.getName() != null && criteria.getName().length() > 0) {
 				str += criteria.getName()+";";
 			}
@@ -188,7 +190,17 @@ public class AttrDictionaryService {
 		
 		auditSystemLogDescribe.setLogid(auditSystemLog.getId());
 		String str="";
-	
+		if(attrItems.getType() == AttrDefinition.ATTRTYPEUSER){
+			str += "用户属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPERESOURCEDATA){
+			str += "数据资源属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPEFUNCDATA){
+			str += "功能资源属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPEORG){
+			str += "机构属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPEROLE){
+			str += "角色属性字典;";
+		}
 		if(attrItems.getName() != null && attrItems.getName().length() > 0) {
 			str += attrItems.getName()+";";
 		}

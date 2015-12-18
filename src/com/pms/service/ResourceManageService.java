@@ -973,6 +973,7 @@ public class ResourceManageService {
 			auditResLogDescribe.setLogid(auditResLog.getId());
 			String str="";
 			if( resData != null){
+				str +="数据资源;";
 				if(resData.getName() != null && resData.getName().length() > 0) {
 					str += resData.getName()+";";
 				}
@@ -981,6 +982,7 @@ public class ResourceManageService {
 				}
 			}
 			if( resFeature != null){
+				str +="功能资源;";
 				if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
 					str += resFeature.getRESOUCE_NAME()+";";
 				}
@@ -1067,6 +1069,7 @@ public class ResourceManageService {
 		auditResLogDescribe.setLogid(auditResLog.getId());
 		String str="";
 		if( resData != null){
+			str +="数据资源;";
 			if(resData.getName() != null && resData.getName().length() > 0) {
 				str += resData.getName()+";";
 			}
@@ -1101,6 +1104,7 @@ public class ResourceManageService {
 			}
 		}
 		if( resFeature != null){
+			str +="功能资源;";
 			if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
 				str += resFeature.getRESOUCE_NAME()+";";
 			}
@@ -1248,6 +1252,7 @@ public class ResourceManageService {
 		String str="";
 		
 		if( resData != null){
+			str +="数据资源;";
 			if(resData.getName() != null && resData.getName().length() > 0) {
 				str += resData.getName()+";";
 			}
@@ -1283,6 +1288,7 @@ public class ResourceManageService {
 		}
 		
 		if( resFeature != null){
+			str +="功能资源;";
 			if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
 				str += resFeature.getRESOUCE_NAME()+";";
 			}

@@ -226,6 +226,7 @@ public class PrivilegeManageService {
 		if (ownertype==Privilege.OWNERTYPEORG) {
 			OrganizationDAO orgDao = new OrganizationDAOImpl();
 			Organization orgNode = orgDao.GetOrgNodeById(ownerid);
+			str += "机构授权;";
 			if(orgNode.getUNIT() != null && orgNode.getUNIT().length() > 0) {
 				str += orgNode.getUNIT()+";";
 			}
@@ -243,6 +244,7 @@ public class PrivilegeManageService {
 		else if (ownertype==Privilege.OWNERTYPEUSER) {
 			UserDAO userDao = new UserDAOImpl();
 			User userNode = userDao.GetUserByCertificateCodeMd5(ownerid);
+			str += "用户授权;";
 			if(userNode.getNAME() != null && userNode.getNAME().length() > 0) {
 				str += userNode.getNAME()+";";
 			}
@@ -253,6 +255,7 @@ public class PrivilegeManageService {
 		else if(ownertype==Privilege.OWNERTYPEUSERGROUP){
 			GroupDAO dao = new GroupDAOImpl();
 			List<Group> groupNodes = dao.GetGroupByGroupId(ownerid);
+			str += "群体授权;";
 			for (int i = 0; i < groupNodes.size(); i++) {
 				if(groupNodes.get(i).getName() != null && groupNodes.get(i).getName().length() > 0) {
 					str += groupNodes.get(i).getName()+";";
