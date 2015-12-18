@@ -4,6 +4,7 @@ package com.pms.dao;
 import java.util.List;
 
 import com.pms.model.AuditGroupLogDescribe;
+import com.pms.model.AuditLogDescribe;
 import com.pms.model.AuditOrgLogDescribe;
 import com.pms.model.AuditPrivLogDescribe;
 import com.pms.model.AuditResLogDescribe;
@@ -26,4 +27,6 @@ public interface AuditLogDescribeDao {
 	List<AuditResLogDescribe> GetResLogDescByLogId(int logid) throws Exception;
 	AuditPrivLogDescribe AuditPrivLogDescribeAdd(AuditPrivLogDescribe auditPrivLogDescribe) throws Exception;
 	List<AuditPrivLogDescribe> GetPrivLogDescByLogId(int logid) throws Exception;
+	AuditLogDescribe AuditLogDescribeAdd(AuditLogDescribe auditLogDescribe) throws Exception;
+	List<AuditLogDescribe> GetLogDescByLogId(int logid) throws Exception;
 }

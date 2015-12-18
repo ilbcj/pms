@@ -36,6 +36,9 @@
  		<action name="queryAllAuditPrivLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditPrivLog" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryAllAuditLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditLog" >
+ 			<result name="success" type="json" />
+ 		</action>
 
 	</package>	
 </struts>    

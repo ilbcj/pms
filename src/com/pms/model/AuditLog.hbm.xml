@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 指定Hiberante3映射文件的DTD信息 -->
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.pms.model">
+	<!-- 每个class元素对应一个持久化对象 -->
+	<class name="AuditLog" table="wa_authority_AuditLog">
+		<!-- id元素定义持久化类的标识属性 -->
+		<id name="id" type="java.lang.Integer">
+			<generator class="identity"/>
+		</id>
+		<!-- property元素定义常规属性 -->
+		<property name="adminId" type="java.lang.Integer"/>
+		<property name="ipAddr" type="java.lang.String" length="64"/>
+		<property name="flag" type="java.lang.String" length="64"/>
+		<property name="result" type="java.lang.String" length="64"/>
+		<property name="LATEST_MOD_TIME" type="java.lang.String" length="64"/>
+	</class>
+</hibernate-mapping>
+	

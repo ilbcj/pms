@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.LogGroupItem;
+import com.pms.dto.LogItem;
 import com.pms.dto.LogOrgItem;
 import com.pms.dto.LogPrivItem;
 import com.pms.dto.LogResItem;
@@ -13,6 +14,7 @@ import com.pms.dto.LogRoleItem;
 import com.pms.dto.LogSystemItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.AuditGroupLog;
+import com.pms.model.AuditLog;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditResLog;
@@ -37,6 +39,7 @@ public class AuditLogAction extends ActionSupport {
 	private List<LogRoleItem> logRoleItems;
 	private List<LogSystemItem> logSystemItems;
 	private List<LogPrivItem> logPrivItems;
+	private List<LogItem> logItems;
 	
 	private String flag;
 	
@@ -117,6 +120,12 @@ public class AuditLogAction extends ActionSupport {
 	}
 	public void setLogPrivItems(List<LogPrivItem> logPrivItems) {
 		this.logPrivItems = logPrivItems;
+	}
+	public List<LogItem> getLogItems() {
+		return logItems;
+	}
+	public void setLogItems(List<LogItem> logItems) {
+		this.logItems = logItems;
 	}
 	public String getFlag() {
 		return flag;
@@ -235,6 +244,23 @@ public class AuditLogAction extends ActionSupport {
 			AuditPrivLog criteria=new AuditPrivLog();
 			criteria.setFlag(flag);
 			total = oms.QueryPrivLogItems(criteria, page, rows, logPrivItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllAuditLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logItems = new ArrayList<LogItem>();
+		try {
+			AuditLog criteria=new AuditLog();
+			criteria.setFlag(flag);
+			total = oms.QueryLogItems(criteria, page, rows, logItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

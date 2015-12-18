@@ -3,6 +3,7 @@ package com.pms.dao;
 import java.util.List;
 
 import com.pms.model.AuditGroupLog;
+import com.pms.model.AuditLog;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditResLog;
@@ -32,4 +33,7 @@ public interface AuditLogDAO {
 	List<AuditPrivLog> GetAllAuditPrivLogs(AuditPrivLog criteria, int page, int rows) throws Exception;
 	AuditPrivLog AuditPrivLogAdd(AuditPrivLog auditPrivLog) throws Exception;
 	int GetAuditPrivLogsCount(AuditPrivLog criteria) throws Exception;
+	List<AuditLog> GetAllAuditLogs(AuditLog criteria, int page, int rows) throws Exception;
+	AuditLog AuditLogAdd(AuditLog auditLog) throws Exception;
+	int GetAuditLogsCount(AuditLog criteria) throws Exception;
 }
