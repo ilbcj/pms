@@ -5,6 +5,8 @@ public class AuditLog {
 	public final static String LOGFLAGADD = "add";
 	public final static String LOGFLAGUPDATE = "update";
 	public final static String LOGFLAGDELETE = "delete";
+	public final static String LOGFLAGIMPORT = "import";
+	public final static String LOGFLAGEXPORT = "export";
 	public final static String LOGRESULTSUCCESS = "成功";
 	public final static String LOGRESULTFAIL = "失败"; 
 	

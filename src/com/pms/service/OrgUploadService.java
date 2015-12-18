@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -15,8 +17,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.OrganizationDAO;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.OrganizationDAOImpl;
+import com.pms.model.AuditOrgLog;
+import com.pms.model.AuditOrgLogDescribe;
 import com.pms.model.OrganizationImport;
 
 public class OrgUploadService {
@@ -45,6 +53,7 @@ public class OrgUploadService {
         
         //update organization;
         updateOrganization();
+        AddOrgImportLog();
         
         return;
 	}
@@ -151,5 +160,35 @@ public class OrgUploadService {
                 cellValue = "错误";  
         }
         return cellValue;
+	}
+	
+	private void AddOrgImportLog() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditOrgLog auditOrgLog = new AuditOrgLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditOrgLog.setAdminId(als.adminLogin());
+		auditOrgLog.setIpAddr("");
+		auditOrgLog.setFlag(AuditOrgLog.LOGFLAGIMPORT);
+		auditOrgLog.setResult(AuditOrgLog.LOGRESULTSUCCESS);
+		auditOrgLog.setLATEST_MOD_TIME(timenow);
+		auditOrgLog = logdao.AuditOrgLogAdd(auditOrgLog);
+		
+		AuditOrgLogDescribe auditOrgLogDescribe = new AuditOrgLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditOrgLogDescribe.setLogid(auditOrgLog.getId());
+		
+		String str="";
+		str += "机构导入";
+		
+		auditOrgLogDescribe.setDescrib(str);
+		
+		auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditOrgLogDescribe = logDescdao.AuditOrgLogDescribeAdd(auditOrgLogDescribe);
 	}
 }

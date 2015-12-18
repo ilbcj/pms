@@ -76,6 +76,7 @@
     $("#rolelog_operation_query_flag").combobox({
 		valueField: 'value',
 		textField: 'label',
+		editable:false,
 		data:[{
 			label: '请选择',
 			value: '',
@@ -91,6 +92,12 @@
 		},{
 			label: 'delete',
 			value: 'delete'
+		},{
+			label: 'import',
+			value: 'import',
+		},{
+			label: 'export',
+			value: 'export'
 		}]
 	});
 	

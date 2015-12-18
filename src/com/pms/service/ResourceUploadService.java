@@ -23,6 +23,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.pms.dao.AttributeDAO;
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.ResClassifyRelationDAO;
 import com.pms.dao.ResColumnClassifyDAO;
 import com.pms.dao.ResColumnClassifyRelationDAO;
@@ -36,6 +38,8 @@ import com.pms.dao.ResValueDAO;
 import com.pms.dao.ResValueSensitiveDAO;
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.AttributeDAOImpl;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.ResClassifyRelationDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyRelationDAOImpl;
@@ -50,6 +54,10 @@ import com.pms.dao.impl.ResValueSensitiveDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
+import com.pms.model.AuditResLog;
+import com.pms.model.AuditResLogDescribe;
+import com.pms.model.AuditRoleLog;
+import com.pms.model.AuditRoleLogDescribe;
 import com.pms.model.ResColumn;
 import com.pms.model.ResColumnClassify;
 import com.pms.model.ResData;
@@ -171,6 +179,9 @@ public class ResourceUploadService {
 	        }
         }
         
+        String importType = "功能资源导入;";
+        AddResImportLog(importType);
+        
         in.close();
         return;
 	}
@@ -191,6 +202,8 @@ public class ResourceUploadService {
         in.close();
         
         updateRoleAndResourceRelatioinship();
+        String importType = "角色导入;";
+        AddRoleImportLog(importType);
 	}
 	
 	public void UploadResourceData(File inData) throws Exception {
@@ -229,6 +242,8 @@ public class ResourceUploadService {
         
         //update resource;
         updateResourceData();
+        String importType = "数据资源导入;";
+        AddResImportLog(importType);
         
         return;
 	}
@@ -1486,5 +1501,58 @@ public class ResourceUploadService {
 //            System.out.println(); 
 //        }
 //	}
+	
+	private void AddResImportLog(String importType) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditResLog auditResLog = new AuditResLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditResLog.setAdminId(als.adminLogin());
+		auditResLog.setIpAddr("");
+		auditResLog.setFlag(AuditResLog.LOGFLAGIMPORT);
+		auditResLog.setResult(AuditResLog.LOGRESULTSUCCESS);
+		auditResLog.setLATEST_MOD_TIME(timenow);
+		auditResLog = logdao.AuditResLogAdd(auditResLog);
+		
+		String str="";
+		AuditResLogDescribe auditResLogDescribe = new AuditResLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		auditResLogDescribe.setLogid(auditResLog.getId());
+		str += importType;
+		auditResLogDescribe.setDescrib(str);
+		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditResLogDescribe = logDescdao.AuditResLogDescribeAdd(auditResLogDescribe);
+	}
+	
+	private void AddRoleImportLog(String importType) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditRoleLog auditRoleLog = new AuditRoleLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditRoleLog.setAdminId(als.adminLogin());
+		auditRoleLog.setIpAddr("");
+		auditRoleLog.setFlag(AuditRoleLog.LOGFLAGIMPORT);
+		auditRoleLog.setResult(AuditRoleLog.LOGRESULTSUCCESS);
+		auditRoleLog.setLATEST_MOD_TIME(timenow);
+		auditRoleLog = logdao.AuditRoleLogAdd(auditRoleLog);
+		
+		String str="";
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		AuditRoleLogDescribe auditRoleLogDescribe = new AuditRoleLogDescribe();
+		auditRoleLogDescribe.setLogid(auditRoleLog.getId());
+		str += importType;
+		auditRoleLogDescribe.setDescrib(str);
+		auditRoleLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditRoleLogDescribe = logDescdao.AuditRoleLogDescribeAdd(auditRoleLogDescribe);
+	}
 	
 }

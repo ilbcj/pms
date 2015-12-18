@@ -24,12 +24,18 @@ import org.dom4j.io.XMLWriter;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.SyncConfigDao;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dao.impl.SyncConfigDaoImpl;
 import com.pms.dao.impl.SystemConfigDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
+import com.pms.model.AuditSystemLog;
+import com.pms.model.AuditSystemLogDescribe;
 import com.pms.model.Organization;
 import com.pms.model.ResData;
 import com.pms.model.ResRole;
@@ -58,14 +64,17 @@ public class DataSyncService {
     	  
 		ResourceDAOImpl dao=new ResourceDAOImpl();
 		List<ResData> res = null;
+		String exportType = "";
 		if( amount == "All" || amount.equals("All") ){
 			res = dao.GetAllDatas();
+			exportType += "资源数据全量导出";
 		}else{
 			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
 			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
 			
 			String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_DATARES, SystemConfigList);
 	        res = dao.GetDatasByTime( LatestModTime );
+	        exportType += "资源增量导出";
 		}
 		
 		items.addAll(res);
@@ -168,7 +177,7 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "DataRes";
         
-		return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+		return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount, exportType);
 	}
 	
 	public String DownLoadOrg(String amount, List<Organization> items) throws Exception {
@@ -183,14 +192,17 @@ public class DataSyncService {
        
 		OrganizationDAOImpl dao = new OrganizationDAOImpl();
 		List<Organization> org = null;
+		String exportType = "";
 		if( amount == "All" || amount.equals("All") ){
 			org = dao.GetAllOrgs();
+			exportType += "组织机构数据全量导出";
 		}else{
 			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
 			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
 			
 	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_ORG, SystemConfigList);
 			org = dao.GetOrgsByTime( LatestModTime );
+			exportType += "组织机构数据增量导出";
 		}	
 		
 		items.addAll(org);
@@ -271,7 +283,7 @@ public class DataSyncService {
             
         String name = "Org";
         
-        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount, exportType);
 	}
 	
 //	private String ConvertOrgLevel(String level){
@@ -303,14 +315,17 @@ public class DataSyncService {
         
 		UserDAOImpl dao = new UserDAOImpl();
 		List<User> user = null;
+		String exportType = "";
 		if( amount == "All" || amount.equals("All") ){
 			user = dao.GetAllUsers();
+			exportType += "用户数据全量导出";
 		}else{
 			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
 			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
 			
 	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_USER, SystemConfigList);
 	        user = dao.GetUsersByTime( LatestModTime );
+	        exportType += "用户数据增量导出";
 		}
 		
 		items.addAll(user);
@@ -418,7 +433,7 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "User";
         
-        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount, exportType);
 	}
 	
 	public String DownLoadResRole(String amount, List<ResRoleResource> items) throws Exception {
@@ -433,14 +448,17 @@ public class DataSyncService {
         
         ResourceDAOImpl dao = new ResourceDAOImpl();
 		List<ResRoleResource> resRole = null;
+		String exportType = "";
 		if( amount == "All" || amount.equals("All") ){
 			resRole = dao.GetAllResRoles();
+			exportType += "资源与角色关系信息数据全量导出";
 		}else{
 			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
 			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
 			
 	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_RESINROLE, SystemConfigList);
 	        resRole = dao.GetResRolesByTime( LatestModTime );
+	        exportType += "资源与角色关系信息数据增量导出";
 		}
 		
 		items.addAll(resRole);
@@ -521,7 +539,7 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "ResInRole";
         
-        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount, exportType);
 	}
 	
 	public String DownLoadRole(String amount, List<ResRole> items) throws Exception {
@@ -541,14 +559,17 @@ public class DataSyncService {
         
         ResourceDAOImpl dao = new ResourceDAOImpl();
 		List<ResRole> role = null;
+		String exportType = "";
 		if( amount == "All" || amount.equals("All") ){
 			role = dao.GetAllRoles();
+			exportType += "角色数据全量导出";
 		}else{
 			SystemConfigDAOImpl scdao = new SystemConfigDAOImpl();
 			List<SystemConfig> SystemConfigList = scdao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
 			
 	        String LatestModTime = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_Role, SystemConfigList);
 	        role = dao.GetRolesByTime( LatestModTime );
+	        exportType += "角色数据增量导出";
 		}
 		
 		items.addAll(role);
@@ -637,10 +658,10 @@ public class DataSyncService {
         String xmlIndex = domIndex.asXML();
         String name = "Role";
         
-        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount);
+        return CreateIndexXmlAndZip(xmlIndex, rootPath, name, amount, exportType);
 	}
 	
-	public String CreateIndexXmlAndZip(String xml, String rootPath, String name, String amount) throws Exception {
+	public String CreateIndexXmlAndZip(String xml, String rootPath, String name, String amount, String exportType) throws Exception {
 	     //xml格式化
         Document doc = DocumentHelper.parseText(xml);       
         OutputFormat format = OutputFormat.createPrettyPrint();
@@ -677,6 +698,7 @@ public class DataSyncService {
 	    UpdateConfig(SystemConfigList, name);
 	    
 	    broadcastNotice(exportPath, zipNnme);
+	    AddSystemExportLog(exportType);
 	    
 		return exportPath +"/"+ zipNnme;
 	    
@@ -990,4 +1012,31 @@ public class DataSyncService {
 		 return value == null ? "" : value;
 	}
 	
+	private void AddSystemExportLog(String exportType) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		AuditSystemLog auditSystemLog = new AuditSystemLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditSystemLog.setAdminId(als.adminLogin());
+		auditSystemLog.setIpAddr("");
+		
+		auditSystemLog.setFlag(AuditSystemLog.LOGFLAGEXPORT);
+		auditSystemLog.setResult(AuditSystemLog.LOGRESULTSUCCESS);
+		auditSystemLog.setLATEST_MOD_TIME(timenow);
+		auditSystemLog = logdao.AuditSystemLogAdd(auditSystemLog);
+		
+		AuditSystemLogDescribe auditSystemLogDescribe = new AuditSystemLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditSystemLogDescribe.setLogid(auditSystemLog.getId());
+		auditSystemLogDescribe.setDescrib(exportType);
+		
+		auditSystemLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditSystemLogDescribe = logDescdao.AuditSystemLogDescribeAdd(auditSystemLogDescribe);
+		
+		return ;
+	}
 }
