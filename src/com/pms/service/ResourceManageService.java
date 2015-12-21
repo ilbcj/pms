@@ -190,9 +190,8 @@ public class ResourceManageService {
 		String timenow = sdf.format(new Date());
 		feature.setLATEST_MOD_TIME(timenow);
 		
-		feature = dao.FeatureAdd(feature);
-		
 		AddResAddOrUpdateLog(null, null, feature, null, null);
+		feature = dao.FeatureAdd(feature);
 		
 		return feature;
 	}
@@ -514,6 +513,7 @@ public class ResourceManageService {
 //			data.setRESOURCE_ID(resId);
 //		}
 //		data = dao.DataAdd(data);
+		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
 		ResData resData = dao.GetData(data);
 		
 		if(resData == null){
@@ -542,8 +542,6 @@ public class ResourceManageService {
 			}
 			
 		}
-		
-		AddResAddOrUpdateLog(data, resDataOrg, null, null, null);
 		
 		return data;
 	}
@@ -699,6 +697,7 @@ public class ResourceManageService {
 		role.setLATEST_MOD_TIME(timenow);
 		role.setDATA_VERSION(role.getDATA_VERSION()+1);
 		
+		AddResAddOrUpdateLog(null, null, null, role, resRoleOrg);
 		role = dao.RoleAdd(role);
 		
 		if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
@@ -716,7 +715,6 @@ public class ResourceManageService {
 		dao.UpdateFeatureRoleResource(role.getBUSINESS_ROLE(), featureIds, delFeatureIds);
 		dao.UpdateDataRoleResource(role.getBUSINESS_ROLE(), dataIds, delDataIds);
 //		dao.UpdateDataResource(dataIds);
-		AddResAddOrUpdateLog(null, null, null, role, resRoleOrg);
 		
 		return role;
 	}
@@ -975,19 +973,19 @@ public class ResourceManageService {
 			if( resData != null){
 				str +="数据资源;";
 				if(resData.getName() != null && resData.getName().length() > 0) {
-					str += resData.getName()+";";
+					str += "名称:" + resData.getName()+";";
 				}
 				if(resData.getRESOURCE_ID() != null && resData.getRESOURCE_ID().length() > 0) {
-					str += resData.getRESOURCE_ID();
+					str += "编码:" + resData.getRESOURCE_ID();
 				}
 			}
 			if( resFeature != null){
 				str +="功能资源;";
 				if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
-					str += resFeature.getRESOUCE_NAME()+";";
+					str += "名称:" + resFeature.getRESOUCE_NAME()+";";
 				}
 				if(resFeature.getRESOURCE_ID() != null && resFeature.getRESOURCE_ID().length() > 0) {
-					str += resFeature.getRESOURCE_ID();
+					str += "编码:" + resFeature.getRESOURCE_ID();
 				}
 			}
 			auditResLogDescribe.setDescrib(str);
@@ -1000,10 +998,10 @@ public class ResourceManageService {
 				
 				auditRoleLogDescribe.setLogid(auditRoleLog.getId());
 				if(resRole.getBUSINESS_ROLE_NAME() != null && resRole.getBUSINESS_ROLE_NAME().length() > 0) {
-					str += resRole.getBUSINESS_ROLE_NAME()+";";
+					str += "名称:" + resRole.getBUSINESS_ROLE_NAME()+";";
 				}
 				if(resRole.getBUSINESS_ROLE() != null && resRole.getBUSINESS_ROLE().length() > 0) {
-					str += resRole.getBUSINESS_ROLE();
+					str += "编码:" + resRole.getBUSINESS_ROLE();
 				}
 				auditRoleLogDescribe.setDescrib(str);
 				
@@ -1071,104 +1069,73 @@ public class ResourceManageService {
 		if( resData != null){
 			str +="数据资源;";
 			if(resData.getName() != null && resData.getName().length() > 0) {
-				str += resData.getName()+";";
+				str += "名称:" + resData.getName()+";";
 			}
 			if(resData.getRESOURCE_ID() != null && resData.getRESOURCE_ID().length() > 0) {
-				str += resData.getRESOURCE_ID()+";";
+				str += "资源唯一标识:" + resData.getRESOURCE_ID()+";";
 			}
-			str += resData.getRESOURCE_STATUS()+";";
+			str += "资源状态:" + resData.getRESOURCE_STATUS()+";";
 			if(resData.getRESOURCE_DESCRIBE() != null && resData.getRESOURCE_DESCRIBE().length() > 0) {
-				str += resData.getRESOURCE_DESCRIBE()+";";
+				str += "资源描述:" + resData.getRESOURCE_DESCRIBE()+";";
 			}
 			if(resData.getRMK() != null && resData.getRMK().length() > 0) {
-				str += resData.getRMK()+";";
+				str += "备注:" + resData.getRMK()+";";
 			}
-			str += resData.getDELETE_STATUS()+";"+resData.getResource_type()+";";
+			str += "删除状态:" + resData.getDELETE_STATUS()+";资源类型:"+resData.getResource_type()+";";
 			if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
-				str += resDataOrg.getCLUE_DST_SYS()+";";
+				str += "目标地市:" + resDataOrg.getCLUE_DST_SYS()+";";
 			}
 			if(resData.getDATASET_SENSITIVE_LEVEL() != null && resData.getDATASET_SENSITIVE_LEVEL().length() > 0) {
-				str += resData.getDATASET_SENSITIVE_LEVEL()+";";
+				str += "数据集敏感度编码:" + resData.getDATASET_SENSITIVE_LEVEL()+";";
 			}
 			if(resData.getDATA_SET() != null && resData.getDATA_SET().length() > 0) {
-				str += resData.getDATA_SET()+";";
+				str += "数据集编码:" + resData.getDATA_SET()+";";
 			}
 			if(resData.getELEMENT() != null && resData.getELEMENT().length() > 0) {
-				str += resData.getELEMENT()+";";
+				str += "字段编码:" + resData.getELEMENT()+";";
 			}
 			if(resData.getSECTION_RELATIOIN_CLASS() != null && resData.getSECTION_RELATIOIN_CLASS().length() > 0) {
-				str += resData.getSECTION_RELATIOIN_CLASS()+";";
+				str += "字段分类关系编码:" + resData.getSECTION_RELATIOIN_CLASS()+";";
 			}
 			if(resData.getSECTION_CLASS() != null && resData.getSECTION_CLASS().length() > 0) {
-				str += resData.getSECTION_CLASS();
+				str += "字段分类编码:" + resData.getSECTION_CLASS()+";";
+			}
+			if(resData.getOPERATE_SYMBOL() != null && resData.getOPERATE_SYMBOL().length() > 0) {
+				str += "操作符:" + resData.getOPERATE_SYMBOL()+";";
+			}
+			if(resData.getELEMENT_VALUE() != null && resData.getELEMENT_VALUE().length() > 0) {
+				str += "字段值:" + resData.getELEMENT_VALUE();
 			}
 		}
 		if( resFeature != null){
 			str +="功能资源;";
 			if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
-				str += resFeature.getRESOUCE_NAME()+";";
+				str += "名称:" + resFeature.getRESOUCE_NAME()+";";
 			}
 			if(resFeature.getRESOURCE_ID() != null && resFeature.getRESOURCE_ID().length() > 0) {
-				str += resFeature.getRESOURCE_ID()+";";
+				str += "资源唯一标识:" + resFeature.getRESOURCE_ID()+";";
 			}
-			str += resFeature.getRESOURCE_STATUS()+";";
+			str += "资源状态:" + resFeature.getRESOURCE_STATUS()+";";
 			if(resFeature.getRESOURCE_DESCRIBE() != null && resFeature.getRESOURCE_DESCRIBE().length() > 0) {
-				str += resFeature.getRESOURCE_DESCRIBE()+";";
+				str += "资源描述:" + resFeature.getRESOURCE_DESCRIBE()+";";
 			}
 			if(resFeature.getRMK() != null && resFeature.getRMK().length() > 0) {
-				str += resFeature.getRMK()+";";
+				str += "备注:" + resFeature.getRMK()+";";
 			}
-			str += resFeature.getDELETE_STATUS()+";";
+			str += "删除状态:" + resFeature.getDELETE_STATUS()+";";
 			if(resFeature.getAPP_ID() != null && resFeature.getAPP_ID().length() > 0) {
-				str += resFeature.getAPP_ID()+";";
+				str += "所属业务系统:" + resFeature.getAPP_ID()+";";
 			}
 			if(resFeature.getPARENT_RESOURCE() != null && resFeature.getPARENT_RESOURCE().length() > 0) {
-				str += resFeature.getPARENT_RESOURCE()+";";
+				str += "父资源唯一标识:" + resFeature.getPARENT_RESOURCE()+";";
 			}
 			if(resFeature.getRESOURCE_ORDER() != null && resFeature.getRESOURCE_ORDER().length() > 0) {
-				str += resFeature.getRESOURCE_ORDER()+";";
+				str += "顺序:" + resFeature.getRESOURCE_ORDER()+";";
 			}
 			if(resFeature.getSYSTEM_TYPE() != null && resFeature.getSYSTEM_TYPE().length() > 0) {
-				str += resFeature.getSYSTEM_TYPE();
+				str += "系统类型:" + resFeature.getSYSTEM_TYPE();
 			}
-		}	
-//		if( role != null){
-//			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
-//				str += role.getBUSINESS_ROLE_NAME()+";";
-//			}
-//			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
-//				str += role.getBUSINESS_ROLE()+";";
-//			}
-//			str += role.getBUSINESS_ROLE_TYPE()+";";
-//			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
-//				str += resRoleOrg.getCLUE_DST_SYS()+";";
-//			}
-//			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
-//				str += role.getSYSTEM_TYPE()+";";
-//			}
-//			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
-//				str += role.getCLUE_SRC_SYS()+";";
-//			}
-//			str += role.getDELETE_STATUS()+";";
-//			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
-//				str += role.getROLE_DESC();
-//			}
-//			
-//			ResourceDAO dao = new ResourceDAOImpl();
-//			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
-//			
-//			for(int i=0; i<rrs.size(); i++) {
-//				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
-//					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
-//					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
-//				}
-//				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
-//					ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
-//					str += ";"+data.getName()+";"+data.getRESOURCE_ID();
-//					
-//				}
-//			}
-//		}
+		}
 		auditResLogDescribe.setDescrib(str);
 		
 		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
@@ -1179,24 +1146,24 @@ public class ResourceManageService {
 			
 			auditRoleLogDescribe.setLogid(auditRoleLog.getId());
 			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
-				str += role.getBUSINESS_ROLE_NAME()+";";
+				str += "角色名称:" + role.getBUSINESS_ROLE_NAME()+";";
 			}
 			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
-				str += role.getBUSINESS_ROLE()+";";
+				str += "角色编码:" + role.getBUSINESS_ROLE()+";";
 			}
-			str += role.getBUSINESS_ROLE_TYPE()+";";
+			str += "角色类型:" + role.getBUSINESS_ROLE_TYPE()+";";
 			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
-				str += resRoleOrg.getCLUE_DST_SYS()+";";
+				str += "目标地市:" + resRoleOrg.getCLUE_DST_SYS()+";";
 			}
 			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
-				str += role.getSYSTEM_TYPE()+";";
+				str += "系统类型:" + role.getSYSTEM_TYPE()+";";
 			}
 			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
-				str += role.getCLUE_SRC_SYS()+";";
+				str += "来源地市:" + role.getCLUE_SRC_SYS()+";";
 			}
-			str += role.getDELETE_STATUS()+";";
+			str += "删除状态:" + role.getDELETE_STATUS()+";";
 			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
-				str += role.getROLE_DESC();
+				str += "描述:" + role.getROLE_DESC();
 			}
 			
 			ResourceDAO dao = new ResourceDAOImpl();
@@ -1205,11 +1172,11 @@ public class ResourceManageService {
 			for(int i=0; i<rrs.size(); i++) {
 				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
 					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
-					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
+					str += ";名称 :"+feature.getRESOUCE_NAME()+";资源唯一标识 :"+feature.getRESOURCE_ID();
 				}
 				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
 					ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
-					str += ";"+data.getName()+";"+data.getRESOURCE_ID();
+					str += ";名称 :"+data.getName()+";资源唯一标识 :"+data.getRESOURCE_ID();
 					
 				}
 			}
@@ -1254,106 +1221,73 @@ public class ResourceManageService {
 		if( resData != null){
 			str +="数据资源;";
 			if(resData.getName() != null && resData.getName().length() > 0) {
-				str += resData.getName()+";";
+				str += "名称:" + resData.getName()+";";
 			}
 			if(resData.getRESOURCE_ID() != null && resData.getRESOURCE_ID().length() > 0) {
-				str += resData.getRESOURCE_ID()+";";
+				str += "资源唯一标识:" + resData.getRESOURCE_ID()+";";
 			}
-			str += resData.getRESOURCE_STATUS()+";";
+			str += "资源状态:" + resData.getRESOURCE_STATUS()+";";
 			if(resData.getRESOURCE_DESCRIBE() != null && resData.getRESOURCE_DESCRIBE().length() > 0) {
-				str += resData.getRESOURCE_DESCRIBE()+";";
+				str += "资源描述:" + resData.getRESOURCE_DESCRIBE()+";";
 			}
 			if(resData.getRMK() != null && resData.getRMK().length() > 0) {
-				str += resData.getRMK()+";";
+				str += "备注:" + resData.getRMK()+";";
 			}
-			str += resData.getDELETE_STATUS()+";"+resData.getResource_type()+";";
+			str += "删除状态:" + resData.getDELETE_STATUS()+";资源类型:"+resData.getResource_type()+";";
 			if(resDataOrg.getCLUE_DST_SYS() !=null && resDataOrg.getCLUE_DST_SYS().length() != 0){
-				str += resDataOrg.getCLUE_DST_SYS()+";";
+				str += "目标地市:" + resDataOrg.getCLUE_DST_SYS()+";";
 			}
 			if(resData.getDATASET_SENSITIVE_LEVEL() != null && resData.getDATASET_SENSITIVE_LEVEL().length() > 0) {
-				str += resData.getDATASET_SENSITIVE_LEVEL()+";";
+				str += "数据集敏感度编码:" + resData.getDATASET_SENSITIVE_LEVEL()+";";
 			}
 			if(resData.getDATA_SET() != null && resData.getDATA_SET().length() > 0) {
-				str += resData.getDATA_SET()+";";
+				str += "数据集编码:" + resData.getDATA_SET()+";";
 			}
 			if(resData.getELEMENT() != null && resData.getELEMENT().length() > 0) {
-				str += resData.getELEMENT()+";";
+				str += "字段编码:" + resData.getELEMENT()+";";
 			}
 			if(resData.getSECTION_RELATIOIN_CLASS() != null && resData.getSECTION_RELATIOIN_CLASS().length() > 0) {
-				str += resData.getSECTION_RELATIOIN_CLASS()+";";
+				str += "字段分类关系编码:" + resData.getSECTION_RELATIOIN_CLASS()+";";
 			}
 			if(resData.getSECTION_CLASS() != null && resData.getSECTION_CLASS().length() > 0) {
-				str += resData.getSECTION_CLASS();
+				str += "字段分类编码:" + resData.getSECTION_CLASS()+";";
+			}
+			if(resData.getOPERATE_SYMBOL() != null && resData.getOPERATE_SYMBOL().length() > 0) {
+				str += "操作符:" + resData.getOPERATE_SYMBOL()+";";
+			}
+			if(resData.getELEMENT_VALUE() != null && resData.getELEMENT_VALUE().length() > 0) {
+				str += "字段值:" + resData.getELEMENT_VALUE();
 			}
 		}
-		
 		if( resFeature != null){
 			str +="功能资源;";
 			if(resFeature.getRESOUCE_NAME() != null && resFeature.getRESOUCE_NAME().length() > 0) {
-				str += resFeature.getRESOUCE_NAME()+";";
+				str += "名称:" + resFeature.getRESOUCE_NAME()+";";
 			}
 			if(resFeature.getRESOURCE_ID() != null && resFeature.getRESOURCE_ID().length() > 0) {
-				str += resFeature.getRESOURCE_ID()+";";
+				str += "资源唯一标识:" + resFeature.getRESOURCE_ID()+";";
 			}
-			str += resFeature.getRESOURCE_STATUS()+";";
+			str += "资源状态:" + resFeature.getRESOURCE_STATUS()+";";
 			if(resFeature.getRESOURCE_DESCRIBE() != null && resFeature.getRESOURCE_DESCRIBE().length() > 0) {
-				str += resFeature.getRESOURCE_DESCRIBE()+";";
+				str += "资源描述:" + resFeature.getRESOURCE_DESCRIBE()+";";
 			}
 			if(resFeature.getRMK() != null && resFeature.getRMK().length() > 0) {
-				str += resFeature.getRMK()+";";
+				str += "备注:" + resFeature.getRMK()+";";
 			}
-			str += resFeature.getDELETE_STATUS()+";";
+			str += "删除状态:" + resFeature.getDELETE_STATUS()+";";
 			if(resFeature.getAPP_ID() != null && resFeature.getAPP_ID().length() > 0) {
-				str += resFeature.getAPP_ID()+";";
+				str += "所属业务系统:" + resFeature.getAPP_ID()+";";
 			}
 			if(resFeature.getPARENT_RESOURCE() != null && resFeature.getPARENT_RESOURCE().length() > 0) {
-				str += resFeature.getPARENT_RESOURCE()+";";
+				str += "父资源唯一标识:" + resFeature.getPARENT_RESOURCE()+";";
 			}
 			if(resFeature.getRESOURCE_ORDER() != null && resFeature.getRESOURCE_ORDER().length() > 0) {
-				str += resFeature.getRESOURCE_ORDER()+";";
+				str += "顺序:" + resFeature.getRESOURCE_ORDER()+";";
 			}
 			if(resFeature.getSYSTEM_TYPE() != null && resFeature.getSYSTEM_TYPE().length() > 0) {
-				str += resFeature.getSYSTEM_TYPE();
+				str += "系统类型:" + resFeature.getSYSTEM_TYPE();
 			}
 		}
-		
-//		if( role != null){
-//			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
-//				str += role.getBUSINESS_ROLE_NAME()+";";
-//			}
-//			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
-//				str += role.getBUSINESS_ROLE()+";";
-//			}
-//			str += role.getBUSINESS_ROLE_TYPE()+";";
-//			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
-//				str += resRoleOrg.getCLUE_DST_SYS()+";";
-//			}
-//			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
-//				str += role.getSYSTEM_TYPE()+";";
-//			}
-//			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
-//				str += role.getCLUE_SRC_SYS()+";";
-//			}
-//			str += role.getDELETE_STATUS()+";";
-//			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
-//				str += role.getROLE_DESC();
-//			}
-//			
-//			ResourceDAO dao = new ResourceDAOImpl();
-//			List<ResRoleResource> rrs = dao.GetRoleResourcesByRoleid(role.getBUSINESS_ROLE());
-//			
-//			for(int i=0; i<rrs.size(); i++) {
-//				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
-//					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
-//					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
-//				}
-//				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
-//					ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
-//					str += ";"+data.getName()+";"+data.getRESOURCE_ID();
-//					
-//				}
-//			}
-//		}
 		auditResLogDescribe.setDescrib(str);
 		
 		auditResLogDescribe.setLATEST_MOD_TIME(timenow);
@@ -1364,24 +1298,24 @@ public class ResourceManageService {
 			
 			auditRoleLogDescribe.setLogid(auditRoleLog.getId());
 			if(role.getBUSINESS_ROLE_NAME() != null && role.getBUSINESS_ROLE_NAME().length() > 0) {
-				str += role.getBUSINESS_ROLE_NAME()+";";
+				str += "角色名称:" + role.getBUSINESS_ROLE_NAME()+";";
 			}
 			if(role.getBUSINESS_ROLE() != null && role.getBUSINESS_ROLE().length() > 0) {
-				str += role.getBUSINESS_ROLE()+";";
+				str += "角色编码:" + role.getBUSINESS_ROLE()+";";
 			}
-			str += role.getBUSINESS_ROLE_TYPE()+";";
+			str += "角色类型:" + role.getBUSINESS_ROLE_TYPE()+";";
 			if(resRoleOrg.getCLUE_DST_SYS() !=null && resRoleOrg.getCLUE_DST_SYS().length() != 0){
-				str += resRoleOrg.getCLUE_DST_SYS()+";";
+				str += "目标地市:" + resRoleOrg.getCLUE_DST_SYS()+";";
 			}
 			if(role.getSYSTEM_TYPE() != null && role.getSYSTEM_TYPE().length() > 0) {
-				str += role.getSYSTEM_TYPE()+";";
+				str += "系统类型:" + role.getSYSTEM_TYPE()+";";
 			}
 			if(role.getCLUE_SRC_SYS() != null && role.getCLUE_SRC_SYS().length() > 0) {
-				str += role.getCLUE_SRC_SYS()+";";
+				str += "来源地市:" + role.getCLUE_SRC_SYS()+";";
 			}
-			str += role.getDELETE_STATUS()+";";
+			str += "删除状态:" + role.getDELETE_STATUS()+";";
 			if(role.getROLE_DESC() != null && role.getROLE_DESC().length() > 0) {
-				str += role.getROLE_DESC();
+				str += "描述:" + role.getROLE_DESC();
 			}
 			
 			ResourceDAO dao = new ResourceDAOImpl();
@@ -1390,11 +1324,11 @@ public class ResourceManageService {
 			for(int i=0; i<rrs.size(); i++) {
 				if ( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSFEATURE ) {
 					ResFeature feature = dao.GetFeatureByResId( rrs.get(i).getRESOURCE_ID() );
-					str += ";"+feature.getRESOUCE_NAME()+";"+feature.getRESOURCE_ID();
+					str += ";名称 :"+feature.getRESOUCE_NAME()+";资源唯一标识 :"+feature.getRESOURCE_ID();
 				}
 				else if( rrs.get(i).getRESOURCE_CLASS() == ResRoleResource.RESCLASSDATA ) {
 					ResData data = dao.GetDataByResId( rrs.get(i).getRESOURCE_ID() );
-					str += ";"+data.getName()+";"+data.getRESOURCE_ID();
+					str += ";名称 :"+data.getName()+";资源唯一标识 :"+data.getRESOURCE_ID();
 					
 				}
 			}

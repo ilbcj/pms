@@ -44,11 +44,11 @@ public class GroupManageService {
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPEUSER);
 		
+		AddGroupAddOrUpdateLog(group, null);
 		group = dao.GroupAdd(group);
 		
 		dao.UpdateGroupUsers(group.getCode(), userIds);
 		
-		AddGroupAddOrUpdateLog(group, null);
 		return group;
 	}
 
@@ -119,11 +119,11 @@ public class GroupManageService {
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPERULE);
 		
+		AddGroupAddOrUpdateLog(group, rules);
 		group = dao.GroupAdd(group);
 		
 		dao.UpdateGroupRules(group.getCode(),ruleValue, rules);
 		
-		AddGroupAddOrUpdateLog(group, rules);
 		return group;
 	}
 
@@ -223,10 +223,10 @@ public class GroupManageService {
 			String str="";
 			str += groupType;
 			if(criteria.getName() != null && criteria.getName().length() > 0) {
-				str += criteria.getName()+";";
+				str += "名称:" + criteria.getName()+";";
 			}
 			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
-				str += criteria.getCode();
+				str += "编码:" + criteria.getCode();
 			}
 			auditGroupLogDescribe.setDescrib(str);
 			
@@ -263,25 +263,25 @@ public class GroupManageService {
 		String str="";
 		List<Rule> rule = dao.GetGroupRulesByGroupId( group.getCode() );
 		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
-		if (rules != null) {
+		if(group.getType() == Group.GROUPTYPERULE){
 			str += "规则群体;";
-		}else if(users.size() > 0){
+		}else if(group.getType() == Group.GROUPTYPEUSER){
 			str += "离散群体;";
 		}
 		if(group.getName() != null && group.getName().length() > 0) {
-			str += group.getName()+";";
+			str += "群体名称:" + group.getName()+";";
 		}
 		if(group.getCode() != null && group.getCode().length() > 0) {
-			str += group.getCode()+";";
+			str += "群体编码:" + group.getCode()+";";
 		}
 		if(group.getDescrib() != null && group.getDescrib().length() > 0) {
-			str += group.getDescrib()+";";
+			str += "描述:" + group.getDescrib()+";";
 		}
 		
 		if (rules != null) {
 			for(int i = 0; i<rules.size(); i++) {
 				if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
-					str += rules.get(i).getRulename()+";";
+					str += "属性:" + rules.get(i).getRulename()+";";
 				}
 				String value = "";
 				List<RuleAttr> ruleAttr = dao.GetRuleAttrByRuleId(rule.get(i).getId());
@@ -291,16 +291,16 @@ public class GroupManageService {
 						value += attr.getValue()+",";
 					}
 				}
-				str += value+";";
+				str += "值:" + value+";";
 			}
 		}
 		
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
-				str += users.get(i).getNAME()+";";
+				str += "姓名 :" + users.get(i).getNAME()+";";
 			}
 			if(users.get(i).getUNIT() != null && users.get(i).getUNIT().length() > 0) {
-				str += users.get(i).getUNIT()+";";
+				str += "组织机构 :" + users.get(i).getUNIT()+";";
 			}
 		}
 		
@@ -338,28 +338,27 @@ public class GroupManageService {
 		String str="";
 		List<Rule> rules = dao.GetGroupRulesByGroupId( group.getCode() );
 		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
-		if (rules.size() > 0) {
+		if(group.getType() == Group.GROUPTYPERULE){
 			str += "规则群体;";
-		}else if(users.size() > 0){
+		}else if(group.getType() == Group.GROUPTYPEUSER){
 			str += "离散群体;";
 		}
 		for (int i = 0; i < groups.size(); i++) {
 			if(groups.get(i).getName() != null && groups.get(i).getName().length() > 0) {
-				str += groups.get(i).getName()+";";
+				str += "群体名称:" + groups.get(i).getName()+";";
 			}
 			if(groups.get(i).getCode() != null && groups.get(i).getCode().length() > 0) {
-				str += groups.get(i).getCode()+";";
+				str += "群体编码:" + groups.get(i).getCode()+";";
 			}
 			if(groups.get(i).getDescrib() != null && groups.get(i).getDescrib().length() > 0) {
-				str += groups.get(i).getDescrib()+";";
+				str += "描述:" + groups.get(i).getDescrib()+";";
 			}
 		}
 		
 		for(int i = 0; i<rules.size(); i++) {
 			if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
-				str += rules.get(i).getRulename()+";";
+				str += "属性:" + rules.get(i).getRulename()+";";
 			}
-			
 			String value = "";
 			List<RuleAttr> ruleAttr = dao.GetRuleAttrByRuleId(rules.get(i).getId());
 			for(int z=0; z<ruleAttr.size(); z++) {     
@@ -368,15 +367,15 @@ public class GroupManageService {
 					value += attr.getValue()+",";
 				}
 			}
-			str += value+";";
+			str += "值:" + value+";";
 		}
 		
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
-				str += users.get(i).getNAME()+";";
+				str += "姓名 :" + users.get(i).getNAME()+";";
 			}
 			if(users.get(i).getUNIT() != null && users.get(i).getUNIT().length() > 0) {
-				str += users.get(i).getUNIT();
+				str += "组织机构 :" + users.get(i).getUNIT();
 			}
 		}
 		auditGroupLogDescribe.setDescrib(str);

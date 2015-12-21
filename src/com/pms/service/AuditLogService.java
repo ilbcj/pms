@@ -385,49 +385,49 @@ public class AuditLogService {
 		if( user != null ) {
 			str +="用户操作日志"+";";
 			if(user.getFlag() != null && user.getFlag().length() > 0) {
-				str += user.getFlag()+";";
+				str += "操作类型:" + user.getFlag()+";";
 			}
 		}
 		if( org != null ) {
 			str +="机构操作日志"+";";
 			if(org.getFlag() != null && org.getFlag().length() > 0) {
-				str += org.getFlag()+";";
+				str += "操作类型:" + org.getFlag()+";";
 			}
 		}
 		if( group != null ) {
 			str +="群体操作日志"+";";
 			if(group.getFlag() != null && group.getFlag().length() > 0) {
-				str += group.getFlag()+";";
+				str += "操作类型:" + group.getFlag()+";";
 			}
 		}
 		if( role != null ) {
 			str +="角色操作日志"+";";
 			if(role.getFlag() != null && role.getFlag().length() > 0) {
-				str += role.getFlag()+";";
+				str += "操作类型:" + role.getFlag()+";";
 			}
 		}
 		if( res != null ) {
 			str +="资源操作日志"+";";
 			if(res.getFlag() != null && res.getFlag().length() > 0) {
-				str += res.getFlag()+";";
+				str += "操作类型:" + res.getFlag()+";";
 			}
 		}
 		if( priv != null ) {
 			str +="授权操作日志"+";";
 			if(priv.getFlag() != null && priv.getFlag().length() > 0) {
-				str += priv.getFlag()+";";
+				str += "操作类型:" + priv.getFlag()+";";
 			}
 		}
 		if( system != null ) {
 			str +="系统操作日志"+";";
 			if(system.getFlag() != null && system.getFlag().length() > 0) {
-				str += system.getFlag()+";";
+				str += "操作类型:" + system.getFlag()+";";
 			}
 		}
 		if( log != null ) {
 			str +="审计操作日志"+";";
 			if(log.getFlag() != null && log.getFlag().length() > 0) {
-				str += log.getFlag()+";";
+				str += "操作类型:" + log.getFlag()+";";
 			}
 		}
 		auditLogDescribe.setDescrib(str);
