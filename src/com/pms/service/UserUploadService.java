@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -18,10 +20,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.OrganizationDAO;
 import com.pms.dao.UserDAO;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
+import com.pms.model.AuditUserLog;
+import com.pms.model.AuditUserLogDescribe;
 import com.pms.model.Organization;
 import com.pms.model.User;
 import com.pms.model.UserImport;
@@ -61,6 +69,7 @@ public class UserUploadService {
         
         //update organization;
         updateUser();
+        AddUserImportLog();
         
         return;
 	}
@@ -238,5 +247,35 @@ public class UserUploadService {
 	
 	private String getIDCardHash(String idcard) throws Exception {
 		return MD5Security.md5(idcard);
+	}
+	
+	private void AddUserImportLog() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditUserLog auditUserLog = new AuditUserLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditUserLog.setAdminId(als.adminLogin());
+		auditUserLog.setIpAddr("");
+		auditUserLog.setFlag(AuditUserLog.LOGFLAGIMPORT);
+		auditUserLog.setResult(AuditUserLog.LOGRESULTSUCCESS);
+		auditUserLog.setLATEST_MOD_TIME(timenow);
+		auditUserLog = logdao.AuditUserLogAdd(auditUserLog);
+		
+		AuditUserLogDescribe auditUserLogDescribe = new AuditUserLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditUserLogDescribe.setLogid(auditUserLog.getId());
+		
+		String str="";
+		str += "用户导入";
+		
+		auditUserLogDescribe.setDescrib(str);
+		
+		auditUserLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditUserLogDescribe = logDescdao.AuditUserLogDescribeAdd(auditUserLogDescribe);
 	}
 }

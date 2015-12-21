@@ -58,7 +58,7 @@ public class ResourceAction extends ActionSupport {
 	private String tName;
 	private String tLastTime;
 	private ResFeature feature;
-	private List<Integer> delIds;
+	private List<String> delIds;
 	private List<ResFeature> features;
 	private ResData data;
 	private ResDataOrg resDataOrg;
@@ -431,11 +431,11 @@ public class ResourceAction extends ActionSupport {
 		this.feature = feature;
 	}
 
-	public List<Integer> getDelIds() {
+	public List<String> getDelIds() {
 		return delIds;
 	}
 
-	public void setDelIds(List<Integer> delIds) {
+	public void setDelIds(List<String> delIds) {
 		this.delIds = delIds;
 	}
 

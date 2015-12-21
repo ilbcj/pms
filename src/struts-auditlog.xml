@@ -27,7 +27,16 @@
  		<action name="queryAllAuditResLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditResLog" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryAllAuditRoleLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditRoleLog" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryAllAuditSystemLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditSystemLog" >
+ 			<result name="success" type="json" />
+ 		</action>
  		<action name="queryAllAuditPrivLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditPrivLog" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryAllAuditLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditLog" >
  			<result name="success" type="json" />
  		</action>
 

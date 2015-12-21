@@ -1,13 +1,22 @@
 package com.pms.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.pms.dao.AttributeDAO;
+import com.pms.dao.AuditLogDAO;
+import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.impl.AttributeDAOImpl;
+import com.pms.dao.impl.AuditLogDAOImpl;
+import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dto.AttrDictItem;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
+import com.pms.model.AuditSystemLog;
+import com.pms.model.AuditSystemLogDescribe;
 
 public class AttrDictionaryService {
 	
@@ -22,6 +31,8 @@ public class AttrDictionaryService {
 			items.add(attrDictItem);
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
+		
+		AddSystemQueryLog(criteria, "用户属性字典;");
 		return total;
 	}
 	
@@ -36,6 +47,8 @@ public class AttrDictionaryService {
 			items.add(attrDictItem);
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
+		
+		AddSystemQueryLog(criteria, "数据资源属性字典;");
 		return total;
 	}
 	
@@ -50,6 +63,8 @@ public class AttrDictionaryService {
 			items.add(attrDictItem);
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
+		
+		AddSystemQueryLog(criteria, "功能资源属性字典;");
 		return total;
 	}
 	
@@ -64,6 +79,8 @@ public class AttrDictionaryService {
 			items.add(attrDictItem);
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
+		
+		AddSystemQueryLog(criteria, "机构属性字典;");
 		return total;
 	}
 	
@@ -78,6 +95,8 @@ public class AttrDictionaryService {
 			items.add(attrDictItem);
 		}
 		int total = dao.GetAttrDefinitionsCount( criteria );
+		
+		AddSystemQueryLog(criteria, "角色属性字典;");
 		return total;
 	}
 	
@@ -87,6 +106,7 @@ public class AttrDictionaryService {
 		item.setId(attr.getId());
 		item.setName(attr.getName());
 		item.setCode(attr.getCode());
+		item.setType(attr.getType());
 		
 		AttributeDAO dao = new AttributeDAOImpl();
 		List<AttrDictionary> attrDicts = dao.GetAttrDictionarysByAttrId(attr.getId());
@@ -109,6 +129,93 @@ public class AttrDictionaryService {
 	public void SaveAttrDictionary(AttrDictItem attrItem) throws Exception {
 		AttributeDAO dao = new AttributeDAOImpl();
 		dao.UpdateAttrDictionary(attrItem.getId(), attrItem.getDictionary());
+		
+		AddSystemAddOrUpdateLog(attrItem);
 	}
-
+	
+	private void AddSystemQueryLog(AttrDefinition criteria, String attrType) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		
+		AuditSystemLog auditSystemLog = new AuditSystemLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditSystemLog.setAdminId(als.adminLogin());
+		auditSystemLog.setIpAddr("");
+		auditSystemLog.setFlag(AuditSystemLog.LOGFLAGQUERY);
+		auditSystemLog.setResult(AuditSystemLog.LOGRESULTSUCCESS);
+		auditSystemLog.setLATEST_MOD_TIME(timenow);
+		auditSystemLog = logdao.AuditSystemLogAdd(auditSystemLog);
+		
+		if( criteria != null ) {
+			AuditSystemLogDescribe auditSystemLogDescribe = new AuditSystemLogDescribe();
+			AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+			
+			auditSystemLogDescribe.setLogid(auditSystemLog.getId());
+			String str="";
+			str += attrType;
+			if(criteria.getName() != null && criteria.getName().length() > 0) {
+				str += criteria.getName()+";";
+			}
+			if(criteria.getCode() != null && criteria.getCode().length() > 0) {
+				str += criteria.getCode()+";";
+			}
+			auditSystemLogDescribe.setDescrib(str);
+			
+			auditSystemLogDescribe.setLATEST_MOD_TIME(timenow);
+			auditSystemLogDescribe = logDescdao.AuditSystemLogDescribeAdd(auditSystemLogDescribe);
+		}
+	}
+	
+	private void AddSystemAddOrUpdateLog(AttrDictItem attrItems) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.SIMPLIFIED_CHINESE);
+		String timenow = sdf.format(new Date());
+		AuditSystemLog auditSystemLog = new AuditSystemLog();
+		AuditLogDAO logdao = new AuditLogDAOImpl();
+		AuditLogService als = new AuditLogService();
+		
+		auditSystemLog.setAdminId(als.adminLogin());
+		auditSystemLog.setIpAddr("");
+		
+		auditSystemLog.setFlag(AuditSystemLog.LOGFLAGUPDATE);
+		auditSystemLog.setResult(AuditSystemLog.LOGRESULTSUCCESS);
+		auditSystemLog.setLATEST_MOD_TIME(timenow);
+		auditSystemLog = logdao.AuditSystemLogAdd(auditSystemLog);
+		
+		AuditSystemLogDescribe auditSystemLogDescribe = new AuditSystemLogDescribe();
+		AuditLogDescribeDao logDescdao = new AuditLogDescribeDAOImpl();
+		
+		auditSystemLogDescribe.setLogid(auditSystemLog.getId());
+		String str="";
+		if(attrItems.getType() == AttrDefinition.ATTRTYPEUSER){
+			str += "用户属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPERESOURCEDATA){
+			str += "数据资源属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPEFUNCDATA){
+			str += "功能资源属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPEORG){
+			str += "机构属性字典;";
+		}else if(attrItems.getType() == AttrDefinition.ATTRTYPEROLE){
+			str += "角色属性字典;";
+		}
+		if(attrItems.getName() != null && attrItems.getName().length() > 0) {
+			str += attrItems.getName()+";";
+		}
+		if(attrItems.getCode() != null && attrItems.getCode().length() > 0) {
+			str += attrItems.getCode()+";";
+		}
+		for(int i=0;i<attrItems.getDictionary().size(); i++) {
+			str += attrItems.getDictionary().get(i).getValue()+":"+attrItems.getDictionary().get(i).getCode()+";";
+		}
+		auditSystemLogDescribe.setDescrib(str);
+		
+		auditSystemLogDescribe.setLATEST_MOD_TIME(timenow);
+		auditSystemLogDescribe = logDescdao.AuditSystemLogDescribeAdd(auditSystemLogDescribe);
+		
+		return ;
+	}
+	
 }

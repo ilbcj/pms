@@ -20,6 +20,7 @@ import com.pms.dao.AppRoleDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
 import com.pms.dao.GroupDAO;
+import com.pms.dao.OrganizationDAO;
 import com.pms.dao.PrivilegeDAO;
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.UserDAO;
@@ -28,6 +29,7 @@ import com.pms.dao.impl.AppRoleDAOImpl;
 import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.AuditLogDescribeDAOImpl;
 import com.pms.dao.impl.GroupDAOImpl;
+import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.dao.impl.PrivilegeDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
@@ -38,6 +40,7 @@ import com.pms.model.Application;
 import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditPrivLogDescribe;
 import com.pms.model.Group;
+import com.pms.model.Organization;
 import com.pms.model.Privilege;
 import com.pms.model.ResRole;
 import com.pms.model.User;
@@ -108,7 +111,7 @@ public class PrivilegeManageService {
 //				saveUserRole(orgs[i], ownertype, roleIds.get(j) );
 			}
 			saveUserRole();
-			//AddPrivilegeAddOrUpdateLog(Integer.parseInt(orgs[i]),ownertype,roleIds,"add");
+			
 			AddPrivilegeAddOrUpdateLog(orgs[i],ownertype,roleIds,"add");
 		}
 	}
@@ -220,34 +223,39 @@ public class PrivilegeManageService {
 		
 		auditPrivLogDescribe.setLogid(auditPrivLog.getId());
 		String str="";
-		if (ownertype==Privilege.OWNERTYPEUSER) {
+		if (ownertype==Privilege.OWNERTYPEORG) {
+			OrganizationDAO orgDao = new OrganizationDAOImpl();
+			Organization orgNode = orgDao.GetOrgNodeById(ownerid);
+			str += "机构授权;";
+			if(orgNode.getUNIT() != null && orgNode.getUNIT().length() > 0) {
+				str += orgNode.getUNIT()+";";
+			}
+			if(orgNode.getGA_DEPARTMENT() != null && orgNode.getGA_DEPARTMENT().length() > 0) {
+				str += orgNode.getGA_DEPARTMENT()+";";
+			}
+			if(orgNode.getPARENT_ORG() != null && orgNode.getPARENT_ORG().length() > 0) {
+				str += orgNode.getPARENT_ORG()+";";
+			}
+			if(orgNode.getGA_DEPARTMENT() != null && orgNode.getGA_DEPARTMENT().length() > 0) {
+				str += orgNode.getGA_DEPARTMENT()+";";
+			}
+			str += orgNode.getORG_LEVEL();
+		}
+		else if (ownertype==Privilege.OWNERTYPEUSER) {
 			UserDAO userDao = new UserDAOImpl();
 			User userNode = userDao.GetUserByCertificateCodeMd5(ownerid);
+			str += "用户授权;";
 			if(userNode.getNAME() != null && userNode.getNAME().length() > 0) {
 				str += userNode.getNAME()+";";
 			}
 			if(userNode.getUNIT() != null && userNode.getUNIT().length() > 0) {
 				str += userNode.getUNIT()+";";
-			}
-				
-			ResourceDAO resDao = new ResourceDAOImpl();
-			for(int i = 0; i<roleIds.size(); i++) {
-				List<ResRole> roleNodes=resDao.GetRoleById(roleIds.get(i));
-				for (int j = 0; j < roleNodes.size(); j++) {
-					if(roleNodes.get(j).getBUSINESS_ROLE_NAME() != null && roleNodes.get(j).getBUSINESS_ROLE_NAME().length() > 0) {
-						str += roleNodes.get(j).getBUSINESS_ROLE_NAME()+";";
-					}
-					if(roleNodes.get(j).getBUSINESS_ROLE() != null && roleNodes.get(j).getBUSINESS_ROLE().length() > 0) {
-						str += roleNodes.get(j).getBUSINESS_ROLE();
-					}
-				}
-			}			
+			}		
 		}
 		else if(ownertype==Privilege.OWNERTYPEUSERGROUP){
 			GroupDAO dao = new GroupDAOImpl();
-			//List<Group> groupNodes = dao.GetGroupByGroupId(ownerid);
-			//int gid = Integer.parseInt(ownerid);
 			List<Group> groupNodes = dao.GetGroupByGroupId(ownerid);
+			str += "群体授权;";
 			for (int i = 0; i < groupNodes.size(); i++) {
 				if(groupNodes.get(i).getName() != null && groupNodes.get(i).getName().length() > 0) {
 					str += groupNodes.get(i).getName()+";";
@@ -255,24 +263,24 @@ public class PrivilegeManageService {
 				if(groupNodes.get(i).getCode() != null && groupNodes.get(i).getCode().length() > 0) {
 					str += groupNodes.get(i).getCode()+";";
 				}
-			}
-			ResourceDAO resDao = new ResourceDAOImpl();
-			for(int i = 0; i<roleIds.size(); i++) {
-				List<ResRole> roleNodes=resDao.GetRoleById(roleIds.get(i));
-				for (int j = 0; j < roleNodes.size(); j++) {
-					if(roleNodes.get(j).getBUSINESS_ROLE_NAME() != null && roleNodes.get(j).getBUSINESS_ROLE_NAME().length() > 0) {
-						str += roleNodes.get(j).getBUSINESS_ROLE_NAME()+";";
-					}
-					if(roleNodes.get(j).getBUSINESS_ROLE() != null && roleNodes.get(j).getBUSINESS_ROLE().length() > 0) {
-						str += roleNodes.get(j).getBUSINESS_ROLE();
-					}
-				}
 			}			
+		}
+		ResourceDAO resDao = new ResourceDAOImpl();
+		for(int i = 0; i<roleIds.size(); i++) {
+			List<ResRole> roleNodes=resDao.GetRoleById(roleIds.get(i));
+			for (int j = 0; j < roleNodes.size(); j++) {
+				if(roleNodes.get(j).getBUSINESS_ROLE_NAME() != null && roleNodes.get(j).getBUSINESS_ROLE_NAME().length() > 0) {
+					str += roleNodes.get(j).getBUSINESS_ROLE_NAME()+";";
+				}
+				if(roleNodes.get(j).getBUSINESS_ROLE() != null && roleNodes.get(j).getBUSINESS_ROLE().length() > 0) {
+					str += roleNodes.get(j).getBUSINESS_ROLE();
+				}
+			}
 		}
 		auditPrivLogDescribe.setDescrib(str);
 		
 		auditPrivLogDescribe.setLATEST_MOD_TIME(timenow);
-//		auditPrivLogDescribe = logDescdao.AuditPrivLogDescribeAdd(auditPrivLogDescribe);
+		auditPrivLogDescribe = logDescdao.AuditPrivLogDescribeAdd(auditPrivLogDescribe);
 		
 		return ;
 	}

@@ -22,11 +22,20 @@
         <li iconCls="icon-leaf" id="menu_grouplog_operation">
             <span>群体操作日志</span>
         </li>
+        <li iconCls="icon-leaf" id="menu_rolelog_operation">
+            <span>角色操作日志</span>
+        </li>
         <li iconCls="icon-leaf" id="menu_reslog_operation">
             <span>资源操作日志</span>
         </li>
         <li iconCls="icon-leaf" id="menu_privilegelog_operation">
             <span>授权操作日志</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_systemlog_operation">
+            <span>系统操作日志</span>
+        </li>
+        <li iconCls="icon-leaf" id="menu_log_operation">
+            <span>审查操作日志</span>
         </li>
     </ul>
 <script>
@@ -42,11 +51,20 @@ $(document).ready(function () {
 			else if( node.id == 'menu_grouplog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/grouplog_operation.html');
 			}
+			else if( node.id == 'menu_rolelog_operation') {
+				$('body').layout('panel','center').panel('refresh','log/rolelog_operation.html');
+			}
 			else if( node.id == 'menu_reslog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/reslog_operation.html');
 			}
 			else if( node.id == 'menu_privilegelog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/privilegelog_operation.html');
+			}
+			else if( node.id == 'menu_systemlog_operation') {
+				$('body').layout('panel','center').panel('refresh','log/systemlog_operation.html');
+			}
+			else if( node.id == 'menu_log_operation') {
+				$('body').layout('panel','center').panel('refresh','log/log_operation.html');
 			}
 		}
 	});

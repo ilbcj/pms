@@ -62,7 +62,8 @@
 								data-options="fit:true,border:false,title:'应用信息',footer:'#attr_dict_org_maintain_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 <!-- 				    <form id="attr_org_disc_maintain_center_detail_form" method="post"> -->
-				    	<input id="attr_id" type="hidden"/> 
+				    	<input id="attr_id" type="hidden"/>
+				    	<input id="attr_type" type="hidden"/>
 				        <table class="nodt" style="width:100%">
 				            <tr>
 				                <td class="form_name_small text_right"><span style="color:red;">*</span> 名称</td>
@@ -127,6 +128,7 @@
 		$("#attr_id").val(rows[0].id);
 		$("#attr_name").textbox('setValue',rows[0].name);
 		$("#attr_code").textbox('setValue',rows[0].code);
+		$("#attr_type").val(rows[0].type);
 
 		var dataArray = new Array();
 		for(var index=0; index < rows[0].dictionary.length; index++) {
@@ -157,6 +159,15 @@
 	function attrDictOrgValueSave() {
 		var attrId = $("#attr_id").val();
     	var poststr = "attrItem.id=" + attrId;
+    	
+    	var attrName = $("#attr_name").val();
+    	poststr += "&attrItem.name=" + attrName;
+    	
+    	var attrCode = $("#attr_code").val();
+    	poststr += "&attrItem.code=" + attrCode;
+    	
+    	var attrType = $("#attr_type").val();
+    	poststr += "&attrItem.type=" + attrType;
     	
     	var rows = $("#attr_dict_org_maintain_center_detail_value_dg").datagrid('getRows');
     	var convertArray = new Array();

@@ -80,8 +80,14 @@
 	<mapping resource="com/pms/model/AuditOrgLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditGroupLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditGroupLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditResLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditResLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditRoleLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditRoleLogDescribe.hbm.xml" />
+	<mapping resource="com/pms/model/AuditSystemLog.hbm.xml" />
+	<mapping resource="com/pms/model/AuditSystemLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/AuditPrivLog.hbm.xml" />
 	<mapping resource="com/pms/model/AuditPrivLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/UserRoleView.hbm.xml" />

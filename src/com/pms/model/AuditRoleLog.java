@@ -1,6 +1,6 @@
 package com.pms.model;
 
-public class AuditResLog {
+public class AuditRoleLog {
 	public final static String LOGFLAGQUERY = "query";
 	public final static String LOGFLAGADD = "add";
 	public final static String LOGFLAGUPDATE = "update";

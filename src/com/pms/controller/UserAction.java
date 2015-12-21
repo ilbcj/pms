@@ -57,7 +57,7 @@ public class UserAction extends ActionSupport {
 	private String userTitle;
 	private String userPoliceNum;
 	private String userbusinesstype;
-	private List<Integer> delNodeIds;
+	private List<String> delNodeIds;
 	
 	private File fi;
 	private String fiFileName;
@@ -231,11 +231,11 @@ public class UserAction extends ActionSupport {
 		this.message = message;
 	}
 
-	public List<Integer> getDelNodeIds() {
+	public List<String> getDelNodeIds() {
 		return delNodeIds;
 	}
 
-	public void setDelNodeIds(List<Integer> delNodeIds) {
+	public void setDelNodeIds(List<String> delNodeIds) {
 		this.delNodeIds = delNodeIds;
 	}
 

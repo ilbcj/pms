@@ -1,7 +1,7 @@
 package com.pms.model;
 
 
-public class AuditGroupLogDescribe {
+public class AuditLogDescribe {
 	private int id;
 	private int logid;
 	private String describ;

@@ -431,9 +431,9 @@
 			});
 			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选群体？', function(r){
                 if (r){
-                	var poststr = "delIds=" + rows[0].id;
+                	var poststr = "delIds=" + rows[0].code;
                 	for(var i=1; i<rows.length; i++){
-					    poststr += "&delIds=" + rows[i].id;
+					    poststr += "&delIds=" + rows[i].code;
 					}
 
                     $.post("../group/deleteGroupRules.action", poststr, function(retObj) {

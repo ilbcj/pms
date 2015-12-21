@@ -114,8 +114,8 @@
 								data-options="fit:true,border:false,title:'基本信息',footer:'#user_maintain_center_detail_ft'" >
 					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
 				    <form id="user_maintain_center_detail_form" method="post">
-				    	<input id="user_id" name="user.id" type="hidden"/>
-				    	<input id="user_data_version" name="user.DATA_VERSION" type="hidden"/> 
+				    	<input id="user_id" name="user.id" value="0" type="hidden"/>
+				    	<input id="user_data_version" value="0" name="user.DATA_VERSION" type="hidden"/> 
 				    	<input id="user_certificate_code_md5" name="user.CERTIFICATE_CODE_MD5" type="hidden"/>
 				        <table class="nodt" style="width:100%">
 				            <tr>
@@ -140,7 +140,7 @@
 				                <td>
 				                	<input id="user_pid" name="user.GA_DEPARTMENT" class="form_value_mid easyui-textbox"  data-options="prompt:'请选择上级机构',editable:false"></input>
 				                	<input id="user_unit" name="user.UNIT" type="hidden"></input>
-				                	<input id="user_orglevel" name="user.ORG_LEVEL" type="hidden"></input>
+				                	<input id="user_orglevel" value="0" name="user.ORG_LEVEL" type="hidden"></input>
 				                	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="openOrgSelectWin()">选择</a>
 				                </td>
 				            </tr>
@@ -293,7 +293,7 @@
     	$("#user_query_name").textbox({value:""});
     	$("#user_query_status").combobox("setValue","0");
     	
-    	$("#businesstype").textbox({value:""});
+    	$("#user_query_businesstype").textbox({value:""});
     	$("#user_query_police_type").textbox({value:""});
     	$("#user_query_sex").textbox({value:""});
     	$("#user_query_idnum").textbox({value:""});
@@ -464,9 +464,9 @@
 			});
 			$.messager.confirm('确认', '您选取了' + rows.length + '条记录，是否删除？', function(r){
                 if (r){
-                	var poststr = "delNodeIds=" + rows[0].id;
+                	var poststr = "delNodeIds=" + rows[0].certificate_code_md5;
                 	for(var i=1; i<rows.length; i++){
-					    poststr += "&delNodeIds=" + rows[i].id;
+					    poststr += "&delNodeIds=" + rows[i].certificate_code_md5;
 					}
 					
                     $.post("../user/deleteUserNode.action", poststr, function(retObj) {

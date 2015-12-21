@@ -6,14 +6,20 @@ import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.LogGroupItem;
+import com.pms.dto.LogItem;
 import com.pms.dto.LogOrgItem;
 import com.pms.dto.LogPrivItem;
 import com.pms.dto.LogResItem;
+import com.pms.dto.LogRoleItem;
+import com.pms.dto.LogSystemItem;
 import com.pms.dto.LogUserItem;
 import com.pms.model.AuditGroupLog;
+import com.pms.model.AuditLog;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditPrivLog;
 import com.pms.model.AuditResLog;
+import com.pms.model.AuditRoleLog;
+import com.pms.model.AuditSystemLog;
 import com.pms.model.AuditUserLog;
 import com.pms.service.AuditLogService;
 
@@ -30,7 +36,11 @@ public class AuditLogAction extends ActionSupport {
 	private List<LogOrgItem> logOrgItems;
 	private List<LogGroupItem> logGroupItems;
 	private List<LogResItem> logResItems;
+	private List<LogRoleItem> logRoleItems;
+	private List<LogSystemItem> logSystemItems;
 	private List<LogPrivItem> logPrivItems;
+	private List<LogItem> logItems;
+	
 	private String flag;
 	
 	public int getPage() {
@@ -93,11 +103,29 @@ public class AuditLogAction extends ActionSupport {
 	public void setLogResItems(List<LogResItem> logResItems) {
 		this.logResItems = logResItems;
 	}
+	public List<LogRoleItem> getLogRoleItems() {
+		return logRoleItems;
+	}
+	public void setLogRoleItems(List<LogRoleItem> logRoleItems) {
+		this.logRoleItems = logRoleItems;
+	}
+	public List<LogSystemItem> getLogSystemItems() {
+		return logSystemItems;
+	}
+	public void setLogSystemItems(List<LogSystemItem> logSystemItems) {
+		this.logSystemItems = logSystemItems;
+	}
 	public List<LogPrivItem> getLogPrivItems() {
 		return logPrivItems;
 	}
 	public void setLogPrivItems(List<LogPrivItem> logPrivItems) {
 		this.logPrivItems = logPrivItems;
+	}
+	public List<LogItem> getLogItems() {
+		return logItems;
+	}
+	public void setLogItems(List<LogItem> logItems) {
+		this.logItems = logItems;
 	}
 	public String getFlag() {
 		return flag;
@@ -174,6 +202,40 @@ public class AuditLogAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QueryAllAuditRoleLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logRoleItems = new ArrayList<LogRoleItem>();
+		try {
+			AuditRoleLog criteria=new AuditRoleLog();
+			criteria.setFlag(flag);
+			total = oms.QueryRoleLogItems(criteria, page, rows, logRoleItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllAuditSystemLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logSystemItems = new ArrayList<LogSystemItem>();
+		try {
+			AuditSystemLog criteria=new AuditSystemLog();
+			criteria.setFlag(flag);
+			total = oms.QuerySystemLogItems(criteria, page, rows, logSystemItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String QueryAllAuditPrivLog()
 	{
 		AuditLogService oms = new AuditLogService();
@@ -182,6 +244,23 @@ public class AuditLogAction extends ActionSupport {
 			AuditPrivLog criteria=new AuditPrivLog();
 			criteria.setFlag(flag);
 			total = oms.QueryPrivLogItems(criteria, page, rows, logPrivItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryAllAuditLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logItems = new ArrayList<LogItem>();
+		try {
+			AuditLog criteria=new AuditLog();
+			criteria.setFlag(flag);
+			total = oms.QueryLogItems(criteria, page, rows, logItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
