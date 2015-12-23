@@ -38,7 +38,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="<%=path %>/js/main.js"></script>
 	
 	<script type="text/javascript" src="<%=path %>/js/easyui-lang-zh_CN.js"></script>
-    
+	
+	<script type="text/javascript" src="<%=path %>/js/highcharts.js"></script>
+    <script type="text/javascript" src="<%=path %>/js/exporting.js"></script>
 </head>
 
 <body class="easyui-layout" style="background:#E6EEF8;">

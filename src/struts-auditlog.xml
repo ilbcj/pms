@@ -18,27 +18,50 @@
  		<action name="queryAllAuditUserLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditUserLog" >
  			<result name="success" type="json" />
  		</action>
+	 	<action name="queryPercentageAuditUserLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditUserLog" >
+			<result name="success" type="json" />
+ 		</action>
  		<action name="queryAllAuditOrgLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditOrgLog" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryPercentageAuditOrgLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditOrgLog" >
  			<result name="success" type="json" />
  		</action>
  		<action name="queryAllAuditGroupLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditGroupLog" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryPercentageAuditGroupLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditGroupLog" >
+ 			<result name="success" type="json" />
+ 		</action>
  		<action name="queryAllAuditResLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditResLog" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryPercentageAuditResLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditResLog" >
  			<result name="success" type="json" />
  		</action>
  		<action name="queryAllAuditRoleLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditRoleLog" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryPercentageAuditRoleLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditRoleLog" >
+ 			<result name="success" type="json" />
+ 		</action>
  		<action name="queryAllAuditSystemLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditSystemLog" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryPercentageAuditSystemLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditSystemLog" >
  			<result name="success" type="json" />
  		</action>
  		<action name="queryAllAuditPrivLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditPrivLog" >
  			<result name="success" type="json" />
  		</action>
+ 		<action name="queryPercentageAuditPrivLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditPrivLog" >
+ 			<result name="success" type="json" />
+ 		</action>
  		<action name="queryAllAuditLog" class="com.pms.controller.AuditLogAction" method="QueryAllAuditLog" >
  			<result name="success" type="json" />
  		</action>
-
+ 		<action name="queryPercentageAuditLog" class="com.pms.controller.AuditLogAction" method="QueryPercentageAuditLog" >
+ 			<result name="success" type="json" />
+ 		</action>
 	</package>	
 </struts>    
