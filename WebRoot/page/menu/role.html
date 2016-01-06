@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>resourcemanager.html</title>
+    <title>rolemanager.html</title>
 	
     <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
     <meta http-equiv="description" content="this is my page">
@@ -12,7 +12,7 @@
   </head>
   
   <body>
-    <ul id="menu_app" class="easyui-tree" lines="true">
+    <ul id="menu_role" class="easyui-tree" lines="true">
         <li iconCls="icon-leaf" id="menu_resource_role_maintain">
             <span>角色维护</span>
         </li>
@@ -22,7 +22,7 @@
     </ul>
 <script>
 $(document).ready(function () {
-	$('#menu_app').tree({
+	$('#menu_role').tree({
 		onClick: function(node){
 			if (node.id == 'menu_resource_role_maintain') {
 				$('body').layout('panel','center').panel('refresh','role/resource_role_maintain.html');

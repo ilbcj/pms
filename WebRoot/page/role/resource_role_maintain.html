@@ -659,7 +659,7 @@
         }
     	
     	
-    	$.post("../resource/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../role/saveResourceRole.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -745,7 +745,7 @@
 		var poststr = "role.BUSINESS_ROLE=" + rows[0].BUSINESS_ROLE;
 		
 		$("#role_resource_feature_dg").datagrid({
-			url:'../resource/queryRoleResourceFunc.action?role.BUSINESS_ROLE='+rows[0].BUSINESS_ROLE,
+			url:'../role/queryRoleResourceFunc.action?role.BUSINESS_ROLE='+rows[0].BUSINESS_ROLE,
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
@@ -759,7 +759,7 @@
 			}
 		});
 		$("#role_resource_data_dg").datagrid({
-			url:'../resource/queryRoleResourceData.action?role.BUSINESS_ROLE='+rows[0].BUSINESS_ROLE,
+			url:'../role/queryRoleResourceData.action?role.BUSINESS_ROLE='+rows[0].BUSINESS_ROLE,
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
@@ -807,7 +807,7 @@
 	    var BUSINESS_ROLE= $("#role_code").textbox('getValue');
 	    var poststr = "role.BUSINESS_ROLE=" + BUSINESS_ROLE;
 	    
-    	$.post("../resource/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../role/queryRoleResource.action?rand=" + Math.random(), poststr, function(retObj) {
 			arr.push(retObj);
 			if( retObj.dataItems.length ==0 ){
 				warningTip("提示", '没有可复制的资源！');
@@ -841,7 +841,7 @@
     
 	function roleSaveTemplate(){
     	$("#role_template_save_list_dg").datagrid({
-			url:'../resource/queryAllResRoleResourceTemplate.action',
+			url:'../role/queryAllResRoleResourceTemplate.action',
 			loadFilter: function(data){
 				var res = new Object();
 				if (data.result == true){
@@ -868,7 +868,7 @@
     	
     	$.messager.confirm('提示框', '你确定要删除吗?',function(r){
     		if(r){
-			    $.post("../resource/deleteResRoleResourceTemplate.action", poststr, function(retObj) {
+			    $.post("../role/deleteResRoleResourceTemplate.action", poststr, function(retObj) {
 			
 					if(retObj.result == true)
 					{
@@ -929,7 +929,7 @@
     		return;
     	}
     	
-    	$.post("../resource/saveResRoleResourceTemplate.action?rand=" + Math.random(), poststr, function(retObj) {
+    	$.post("../role/saveResRoleResourceTemplate.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -945,7 +945,7 @@
     
     function roleCopyTemplate(){
     	$("#role_template_copy_list_dg").datagrid('loadData',{total:0,rows:[]});
-		$.post("../resource/queryAllResRoleResourceTemplate.action", function(data) {
+		$.post("../role/queryAllResRoleResourceTemplate.action", function(data) {
 			var tname="";				//模板名称
 			
 			for(var i=0;i<data.resRoleResourceTemplates.length;i++){
@@ -964,7 +964,7 @@
 				editable:false,
 				onSelect: function(){   
 	            	$("#role_template_copy_list_dg").datagrid({
-						url:'../resource/queryResRoleResourceTemplate.action?resRoleResourceTemplate.TEMPLATE_NAME='+$('#template_name_copy').combobox('getText')+'&resRoleResourceTemplate.LATEST_MOD_TIME='+$('#template_name_copy').combobox('getValue'),
+						url:'../role/queryResRoleResourceTemplate.action?resRoleResourceTemplate.TEMPLATE_NAME='+$('#template_name_copy').combobox('getText')+'&resRoleResourceTemplate.LATEST_MOD_TIME='+$('#template_name_copy').combobox('getValue'),
 						cache:false,
 						loadFilter: function(data){
 							var res = new Object();
@@ -997,7 +997,7 @@
     	
 		var templateLateTime = $('#template_name_copy').combobox('getValue');
     	poststr += "&resRoleResourceTemplate.LATEST_MOD_TIME=" + templateLateTime;
-   		$.post("../resource/queryRoleResourceTemplate.action?rand=" + Math.random(), poststr, function(retObj) {
+   		$.post("../role/queryRoleResourceTemplate.action?rand=" + Math.random(), poststr, function(retObj) {
 		
 			if(retObj.result == true)
 			{
@@ -1039,7 +1039,7 @@
 					    poststr += "&delIds=" + rows[i].BUSINESS_ROLE;
 					}
 
-                    $.post("../resource/deleteResourceRole.action", poststr, function(retObj) {
+                    $.post("../role/deleteResourceRole.action", poststr, function(retObj) {
 		
 						if(retObj.result == true)
 						{
@@ -1215,7 +1215,7 @@
 $(document).ready(function () { 
 	
 	$("#resource_role_manage_center_list_dg").datagrid({
-		url:'../resource/queryRoleItems.action',
+		url:'../role/queryRoleItems.action',
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){

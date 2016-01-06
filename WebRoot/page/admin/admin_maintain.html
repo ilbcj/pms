@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>admin_maintain.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">管理员维护</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="admin_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+				<div id="admin_maintain_center_main" class="easyui-layout" data-options="fit:true" >
+					<div id="admin_maintain_center_query" region="north" data-options="border:false,noheader:true" style="margin-bottom:5px;">
+		    			<table class="nodt" style="width:100%">
+			                <tr>
+			                    <td class="query_name_small text_right">管理员账号</td>
+			                    <td class="query_value_small"><input id="admin_query_loginid" class="easyui-textbox"></input></td>
+			                    <td class="query_name_small text_right">状态</td>
+			                    <td class="query_value_small"><input id="admin_query_status" value="1" style="width:150px;"></input></td>
+			                    <td>
+			                    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="queryAdmin()">查询</a>
+	            					<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearQueryAdminCondition()">重置</a>
+			                    </td>
+			                </tr>
+			            </table>
+		    		</div><!-- end of admin_maintain_center_query -->
+		    		
+		    		<div id="admin_maintain_center_list" region="center" data-options="border:false,noheader:true" >
+		    			<table class="nodt" id="admin_maintain_center_list_dg"  
+					            data-options="singleSelect:false,method:'post',nowrap:true,toolbar:'#toolbar',pagination:true,noheader:true,fit:true">
+					        <thead>
+					            <tr>
+					            	<th field="ck" checkbox="true"></th>
+					            	<th data-options="field:'loginid'" style="width:33%;">管理员账号</th>
+					                <th data-options="field:'name'" style="width:33%;">管理员姓名</th>
+					                <th data-options="field:'status',formatter:formatStatus" style="width:33%;">状态</th>
+					            </tr>
+					        </thead>
+					    </table>
+					    <div id="toolbar" style="background-color:#E7F0FF">
+					    	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="addAdmin()">添加</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true" onclick="modAdmin()">修改</a>
+	            			<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="delAdmin()">删除</a>
+	            			
+					    </div><!-- end of toolbar -->
+		    		</div><!-- end of admin_maintain_center_list -->
+		    	</div><!-- end of admin_maintain_center_main -->
+			</div><!-- admin_maintain_center_main_wapper -->
+			
+			<div id="admin_maintain_center_detail_wapper" class="easyui-panel" data-options="fit:true,closed:true" >
+				<div id="admin_maintain_center_detail" class="easyui-panel" 
+								data-options="fit:true,border:false,title:'基本信息',footer:'#admin_maintain_center_detail_ft'" >
+					<div id="message" style="width=100%;height:30px;text-align:center;line-height:30px;display:none"></div>
+					<input id="admin_id" type="hidden"/>
+					<input id="admin_unit" type="hidden"/>
+					<input id="admin_frozentime" type="hidden"/>
+					<input id="admin_errorcount" type="hidden"/>
+			        <table class="nodt" style="width:100%">
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 管理员账号</td>
+			                <td><input id="admin_loginid" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理员账号'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 管理员姓名</td>
+			                <td><input id="admin_name" class="form_value_mid easyui-textbox" data-options="prompt:'请输入管理员姓名'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 密码</td>
+			                <td><input id="admin_pwd" class="form_value_mid easyui-textbox" type="password" data-options="prompt:'请输入密码'"></input></td>
+			            </tr>
+			            <tr>
+			                <td class="form_name_small text_right"><span style="color:red;">*</span> 状态</td>
+			                <td><input id="admin_status" class="form_value_mid easyui-combobox" 
+				                		data-options="readonly:true, valueField:'value', textField:'label', data: [{label: '使用中',value: '1',selected:true}]" /></td>
+			            </tr>
+					</table>
+				    <table class="nodt easyui-datagrid" id="admin_list_dg" >
+				    </table>
+				</div><!-- end of admin_maintain_center_detail -->
+
+				<div id="admin_maintain_center_detail_ft" style="text-align:center;height:45px;padding-top:15px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="addAdminSave();">保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="addAdminReturn();">返回</a>
+				</div><!-- end of admin_maintain_center_detail_ft -->
+				
+	    	</div><!-- end of admin_maintain_center_detail_wapper -->
+	    			
+		</div><!-- end of center -->
+	</div><!-- end of layout -->
+<script>
+	function queryAdmin(){
+    	var loginid = $("#admin_query_loginid").val();
+    	var status = $("#admin_query_status").combobox("getValue");
+    	
+    	$("#admin_maintain_center_list_dg").datagrid('load',{
+    		queryAll: true,
+			adminLoginid: loginid,
+			adminStatus: status
+		});
+    }
+    
+    function clearQueryAdminCondition(){
+    	$("#admin_query_loginid").textbox({value:""});
+    	$("#admin_query_status").combobox("setValue","1");
+    }
+        
+	function addAdmin() {
+		$("#admin_maintain_center_main_wapper").panel('close');
+    	$("#admin_maintain_center_detail_wapper").panel('open');
+	}
+	
+	function addAdminReturn() {
+		$("#admin_maintain_center_list_dg").datagrid('clearSelections');
+		$("#admin_list_dg").datagrid('clearSelections');
+    	$("#admin_maintain_center_main_wapper").panel('open');
+    	$("#admin_maintain_center_main_wapper").panel('resize');
+    	$("#admin_maintain_center_detail_wapper").panel('close');
+    	refreshDetailPage();
+    }
+    
+    function refreshDetailPage() {
+		$("#admin_id").val("");
+		$("#admin_unit").textbox('setValue',"");
+     	$("#admin_frozentime").textbox('setValue',"");
+     	$("#admin_errorcount").textbox('setValue',"");
+     	$("#admin_name").textbox('setValue',"");
+     	$("#admin_loginid").textbox('setValue',"");
+     	$("#admin_pwd").textbox('setValue',"");
+//      	$("#admin_status").textbox('setValue',"");
+
+		//clear datagrid's data
+      	$("#admin_list_dg").datagrid('unselectAll');
+    }
+    
+    function formatStatus(val,row){
+		if (val == 1){
+			return "使用中";
+		} else if (val == 2) {
+			return "已锁定";
+		} else if (val == 3) {
+			return "已删除";
+		} else {
+			return "未知状态";
+		}
+	}
+	
+    function addAdminSave() {
+    	var adminId = $("#admin_id").val();
+    	var adminName = $("#admin_name").textbox('getValue');
+    	
+    	if(adminId.length == 0){
+    		var poststr = "admin.name=" + adminName;
+    	}else{
+	    	var poststr = "admin.id=" + adminId;
+	    	poststr += "&admin.name=" + adminName;
+    	}
+    	
+		var adminUnit= $("#admin_unit").val();
+    	poststr += "&admin.unit=" + adminUnit;
+    	
+    	var adminFrozentime = $("#admin_frozentime").val();
+    	poststr += "&admin.frozentime=" + adminFrozentime;
+    	
+    	var adminErrorcount = $("#admin_errorcount").val();
+    	poststr += "&admin.errorcount=" + adminErrorcount;
+    	
+    	var adminLoginid = $("#admin_loginid").textbox('getValue');
+    	poststr += "&admin.loginid=" + adminLoginid;
+    	
+    	var adminPwd = $("#admin_pwd").textbox('getValue');
+    	poststr += "&admin.pwd=" + adminPwd;
+    	
+    	var adminStatus = $("#admin_status").combobox("getValue");
+    	poststr += "&admin.status=" + adminStatus;
+    	
+    	var rows = $("#admin_list_dg").datagrid('getSelections');
+    	if(rows.length > 0){
+	    	for(var index=0; index < rows.length; index++ ) {
+	    		poststr += '&pid='+ rows[index].accreditCode;
+			}
+		}
+    	
+    	$.post("../admin/saveAdmin.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				$("#admin_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
+				successTip("提示", '保存管理员信息成功');
+			}
+			else
+			{
+				warningTip("提示", '保存管理员信息失败');	
+			}
+			addAdminReturn();
+		}, "json");
+    }
+    
+	function modAdmin() {
+		var rows = $("#admin_maintain_center_list_dg").datagrid('getSelections');
+		
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要修改的管理员');
+			return false;
+		} else if (rows.length>1)
+		{
+			warningTip("提示", '一次只能修改一个管理员');
+			return false;
+		}
+		if(rows[0].id == 1 && rows[0].loginid == 'admin'){
+			warningTip("提示", '系统管理员不可修改');
+			return false;
+		}
+		$("#admin_id").val(rows[0].id);
+		$("#admin_unit").val(rows[0].unit);
+		$("#admin_frozentime").val(rows[0].frozentime);
+		$("#admin_errorcount").val(rows[0].errorcount);
+		$("#admin_loginid").textbox('setValue',rows[0].loginid);
+		$("#admin_name").textbox('setValue',rows[0].name);
+		$("#admin_pwd").textbox('setValue',rows[0].pwd);
+// 		$("#admin_status").textbox('setValue',rows[0].status);
+		
+		var poststr = "admin.id=" + rows[0].id;
+		$.post("../admin/queryAdminAccreditById.action?rand=" + Math.random(), poststr, function(retObj) {
+		
+			if(retObj.result == true)
+			{
+				var accreditRows = $("#admin_list_dg").datagrid('getRows');
+				for(var key in retObj.accredits) {
+		    		for(var index=0; index < accreditRows.length; index++ ) {
+		    			if( accreditRows[index].accreditCode == retObj.accredits[key].pid) {
+		    				$("#admin_list_dg").datagrid('selectRow', index);
+		    			}
+		    		}
+		    	}
+			}
+			else
+			{
+				warningTip("提示", '获取管理员信息失败');	
+				refreshDetailPage();
+				return;
+			}
+		}, "json");
+		
+   		$("#admin_maintain_center_main_wapper").panel('close');
+    	$("#admin_maintain_center_detail_wapper").panel('open');
+	}
+	
+	function delAdmin() {
+		var rows = $("#admin_maintain_center_list_dg").datagrid('getSelections');
+		if(rows.length == 0) {
+			warningTip("提示", '请选择要删除的管理员');
+			return;
+		}
+		else {
+			if(rows[0].id == 1 && rows[0].loginid == 'admin'){
+				warningTip("提示", '系统管理员不可删除');
+				return false;
+			}
+			$.extend($.messager.defaults,{  
+				ok:"删除",  
+				cancel:"取消"  
+			});
+			$.messager.confirm('确认', '您选取了' + rows.length + '条记录。确认要删除所选管理员？', function(r){
+                if (r){
+                	var poststr = "delIds=" + rows[0].id;
+                	for(var i=1; i<rows.length; i++){
+					    poststr += "&delIds=" + rows[i].id;
+					}
+
+                    $.post("../admin/deleteAdmin.action", poststr, function(retObj) {
+		
+						if(retObj.result == true)
+						{
+							$("#admin_maintain_center_list_dg").datagrid('reload').datagrid('clearSelections');
+							successTip("删除管理员","操作成功");
+						}
+						else
+						{
+							warningTip("提示", "删除管理员操作失败：" + retObj.message);
+						}
+					}, "json");
+                }
+            });
+		}
+	}
+$(document).ready(function () { 
+	
+	$("#admin_maintain_center_list_dg").datagrid({
+		url:'../admin/queryAdmin.action',
+		loadFilter: function(data){
+			var res = new Object();
+			if (data.result == true){
+				res.total = data.total;
+				res.rows = data.items;
+			} else {
+				res.total=0;
+				res.rows = [];
+			}
+			return res;
+		},
+//		onLoadSuccess: function() {alert("success");},
+		onLoadError: function() { $("#admin_maintain_center_main").layout('resize',{width:'100%',height:'100%'}); }
+	});
+
+	$("#admin_list_dg").datagrid({
+		title:'权限列表',
+		iconCls:'icon-edit',
+		nowrap:true,
+		height:'100%',
+		singleSelect:false,
+		pagination:false,
+		columns:[[
+			{field:'ck',checkbox:true},
+			{field:'accreditName',title:'权限',width:'100%',editor:'text'},
+			{field:'accreditCode',hidden:'true'}
+		]]
+	});
+	var data = {'total':100,'rows':[{accreditName:'机构管理',accreditCode:'0'},{accreditName:'用户管理',accreditCode:'1'},
+						{accreditName:'群体管理',accreditCode:'2'},{accreditName:'角色管理',accreditCode:'3'},
+						{accreditName:'资源管理',accreditCode:'4'},{accreditName:'授权管理',accreditCode:'5'},
+						{accreditName:'系统管理',accreditCode:'6'},{accreditName:'日志审计',accreditCode:'7'},
+						{accreditName:'管理员管理',accreditCode:'8'}]};   
+	$('#admin_list_dg').datagrid('loadData', data); 
+	
+	$("#admin_query_status").combobox({
+		valueField: 'value',
+		textField: 'label',
+		editable:false,
+		data:[{
+			label: '请选择',
+			value: '',
+		},{
+			label: '使用中',
+			value: '1'
+		},{
+			label: '已锁定',
+			value: '2'
+		},{
+			label: '已删除',
+			value: '3'
+		}]
+	});
+});
+</script>	
+  </body>
+</html>

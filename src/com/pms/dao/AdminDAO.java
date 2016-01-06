@@ -11,4 +11,7 @@ public interface AdminDAO {
 	public List<Admin> GetAllAdmins() throws Exception;
 	public Admin GetAdminById(int id) throws Exception;
 	public Admin GetAdminByLoginid(String loginid) throws Exception;
+	List<Admin> GetAdmins(Admin criteria, int page, int rows) throws Exception;
+	Admin AdminsAdd(Admin admin) throws Exception;
+	void AdminOfAccreditDel(Admin target) throws Exception;
 }
