@@ -1,3 +1,13 @@
+/**   
+ * @ClassName:     ${UserManageService}   
+ * @Description:   ${用户管理功能}   
+ * 
+ * @ProductName:   ${中盈集中用户平台}
+ * @author         ${北京中盈网信科技有限公司}  
+ * @version        V1.0     
+ * @Date           ${2014.8.27} 
+*/
+
 package com.pms.service;
 
 import java.text.SimpleDateFormat;
