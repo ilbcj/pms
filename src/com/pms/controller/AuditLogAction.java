@@ -151,6 +151,21 @@ public class AuditLogAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QueryPercentageAuditUserLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logUserItems = new ArrayList<LogUserItem>();
+		try {
+			oms.QueryUserLogsPercentage(logUserItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String QueryAllAuditOrgLog()
 	{
 		AuditLogService oms = new AuditLogService();
@@ -159,6 +174,21 @@ public class AuditLogAction extends ActionSupport {
 			AuditOrgLog criteria=new AuditOrgLog();
 			criteria.setFlag(flag);
 			total = oms.QueryOrgLogItems(criteria, page, rows, logOrgItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryPercentageAuditOrgLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logOrgItems = new ArrayList<LogOrgItem>();
+		try {
+			oms.QueryOrgLogsPercentage(logOrgItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -185,6 +215,21 @@ public class AuditLogAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QueryPercentageAuditGroupLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logGroupItems = new ArrayList<LogGroupItem>();
+		try {
+			oms.QueryGroupLogsPercentage(logGroupItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String QueryAllAuditResLog()
 	{
 		AuditLogService oms = new AuditLogService();
@@ -193,6 +238,21 @@ public class AuditLogAction extends ActionSupport {
 			AuditResLog criteria=new AuditResLog();
 			criteria.setFlag(flag);
 			total = oms.QueryResLogItems(criteria, page, rows, logResItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryPercentageAuditResLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logResItems = new ArrayList<LogResItem>();
+		try {
+			oms.QueryResLogsPercentage(logResItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -219,6 +279,21 @@ public class AuditLogAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QueryPercentageAuditRoleLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logRoleItems = new ArrayList<LogRoleItem>();
+		try {
+			oms.QueryRoleLogsPercentage(logRoleItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String QueryAllAuditSystemLog()
 	{
 		AuditLogService oms = new AuditLogService();
@@ -227,6 +302,21 @@ public class AuditLogAction extends ActionSupport {
 			AuditSystemLog criteria=new AuditSystemLog();
 			criteria.setFlag(flag);
 			total = oms.QuerySystemLogItems(criteria, page, rows, logSystemItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryPercentageAuditSystemLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logSystemItems = new ArrayList<LogSystemItem>();
+		try {
+			oms.QuerySystemLogsPercentage(logSystemItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
@@ -253,6 +343,21 @@ public class AuditLogAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
+	public String QueryPercentageAuditPrivLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logPrivItems = new ArrayList<LogPrivItem>();
+		try {
+			oms.QueryPrivLogsPercentage(logPrivItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 	public String QueryAllAuditLog()
 	{
 		AuditLogService oms = new AuditLogService();
@@ -261,6 +366,21 @@ public class AuditLogAction extends ActionSupport {
 			AuditLog criteria=new AuditLog();
 			criteria.setFlag(flag);
 			total = oms.QueryLogItems(criteria, page, rows, logItems);
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
+	public String QueryPercentageAuditLog()
+	{
+		AuditLogService oms = new AuditLogService();
+		logItems = new ArrayList<LogItem>();
+		try {
+			oms.QueryLogPercentage(logItems);
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);

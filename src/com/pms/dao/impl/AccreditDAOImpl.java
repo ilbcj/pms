@@ -133,5 +133,37 @@ public class AccreditDAOImpl implements AccreditDAO{
 		}
 		return rs;
 	}
-
+	
+	@Override
+	public void UpdateAdminAccredits(int id, List<Integer> pid) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		String sqlString = "delete from accredit where aid = :aid ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString);
+			q.setInteger("aid", id);
+			q.executeUpdate();
+			
+			AdminAccredit accredit;
+			if(pid != null) {
+				for(int i = 0; i<pid.size(); i++) {
+					accredit = new AdminAccredit();
+					accredit.setAid(id);
+					accredit.setPid(pid.get(i));
+					session.merge(accredit);
+				}
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return;
+	}
+	
 }

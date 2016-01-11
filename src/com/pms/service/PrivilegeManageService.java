@@ -228,28 +228,25 @@ public class PrivilegeManageService {
 			Organization orgNode = orgDao.GetOrgNodeById(ownerid);
 			str += "机构授权;";
 			if(orgNode.getUNIT() != null && orgNode.getUNIT().length() > 0) {
-				str += orgNode.getUNIT()+";";
+				str += "机构名称:" + orgNode.getUNIT()+";";
 			}
 			if(orgNode.getGA_DEPARTMENT() != null && orgNode.getGA_DEPARTMENT().length() > 0) {
-				str += orgNode.getGA_DEPARTMENT()+";";
+				str += "机构编码:" + orgNode.getGA_DEPARTMENT()+";";
 			}
 			if(orgNode.getPARENT_ORG() != null && orgNode.getPARENT_ORG().length() > 0) {
-				str += orgNode.getPARENT_ORG()+";";
+				str += "上级机构编码:" + orgNode.getPARENT_ORG()+";";
 			}
-			if(orgNode.getGA_DEPARTMENT() != null && orgNode.getGA_DEPARTMENT().length() > 0) {
-				str += orgNode.getGA_DEPARTMENT()+";";
-			}
-			str += orgNode.getORG_LEVEL();
+			str += "公安组织机构级别:" + orgNode.getORG_LEVEL();
 		}
 		else if (ownertype==Privilege.OWNERTYPEUSER) {
 			UserDAO userDao = new UserDAOImpl();
 			User userNode = userDao.GetUserByCertificateCodeMd5(ownerid);
 			str += "用户授权;";
 			if(userNode.getNAME() != null && userNode.getNAME().length() > 0) {
-				str += userNode.getNAME()+";";
+				str += "姓名:" + userNode.getNAME()+";";
 			}
 			if(userNode.getUNIT() != null && userNode.getUNIT().length() > 0) {
-				str += userNode.getUNIT()+";";
+				str += "组织机构:" + userNode.getUNIT()+";";
 			}		
 		}
 		else if(ownertype==Privilege.OWNERTYPEUSERGROUP){
@@ -258,10 +255,10 @@ public class PrivilegeManageService {
 			str += "群体授权;";
 			for (int i = 0; i < groupNodes.size(); i++) {
 				if(groupNodes.get(i).getName() != null && groupNodes.get(i).getName().length() > 0) {
-					str += groupNodes.get(i).getName()+";";
+					str += "名称:" + groupNodes.get(i).getName()+";";
 				}
 				if(groupNodes.get(i).getCode() != null && groupNodes.get(i).getCode().length() > 0) {
-					str += groupNodes.get(i).getCode()+";";
+					str += "编码:" +groupNodes.get(i).getCode()+";";
 				}
 			}			
 		}
@@ -270,10 +267,10 @@ public class PrivilegeManageService {
 			List<ResRole> roleNodes=resDao.GetRoleById(roleIds.get(i));
 			for (int j = 0; j < roleNodes.size(); j++) {
 				if(roleNodes.get(j).getBUSINESS_ROLE_NAME() != null && roleNodes.get(j).getBUSINESS_ROLE_NAME().length() > 0) {
-					str += roleNodes.get(j).getBUSINESS_ROLE_NAME()+";";
+					str += "角色名称:" + roleNodes.get(j).getBUSINESS_ROLE_NAME()+";";
 				}
 				if(roleNodes.get(j).getBUSINESS_ROLE() != null && roleNodes.get(j).getBUSINESS_ROLE().length() > 0) {
-					str += roleNodes.get(j).getBUSINESS_ROLE();
+					str += "角色编码:" + roleNodes.get(j).getBUSINESS_ROLE();
 				}
 			}
 		}

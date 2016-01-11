@@ -106,4 +106,51 @@ public class AdministratorManageService {
 		}
 		return ;
 	}
+	
+	public int QueryAdministrators(Admin criteria, int page, int rows, List<Admin> items) throws Exception {
+		AdminDAO admindao = new AdminDAOImpl();
+		List<Admin> admins = admindao.GetAdmins(criteria, page, rows);
+		items.addAll(admins);
+		int total = admins.size();
+		
+		return total;
+	}
+	
+	public Admin SaveAdmin(Admin admin, List<Integer> pid) throws Exception {
+		AdminDAO admindao = new AdminDAOImpl();
+		admin = admindao.AdminsAdd(admin);
+		
+		AccreditDAO accreditdao = new AccreditDAOImpl();
+		accreditdao.UpdateAdminAccredits(admin.getId(), pid);
+		
+		return admin;
+	}
+	
+	public List<AdminAccredit> QueryAccreditByAdminId(int aid) throws Exception {
+		AccreditDAO accreditdao = new AccreditDAOImpl();
+		List<AdminAccredit> accredit = accreditdao.GetAdminAccreditById( aid );
+		return accredit;
+	}
+	
+	public Admin QueryAdminByLoginid(String loginid) throws Exception {
+		AdminDAO admindao = new AdminDAOImpl();
+		Admin admin = admindao.GetAdminByLoginid(loginid);
+		return admin;
+	}
+	
+	public void DeleteAdmin(List<Integer> id) throws Exception {
+		if(id == null)
+			return;
+		
+		Admin target;
+		AdminDAO admindao = new AdminDAOImpl();
+		for(int i = 0; i< id.size(); i++) {
+			target = new Admin();
+			target.setId(id.get(i));
+			
+			admindao.AdminOfAccreditDel(target);
+		}
+		
+		return ;
+	}
 }

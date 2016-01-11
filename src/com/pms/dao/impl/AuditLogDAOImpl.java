@@ -133,6 +133,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditUserLog> GetAuditUserLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditUserLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog_user)*100,1)  as result, flag FROM wa_authority_auditlog_user GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditUserLog.class);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@Override
 	public AuditOrgLog AuditOrgLogAdd(AuditOrgLog auditOrgLog) throws Exception {
 		//打开线程安全的session对象
@@ -227,6 +250,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditOrgLog> GetAuditOrgLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditOrgLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog_org)*100,1)  as result, flag FROM wa_authority_auditlog_org GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditOrgLog.class);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -345,6 +391,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditGroupLog> GetAuditGroupLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditGroupLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog_group)*100,1)  as result, flag FROM wa_authority_auditlog_group GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditGroupLog.class);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@Override
 	public AuditRoleLog AuditRoleLogAdd(AuditRoleLog auditRoleLog) throws Exception {
 		//打开线程安全的session对象
@@ -439,6 +508,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditRoleLog> GetAuditRoleLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditRoleLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog_role)*100,1)  as result, flag FROM wa_authority_auditlog_role GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditRoleLog.class);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -557,6 +649,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditSystemLog> GetAuditSystemLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditSystemLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog_system)*100,1)  as result, flag FROM wa_authority_auditlog_system GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditSystemLog.class);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@Override
 	public AuditResLog AuditResLogAdd(AuditResLog auditResLog) throws Exception {
 		//打开线程安全的session对象
@@ -651,6 +766,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditResLog> GetAuditResLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditResLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog_res)*100,1)  as result, flag FROM wa_authority_auditlog_res GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditResLog.class);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -769,6 +907,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditPrivLog> GetAuditPrivLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditPrivLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog_privilege)*100,1)  as result, flag FROM wa_authority_auditlog_privilege GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditPrivLog.class);
+			rs = q.list();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@Override
 	public AuditLog AuditLogAdd(AuditLog auditLog) throws Exception {
 		//打开线程安全的session对象
@@ -863,6 +1024,29 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 				}
 			}
 			rs = ((BigInteger)q.uniqueResult()).intValue();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")	
+	@Override
+	public List<AuditLog> GetAuditLogsPercentageByFlag() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<AuditLog> rs = null;
+		String sqlString = "SELECT id,adminId,ipAddr,LATEST_MOD_TIME,ROUND(COUNT(*)/(SELECT COUNT(*) FROM wa_authority_auditlog)*100,1)  as result, flag FROM wa_authority_auditlog GROUP BY flag ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(AuditLog.class);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

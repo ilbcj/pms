@@ -29,7 +29,9 @@
  	<include file="struts-resource.xml"/>
  	<include file="struts-group.xml"/>
  	<include file="struts-privilege.xml"/>
+ 	<include file="struts-role.xml"/>
  	<include file="struts-system.xml"/>
  	<include file="struts-auditlog.xml" />
  	<include file="struts-dataresource.xml" />
+ 	<include file="struts-admin.xml"/>
 </struts>    

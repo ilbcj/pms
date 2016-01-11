@@ -67,6 +67,7 @@ public class AuditLogService {
 		item.setFlag(auditUserLog.getFlag());
 		item.setResult(auditUserLog.getResult());
 		item.setLATEST_MOD_TIME(auditUserLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditUserLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditUserLogDescribe> logdesc = dao.GetUserLogDescByLogId(auditUserLog.getId());
@@ -75,7 +76,20 @@ public class AuditLogService {
 		}
 		
 		return item;
+	}
+	
+	public int QueryUserLogsPercentage(List<LogUserItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditUserLog> res = dao.GetAuditUserLogsPercentageByFlag();
+		LogUserItem logUserItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logUserItem = ConvertUserLogToListItem(res.get(i));
+			items.add(logUserItem);
+		}
 		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int QueryOrgLogItems(AuditOrgLog criteria, int page, int rows, List<LogOrgItem> items) throws Exception {
@@ -106,6 +120,7 @@ public class AuditLogService {
 		item.setFlag(auditOrgLog.getFlag());
 		item.setResult(auditOrgLog.getResult());
 		item.setLATEST_MOD_TIME(auditOrgLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditOrgLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditOrgLogDescribe> logdesc = dao.GetOrgLogDescByLogId(auditOrgLog.getId());
@@ -115,6 +130,20 @@ public class AuditLogService {
 		
 		return item;
 		
+	}
+	
+	public int QueryOrgLogsPercentage(List<LogOrgItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditOrgLog> res = dao.GetAuditOrgLogsPercentageByFlag();
+		LogOrgItem logOrgItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logOrgItem = ConvertOrgLogToListItem(res.get(i));
+			items.add(logOrgItem);
+		}
+		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int QueryGroupLogItems(AuditGroupLog criteria, int page, int rows, List<LogGroupItem> items) throws Exception {
@@ -145,6 +174,7 @@ public class AuditLogService {
 		item.setFlag(auditGroupLog.getFlag());
 		item.setResult(auditGroupLog.getResult());
 		item.setLATEST_MOD_TIME(auditGroupLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditGroupLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditGroupLogDescribe> logdesc = dao.GetGroupLogDescByLogId(auditGroupLog.getId());
@@ -153,7 +183,20 @@ public class AuditLogService {
 		}
 		
 		return item;
+	}
+	
+	public int QueryGroupLogsPercentage(List<LogGroupItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditGroupLog> res = dao.GetAuditGroupLogsPercentageByFlag();
+		LogGroupItem logGroupItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logGroupItem = ConvertGroupLogToListItem(res.get(i));
+			items.add(logGroupItem);
+		}
 		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int QueryRoleLogItems(AuditRoleLog criteria, int page, int rows, List<LogRoleItem> items) throws Exception {
@@ -184,6 +227,7 @@ public class AuditLogService {
 		item.setFlag(auditRoleLog.getFlag());
 		item.setResult(auditRoleLog.getResult());
 		item.setLATEST_MOD_TIME(auditRoleLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditRoleLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditRoleLogDescribe> logdesc = dao.GetRoleLogDescByLogId(auditRoleLog.getId());
@@ -192,7 +236,20 @@ public class AuditLogService {
 		}
 		
 		return item;
+	}
+	
+	public int QueryRoleLogsPercentage(List<LogRoleItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditRoleLog> res = dao.GetAuditRoleLogsPercentageByFlag();
+		LogRoleItem logRoleItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logRoleItem = ConvertRoleLogToListItem(res.get(i));
+			items.add(logRoleItem);
+		}
 		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int QuerySystemLogItems(AuditSystemLog criteria, int page, int rows, List<LogSystemItem> items) throws Exception {
@@ -223,6 +280,7 @@ public class AuditLogService {
 		item.setFlag(auditSystemLog.getFlag());
 		item.setResult(auditSystemLog.getResult());
 		item.setLATEST_MOD_TIME(auditSystemLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditSystemLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditSystemLogDescribe> logdesc = dao.GetSystemLogDescByLogId(auditSystemLog.getId());
@@ -231,7 +289,20 @@ public class AuditLogService {
 		}
 		
 		return item;
+	}
+	
+	public int QuerySystemLogsPercentage(List<LogSystemItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditSystemLog> res = dao.GetAuditSystemLogsPercentageByFlag();
+		LogSystemItem logSystemItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logSystemItem = ConvertSystemLogToListItem(res.get(i));
+			items.add(logSystemItem);
+		}
 		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int QueryResLogItems(AuditResLog criteria, int page, int rows, List<LogResItem> items) throws Exception {
@@ -262,6 +333,7 @@ public class AuditLogService {
 		item.setFlag(auditResLog.getFlag());
 		item.setResult(auditResLog.getResult());
 		item.setLATEST_MOD_TIME(auditResLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditResLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditResLogDescribe> logdesc = dao.GetResLogDescByLogId(auditResLog.getId());
@@ -270,7 +342,20 @@ public class AuditLogService {
 		}
 		
 		return item;
+	}
+	
+	public int QueryResLogsPercentage(List<LogResItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditResLog> res = dao.GetAuditResLogsPercentageByFlag();
+		LogResItem logResItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logResItem = ConvertResLogToListItem(res.get(i));
+			items.add(logResItem);
+		}
 		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int QueryPrivLogItems(AuditPrivLog criteria, int page, int rows, List<LogPrivItem> items) throws Exception {
@@ -301,6 +386,7 @@ public class AuditLogService {
 		item.setFlag(auditPrivLog.getFlag());
 		item.setResult(auditPrivLog.getResult());
 		item.setLATEST_MOD_TIME(auditPrivLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditPrivLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditPrivLogDescribe> logdesc = dao.GetPrivLogDescByLogId(auditPrivLog.getId());
@@ -309,7 +395,20 @@ public class AuditLogService {
 		}
 		
 		return item;
+	}
+	
+	public int QueryPrivLogsPercentage(List<LogPrivItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditPrivLog> res = dao.GetAuditPrivLogsPercentageByFlag();
+		LogPrivItem logPrivItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logPrivItem = ConvertPrivLogToListItem(res.get(i));
+			items.add(logPrivItem);
+		}
 		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int QueryLogItems(AuditLog criteria, int page, int rows, List<LogItem> items) throws Exception {
@@ -340,6 +439,7 @@ public class AuditLogService {
 		item.setFlag(auditLog.getFlag());
 		item.setResult(auditLog.getResult());
 		item.setLATEST_MOD_TIME(auditLog.getLATEST_MOD_TIME());
+		item.setPercentage(auditLog.getResult());
 		
 		AuditLogDescribeDao dao = new AuditLogDescribeDAOImpl();
 		List<AuditLogDescribe> logdesc = dao.GetLogDescByLogId(auditLog.getId());
@@ -348,7 +448,20 @@ public class AuditLogService {
 		}
 		
 		return item;
+	}
+	
+	public int QueryLogPercentage(List<LogItem> items) throws Exception {
+		AuditLogDAO dao = new AuditLogDAOImpl();
+		List<AuditLog> res = dao.GetAuditLogsPercentageByFlag();
+		LogItem logItem = null;
+		for(int i=0; i<res.size(); i++) {
+			logItem = ConvertLogToListItem(res.get(i));
+			items.add(logItem);
+		}
 		
+		int total = res.size();
+		
+		return total;
 	}
 	
 	public int adminLogin() throws Exception {
@@ -385,49 +498,49 @@ public class AuditLogService {
 		if( user != null ) {
 			str +="用户操作日志"+";";
 			if(user.getFlag() != null && user.getFlag().length() > 0) {
-				str += user.getFlag()+";";
+				str += "操作类型:" + user.getFlag()+";";
 			}
 		}
 		if( org != null ) {
 			str +="机构操作日志"+";";
 			if(org.getFlag() != null && org.getFlag().length() > 0) {
-				str += org.getFlag()+";";
+				str += "操作类型:" + org.getFlag()+";";
 			}
 		}
 		if( group != null ) {
 			str +="群体操作日志"+";";
 			if(group.getFlag() != null && group.getFlag().length() > 0) {
-				str += group.getFlag()+";";
+				str += "操作类型:" + group.getFlag()+";";
 			}
 		}
 		if( role != null ) {
 			str +="角色操作日志"+";";
 			if(role.getFlag() != null && role.getFlag().length() > 0) {
-				str += role.getFlag()+";";
+				str += "操作类型:" + role.getFlag()+";";
 			}
 		}
 		if( res != null ) {
 			str +="资源操作日志"+";";
 			if(res.getFlag() != null && res.getFlag().length() > 0) {
-				str += res.getFlag()+";";
+				str += "操作类型:" + res.getFlag()+";";
 			}
 		}
 		if( priv != null ) {
 			str +="授权操作日志"+";";
 			if(priv.getFlag() != null && priv.getFlag().length() > 0) {
-				str += priv.getFlag()+";";
+				str += "操作类型:" + priv.getFlag()+";";
 			}
 		}
 		if( system != null ) {
 			str +="系统操作日志"+";";
 			if(system.getFlag() != null && system.getFlag().length() > 0) {
-				str += system.getFlag()+";";
+				str += "操作类型:" + system.getFlag()+";";
 			}
 		}
 		if( log != null ) {
 			str +="审计操作日志"+";";
 			if(log.getFlag() != null && log.getFlag().length() > 0) {
-				str += log.getFlag()+";";
+				str += "操作类型:" + log.getFlag()+";";
 			}
 		}
 		auditLogDescribe.setDescrib(str);

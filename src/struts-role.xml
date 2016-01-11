@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="role" extends="json-default" namespace="/role">
+		
+		<global-results>
+ 			<result name="sqlException">/jsp/exception.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping exception="java.sql.SQLException" result="sqlException" />
+			<exception-mapping exception="java.lang.Exception" result="sqlException" />	
+		</global-exception-mappings>
+	
+	<!-- 
+		角色				method="queryRoleItems"、"saveResourceRole"、"deleteResourceRole"、"queryRoleResource"
+		
+	 -->	
+ 		<action name="queryRoleItems" class="com.pms.controller.RoleAction" method="QueryRoleItems" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="saveResourceRole" class="com.pms.controller.RoleAction" method="SaveResourceRole" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteResourceRole" class="com.pms.controller.RoleAction" method="DeleteResourceRole" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryRoleResource" class="com.pms.controller.RoleAction" method="QueryRoleResource" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		
+ 		<action name="queryRoleResourceData" class="com.pms.controller.RoleAction" method="QueryRoleResourceData" >
+ 			<result name="success" type="json" />
+ 		</action>	
+ 		<action name="queryRoleResourceFunc" class="com.pms.controller.RoleAction" method="QueryRoleResourceFunc" >
+ 			<result name="success" type="json" />
+ 		</action>	
+ 		
+ 		<action name="saveResRoleResourceTemplate" class="com.pms.controller.RoleAction" method="SaveResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryAllResRoleResourceTemplate" class="com.pms.controller.RoleAction" method="QueryAllResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryResRoleResourceTemplate" class="com.pms.controller.RoleAction" method="QueryResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="deleteResRoleResourceTemplate" class="com.pms.controller.RoleAction" method="DeleteResRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="queryRoleResourceTemplate" class="com.pms.controller.RoleAction" method="QueryRoleResourceTemplate" >
+ 			<result name="success" type="json" />
+ 		</action>
+ 		<action name="fileUploadRole" class="com.pms.controller.RoleAction" method="FileUploadRole" >
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action>
+	</package>	
+</struts>    
