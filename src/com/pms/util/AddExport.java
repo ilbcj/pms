@@ -27,17 +27,18 @@ public class AddExport implements Job{
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		DataSyncService dss = new DataSyncService();
 		String amount = "Add";
+		String exportMode = "定时导出;";
 		resDatas = new ArrayList<ResData>();
 		orgNode = new ArrayList<Organization>();
 		users = new ArrayList<User>();
 		roles = new ArrayList<ResRole>();
 		resRoleResources = new ArrayList<ResRoleResource>();
 		try {
-			dss.DownLoadRes(amount, resDatas);
-			dss.DownLoadOrg(amount, orgNode);
-			dss.DownLoadUser(amount, users);
-			dss.DownLoadResRole(amount, resRoleResources);
-			dss.DownLoadRole(amount, roles);
+			dss.DownLoadRes(amount, exportMode, resDatas);
+			dss.DownLoadOrg(amount, exportMode, orgNode);
+			dss.DownLoadUser(amount, exportMode, users);
+			dss.DownLoadResRole(amount, exportMode, resRoleResources);
+			dss.DownLoadRole(amount, exportMode, roles);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

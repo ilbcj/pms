@@ -13,28 +13,52 @@
   
   <body>
     <ul id="menu_log" class="easyui-tree" lines="true">
-    	<li iconCls="icon-leaf" id="menu_orglog_operation">
+<!--     	<li iconCls="icon-leaf" id="menu_orglog_operation"> -->
+<!--             <span>机构操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_orglog_chart_operation">
             <span>机构操作日志</span>
         </li>
-        <li iconCls="icon-leaf" id="menu_userlog_operation">
+<!--         <li iconCls="icon-leaf" id="menu_userlog_operation"> -->
+<!--             <span>用户操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_userlog_chart_operation">
             <span>用户操作日志</span>
         </li>
-        <li iconCls="icon-leaf" id="menu_grouplog_operation">
+<!--         <li iconCls="icon-leaf" id="menu_grouplog_operation"> -->
+<!--             <span>群体操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_grouplog_chart_operation">
             <span>群体操作日志</span>
         </li>
-        <li iconCls="icon-leaf" id="menu_rolelog_operation">
+<!--         <li iconCls="icon-leaf" id="menu_rolelog_operation"> -->
+<!--             <span>角色操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_rolelog_chart_operation">
             <span>角色操作日志</span>
         </li>
-        <li iconCls="icon-leaf" id="menu_reslog_operation">
+<!--         <li iconCls="icon-leaf" id="menu_reslog_operation"> -->
+<!--             <span>资源操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_reslog_chart_operation">
             <span>资源操作日志</span>
         </li>
-        <li iconCls="icon-leaf" id="menu_privilegelog_operation">
+<!--         <li iconCls="icon-leaf" id="menu_privilegelog_operation"> -->
+<!--             <span>授权操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_privilegelog_chart_operation">
             <span>授权操作日志</span>
         </li>
-        <li iconCls="icon-leaf" id="menu_systemlog_operation">
+<!--         <li iconCls="icon-leaf" id="menu_systemlog_operation"> -->
+<!--             <span>系统操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_systemlog_chart_operation">
             <span>系统操作日志</span>
         </li>
-        <li iconCls="icon-leaf" id="menu_log_operation">
+<!--         <li iconCls="icon-leaf" id="menu_log_operation"> -->
+<!--             <span>审查操作日志</span> -->
+<!--         </li> -->
+        <li iconCls="icon-leaf" id="menu_log_chart_operation">
             <span>审查操作日志</span>
         </li>
     </ul>
@@ -45,26 +69,50 @@ $(document).ready(function () {
 			if( node.id == 'menu_orglog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/orglog_operation.html');
 			}
+			else if( node.id == 'menu_orglog_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/orglog_chart_operation.html');
+			}
 			else if( node.id == 'menu_userlog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/userlog_operation.html');
+			}
+			else if( node.id == 'menu_userlog_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/userlog_chart_operation.html');
 			}
 			else if( node.id == 'menu_grouplog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/grouplog_operation.html');
 			}
+			else if( node.id == 'menu_grouplog_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/grouplog_chart_operation.html');
+			}
 			else if( node.id == 'menu_rolelog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/rolelog_operation.html');
+			}
+			else if( node.id == 'menu_rolelog_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/rolelog_chart_operation.html');
 			}
 			else if( node.id == 'menu_reslog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/reslog_operation.html');
 			}
+			else if( node.id == 'menu_reslog_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/reslog_chart_operation.html');
+			}
 			else if( node.id == 'menu_privilegelog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/privilegelog_operation.html');
+			}
+			else if( node.id == 'menu_privilegelog_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/privilegelog_chart_operation.html');
 			}
 			else if( node.id == 'menu_systemlog_operation') {
 				$('body').layout('panel','center').panel('refresh','log/systemlog_operation.html');
 			}
+			else if( node.id == 'menu_systemlog_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/systemlog_chart_operation.html');
+			}
 			else if( node.id == 'menu_log_operation') {
 				$('body').layout('panel','center').panel('refresh','log/log_operation.html');
+			}
+			else if( node.id == 'menu_log_chart_operation') {
+				$('body').layout('panel','center').panel('refresh','log/log_chart_operation.html');
 			}
 		}
 	});

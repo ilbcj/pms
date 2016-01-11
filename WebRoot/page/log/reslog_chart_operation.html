@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>reslog_chart_operation.html</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+	<div class="easyui-layout" data-options="fit:true,border:false">
+		<div region="north" data-options="split:false,border:true"  style="height:45px;line-height:42px;padding-left:5px;background: url(../images/white-top-bottom.gif) repeat-x;">
+			<b>当前位置：<span style="color:blue">资源操作日志</span></b>
+		</div>
+		<div id="content" region="center" data-options="border:true,noheader:true" style="padding:3px;">
+			<div id="reslog_chart_operation_maintain_center_main_wapper" class="easyui-panel" data-options="border:false,fit:true">
+				<div id="reslog_chart_operation_maintain_center_main" class="easyui-layout" data-options="fit:true" >
+		    		
+		    		<div id="reslog_chart_operation_maintain_center_list" region="center" data-options="border:false,noheader:true" >
+		    		</div><!-- end of reslog_chart_operation_maintain_center_list -->
+		    		
+		    	</div><!-- end of reslog_chart_operation_maintain_center_main -->
+			</div><!-- reslog_chart_operation_maintain_center_main_wapper -->			
+	    			
+		</div><!-- end of center -->
+	</div><!-- end of layout -->
+	
+<script type="text/javascript">	
+	function resLog(){
+		$('body').layout('panel','center').panel('refresh','log/reslog_operation.html');
+	}
+	
+$(document).ready(function () { 
+	var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+	//汉化图表菜单
+	Highcharts.setOptions({
+		lang: {
+			printChart:"打印图表",
+		   	downloadJPEG: "下载JPEG 图片" , 
+		   	downloadPDF: "下载PDF文档"  ,
+		   	downloadPNG: "下载PNG 图片"  ,
+		   	downloadSVG: "下载SVG 矢量图" , 
+		}
+    });
+    var chartPercentage = new Highcharts.Chart({
+        chart: {
+            renderTo: "reslog_chart_operation_maintain_center_list",
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+        },
+        title: {
+        	useHTML:true,
+            text: '日志操作类型饼状图 | <a href="javascript:void(0)" class="easyui-linkbutton" onclick="resLog()">资源操作日志详细信息</a>'
+        },
+        tooltip: {
+    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+		credits: {  
+			enabled: false
+		},
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '操作类型比例',
+            data: []
+        }]
+    });
+    
+    $.ajaxSettings.async = false;
+    var dataPercentage = [];
+    $.post("../auditlog/queryPercentageAuditResLog.action", function (data) {    
+        for(var i=0; i<data.logResItems.length; i++){
+			dataPercentage.push([data.logResItems[i].flag, parseFloat(data.logResItems[i].percentage)]);
+		}
+        chartPercentage.series[0].setData(dataPercentage);
+    });
+    
+});
+</script>
+  </body>
+</html>

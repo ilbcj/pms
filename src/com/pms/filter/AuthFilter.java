@@ -97,7 +97,8 @@ public class AuthFilter implements Filter {
 	
 	private String makeJsonDate()
 	{
-		String message = "{	\"result\":\"false\", \"detail\":\"您没有权限进行此项操作。\" }";
+//		String message = "{	\"result\":\"false\", \"detail\":\"您没有权限进行此项操作。\" }";
+		String message = "您没有权限进行此项操作。";
 		return message;
 	}
 }

@@ -1,12 +1,12 @@
 package com.pms.model;
 
 public class AuditResLog {
-	public final static String LOGFLAGQUERY = "query";
-	public final static String LOGFLAGADD = "add";
-	public final static String LOGFLAGUPDATE = "update";
-	public final static String LOGFLAGDELETE = "delete";
-	public final static String LOGFLAGIMPORT = "import";
-	public final static String LOGFLAGEXPORT = "export";
+	public final static String LOGFLAGQUERY = "查询";
+	public final static String LOGFLAGADD = "添加";
+	public final static String LOGFLAGUPDATE = "修改";
+	public final static String LOGFLAGDELETE = "删除";
+	public final static String LOGFLAGIMPORT = "导入";
+	public final static String LOGFLAGEXPORT = "导出";
 	public final static String LOGRESULTSUCCESS = "成功";
 	public final static String LOGRESULTFAIL = "失败"; 
 	

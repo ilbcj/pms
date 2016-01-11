@@ -10,27 +10,30 @@ import java.util.regex.Pattern;
 import com.pms.dao.AdminDAO;
 import com.pms.dao.impl.AdminDAOImpl;
 import com.pms.model.Admin;
+import com.pms.model.AdminAccredit;
 
 public class AuthService {
 
-	private Pattern regLogin = Pattern.compile("/login/.*action$");
-	private Pattern regUnlockReq = Pattern.compile("/unlock/unlockReq.action");
-	private Pattern regUnlockReqHtml = Pattern.compile("/jsp/ulockapp.html");
-	private Pattern regUnlockApprove = Pattern.compile("/unlock/unlockApprove.action");
-	private Pattern regUnlockApproveHtml = Pattern.compile("/jsp/Approvalcert.html");
-	private Pattern regUnlockUkey = Pattern.compile("/unlock/unlockUkeyCommand.action");
-	private Pattern regUnlockUkeyHtml = Pattern.compile("/jsp/fullyunlock.html");
-	private Pattern regQuery = Pattern.compile("/query/.*action$");
-	private Pattern regQueryHtml = Pattern.compile("^/jsp/query/.*");
-	private Pattern regSysConfig = Pattern.compile("/sysmanage/.*action$");
-	private Pattern regSysConfigHtml = Pattern.compile("^/jsp/sysmanage/.*");
-	
-	private int privilegeLogin = 0;
-	private int privilegeUnlockReq = 1;
-	private int privilegeUnlockApprove = 2;
-	private int privilegeUnlockUkey = 3;
-	private int privilegeQuery = 4;
-	private int privilegeSysconfig = 5;
+	private Pattern regAction = Pattern.compile("/.*action$");
+	private Pattern regLoginReqHtml = Pattern.compile("/page/.*jsp$");
+	private Pattern regOrganizationReqMenuHtml = Pattern.compile("/page/menu/organization.html");
+	private Pattern regOrganizationReqHtml = Pattern.compile("/page/organization/.*html$");
+	private Pattern regUserReqMenuHtml = Pattern.compile("/page/menu/user.html");
+	private Pattern regUserReqHtml = Pattern.compile("/page/user/.*html$");
+	private Pattern regGroupReqMenuHtml = Pattern.compile("/page/menu/group.html");
+	private Pattern regGroupReqHtml = Pattern.compile("/page/group/.*html$");
+	private Pattern regRoleReqMenuHtml = Pattern.compile("/page/menu/role.html");
+	private Pattern regRoleReqHtml = Pattern.compile("/page/role/.*html$");
+	private Pattern regResourceReqMenuHtml = Pattern.compile("/page/menu/resource.html");
+	private Pattern regResourceReqHtml = Pattern.compile("/page/resource/.*html$");
+	private Pattern regPrivilegeReqMenuHtml = Pattern.compile("/page/menu/privilege.html");
+	private Pattern regPrivilegeReqHtml = Pattern.compile("/page/privilege/.*html$");
+	private Pattern regSystemReqMenuHtml = Pattern.compile("/page/menu/system.html");
+	private Pattern regSystemReqHtml = Pattern.compile("/page/system/.*html$");
+	private Pattern regLogReqMenuHtml = Pattern.compile("/page/menu/log.html");
+	private Pattern regLogReqHtml = Pattern.compile("/page/log/.*html$");
+	private Pattern regAdminReqMenuHtml = Pattern.compile("/page/menu/admin.html");
+	private Pattern regAdminReqHtml = Pattern.compile("/page/admin/.*html$");
 	
 	public boolean CheckStatus(String loginid)
 	{
@@ -52,7 +55,7 @@ public class AuthService {
 				
 				Calendar frozen = sdf.getCalendar();
 				Calendar now=Calendar.getInstance();
-				//锁定时间�?分钟后解�?
+				//锁定时间�?分钟后解�?
 				now.add(Calendar.MINUTE, -5);
 				boolean flag = now.after(frozen);
 				if(!flag)
@@ -99,7 +102,7 @@ public class AuthService {
 			else
 			{
 				int count = admin.getErrorcount();
-				//尝试次数�?次后锁定
+				//尝试次数�?次后锁定
 				if(count >= 4)
 				{
 					admin.setErrorcount(0);
@@ -135,31 +138,41 @@ public class AuthService {
 			if(types == null || types.length == 0) {
 				return false;
 			}
-			if(regLogin.matcher(url).find()) {
-				return isContained(types, privilegeLogin);
+			if(regAction.matcher(url).find() || regLoginReqHtml.matcher(url).find()) {
+				return true;
 			}
-			if(regUnlockReq.matcher(url).find() || regUnlockReqHtml.matcher(url).find()) {
-				return isContained(types, privilegeUnlockReq);
+			if(regAction.matcher(url).find() || regOrganizationReqMenuHtml.matcher(url).find() || regOrganizationReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITORGANIZATION);
 			}
-			if(regUnlockApprove.matcher(url).find() || regUnlockApproveHtml.matcher(url).find()) {
-				return isContained(types, privilegeUnlockApprove);
+			if(regAction.matcher(url).find() || regUserReqMenuHtml.matcher(url).find() || regUserReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITUSER);
 			}
-			if(regUnlockUkey.matcher(url).find() || regUnlockUkeyHtml.matcher(url).find()) {
-				return isContained(types, privilegeUnlockUkey);
+			if(regAction.matcher(url).find() || regGroupReqMenuHtml.matcher(url).find() || regGroupReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITGROUP);
 			}
-			if(regQuery.matcher(url).find() || regQueryHtml.matcher(url).find() )
-			{
-				return isContained(types, privilegeQuery);
+			if(regAction.matcher(url).find() || regRoleReqMenuHtml.matcher(url).find() || regRoleReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITROLE);
 			}
-			if(regSysConfig.matcher(url).find() || regSysConfigHtml.matcher(url).find())
-			{
-				return isContained(types, privilegeSysconfig);
+			if(regAction.matcher(url).find() || regResourceReqMenuHtml.matcher(url).find() || regResourceReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITRESOURCE);
+			}
+			if(regAction.matcher(url).find() || regPrivilegeReqMenuHtml.matcher(url).find() || regPrivilegeReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITPRIVILEGE);
+			}
+			if(regAction.matcher(url).find() || regSystemReqMenuHtml.matcher(url).find() || regSystemReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITSYSTEM);
+			}
+			if(regAction.matcher(url).find() || regLogReqMenuHtml.matcher(url).find() || regLogReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITAUDITLOG);
+			}
+			if(regAction.matcher(url).find() || regAdminReqMenuHtml.matcher(url).find() || regAdminReqHtml.matcher(url).find()) {
+				return isContained(types, AdminAccredit.ACCREDITADMIN);
 			}
 		} catch (Exception e) {
 			e.getMessage();
 		}
 		System.out.println("[Accessd url]\"" + url + "\"");
-		return true;
+		return false;
 	}
 	
 	/**

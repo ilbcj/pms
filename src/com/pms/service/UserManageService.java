@@ -43,9 +43,9 @@ public class UserManageService {
 			user.setCERTIFICATE_CODE_MD5( generateHash(idNum) );
 			user.setCERTIFICATE_CODE_SUFFIX( generateSuffix(idNum) );
 		}
-		user = dao.UserAdd(user);
 		
 		AddUserAddOrUpdateLog(user);
+		user = dao.UserAdd(user);
 		
 		return user;
 	}
@@ -344,34 +344,35 @@ public class UserManageService {
 			auditUserLogDescribe.setLogid(auditUserLog.getId());
 			String str="";
 			if(criteria.getNAME() != null && criteria.getNAME().length() > 0) {
-				str += criteria.getNAME()+";";
+				str += "姓名:" + criteria.getNAME()+";";
 			}
+			str += "状态:" + criteria.getUSER_STATUS()+";";
 			if(criteria.getBUSINESS_TYPE() != null && criteria.getBUSINESS_TYPE().length() > 0) {
-				str += criteria.getBUSINESS_TYPE()+";";
+				str += "业务部门类别:" + criteria.getBUSINESS_TYPE()+";";
 			}
 			if(criteria.getPOLICE_SORT() != null && criteria.getPOLICE_SORT().length() > 0) {
-				str += criteria.getPOLICE_SORT()+";";
+				str += "警种:" + criteria.getPOLICE_SORT()+";";
 			}
 			if(criteria.getSEXCODE() != null && criteria.getSEXCODE().length() > 0) {
-				str += criteria.getSEXCODE()+";";
+				str += "性别:" + criteria.getSEXCODE()+";";
 			}
 			if(criteria.getCERTIFICATE_CODE_SUFFIX() != null && criteria.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
-				str += criteria.getCERTIFICATE_CODE_SUFFIX()+";";
+				str += "身份证:" + criteria.getCERTIFICATE_CODE_SUFFIX()+";";
 			}
 			if(criteria.getSENSITIVE_LEVEL() != null && criteria.getSENSITIVE_LEVEL().length() > 0) {
-				str += criteria.getSENSITIVE_LEVEL()+";";
+				str += "最高敏感级别:" + criteria.getSENSITIVE_LEVEL()+";";
 			}
 			if(criteria.getPosition() != null && criteria.getPosition().length() > 0) {
-				str += criteria.getPosition()+";";
+				str += "岗位:" + criteria.getPosition()+";";
 			}
 			if(criteria.getDept() != null && criteria.getDept().length() > 0) {
-				str += criteria.getDept()+";";
+				str += "二级部门:" + criteria.getDept()+";";
 			}
 			if(criteria.getTAKE_OFFICE() != null && criteria.getTAKE_OFFICE().length() > 0) {
-				str += criteria.getTAKE_OFFICE()+";";
+				str += "职务/职称:" + criteria.getTAKE_OFFICE()+";";
 			}
 			if(criteria.getPOLICE_NO() != null && criteria.getPOLICE_NO().length() > 0) {
-				str += criteria.getPOLICE_NO();
+				str += "警号  :" + criteria.getPOLICE_NO();
 			}
 			auditUserLogDescribe.setDescrib(str);
 			
@@ -404,42 +405,42 @@ public class UserManageService {
 		
 		auditUserLogDescribe.setLogid(auditUserLog.getId());
 		String str="";
-	
 		if(user.getNAME() != null && user.getNAME().length() > 0) {
-			str += user.getNAME()+";";
+			str += "姓名:" + user.getNAME()+";";
 		}
+		str += "状态:" + user.getUSER_STATUS()+";";
 		if(user.getBUSINESS_TYPE() != null && user.getBUSINESS_TYPE().length() > 0) {
-			str += user.getBUSINESS_TYPE()+";";
+			str += "业务部门类别:" + user.getBUSINESS_TYPE()+";";
 		}
 		if(user.getPOLICE_SORT() != null && user.getPOLICE_SORT().length() > 0) {
-			str += user.getPOLICE_SORT()+";";
+			str += "警种:" + user.getPOLICE_SORT()+";";
 		}
 		if(user.getSEXCODE() != null && user.getSEXCODE().length() > 0) {
-			str += user.getSEXCODE()+";";
+			str += "性别:" + user.getSEXCODE()+";";
 		}
 		if(user.getCERTIFICATE_CODE_SUFFIX() != null && user.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
-			str += user.getCERTIFICATE_CODE_SUFFIX()+";";
-		}
-		if(user.getSENSITIVE_LEVEL() != null && user.getSENSITIVE_LEVEL().length() > 0) {
-			str += user.getSENSITIVE_LEVEL()+";";
+			str += "身份证:" + user.getCERTIFICATE_CODE_SUFFIX()+";";
 		}
 		if(user.getGA_DEPARTMENT() != null && user.getGA_DEPARTMENT().length() > 0) {
-			str += user.getGA_DEPARTMENT()+";";
+			str += "组织机构编码:" + user.getGA_DEPARTMENT()+";";
 		}
 		if(user.getUNIT() != null && user.getUNIT().length() > 0) {
-			str += user.getUNIT()+";";
+			str += "组织机构名称:" + user.getUNIT()+";";
+		}
+		if(user.getSENSITIVE_LEVEL() != null && user.getSENSITIVE_LEVEL().length() > 0) {
+			str += "最高敏感级别:" + user.getSENSITIVE_LEVEL()+";";
 		}
 		if(user.getPosition() != null && user.getPosition().length() > 0) {
-			str += user.getPosition()+";";
+			str += "岗位:" + user.getPosition()+";";
 		}
 		if(user.getDept() != null && user.getDept().length() > 0) {
-			str += user.getDept()+";";
+			str += "二级部门:" + user.getDept()+";";
 		}
 		if(user.getTAKE_OFFICE() != null && user.getTAKE_OFFICE().length() > 0) {
-			str += user.getTAKE_OFFICE()+";";
+			str += "职务/职称:" + user.getTAKE_OFFICE()+";";
 		}
 		if(user.getPOLICE_NO() != null && user.getPOLICE_NO().length() > 0) {
-			str += user.getPOLICE_NO();
+			str += "警号  :" + user.getPOLICE_NO();
 		}
 		auditUserLogDescribe.setDescrib(str);
 		
@@ -472,40 +473,41 @@ public class UserManageService {
 		
 		String str="";
 		if(user.getNAME() != null && user.getNAME().length() > 0) {
-			str += user.getNAME()+";";
+			str += "姓名:" + user.getNAME()+";";
 		}
+		str += "状态:" + user.getUSER_STATUS()+";";
 		if(user.getBUSINESS_TYPE() != null && user.getBUSINESS_TYPE().length() > 0) {
-			str += user.getBUSINESS_TYPE()+";";
+			str += "业务部门类别:" + user.getBUSINESS_TYPE()+";";
 		}
 		if(user.getPOLICE_SORT() != null && user.getPOLICE_SORT().length() > 0) {
-			str += user.getPOLICE_SORT()+";";
+			str += "警种:" + user.getPOLICE_SORT()+";";
 		}
 		if(user.getSEXCODE() != null && user.getSEXCODE().length() > 0) {
-			str += user.getSEXCODE()+";";
+			str += "性别:" + user.getSEXCODE()+";";
 		}
 		if(user.getCERTIFICATE_CODE_SUFFIX() != null && user.getCERTIFICATE_CODE_SUFFIX().length() > 0) {
-			str += user.getCERTIFICATE_CODE_SUFFIX()+";";
-		}
-		if(user.getSENSITIVE_LEVEL() != null && user.getSENSITIVE_LEVEL().length() > 0) {
-			str += user.getSENSITIVE_LEVEL()+";";
+			str += "身份证:" + user.getCERTIFICATE_CODE_SUFFIX()+";";
 		}
 		if(user.getGA_DEPARTMENT() != null && user.getGA_DEPARTMENT().length() > 0) {
-			str += user.getGA_DEPARTMENT()+";";
+			str += "组织机构编码:" + user.getGA_DEPARTMENT()+";";
 		}
 		if(user.getUNIT() != null && user.getUNIT().length() > 0) {
-			str += user.getUNIT()+";";
+			str += "组织机构名称:" + user.getUNIT()+";";
+		}
+		if(user.getSENSITIVE_LEVEL() != null && user.getSENSITIVE_LEVEL().length() > 0) {
+			str += "最高敏感级别:" + user.getSENSITIVE_LEVEL()+";";
 		}
 		if(user.getPosition() != null && user.getPosition().length() > 0) {
-			str += user.getPosition()+";";
+			str += "岗位:" + user.getPosition()+";";
 		}
 		if(user.getDept() != null && user.getDept().length() > 0) {
-			str += user.getDept()+";";
+			str += "二级部门:" + user.getDept()+";";
 		}
 		if(user.getTAKE_OFFICE() != null && user.getTAKE_OFFICE().length() > 0) {
-			str += user.getTAKE_OFFICE()+";";
+			str += "职务/职称:" + user.getTAKE_OFFICE()+";";
 		}
 		if(user.getPOLICE_NO() != null && user.getPOLICE_NO().length() > 0) {
-			str += user.getPOLICE_NO();
+			str += "警号  :" + user.getPOLICE_NO();
 		}
 		
 		auditUserLogDescribe.setDescrib(str);

@@ -38,7 +38,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script type="text/javascript" src="<%=path %>/js/main.js"></script>
 	
 	<script type="text/javascript" src="<%=path %>/js/easyui-lang-zh_CN.js"></script>
-    
+	
+	<script type="text/javascript" src="<%=path %>/js/highcharts.js"></script>
+    <script type="text/javascript" src="<%=path %>/js/exporting.js"></script>
 </head>
 
 <body class="easyui-layout" style="background:#E6EEF8;">
@@ -81,61 +83,157 @@ $(document).keydown(function(e){
 	if (doPrevent) e.preventDefault();   
 });
 $(document).ready(function () {
+	var poststr1 = "admin.loginid=" + '${sessionScope.admin}';
+	$.post("../admin/queryAdminByLoginid.action?rand=" + Math.random(), poststr1, function(retObj) {	
+		if(retObj.result == true)
+		{	
+			var poststr2 = "admin.id=" + retObj.admin.id;
+			$.post("../admin/queryAdminAccreditById.action?rand=" + Math.random(), poststr2, function(retObj) {
+				if(retObj.result == true)
+				{
+		    		for(var index=0; index < retObj.accredits.length; index++ ) {
+		    			if(retObj.accredits[index].pid == 0){
+			    			$('#mm').accordion('add', {
+								title: '机构管理',
+								href:'menu/organization.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 1){
+			    			$('#mm').accordion('add', {
+								title: '用户管理',
+								href:'menu/user.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 2){
+							$('#mm').accordion('add', {
+								title: '群体管理',
+								href:'menu/group.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 3){
+							$('#mm').accordion('add', {
+								title: '角色管理',
+								href:'menu/role.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 4){
+							$('#mm').accordion('add', {
+								title: '资源管理',
+								href:'menu/resource.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 5){
+							$('#mm').accordion('add', {
+								title: '授权管理',
+								href:'menu/privilege.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 6){
+							$('#mm').accordion('add', {
+								title: '系统管理',
+								href:'menu/system.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 7){
+							$('#mm').accordion('add', {
+								title: '日志审计',
+								href:'menu/log.html',
+								selected: false
+							});
+		    			}
+		    			if(retObj.accredits[index].pid == 8){
+							$('#mm').accordion('add', {
+								title: '管理员管理',
+								href:'menu/admin.html',
+								selected: false
+							});
+		    			}
+		    		}
+				}
+				else
+				{
+					warningTip("提示", '获取管理员权限操作对象失败');	
+					refreshDetailPage();
+					return;
+				}
+			}, "json");
+		}
+		else
+		{
+			warningTip("提示", '获取管理员信息失败');	
+			refreshDetailPage();
+			return;
+		}
+	}, "json");
 	
-	$('#mm').accordion('add', {
-		title: '机构管理',
-		href:'menu/organization.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '机构管理',
+// 		href:'menu/organization.html',
+// 		selected: false
+// 	});
 	
-	$('#mm').accordion('add', {
-		title: '用户管理',
-		href:'menu/user.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '用户管理',
+// 		href:'menu/user.html',
+// 		selected: false
+// 	});
 
 // 	$('#mm').accordion('add', {
 // 		title: '账号管理',
 // 		href:'menu/account.html',
 // 		selected: false
 // 	});
-	$('#mm').accordion('add', {
-		title: '群体管理',
-		href:'menu/group.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '群体管理',
+// 		href:'menu/group.html',
+// 		selected: false
+// 	});
 	
-	$('#mm').accordion('add', {
-		title: '角色管理',
-		href:'menu/role.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '角色管理',
+// 		href:'menu/role.html',
+// 		selected: false
+// 	});
 	
-	$('#mm').accordion('add', {
-		title: '资源管理',
-		href:'menu/resource.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '资源管理',
+// 		href:'menu/resource.html',
+// 		selected: false
+// 	});
 	
-	$('#mm').accordion('add', {
-		title: '授权管理',
-		href:'menu/privilege.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '授权管理',
+// 		href:'menu/privilege.html',
+// 		selected: false
+// 	});
 
-	$('#mm').accordion('add', {
-		title: '系统管理',
-		href:'menu/system.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '系统管理',
+// 		href:'menu/system.html',
+// 		selected: false
+// 	});
 	
-	$('#mm').accordion('add', {
-		title: '日志审计',
-		href:'menu/log.html',
-		selected: false
-	});
+// 	$('#mm').accordion('add', {
+// 		title: '日志审计',
+// 		href:'menu/log.html',
+// 		selected: false
+// 	});
+	
+// 	$('#mm').accordion('add', {
+// 		title: '管理员管理',
+// 		href:'menu/admin.html',
+// 		selected: false
+// 	});
 	
 	$('#mm').accordion('select', 4);
+
 });
 
 </script>

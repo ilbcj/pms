@@ -8,6 +8,7 @@ public class LogSystemItem {
 	private String result;
 	private String desc;
 	private String LATEST_MOD_TIME;
+	private String percentage;
 	public int getLogid() {
 		return logid;
 	}
@@ -49,6 +50,12 @@ public class LogSystemItem {
 	}
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
+	}
+	public String getPercentage() {
+		return percentage;
+	}
+	public void setPercentage(String percentage) {
+		this.percentage = percentage;
 	}
 	
 }

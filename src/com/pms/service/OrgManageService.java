@@ -42,9 +42,8 @@ public class OrgManageService {
 		org.setLATEST_MOD_TIME(timenow);
 		org.setDATA_VERSION(org.getDATA_VERSION()+1);
 		
-		org = dao.OrgNodeAdd(org);
-		
 		AddOrgAddOrUpdateLog(org);
+		org = dao.OrgNodeAdd(org);
 		
 		return org;
 	}
@@ -247,9 +246,8 @@ public class OrgManageService {
 		node.setLATEST_MOD_TIME(timenow);
 		node.setDATA_VERSION(node.getDATA_VERSION()+1);
 		
-		node = dao.OrgNodeAdd(node);
-		
 		AddOrgAddOrUpdateLog(node);
+		node = dao.OrgNodeAdd(node);
 		
 		return;
 	}
@@ -297,14 +295,12 @@ public class OrgManageService {
 			auditOrgLogDescribe.setLogid(auditOrgLog.getId());
 			String str="";
 			if(condition.getUNIT() != null && condition.getUNIT().length() > 0) {
-				str += condition.getUNIT()+";";
+				str += "机构名称:" + condition.getUNIT()+";";
 			}
 			if(condition.getGA_DEPARTMENT() != null && condition.getGA_DEPARTMENT().length() > 0) {
-				str += condition.getGA_DEPARTMENT()+";";
+				str += "机构编码:" + condition.getGA_DEPARTMENT()+";";
 			}
-//			if(condition.getORG_LEVEL() != 0) {
-				str += condition.getORG_LEVEL();
-//			}
+			str += "公安组织机构级别:" + condition.getORG_LEVEL();
 			auditOrgLogDescribe.setDescrib(str);
 			
 			auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
@@ -340,14 +336,15 @@ public class OrgManageService {
 		String str="";
 	
 		if(org.getUNIT() != null && org.getUNIT().length() > 0) {
-			str += org.getUNIT()+";";
+			str += "机构名称:" + org.getUNIT()+";";
+		}
+		if(org.getGA_DEPARTMENT() != null && org.getGA_DEPARTMENT().length() > 0) {
+			str += "机构编码:" + org.getGA_DEPARTMENT()+";";
 		}
 		if(org.getPARENT_ORG() != null && org.getPARENT_ORG().length() > 0) {
-			str += org.getPARENT_ORG()+";";
+			str += "上级机构编码:" + org.getPARENT_ORG()+";";
 		}
-//		if(org.getORG_LEVEL() != 0) {
-			str += org.getORG_LEVEL();
-//		}
+		str += "公安组织机构级别:" + org.getORG_LEVEL();
 		auditOrgLogDescribe.setDescrib(str);
 		
 		auditOrgLogDescribe.setLATEST_MOD_TIME(timenow);
@@ -379,17 +376,15 @@ public class OrgManageService {
 		
 		String str="";
 		if(org.getUNIT() != null && org.getUNIT().length() > 0) {
-			str += org.getUNIT()+";";
+			str += "机构名称:" + org.getUNIT()+";";
 		}
 		if(org.getGA_DEPARTMENT() != null && org.getGA_DEPARTMENT().length() > 0) {
-			str += org.getGA_DEPARTMENT()+";";
+			str += "机构编码:" + org.getGA_DEPARTMENT()+";";
 		}
 		if(org.getPARENT_ORG() != null && org.getPARENT_ORG().length() > 0) {
-			str += org.getPARENT_ORG()+";";
+			str += "上级机构编码:" + org.getPARENT_ORG()+";";
 		}
-//		if(org.getORG_LEVEL() != 0) {
-			str += org.getORG_LEVEL();
-//		}
+		str += "公安组织机构级别:" + org.getORG_LEVEL();
 		
 		auditOrgLogDescribe.setDescrib(str);
 		

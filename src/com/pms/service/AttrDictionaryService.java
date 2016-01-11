@@ -202,13 +202,13 @@ public class AttrDictionaryService {
 			str += "角色属性字典;";
 		}
 		if(attrItems.getName() != null && attrItems.getName().length() > 0) {
-			str += attrItems.getName()+";";
+			str += "名称:" + attrItems.getName()+";";
 		}
 		if(attrItems.getCode() != null && attrItems.getCode().length() > 0) {
-			str += attrItems.getCode()+";";
+			str += "编码:" + attrItems.getCode()+";";
 		}
 		for(int i=0;i<attrItems.getDictionary().size(); i++) {
-			str += attrItems.getDictionary().get(i).getValue()+":"+attrItems.getDictionary().get(i).getCode()+";";
+			str += "属性名称:" + attrItems.getDictionary().get(i).getValue()+";属性编码:" + attrItems.getDictionary().get(i).getCode()+";";
 		}
 		auditSystemLogDescribe.setDescrib(str);
 		
