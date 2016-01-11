@@ -1,3 +1,12 @@
+/**   
+ * @ClassName:     ${UserUploadService}   
+ * @Description:   ${用户数据上传管理功能}   
+ * 
+ * @ProductName:   ${中盈集中用户平台}
+ * @author         ${北京中盈网信科技有限公司}  
+ * @version        V1.0     
+ * @Date           ${2014.9.8} 
+*/
 package com.pms.service;
 
 import java.io.File;

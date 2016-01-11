@@ -1,3 +1,12 @@
+/**   
+ * @ClassName:     ${OrganizationDAOImpl}   
+ * @Description:   ${机构数据库访问接口}   
+ * 
+ * @ProductName:   ${中盈集中用户平台}
+ * @author         ${北京中盈网信科技有限公司}  
+ * @version        V1.0     
+ * @Date           ${2014.8.26} 
+*/
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
