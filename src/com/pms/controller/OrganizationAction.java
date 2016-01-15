@@ -343,6 +343,7 @@ public class OrganizationAction extends ActionSupport {
 //				orgName = java.net.URLDecoder.decode(orgName,"UTF-8");
 				System.out.println(orgLevel);
 				Organization condition = new Organization();
+				condition.setGA_DEPARTMENT(orgUid);
 				condition.setUNIT(orgName);
 //				condition.setUid(orgUid);
 				condition.setORG_LEVEL( orgLevel );
