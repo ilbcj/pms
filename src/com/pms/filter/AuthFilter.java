@@ -56,6 +56,12 @@ public class AuthFilter implements Filter {
 			}
 			else if(!isHavePrivilege((String)session.getAttribute("admin"), targetURL)){
 				//response.getOutputStream().println(makeJsonDate());
+				if (targetURL.substring(0,1).equals("/")){
+					targetURL=targetURL.substring(1);
+				}
+				if(targetURL == null || targetURL.length() == 0) {
+					response.sendRedirect(request.getContextPath() + "/login.jsp");
+				}
 				response.setContentType("text/html;charset=UTF-8");
 				response.getWriter().println(makeJsonDate());
 				return;

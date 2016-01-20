@@ -261,8 +261,6 @@ public class GroupManageService {
 		
 		auditGroupLogDescribe.setLogid(auditGroupLog.getId());
 		String str="";
-		List<Rule> rule = dao.GetGroupRulesByGroupId( group.getCode() );
-		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		if(group.getType() == Group.GROUPTYPERULE){
 			str += "规则群体;";
 		}else if(group.getType() == Group.GROUPTYPEUSER){
@@ -279,22 +277,25 @@ public class GroupManageService {
 		}
 		
 		if (rules != null) {
+			List<Rule> rule = dao.GetGroupRulesByGroupId( group.getCode() );
 			for(int i = 0; i<rules.size(); i++) {
 				if(rules.get(i).getRulename() != null && rules.get(i).getRulename().length() > 0) {
 					str += "属性:" + rules.get(i).getRulename()+";";
 				}
 				String value = "";
-				List<RuleAttr> ruleAttr = dao.GetRuleAttrByRuleId(rule.get(i).getId());
-				for(int z=0; z<ruleAttr.size(); z++) {     
-					AttrDictionary attr = attrdao.GetAttrDictionarysByAttrIdAndCode(rule.get(i).getAttrid(), ruleAttr.get(z).getRulevalue());
-					if (attr != null) {	
-						value += attr.getValue()+",";
+				for (int j = 0; j < rule.size(); j++) {
+					List<RuleAttr> ruleAttr = dao.GetRuleAttrByRuleId(rule.get(j).getId());
+					for(int z=0; z<ruleAttr.size(); z++) {     
+						AttrDictionary attr = attrdao.GetAttrDictionarysByAttrIdAndCode(rule.get(j).getAttrid(), ruleAttr.get(z).getRulevalue());
+						if (attr != null) {	
+							value += attr.getValue()+",";
+						}
 					}
 				}
 				str += "值:" + value+";";
 			}
 		}
-		
+		List<User> users = dao.GetGroupUsersByGroupId( group.getCode() );
 		for(int i = 0; i<users.size(); i++) {
 			if(users.get(i).getNAME() != null && users.get(i).getNAME().length() > 0) {
 				str += "姓名 :" + users.get(i).getNAME()+";";

@@ -40,7 +40,7 @@
 	function importFileSave(){
   		$.messager.progress();	// 显示进度条
 		$("#import_file_form").form('submit', {
-			url:'../resource/fileUploadRole.action',
+			url:'../role/fileUploadRole.action',
 			success: function(message){
 				var retObj = $.parseJSON(message);
 				

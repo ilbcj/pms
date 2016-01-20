@@ -129,9 +129,9 @@ public class AuthService {
 	
 	public boolean AccessPrivilege(String loginid, String url )
 	{
-		if(url == null || url.length() == 0) {
-			return false;
-		}
+//		if(url == null || url.length() == 0) {
+//			return false;
+//		}
 		AdministratorManageService ams = new AdministratorManageService();
 		try {
 			int types[] = ams.QueryAdminAccreditByLoginid(loginid);

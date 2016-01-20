@@ -449,7 +449,7 @@ $(document).ready(function () {
 	});
 	
 	$("#privilege_authorize_user_detail_win_list_dg").datagrid({
-		url:'../resource/queryRoleItems.action',
+		url:'../role/queryRoleItems.action',
 		loadFilter: function(data){
 			var res = new Object();
 			if (data.result == true){
@@ -464,7 +464,8 @@ $(document).ready(function () {
 //		onLoadSuccess: function() {alert("success");},
 		onLoadError: function() { $("#privilege_authorize_user_detail_win_list_dg").layout('resize',{width:'100%',height:'100%'}); }
 	});
-	$.getJSON("../system/queryUserAttrs.action", function(data) {
+	
+	$.post("../system/queryUserAttrs.action", function(data) {
 		var sex="";						//性别
 		var police_type="";				//警种
 		//var police_num="";				//警号
@@ -550,8 +551,7 @@ $(document).ready(function () {
 // 			valueField:'id',
 // 			textField:'text'
 // 		});
-		
-	});	
+	}, "json");
 });
 </script>	
   </body>
