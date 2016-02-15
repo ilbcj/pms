@@ -737,9 +737,12 @@ public class DataSyncService {
 
 	    UpdateConfig(SystemConfigList, name);
 	    
-	    broadcastNotice(exportPath, zipNnme);
-	    AddSystemExportLog(exportType + zipNnme);
+	    String syncToEsb = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_SYNCTOESB, SystemConfigList);
+	    if( !"false".equals(syncToEsb) ) {
+		    broadcastNotice(exportPath, zipNnme);
+	    }
 	    
+	    AddSystemExportLog(exportType + zipNnme);
 		return exportPath +"/"+ zipNnme;
 	    
 	}
@@ -756,14 +759,13 @@ public class DataSyncService {
 		
 		// 2. add notice list
 		SyncList sl = null;
-		String fullPath = path + "/" + fileName;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.SIMPLIFIED_CHINESE);
 		String timenow = sdf.format(new Date());
 		for( SyncConfig sc : scs ) {
 			sl = new SyncList();
 			sl.setGA_DEPARTMENT(sc.getGA_DEPARTMENT());
-			sl.setFilename(fullPath);
+			sl.setFilename(fileName);
 			sl.setStatus(SyncList.STATUS_GENERATED);
 			sl.setTstamp(timenow);
 			scdao.SyncListAdd(sl);
@@ -776,6 +778,13 @@ public class DataSyncService {
 	public void NotificationPush(){
 		String warnMsg = null;
 		try {
+			// 0. get export path
+			SystemConfigDAOImpl dao = new SystemConfigDAOImpl();
+			List<SystemConfig> SystemConfigList = dao.GetConfigByType(SystemConfig.SYSTEMCONFIGTYPESYNC);
+			
+	        String exportPath = getSysConfigByItem(SystemConfig.SYSTEMCONFIG_ITEM_EXPORTPATH, SystemConfigList);
+			
+			
 			// 1. get notice list
 			SyncConfigDao scdao = new SyncConfigDaoImpl();
 			List<SyncList> sls = scdao.GetAllSyncList(SyncList.STATUS_GENERATED);
@@ -793,14 +802,17 @@ public class DataSyncService {
 			for( SyncList sl : sls ) {
 				// 2. calculate checksum
 				if( fileName == null || fileName != sl.getFilename() ) {
+					String fullPath = null;
 					try{
 						fileName = sl.getFilename();
-						File file = new File(fileName);
+						fullPath = exportPath + "/" + fileName;
+						File file = new File(fullPath);
 						FileInputStream fi = new FileInputStream(file);
 						checksum = MD5Security.md5(fi);
 					} catch (FileNotFoundException e) {
-						warnMsg = "[DSN]加载文件失败，文件:" + fileName + ";错误信息:" + e.getMessage() + ".";
+						warnMsg = "[DSN]加载文件失败，文件:" + fullPath + ";错误信息:" + e.getMessage() + ".";
 						logger.warn(warnMsg);
+						continue;
 					}
 				}
 				

@@ -64,35 +64,62 @@ public class SyncAcquireDataService extends SyncService {
 		String filename = "";//"5416-010000-User-All-1445941888-00233.zip";
 		InputStream input = null;
 		
-		// get all pms nodes
+//		// get all pms nodes -- this is error????
+//		List<String> pmsNodes = new ArrayList<String>();
+//		//pmsNodes.add("110000");
+//		pmsNodes.add("330200");
+		
+		// change to get from pms node
 		List<String> pmsNodes = new ArrayList<String>();
-		//pmsNodes.add("110000");
-		pmsNodes.add("330200");
+		String fromPms = getDci().getFROM();
+		logger.info("aquire data from " + fromPms);
+		pmsNodes.add(fromPms);
 		
 		if( files.getAllDataItems() != null && files.getAllDataItems().size() > 0 ) {
 			for(Item allItem : files.getAllDataItems()) {
-				localFile = exportPath + "/" + allItem.getVal();
-				filename = allItem.getVal();
-				input = new FileInputStream(new File(localFile));
-				for(String pmsNode : pmsNodes) {
-					path = parentPath + pmsNode;
-					FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+				try{
+					localFile = exportPath + "/" + allItem.getVal();
+					filename = allItem.getVal();
+					input = new FileInputStream(new File(localFile));
+					
+					for(String pmsNode : pmsNodes) {
+						path = parentPath + pmsNode;
+						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+					}
+					allDataItems.add(allItem);
 				}
-				allDataItems.add(allItem);
+				catch(Exception e) {
+					String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:" + e.getMessage() + ".";
+					logger.warn(warnMsg);
+//					filename = allItem.getVal();
+//					input = new FileInputStream(new File(filename));
+//					
+//					for(String pmsNode : pmsNodes) {
+//						path = parentPath + pmsNode;
+//						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+//					}
+//					allDataItems.add(allItem);
+				}
 			}
 		}
 		result.setAllDataItems(allDataItems);
 		
 		if( files.getAddDataItems() != null && files.getAddDataItems().size() > 0 ) {
 			for(Item addItem : files.getAddDataItems()) {
-				localFile = exportPath + "/" + addItem.getVal();
-				filename = addItem.getVal();
-				input = new FileInputStream(new File(localFile));
-				for(String pmsNode : pmsNodes) {
-					path = parentPath + pmsNode;
-					FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+				try{
+					localFile = exportPath + "/" + addItem.getVal();
+					filename = addItem.getVal();
+					input = new FileInputStream(new File(localFile));
+					for(String pmsNode : pmsNodes) {
+						path = parentPath + pmsNode;
+						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+					}
+					addDataItems.add(addItem);
 				}
-				addDataItems.add(addItem);
+				catch(Exception e) {
+					String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:" + e.getMessage() + ".";
+					logger.warn(warnMsg);
+				}
 			}
 		}
 		result.setAddDataItems(addDataItems);

@@ -16,6 +16,7 @@ public class SystemConfig {
 	public final static String SYSTEMCONFIG_ITEM_USER = "sync_User";
 	public final static String SYSTEMCONFIG_ITEM_Role = "sync_Role";
 	public final static String SYSTEMCONFIG_ITEM_RESINROLE = "sync_ResInRole";
+	public final static String SYSTEMCONFIG_ITEM_SYNCTOESB = "sync_ToEsb";
 	
 	public final static int SYSTEMCONFIGTYPESYSTEM = 2;
 	
