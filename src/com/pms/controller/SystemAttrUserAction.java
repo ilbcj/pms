@@ -1,7 +1,16 @@
 package com.pms.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 import com.pms.dto.AttrDictItem;
@@ -412,18 +421,34 @@ public class SystemAttrUserAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String SaveSyncConfigItems()
+	public String SaveSyncConfigItems() throws IOException
 	{
 		SyncConfigService sss = new SyncConfigService();
+		
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
 		try {
 			sss.SaveSyncConfig(syncConfig);
+			setResult(true);
+			return SUCCESS;
 		} catch (Exception e) {
 			message = e.getMessage();
 			setResult(false);
 			return SUCCESS;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
 		}
-		setResult(true);
-		return SUCCESS;
 	}
 	
 	public String QuerySyncConfigOrg()
