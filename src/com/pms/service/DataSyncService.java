@@ -505,12 +505,13 @@ public class DataSyncService {
         }
         
         for (int j = 1; j <= count; j++) {
-            String str = "RESOURCE_ID" + "\t" + "BUSINESS_ROLE" + "\t"
+            String str = "RESOURCE_ID" + "\t" + "BUSINESS_ROLE" + "\t" + "RESOURCE_CLASS" + "\t"
             	 + "DELETE_STATUS" + "\t" + "DATA_VERSION" + "\t"
             	 + "LATEST_MOD_TIME"  + "\n";
             for (int i = num; i <resRole.size(); i++)  {
             	str = str + nullConvertEmptyStr( resRole.get(i).getRESOURCE_ID() ) + "\t" 
             			+ nullConvertEmptyStr( resRole.get(i).getBUSINESS_ROLE() ) + "\t"
+            			+ resRole.get(i).getRESOURCE_CLASS() + "\t"
             			+ resRole.get(i).getDELETE_STATUS() + "\t" 
             			+ resRole.get(i).getDATA_VERSION() + "\t" 
             			+ getLongTime(resRole.get(i).getLATEST_MOD_TIME()) + "\n";
@@ -1053,7 +1054,7 @@ public class DataSyncService {
             // information this date object will represent the 1st of
             // january 1970.
             Date date = sdf.parse(time);
-            longtime = date.getTime();
+            longtime = date.getTime()/1000;
         } catch (Exception e) {
             e.printStackTrace();
         }
