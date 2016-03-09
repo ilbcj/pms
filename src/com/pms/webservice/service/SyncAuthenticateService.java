@@ -42,6 +42,9 @@ public class SyncAuthenticateService extends SyncService {
 		//0. get user by user id
 		UserDAO udao = new UserDAOImpl();
 		User user = udao.GetUserByCertificateCodeMd5(this.getUa().getCERTIFICATE_CODE_MD5());
+		if(user == null) {
+			throw new Exception("there is no record returned wher query user by certificate_code_md5(" + this.getUa().getCERTIFICATE_CODE_MD5() + ").");
+		}
 		this.getAc().setSensitiveLevel(user.getSENSITIVE_LEVEL());
 		
 		//1. get resource's by user id

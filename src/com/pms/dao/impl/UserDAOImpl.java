@@ -628,7 +628,7 @@ public class UserDAOImpl implements UserDAO {
 		} finally {
 			HibernateUtil.closeSession();
 		}
-		if(rs == null) {
+		if(rs == null || rs.size() == 0) {
 			return null;
 		}
 		else if ( rs.size() != 1) {
