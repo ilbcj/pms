@@ -88,7 +88,7 @@ public class SyncAuthenticateService extends SyncService {
 			    		Item itme = new Item();
 			    		itme.setKey(value.getELEMENT());
 			    		itme.setVal(value.getELEMENT_VALUE());
-			    		itme.setEng(convertKeyToEngName(value.getELEMENT()));
+			    		itme.setEng(convertKeyToEngNameWithAlias(value.getELEMENT()));
 			    		itme.setHasAccessAuth(true);
 			    		items.add(itme);
 				    }
@@ -135,7 +135,7 @@ public class SyncAuthenticateService extends SyncService {
 						Item itme = new Item();
 			    		itme.setKey(resource.getELEMENT());
 			    		itme.setVal("");
-			    		itme.setEng(convertKeyToEngName(resource.getELEMENT()));
+			    		itme.setEng(convertKeyToEngNameWithAlias(resource.getELEMENT()));
 			    		itme.setHasAccessAuth(true);
 			    		retColumns.add(itme);
 					}
@@ -520,7 +520,7 @@ public class SyncAuthenticateService extends SyncService {
 							itemRetColumn = new Element("ITEM");
 							
 							itemSetAttribute(itemRetColumn, "key", resource.getELEMENT());
-							itemSetAttribute(itemRetColumn, "eng", convertKeyToEngName(resource.getELEMENT()));
+							itemSetAttribute(itemRetColumn, "eng", convertKeyToEngNameWithAlias(resource.getELEMENT()));
 							itemSetAttribute(itemRetColumn, "val", "");
 							hasAuthColumn = true;
 							dataSuccessColumn.addContent(itemRetColumn);
@@ -671,7 +671,7 @@ public class SyncAuthenticateService extends SyncService {
 						itemRetColumn = new Element("ITEM");
 						
 						itemSetAttribute(itemRetColumn, "key", resource.getELEMENT());
-						itemSetAttribute(itemRetColumn, "eng", convertKeyToEngName(resource.getELEMENT()));
+						itemSetAttribute(itemRetColumn, "eng", convertKeyToEngNameWithAlias(resource.getELEMENT()));
 						itemSetAttribute(itemRetColumn, "val", "");
 						hasUnauthColumn = true;
 						dataFailColumn.addContent(itemRetColumn);
