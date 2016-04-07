@@ -21,7 +21,9 @@ import com.pms.model.Organization;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
+import com.pms.model.ResRoleResource;
 import com.pms.model.User;
+import com.pms.model.UserRole;
 import com.pms.webservice.dao.SearchDAO;
 import com.pms.webservice.dao.impl.SearchDAOImpl;
 import com.pms.webservice.model.Common010123;
@@ -747,6 +749,78 @@ public class SyncSearchService extends SyncService {
 			itemSetAttribute(item, "val", ""+ getLongTime(resFeature.getLATEST_MOD_TIME()) );
 			itemSetAttribute(item, "rmk", "最新修改时间");
 		}
+		else if( type == SearchDAO.TYPEUSER_ROLE ) {
+			UserRole userRole = (UserRole)model;
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.J030014");
+			itemSetAttribute(item, "val", userRole.getCERTIFICATE_CODE_MD5());
+			itemSetAttribute(item, "rmk", "身份证哈希值");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.I010026");
+			itemSetAttribute(item, "val", userRole.getBUSINESS_ROLE());
+			itemSetAttribute(item, "rmk", "角色编码");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.H010029");
+			itemSetAttribute(item, "val", ""+userRole.getDELETE_STATUS());
+			itemSetAttribute(item, "rmk", "删除状态");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.J030017");
+			itemSetAttribute(item, "val", ""+userRole.getDATA_VERSION());
+			itemSetAttribute(item, "rmk", "数据版本号");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.I010005");
+			itemSetAttribute(item, "val", ""+ getLongTime(userRole.getLATEST_MOD_TIME()) );
+			itemSetAttribute(item, "rmk", "最新修改时间");
+		}
+		else if( type == SearchDAO.TYPEROLE_RESOURCE ) {
+			ResRoleResource roleRes = (ResRoleResource)model;
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.J030006");
+			itemSetAttribute(item, "val", roleRes.getRESOURCE_ID());
+			itemSetAttribute(item, "rmk", "资源唯一标识");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.I010026");
+			itemSetAttribute(item, "val", roleRes.getBUSINESS_ROLE());
+			itemSetAttribute(item, "rmk", "角色编码");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.J030036");
+			itemSetAttribute(item, "val", ""+roleRes.getRESOURCE_CLASS());
+			itemSetAttribute(item, "rmk", "资源分类");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.H010029");
+			itemSetAttribute(item, "val", ""+roleRes.getDELETE_STATUS());
+			itemSetAttribute(item, "rmk", "删除状态");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.J030017");
+			itemSetAttribute(item, "val", ""+roleRes.getDATA_VERSION());
+			itemSetAttribute(item, "rmk", "数据版本号");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.I010005");
+			itemSetAttribute(item, "val", ""+ getLongTime(roleRes.getLATEST_MOD_TIME()) );
+			itemSetAttribute(item, "rmk", "最新修改时间");
+		}
 	}
 	
 	private long getLongTime(String time) {
@@ -762,8 +836,8 @@ public class SyncSearchService extends SyncService {
             // information this date object will represent the 1st of
             // january 1970.
             Date date = sdf.parse(time);        
-            System.out.println("Date and Time: " + date);
-            longtime = date.getTime();
+            //System.out.println("Date and Time: " + date);
+            longtime = date.getTime() / 1000;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -786,6 +860,12 @@ public class SyncSearchService extends SyncService {
 		}
 		else if ("WA_AUTHORITY_FUNC_RESOURCE".equals(tableName) ) {
 			type = SearchDAO.TYPERESFUN;
+		}
+		else if ("WA_AUTHORITY_POLICE_ROLE".equals(tableName) ) {
+			type = SearchDAO.TYPEUSER_ROLE;
+		}
+		else if ("WA_AUTHORITY_RESOURCE_ROLE".equals(tableName) ) {
+			type = SearchDAO.TYPEROLE_RESOURCE;
 		}
 		return type;
 	}
