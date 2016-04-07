@@ -118,6 +118,7 @@ public class PrivilegeManageService {
 	
 	public void UpdatePrivilege(String ownerid, int ownertype,
 			List<String> roleIds) throws Exception {
+		if( roleIds == null ) roleIds = new ArrayList<String>();
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		List<Privilege> privs = new ArrayList<Privilege>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
