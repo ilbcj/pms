@@ -22,6 +22,7 @@ import org.jdom2.Element;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
 
+import com.pms.webservice.model.Common010121;
 import com.pms.webservice.model.Common010123;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
@@ -635,6 +636,8 @@ public abstract class SyncService {
 							result.setTableAlias( item.getAttributeValue("alias") );
 						} else if ( "I010017".equals(item.getAttributeValue("key"))  ) {
 							result.setTotalNum( item.getAttributeValue("val") );
+						} else if ( "H010005".equals(item.getAttributeValue("key"))  ) {
+							result.setSearchId( item.getAttributeValue("val") );
 						} else if ( "I010019".equals(item.getAttributeValue("key"))  ) {
 							result.setOnceNum( item.getAttributeValue("val") );
 						} else if ( "I010018".equals(item.getAttributeValue("key"))  ) {
@@ -727,7 +730,7 @@ public abstract class SyncService {
 															Integer.parseInt(value);
 														}
 														catch(Exception e) {
-															value = "'" + value + "'";
+															//value = "'" + value + "'";
 														}
 														con.setVal( value );
 													}
@@ -744,6 +747,81 @@ public abstract class SyncService {
 									}
 								}
 								result.setCommon010123(common010123s);
+							}
+						}
+						else if ("WA_COMMON_010121".equalsIgnoreCase( item.getAttributeValue("name")) ) {
+							List<Element> children = item.getChildren();
+							if( children.size() > 0 ) {
+								List<Common010121> common010121s = new ArrayList<Common010121>();
+								for(int o = 0; o < children.size(); o++) {
+									String childName = children.get(o).getName();
+									if( "DATA".equals(childName) ) {
+										List<Element> _010121ItemList = children.get(o).getChildren();
+										Common010121 common010121 = new Common010121();
+										
+										for(int p=0; p < _010121ItemList.size(); p++) {
+											
+											Element _010121Item = _010121ItemList.get(p);
+											if("ITEM".equals(_010121Item.getName())) {
+												if( "J010002".equals(_010121Item.getAttributeValue("key")) ) {
+													common010121.setTable( _010121Item.getAttributeValue("val") );
+												} else if ( "I010018".equals(_010121Item.getAttributeValue("key"))  ) {
+													common010121.setIsAsyn(_010121Item.getAttributeValue("val") );
+												} else if ( "J010015".equals(_010121Item.getAttributeValue("key"))  ) {
+													common010121.setAlias( _010121Item.getAttributeValue("val") );
+												}
+											} 
+											else if ( "CONDITION".equals(_010121Item.getName()) ) {
+												Condition searchCondition = new Condition();
+												searchCondition.setRel( _010121Item.getAttributeValue("rel") );
+												List<Item> searchConditionItems = new ArrayList<Item>();
+												List<Element> searchConditionList = _010121Item.getChildren();
+												for(int q=0; q<searchConditionList.size(); q++) {
+													Element searchConditionItem = searchConditionList.get(q);
+													Item con = new Item();
+													con.setKey( searchConditionItem.getAttributeValue("key") );
+													con.setEng( convertKeyToEngNameWithAlias( searchConditionItem.getAttributeValue("key") ) );
+													con.setVal( searchConditionItem.getAttributeValue("val") );
+													
+													if(con.getEng() == null || con.getEng().length() == 0) {
+														throw new Exception("unsupport search column key: " + con.getKey());
+													}
+													searchConditionItems.add(con);
+												}
+												searchCondition.setItems(searchConditionItems);
+												common010121.setSearch(searchCondition);
+											}
+											else if( "DATASET".equals(_010121Item.getName()) ) {
+												if( "WA_COMMON_010118".equals( _010121Item.getAttributeValue("name")) ) {
+													List<Element> _010121_010118_children = _010121Item.getChildren();
+													if( _010121_010118_children.size() > 0 ) {
+														String _010121_010118_childrenFirstItemName = _010121_010118_children.get(0).getName();
+														if( "DATA".equals(_010121_010118_childrenFirstItemName) ) {
+															List<Element> retColList = _010121_010118_children.get(0).getChildren();
+															List<Item> retCols = new ArrayList<Item>();
+															for(int j=0; j<retColList.size(); j++) {
+																
+																
+																Element condition = retColList.get(j);
+																Item con = new Item();
+																con.setKey( condition.getAttributeValue("key") );
+																con.setEng( convertKeyToEngNameWithAlias( condition.getAttributeValue("key") ) );
+																con.setVal( condition.getAttributeValue("val") );
+																if(con.getEng() == null || con.getEng().length() == 0) {
+																	throw new Exception("unsupport search column key:" + con.getKey());
+																}
+																retCols.add(con);
+															}
+															common010121.setRETURNITEMS(retCols);
+														}
+													}
+												}// end of [010121] WA_COMMON_010118
+											}
+										}
+										common010121s.add(common010121);
+									}
+								}
+								result.setCommon010121(common010121s);
 							}
 						}
 					}
@@ -1062,6 +1140,7 @@ public abstract class SyncService {
 		keyColumnMap.put("H070003", "TOOLTYPE");
 		
 		keyColumnMap.put("I010009", "CONTEXT");
+		keyColumnMap.put("I010031", "BUSINESS_TYPE");
 		
 		String result = "";
 		if(key.contains(".")) {

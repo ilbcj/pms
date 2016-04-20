@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
@@ -26,13 +28,15 @@ import com.pms.model.User;
 import com.pms.model.UserRole;
 import com.pms.webservice.dao.SearchDAO;
 import com.pms.webservice.dao.impl.SearchDAOImpl;
+import com.pms.webservice.model.Common010121;
 import com.pms.webservice.model.Common010123;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.SearchCondition;
 
 public class SyncSearchService extends SyncService {
-
+	private static Log logger = LogFactory.getLog(SyncSearchService.class);
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public String GetResult() throws IOException {
@@ -99,7 +103,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "I010015");
-			itemSetAttribute(item, "val", "" + new Date().getTime());
+			itemSetAttribute(item, "val", "" + new Date().getTime()/1000);
 			itemSetAttribute(item, "rmk", "消息返回时间");
 			
 			item = new Element("ITEM");
@@ -139,7 +143,7 @@ public class SyncSearchService extends SyncService {
 				throw new Exception("search condition data error");
 			}
 			
-			String sqlStr = "select ";
+			String sqlStr = "select distinct ";
 			if( this.getSc().getRETURNITEMS() == null || this.getSc().getRETURNITEMS().size() == 0 ) {
 				sqlStr += "* ";
 			}
@@ -240,6 +244,7 @@ public class SyncSearchService extends SyncService {
 		
 		if( this.getSc().getCommon010123() != null && this.getSc().getCommon010123().size() > 0 ) {
 			//1 join case
+			// 1.1 deal with join part
 			for(Common010123 common010123 : getSc().getCommon010123() ) {
 				if( Common010123.JOINTYPEINNER == common010123.getJoin() ) {
 					where += " inner join ";
@@ -262,7 +267,10 @@ public class SyncSearchService extends SyncService {
 				}
 				
 				if(common010123.getAlias() == null || common010123.getAlias().isEmpty()) {
-					throw new Exception("missing table alias parameter");
+					//throw new Exception("missing table alias parameter");
+					String loginfo = "[WSQ]missing table alias parameter in '" + getDci().getMESSAGE_SEQUENCE() + "' query message.";
+					logger.error(loginfo);
+					where += " on ";
 				}
 				else {
 					where += common010123.getAlias() + " on ";
@@ -271,11 +279,94 @@ public class SyncSearchService extends SyncService {
 				Condition joinConditions = common010123.getSearch();
 				if( joinConditions.getItems().size() > 0 ) {
 					Item item = joinConditions.getItems().get(0);
-					where += item.getEng() + "=" + item.getVal() + " ";
+					//where += item.getEng() + "=" + item.getVal() + " ";
+					String destColumn = item.getEng().contains(".") ? item.getEng().substring(item.getEng().indexOf(".") + 1) : item.getEng();
+					// if join table only contain one column, the request doesn't contain column name, we need add column name after table name.
+					if( item.getVal().contains(".") ) {
+						where += item.getEng() + "=" + item.getVal() + " ";
+					}
+					else {
+						
+						where += item.getEng() + "=" + item.getVal() + "." + destColumn + " ";
+					}
 					for( int i = 1; i < joinConditions.getItems().size(); i++ ) {
 						item = joinConditions.getItems().get(i);
-						where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + " ";
+						//where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + " ";
+						if( item.getVal().contains(".") ) { 
+							where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + " ";
+						}
+						else {
+							where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + "." + destColumn + " ";
+						}
 					}
+				}
+			}
+			
+			// 1.2 deal with alias part which in the join clause
+			if( this.getSc().getCommon010121() != null && this.getSc().getCommon010121().size() > 0 ) {
+				for(Common010121 common010121 : getSc().getCommon010121() ) {
+					// 1.2.1 : ( select distinct
+					String aliasSearch = " ( select distinct ";
+					List<Item> retCols = common010121.getRETURNITEMS();
+					if( retCols == null || retCols.size() == 0 ) {
+						aliasSearch += " * ";
+					}
+					else {
+						aliasSearch += " " + retCols.get(0).getEng();
+						for( int i = 1; i < retCols.size(); i++ ) {
+							aliasSearch += ", " + retCols.get(i).getEng();
+						}
+						aliasSearch += " ";
+					}
+					
+					// 1.2.2 : ( select distinct columns from
+					aliasSearch += " from ";
+					
+					// 1.2.3 : ( select distinct columns from table 
+					if( common010121.getTable() == null || common010121.getTable().length() == 0 ) {
+						logger.info("查询条件不正确，表名不存在");
+						throw new Exception("search condition data error");
+					}
+					else {
+						aliasSearch += common010121.getTable() + " ";
+					}
+					
+					// 1.2.4 : ( select distinct columns from table where case
+					if( common010121.getSearch() != null && common010121.getSearch().getItems() != null && common010121.getSearch().getItems().size() != 0 ) {
+						aliasSearch += " where ";
+						List<Item> items = common010121.getSearch().getItems();
+						if( items.size() == 1 && "IN".equalsIgnoreCase(common010121.getSearch().getRel()) ) {
+							aliasSearch += items.get(0).getEng() + " in ( " + items.get(0).getVal() + ") ";
+						}
+						else {
+							aliasSearch += items.get(0).getEng() + " = " + items.get(0).getVal();
+							for(int i = 1; i< items.size(); i++) {
+								aliasSearch += " " + common010121.getSearch().getRel() + " " + items.get(i).getEng() + " = " + items.get(i).getVal() + " ";
+							}
+						}
+					}
+
+					// 1.2.5 : ( select distinct columns from table where case ) alias 
+					aliasSearch += " ) " + common010121.getAlias() + " ";
+					
+					// 1.2.6 : put aliasSearch to join clause
+//					if( where.contains( "'" + common010121.getAlias() + "'" ) ) {
+//						where.replace("'" + common010121.getAlias() + "'", aliasSearch);
+//					}
+					if( where.contains( common010121.getAlias() ) ) {
+						where = where.replaceAll("(^.*?)" + common010121.getAlias() + "(.*$)", "$1" + aliasSearch + "$2");
+
+						where.replaceAll(common010121.getAlias(), aliasSearch);
+					}
+				}
+			}
+			
+			// 1.3 deal with where part
+			List<Item> whereItem = getSc().getCONDITIONITEMS();
+			if( whereItem != null && whereItem.size() > 0 ) {
+				where += " where " + whereItem.get(0).getEng() + " = " + whereItem.get(0).getVal() + " ";
+				for(int i = 1; i< whereItem.size(); i++) {
+					where += " " + getSc().getCONDITION() + " " + whereItem.get(i).getEng() + " = " + whereItem.get(i).getVal() + " ";
 				}
 			}
 		}

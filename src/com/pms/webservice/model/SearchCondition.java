@@ -10,6 +10,7 @@ public class SearchCondition {
 	private String totalNum;
 	private String onceNum;
 	private String isAsyn;
+	private String searchId;
 	private String CONDITION;
 	private List<Item> CONDITIONITEMS;
 	private List<Item> RETURNITEMS;
@@ -23,8 +24,21 @@ public class SearchCondition {
 	
 	//join conditions
 	private List<Common010123> common010123;
+	private List<Common010121> common010121;
 	private String tableAlias;
 	
+	public List<Common010121> getCommon010121() {
+		return common010121;
+	}
+	public void setCommon010121(List<Common010121> common010121) {
+		this.common010121 = common010121;
+	}
+	public String getSearchId() {
+		return searchId;
+	}
+	public void setSearchId(String searchId) {
+		this.searchId = searchId;
+	}
 	public String getTableAlias() {
 		return tableAlias;
 	}
