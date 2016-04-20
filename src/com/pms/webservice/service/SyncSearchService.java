@@ -194,7 +194,10 @@ public class SyncSearchService extends SyncService {
 			SearchDAO dao = new SearchDAOImpl();
 			int type = getSearchType(this.getSc().getTableName());
 //			int first = Integer.parseInt(this.getSc().getOnceNum());
-			int total = Integer.parseInt(this.getSc().getTotalNum() == null ? "0" : this.getSc().getTotalNum());
+			//int total = Integer.parseInt(this.getSc().getTotalNum() == null ? "0" : this.getSc().getTotalNum());
+			int totalNum = Integer.parseInt(this.getSc().getTotalNum() == null ? "0" : this.getSc().getTotalNum());
+			int onceNum = Integer.parseInt(this.getSc().getOnceNum() == null ? "0" : this.getSc().getOnceNum());
+			int total = Math.min(totalNum, onceNum);
 			List datas = null;
 			if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_NO ) {
 				datas = dao.SqlQueryAllCols(sqlStr, type, 0, total);
