@@ -167,7 +167,7 @@ public class SyncDataexchangeService extends SyncService {
 			item010004 = new Element("ITEM");
 			data010004.addContent(item010004);
 			itemSetAttribute(item010004, "key", "I010015");
-			itemSetAttribute(item010004, "val", "" + new Date().getTime());
+			itemSetAttribute(item010004, "val", "" + new Date().getTime()/1000);
 			itemSetAttribute(item010004, "rmk", "消息返回时间");
 			
 			item010004 = new Element("ITEM");
