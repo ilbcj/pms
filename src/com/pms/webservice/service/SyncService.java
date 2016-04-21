@@ -308,44 +308,84 @@ public abstract class SyncService {
 		return result;
 	}
 	
+//	private static AuthCondition parseAuthCondition(Element root) throws Exception {
+//		AuthCondition result = null;
+//		String name = root.getChildren().get(0).getName();
+//		if( "DATA".equals(name) ) {
+//			result = new AuthCondition();
+//			List<Element> elementList = root.getChildren().get(0).getChildren();
+//			for(int i=0; i<elementList.size(); i++) {
+//				Element element = elementList.get(i);
+//				if ( "CONDITION".equals(element.getName()) && "STC".equalsIgnoreCase( element.getAttributeValue("rel") ) ) {
+//					Condition stc = new Condition();
+//					stc.setRel("STC");
+//					List<Item> items = new ArrayList<Item>();
+//					List<Element> itemList = element.getChildren();
+//					for(int j=0; j<itemList.size(); j++) {
+//						Element current = itemList.get(j);
+//						Item item = new Item();
+//						item.setKey( current.getAttributeValue("key") );
+//						item.setEng( convertKeyToEngNameWithAlias( current.getAttributeValue("key") ) );
+//						item.setVal( current.getAttributeValue("val") );
+//						if(item.getEng() == null || item.getEng().length() == 0) {
+//							throw new Exception("unsupport stc item key:" + item.getKey());
+//						}
+//						items.add(item);
+//					}
+//					stc.setItems(items);
+//					result.setStc(stc);
+//				} else if ( "DATASET".equals(element.getName()) ) {
+//					if( "WA_COMMON_010032".equals( element.getAttributeValue("name")) ) {
+//						List<Common010032> common010032 = parse010032(element);
+//						result.setCommon010032(common010032);
+//					}
+//				}
+//			}
+//		}
+//		return result;
+//	}
 	private static AuthCondition parseAuthCondition(Element root) throws Exception {
 		AuthCondition result = null;
-		String name = root.getChildren().get(0).getName();
-		if( "DATA".equals(name) ) {
+		//String name = root.getChildren().get(0).getName();
+		//if( "DATA".equals(name) ) {
 			result = new AuthCondition();
-			List<Element> elementList = root.getChildren().get(0).getChildren();
+			List<Common010032> common010032s = new ArrayList<Common010032>();
+			List<Element> elementList = root.getChildren();
 			for(int i=0; i<elementList.size(); i++) {
 				Element element = elementList.get(i);
-				if ( "CONDITION".equals(element.getName()) && "STC".equalsIgnoreCase( element.getAttributeValue("rel") ) ) {
-					Condition stc = new Condition();
-					stc.setRel("STC");
-					List<Item> items = new ArrayList<Item>();
-					List<Element> itemList = element.getChildren();
-					for(int j=0; j<itemList.size(); j++) {
-						Element current = itemList.get(j);
-						Item item = new Item();
-						item.setKey( current.getAttributeValue("key") );
-						item.setEng( convertKeyToEngNameWithAlias( current.getAttributeValue("key") ) );
-						item.setVal( current.getAttributeValue("val") );
-						if(item.getEng() == null || item.getEng().length() == 0) {
-							throw new Exception("unsupport stc item key:" + item.getKey());
+//				if ( "CONDITION".equals(element.getName()) && "STC".equalsIgnoreCase( element.getAttributeValue("rel") ) ) {
+//					Condition stc = new Condition();
+//					stc.setRel("STC");
+//					List<Item> items = new ArrayList<Item>();
+//					List<Element> itemList = element.getChildren();
+//					for(int j=0; j<itemList.size(); j++) {
+//						Element current = itemList.get(j);
+//						Item item = new Item();
+//						item.setKey( current.getAttributeValue("key") );
+//						item.setEng( convertKeyToEngNameWithAlias( current.getAttributeValue("key") ) );
+//						item.setVal( current.getAttributeValue("val") );
+//						if(item.getEng() == null || item.getEng().length() == 0) {
+//							throw new Exception("unsupport stc item key:" + item.getKey());
+//						}
+//						items.add(item);
+//					}
+//					stc.setItems(items);
+//					result.setStc(stc);
+//				} else if ( "DATASET".equals(element.getName()) ) {
+					//if( "WA_COMMON_010032".equals( element.getAttributeValue("name")) ) {
+						Common010032 common010032 = parse010032(element);
+						if( null != common010032 ) {
+							common010032s.add(common010032);
 						}
-						items.add(item);
-					}
-					stc.setItems(items);
-					result.setStc(stc);
-				} else if ( "DATASET".equals(element.getName()) ) {
-					if( "WA_COMMON_010032".equals( element.getAttributeValue("name")) ) {
-						List<Common010032> common010032 = parse010032(element);
-						result.setCommon010032(common010032);
-					}
-				}
+					//}
+				//}
 			}
-		}
+			result.setCommon010032(common010032s);
+		//}
 		return result;
 	}
 	
-//<DATASET name="WA_COMMON_010032">
+//<!-- <DATASET name="WA_COMMON_010032" rmk="单个请求条件的对象及数据项"> -->
 //	<DATA>
 //		<DATASET name="WA_SOURCE_0001">
 //			<DATA>
@@ -363,116 +403,134 @@ public abstract class SyncService {
 //					<CONDITION rel="IN">
 //						<ITEM key="B050016" eng="DATA_SOURCE" val="111,120,123,124"/>
 //					</CONDITION>
+//					<ITEM key="F020004" eng="SRC_IP" val="167842562"/>
 //				</CONDITION>
 //			</DATA>
-//			<DATA/>
+//			<DATA>
+//				<ITEM key="B020007" eng="IMSI" val=""/>
+//				<ITEM key="F020004" eng="SRC_IP" val=""/>
+//				<ITEM key="G010002" eng="URL" val=""/>
+//			</DATA>
 //		</DATASET>
 //	</DATA>
-//</DATASET>
-	private static List<Common010032> parse010032(Element root) throws Exception {
-		List<Common010032> result = new ArrayList<Common010032>();
-		List<Element> xmlChildren = root.getChildren();
-		for(int i = 0; i < xmlChildren.size(); i++) {
+//<!-- </DATASET> -->
+	private static Common010032 parse010032(Element root) throws Exception {
+		//Common010032 result = new Common010032();
+		//List<Element> xmlChildren = root.getChildren();
+		//for(int i = 0; i < xmlChildren.size(); i++) {
 			Common010032 common010032 = new Common010032();
-			String name = xmlChildren.get(i).getName();
+			String name = root.getName();
 			if( "DATA".equals(name) ) {
-				Element xmlSourceDataSet = xmlChildren.get(i).getChildren().get(0);
-				common010032.setSourceName(xmlSourceDataSet.getAttributeValue("name"));
-				
-				//parse condition
-				Element xmlConditionData = xmlSourceDataSet.getChildren().get(0);
-				if(xmlConditionData == null || !"DATA".equals(xmlConditionData.getName())) {
-					logger.info("parse 'WA_COMMON_010032 --> data --> dataset --> data(0)' error.");
-					continue;
-				}
-				else {
-					Element xmlParentCondition = xmlConditionData.getChildren().get(0);
-					if(xmlParentCondition == null || !"CONDITION".equals(xmlParentCondition.getName())) {
-						logger.info("parse 'WA_COMMON_010032 --> data --> dataset --> data(0) --> CONDITION' error.");
-						continue;
+				for(int i = 0; i < root.getChildren().size(); i++) {
+					Element rootChild = root.getChildren().get(i);
+					if( "ITEM".equalsIgnoreCase(rootChild.getName()) ) {
+						if( "H010005".equals(rootChild.getAttributeValue("key")) ) {
+							common010032.setSyncKey( rootChild.getAttributeValue("val") );
+						}						
 					}
-					else {
-						common010032.setParentCondition(xmlParentCondition.getAttributeValue("rel"));
-						List<Element> xmlSubConditions = xmlParentCondition.getChildren();
-						List<Condition> conditions = new ArrayList<Condition>();
-						List<Item> subItems = new ArrayList<Item>();
-						for(int j = 0; j < xmlSubConditions.size(); j++) {
-							Condition condition = new Condition();
-							Item subItem = new Item();
-							Element xmlCurrentCondition = xmlSubConditions.get(j);
-							if( "ITEM".equalsIgnoreCase(xmlCurrentCondition.getName()) ) {
-								subItem.setKey( xmlCurrentCondition.getAttributeValue("key") );
-								subItem.setEng( convertKeyToEngNameWithAlias( xmlCurrentCondition.getAttributeValue("key") ) );
-								subItem.setVal( xmlCurrentCondition.getAttributeValue("val") );
-								if(subItem.getEng() == null || subItem.getEng().length() == 0) {
-									throw new Exception("unsupport search column key:" + subItem.getKey());
-								}
-								subItems.add(subItem);
-							}
-							else if( "CONDITION".equalsIgnoreCase(xmlCurrentCondition.getName()) ) {
-								condition.setRel(xmlCurrentCondition.getAttributeValue("rel"));
-								List<Element> xmlItems = xmlCurrentCondition.getChildren();
-								List<Item> items = new ArrayList<Item>();
-								for(int k = 0; k < xmlItems.size(); k++) {
-									Element xmlCurrentItem = xmlItems.get(k);
-									String[] values = xmlCurrentItem.getAttributeValue("val").split(",");
-									for(int x = 0; x < values.length; x++) {
-										Item item = new Item();
-										item.setKey( xmlCurrentItem.getAttributeValue("key") );
-										item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
-										item.setVal( values[x] );
-										if(item.getEng() == null || item.getEng().length() == 0) {
-											throw new Exception("unsupport search column key:" + item.getKey());
-										}
-										items.add(item);
-									}
-								}
-								condition.setItems(items);
-								conditions.add(condition);
+					else if( "DATASET".equalsIgnoreCase(rootChild.getName()) ) {
+						Element xmlSourceDataSet = rootChild;
+						common010032.setSourceName(xmlSourceDataSet.getAttributeValue("name"));
+						
+						//parse condition
+						Element xmlConditionData = xmlSourceDataSet.getChildren().get(0);
+						if(xmlConditionData == null || !"DATA".equals(xmlConditionData.getName())) {
+							logger.info("parse 'WA_COMMON_010032[remove] --> data --> dataset --> data(0)' error.");
+							return null;
+						}
+						else {
+							Element xmlParentCondition = xmlConditionData.getChildren().get(0);
+							if(xmlParentCondition == null || !"CONDITION".equals(xmlParentCondition.getName())) {
+								logger.info("parse 'WA_COMMON_010032[remove] --> data --> dataset --> data(0) --> CONDITION' error.");
+								return null;
 							}
 							else {
-								logger.info("parse 'WA_COMMON_010032 --> data --> dataset --> data(0) --> CONDITION --> CONDITION(" + j + ")' error.");
-								continue;
+								common010032.setParentCondition(xmlParentCondition.getAttributeValue("rel"));
+								List<Element> xmlSubConditions = xmlParentCondition.getChildren();
+								List<Condition> conditions = new ArrayList<Condition>();
+								List<Item> subItems = new ArrayList<Item>();
+								for(int j = 0; j < xmlSubConditions.size(); j++) {
+									Condition condition = new Condition();
+									Item subItem = new Item();
+									Element xmlCurrentCondition = xmlSubConditions.get(j);
+									if( "ITEM".equalsIgnoreCase(xmlCurrentCondition.getName()) ) {
+										subItem.setKey( xmlCurrentCondition.getAttributeValue("key") );
+										subItem.setEng( convertKeyToEngNameWithAlias( xmlCurrentCondition.getAttributeValue("key") ) );
+										subItem.setVal( xmlCurrentCondition.getAttributeValue("val") );
+										if(subItem.getEng() == null || subItem.getEng().length() == 0) {
+											throw new Exception("unsupport search column key:" + subItem.getKey());
+										}
+										subItems.add(subItem);
+									}
+									else if( "CONDITION".equalsIgnoreCase(xmlCurrentCondition.getName()) ) {
+										condition.setRel(xmlCurrentCondition.getAttributeValue("rel"));
+										List<Element> xmlItems = xmlCurrentCondition.getChildren();
+										List<Item> items = new ArrayList<Item>();
+										for(int k = 0; k < xmlItems.size(); k++) {
+											Element xmlCurrentItem = xmlItems.get(k);
+											String[] values = xmlCurrentItem.getAttributeValue("val").split(",");
+											for(int x = 0; x < values.length; x++) {
+												Item item = new Item();
+												item.setKey( xmlCurrentItem.getAttributeValue("key") );
+												item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
+												item.setVal( values[x] );
+												if(item.getEng() == null || item.getEng().length() == 0) {
+													throw new Exception("unsupport search column key:" + item.getKey());
+												}
+												items.add(item);
+											}
+										}
+										condition.setItems(items);
+										conditions.add(condition);
+									}
+									else {
+										logger.info("parse 'WA_COMMON_010032[remove] --> data --> dataset --> data(0) --> CONDITION --> CONDITION(" + j + ")' error.");
+										continue;
+									}
+								}
+								common010032.setSubConditions(conditions);
+								common010032.setSubItems(subItems);
 							}
-							
-							
 						}
-						common010032.setSubConditions(conditions);
-						common010032.setSubItems(subItems);
-					}
-				}
-				
-				//parse return columns
-				Element xmlRetColumnsData = xmlSourceDataSet.getChildren().get(1);
-				if(xmlRetColumnsData == null || !"DATA".equals(xmlRetColumnsData.getName()) ) {
-					logger.info("parse 'WA_COMMON_010032 --> data --> dataset --> data(1)' error.");
-					continue;
-				}
-				else {
-					List<Element> xmlItems = xmlRetColumnsData.getChildren();
-					List<Item> items = new ArrayList<Item>();
-					for(int j = 0; j < xmlItems.size(); j++) {
-						Element xmlCurrentItem = xmlItems.get(j);
-						Item item = new Item();
-						item.setKey( xmlCurrentItem.getAttributeValue("key") );
-						item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
-						item.setVal( xmlCurrentItem.getAttributeValue("val") );
-						if(item.getEng() == null || item.getEng().length() == 0) {
-							throw new Exception("unsupport search column key:" + item.getKey());
+						
+						//parse return columns
+						Element xmlRetColumnsData = xmlSourceDataSet.getChildren().get(1);
+						if(xmlRetColumnsData == null || !"DATA".equals(xmlRetColumnsData.getName()) ) {
+							logger.info("parse 'WA_COMMON_010032[remove] --> data --> dataset --> data(1)' error.");
+							return null;
 						}
-						items.add(item);
+						else {
+							List<Element> xmlItems = xmlRetColumnsData.getChildren();
+							List<Item> items = new ArrayList<Item>();
+							for(int j = 0; j < xmlItems.size(); j++) {
+								Element xmlCurrentItem = xmlItems.get(j);
+								Item item = new Item();
+								item.setKey( xmlCurrentItem.getAttributeValue("key") );
+								item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
+								item.setVal( xmlCurrentItem.getAttributeValue("val") );
+								if(item.getEng() == null || item.getEng().length() == 0) {
+									throw new Exception("unsupport search column key:" + item.getKey());
+								}
+								items.add(item);
+							}
+							common010032.setItems(items);
+						}
+						
+						
 					}
-					common010032.setItems(items);
+					
 				}
+
 			}
 			else {
-				logger.info("parse 'WA_COMMON_010032 --> data' error.");
-				continue;
+				logger.info("parse 'WA_COMMON_010032[remove] --> data' error.");
+				return null;
 			}
-			result.add(common010032);
-		}
+			//result.add(common010032);
+			return common010032;
+		//}
 		
-		return result;
+		//return result;
 	}
 
 //<DATASET rmk="要更新的字段信息" name="WA_COMMON_010131">
