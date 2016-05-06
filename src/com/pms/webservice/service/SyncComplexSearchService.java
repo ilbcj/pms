@@ -303,6 +303,44 @@ public class SyncComplexSearchService extends SyncService {
 				throw new Exception("parse where condition(IN) error.");
 			}
 		}
+		else if ( "NOT IN".equalsIgnoreCase(condition.getRel()) ) {
+			if( items != null && items.size() == 1 ) {
+				String values[] = items.get(0).getVal().split(",");
+				result = items.get(0).getEng() + " not in ('" + values[0] + "'";
+				for( int i = 1; i < values.length; i++ ){
+					result += " , '" + values[i] + "'"; 
+				}
+				result += ") ";
+			}
+			else {
+				throw new Exception("parse where condition(NOT IN) error.");
+			}
+		}
+		else if ( "NULL".equalsIgnoreCase(condition.getRel()) ) {
+			if( items != null && items.size() == 1 ) {
+				result = items.get(0).getEng() + " is null ";
+			}
+			else {
+				throw new Exception("parse where condition(NULL) error.");
+			}
+		}
+		else if ( "NOT NULL".equalsIgnoreCase(condition.getRel()) ) {
+			if( items != null && items.size() == 1 ) {
+				result = items.get(0).getEng() + " is not null ";
+			}
+			else {
+				throw new Exception("parse where condition(NOT NULL) error.");
+			}
+		}
+		else if ( "NOT".equalsIgnoreCase(condition.getRel()) ) {
+			if( items != null && items.size() == 1 ) {
+				String val = items.get(0).getVal();
+				result = items.get(0).getEng() + " != '" + val + "' ";
+			}
+			else {
+				throw new Exception("parse where condition(NOT NULL) error.");
+			}
+		}
 		else if ( "GE".equalsIgnoreCase(condition.getRel()) ) {
 			if( items != null && items.size() == 1 ) {
 				String val = items.get(0).getVal();
