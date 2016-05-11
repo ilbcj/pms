@@ -16,7 +16,7 @@ public class ComplexSearchCondition {
 	private List<Common_010121> common010121;
 	private List<Item> orderColumns;
 	private List<Item> groupColumns;
-	private Conditions conditions;
+	private NestConditions conditions;
 	
 	public List<Item> getGroupColumns() {
 		return groupColumns;
@@ -24,10 +24,10 @@ public class ComplexSearchCondition {
 	public void setGroupColumns(List<Item> groupColumns) {
 		this.groupColumns = groupColumns;
 	}
-	public Conditions getConditions() {
+	public NestConditions getConditions() {
 		return conditions;
 	}
-	public void setConditions(Conditions conditions) {
+	public void setConditions(NestConditions conditions) {
 		this.conditions = conditions;
 	}
 	public List<Item> getReturnColumns() {

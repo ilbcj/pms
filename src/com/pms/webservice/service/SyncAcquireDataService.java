@@ -25,7 +25,6 @@ import com.pms.webservice.model.acquiredata.AcquiredataCondition;
 
 public class SyncAcquireDataService extends SyncService {
 
-	@SuppressWarnings("unused")
 	private Log logger = LogFactory.getLog(SyncAcquireDataService.class);
 	
 	@Override

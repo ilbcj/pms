@@ -40,7 +40,7 @@ import com.pms.webservice.model.exchange.ExchangeCondition;
 import com.pms.webservice.model.search.Common_010121;
 import com.pms.webservice.model.search.Common_010123;
 import com.pms.webservice.model.search.ComplexSearchCondition;
-import com.pms.webservice.model.search.Conditions;
+import com.pms.webservice.model.search.NestConditions;
 
 public abstract class SyncService {
 	private static Log logger = LogFactory.getLog(SyncService.class);
@@ -725,67 +725,8 @@ public abstract class SyncService {
 					result.setSearchAllowAsynI010018( valTmp );
 				}
 			}
-			//<DATASET name="WA_COMMON_010117">--<DATA>--<CONDITION>
-			//
-			//  <CONDITION rel="AND">
-			//		<CONDITION rel="IN">
-			//			<ITEM key="WA_AUTHORITY_DATA_RESOURCE.A010004" eng="" val="VOIP,SMS,MBLOG,MMS"/>
-			//		</CONDITION>
-			//		<ITEM key="WA_AUTHORITY_DATA_RESOURCE.J030010" eng="" val="1"/>
-			//		<ITEM key="WA_AUTHORITY_DATA_RESOURCE.H010029" eng="" val="0"/>
-			//	</CONDITION>
-			//
 			else if ( "CONDITION".equalsIgnoreCase(item.getName()) ) {
-				Conditions conditions = new Conditions();
-				List<Condition> subConditions = new ArrayList<Condition>();
-				Condition condition = new Condition();
-				List<Item> conditionItems = new ArrayList<Item>();
-				condition.setRel( item.getAttributeValue("rel") );
-				
-				List<Element> conditionList = item.getChildren();
-				for(int j = 0; j < conditionList.size(); j++) {
-					if( "CONDITION".equalsIgnoreCase(conditionList.get(j).getName()) ) {
-						Condition con = new Condition();
-						Element conTag = conditionList.get(j);
-						con.setRel( conTag.getAttributeValue("rel") );
-						
-						List<Item> items = new ArrayList<Item>();
-						List<Element> conTagChildren = conTag.getChildren();
-						for(int k = 0; k < conTagChildren.size(); k++) {
-							Element itemTag = conTagChildren.get(k);
-							Item innerItem = new Item();
-							innerItem.setKey( itemTag.getAttributeValue("key") );
-							innerItem.setEng( convertKeyToEngNameWithAlias( itemTag.getAttributeValue("key") ) );
-							innerItem.setVal( itemTag.getAttributeValue("val") );
-							if(innerItem.getEng() == null || innerItem.getEng().length() == 0) {
-								throw new Exception("unsupport search column key:" + innerItem.getKey());
-							}
-							items.add(innerItem);
-						}
-						if( items.size() > 0 ) {
-							con.setItems(items);
-						}
-						subConditions.add(con);
-					}
-					else if ( "ITEM".equalsIgnoreCase(conditionList.get(j).getName()) ) {
-						Item innerItem = new Item();
-						innerItem.setEng( convertKeyToEngNameWithAlias( conditionList.get(j).getAttributeValue("key") ) );
-						innerItem.setVal( conditionList.get(j).getAttributeValue("val") );
-						if(innerItem.getEng() == null || innerItem.getEng().length() == 0) {
-							throw new Exception("unsupport search column key:" + innerItem.getKey());
-						}
-						conditionItems.add(innerItem);
-					}
-				}
-				
-				if( conditionItems.size() > 0 ) {
-					condition.setItems(conditionItems);
-				}
-				conditions.setCondition(condition);
-				
-				if( subConditions.size() > 0 ) {
-					conditions.setConditions(subConditions);
-				}
+				NestConditions conditions = parseCONDITIONS( item );
 				result.setConditions(conditions);
 			}
 			else if ( "DATASET".equals(item.getName()) ) {
@@ -973,56 +914,57 @@ public abstract class SyncService {
 								//<DATASET name="WA_COMMON_010117">--<DATA>--<DATASET name="WA_COMMON_010121">--<DATA>--<CONDITION>
 								else if ( "CONDITION".equals(_010121Item.getName()) ) {
 								
-									Conditions conditions = new Conditions();
-									List<Condition> subConditions = new ArrayList<Condition>();
-									Condition condition = new Condition();
-									List<Item> conditionItems = new ArrayList<Item>();
-									condition.setRel( _010121Item.getAttributeValue("rel") );
-									List<Element> conditionList = _010121Item.getChildren();
-									
-									for(int q = 0; q < conditionList.size(); q++) {
-										if( "CONDITION".equalsIgnoreCase(conditionList.get(q).getName()) ) {
-											Condition con = new Condition();
-											Element conTag = conditionList.get(q);
-											con.setRel( conTag.getAttributeValue("rel") );
-											
-											List<Item> items = new ArrayList<Item>();
-											List<Element> conTagChildren = conTag.getChildren();
-											for(int k = 0; k < conTagChildren.size(); k++) {
-												Element itemTag = conTagChildren.get(k);
-												Item innerItem = new Item();
-												innerItem.setKey( itemTag.getAttributeValue("key") );
-												innerItem.setEng( convertKeyToEngNameWithAlias( itemTag.getAttributeValue("key") ) );
-												innerItem.setVal( itemTag.getAttributeValue("val") );
-												if(innerItem.getEng() == null || innerItem.getEng().length() == 0) {
-													throw new Exception("unsupport search column key:" + innerItem.getKey());
-												}
-												items.add(innerItem);
-											}
-											if( items.size() > 0 ) {
-												con.setItems(items);
-											}
-											subConditions.add(con);
-										}
-										else if ( "ITEM".equalsIgnoreCase(conditionList.get(q).getName()) ) {
-											Item innerItem = new Item();
-											innerItem.setEng( convertKeyToEngNameWithAlias( conditionList.get(q).getAttributeValue("key") ) );
-											innerItem.setVal( conditionList.get(q).getAttributeValue("val") );
-											if(innerItem.getEng() == null || innerItem.getEng().length() == 0) {
-												throw new Exception("unsupport search column key:" + innerItem.getKey());
-											}
-											conditionItems.add(innerItem);
-										}
-									}
-									
-									if( conditionItems.size() > 0 ) {
-										condition.setItems(conditionItems);
-									}
-									conditions.setCondition(condition);
-
-									if( subConditions.size() > 0 ) {
-										conditions.setConditions(subConditions);
-									}
+//									Conditions conditions = new Conditions();
+//									List<Condition> subConditions = new ArrayList<Condition>();
+//									Condition condition = new Condition();
+//									List<Item> conditionItems = new ArrayList<Item>();
+//									condition.setRel( _010121Item.getAttributeValue("rel") );
+//									List<Element> conditionList = _010121Item.getChildren();
+//									
+//									for(int q = 0; q < conditionList.size(); q++) {
+//										if( "CONDITION".equalsIgnoreCase(conditionList.get(q).getName()) ) {
+//											Condition con = new Condition();
+//											Element conTag = conditionList.get(q);
+//											con.setRel( conTag.getAttributeValue("rel") );
+//											
+//											List<Item> items = new ArrayList<Item>();
+//											List<Element> conTagChildren = conTag.getChildren();
+//											for(int k = 0; k < conTagChildren.size(); k++) {
+//												Element itemTag = conTagChildren.get(k);
+//												Item innerItem = new Item();
+//												innerItem.setKey( itemTag.getAttributeValue("key") );
+//												innerItem.setEng( convertKeyToEngNameWithAlias( itemTag.getAttributeValue("key") ) );
+//												innerItem.setVal( itemTag.getAttributeValue("val") );
+//												if(innerItem.getEng() == null || innerItem.getEng().length() == 0) {
+//													throw new Exception("unsupport search column key:" + innerItem.getKey());
+//												}
+//												items.add(innerItem);
+//											}
+//											if( items.size() > 0 ) {
+//												con.setItems(items);
+//											}
+//											subConditions.add(con);
+//										}
+//										else if ( "ITEM".equalsIgnoreCase(conditionList.get(q).getName()) ) {
+//											Item innerItem = new Item();
+//											innerItem.setEng( convertKeyToEngNameWithAlias( conditionList.get(q).getAttributeValue("key") ) );
+//											innerItem.setVal( conditionList.get(q).getAttributeValue("val") );
+//											if(innerItem.getEng() == null || innerItem.getEng().length() == 0) {
+//												throw new Exception("unsupport search column key:" + innerItem.getKey());
+//											}
+//											conditionItems.add(innerItem);
+//										}
+//									}
+//									
+//									if( conditionItems.size() > 0 ) {
+//										condition.setItems(conditionItems);
+//									}
+//									conditions.setCondition(condition);
+//
+//									if( subConditions.size() > 0 ) {
+//										conditions.setConditions(subConditions);
+//									}
+									NestConditions conditions = parseCONDITIONS( _010121Item );
 									common010121.setConditions(conditions);
 								}
 								else if( "DATASET".equals(_010121Item.getName()) ) {
@@ -1136,6 +1078,56 @@ public abstract class SyncService {
 			}// end of DATASET
 		}// end of for loop
 		return result;
+	}
+	
+	
+	//<DATASET name="WA_COMMON_010117">--<DATA>--<CONDITION>
+	//
+	//  <CONDITION rel="AND">
+	//		<CONDITION rel="NOT">
+	//			<CONDITION rel="IN">
+	//				<ITEM key="WA_AUTHORITY_DATA_RESOURCE.A010004" eng="" val="VOIP,SMS,MBLOG,MMS"/>
+	//			</CONDITION>
+	//		</CONDITION>
+	//		<ITEM key="WA_AUTHORITY_DATA_RESOURCE.J030010" eng="" val="1"/>
+	//		<ITEM key="WA_AUTHORITY_DATA_RESOURCE.H010029" eng="" val="0"/>
+	//	</CONDITION>
+	//
+	private static NestConditions parseCONDITIONS(Element element) throws Exception {
+		NestConditions conditions = new NestConditions();
+		List<NestConditions> subConditions = new ArrayList<NestConditions>();
+		Condition condition = new Condition();
+		List<Item> conditionItems = new ArrayList<Item>();
+		condition.setRel( element.getAttributeValue("rel") );
+		
+		List<Element> conditionList = element.getChildren();
+		for(int j = 0; j < conditionList.size(); j++) {
+			Element conditionListItem = conditionList.get(j);
+			if( "CONDITION".equalsIgnoreCase(conditionListItem.getName()) ) {
+				NestConditions tmp = parseCONDITIONS( conditionListItem );
+				subConditions.add(tmp);
+			}
+			else if ( "ITEM".equalsIgnoreCase(conditionListItem.getName()) ) {
+				Item innerItem = new Item();
+				innerItem.setEng( convertKeyToEngNameWithAlias( conditionListItem.getAttributeValue("key") ) );
+				innerItem.setVal( conditionListItem.getAttributeValue("val") );
+				innerItem.setKey(conditionListItem.getAttributeValue("key"));
+				if(innerItem.getEng() == null || innerItem.getEng().length() == 0) {
+					throw new Exception("unsupport search column key:" + innerItem.getKey());
+				}
+				conditionItems.add(innerItem);
+			}
+		}
+		
+		if( conditionItems.size() > 0 ) {
+			condition.setItems(conditionItems);
+		}
+		conditions.setCondition(condition);
+		
+		if( subConditions.size() > 0 ) {
+			conditions.setSubConditions(subConditions);
+		}
+		return conditions;
 	}
 	
 //	private static SearchCondition parseSearchCondition(Element element) throws Exception {

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.search.Common_010121;
 import com.pms.webservice.model.search.Common_010123;
+import com.pms.webservice.model.search.NestConditions;
 
 public class SyncComplexSearchService extends SyncService {
 	private static Log logger = LogFactory.getLog(SyncComplexSearchService.class);
@@ -123,19 +125,8 @@ public class SyncComplexSearchService extends SyncService {
 				sqlStr += "* ";
 			}
 			else {
+				// deal with return columns when generating xml result
 				sqlStr += "* ";
-//				// TODO parse return column
-//				List<Item> retCols = getCsc().getRETURNITEMS();
-//				String tableAlias = getCsc().getTableAlias();
-//				for( int i = 0; i < retCols.size(); i++ ) {
-//					if(tableAlias != null && !tableAlias.isEmpty()) {
-//						sqlStr += tableAlias + "." + retCols.get(i).getEng() + ", ";
-//					}
-//					else {
-//						sqlStr += retCols.get(i).getEng() + ", ";
-//					}
-//				}
-//				sqlStr = sqlStr.substring(0, sqlStr.length() - 2);
 			}
 			
 			sqlStr += " from ";
@@ -164,14 +155,15 @@ public class SyncComplexSearchService extends SyncService {
 			
 			// parse where clause
 			if( this.getCsc().getConditions() != null && this.getCsc().getConditions().getCondition() != null ) {
-				Condition condition = getCsc().getConditions().getCondition();
-				sqlStr += " where (" + parseCondition( condition ) + ") ";
-				if( getCsc().getConditions().getConditions() != null ) {
-					for( int i = 0; i < getCsc().getConditions().getConditions().size(); i++ ) {
-						condition = getCsc().getConditions().getConditions().get(i);
-						sqlStr += " " + getCsc().getConditions().getCondition().getRel() + " (" + parseCondition( condition ) + ") ";
-					}
-				}
+//				Condition condition = getCsc().getConditions().getCondition();
+//				sqlStr += " where (" + parseCondition( condition ) + ") ";
+//				if( getCsc().getConditions().getConditions() != null ) {
+//					for( int i = 0; i < getCsc().getConditions().getConditions().size(); i++ ) {
+//						condition = getCsc().getConditions().getConditions().get(i);
+//						sqlStr += " " + getCsc().getConditions().getCondition().getRel() + " (" + parseCondition( condition ) + ") ";
+//					}
+//				}
+				sqlStr += " where (" + parseConditionsObject( getCsc().getConditions() ) + ") ";
 			}
 
 			// parse group clause
@@ -276,111 +268,254 @@ public class SyncComplexSearchService extends SyncService {
 		return order;
 	}
 
-	private String parseCondition( Condition condition ) throws Exception
-	{
+	private String parseConditionsObject(NestConditions conditions) throws Exception {
+		String rel = conditions.getCondition().getRel();
+		List<NestConditions> subConditions = conditions.getSubConditions();
+		String resultTemp = "";
+		List<String> parts = new ArrayList<String>();
+		if( subConditions != null && !"NOT".equalsIgnoreCase(rel)) {
+			for( NestConditions sub : subConditions ) {
+				resultTemp = parseConditionsObject(sub);
+				if(resultTemp != null && resultTemp.length() > 0) {
+					parts.add(resultTemp);
+				}
+			}
+		}
+		
+		if( "NOT".equals(rel) ) {
+			if(subConditions != null && subConditions.size() > 0) {
+				if( subConditions.size() != 1 ) {
+					throw new Exception("parse where condition(NOT with subconditions'size > 1) error.");
+				}
+				NestConditions innerCondition = subConditions.get(0);
+				if( innerCondition.getCondition() == null
+						|| innerCondition.getCondition().getItems() == null
+						|| innerCondition.getCondition().getItems().size() != 1 ) {
+					throw new Exception("parse where condition(NOT with size of subconditions'items != 1) error.");
+				}
+				String innerRel = innerCondition.getCondition().getRel();
+				Item innerItem = innerCondition.getCondition().getItems().get(0);
+				if( "NULL".equalsIgnoreCase(innerRel) ) {
+					resultTemp = "(" + innerItem.getEng() + " is not NULL ) ";
+				}
+				else if ( "IN".equalsIgnoreCase(innerRel) ) {
+					String values[] = innerItem.getVal().split(",");
+					resultTemp = "(" + innerItem.getEng() + " not in ('" + values[0] + "'";
+					for( int j = 1; j < values.length; j++ ){
+						resultTemp += " , '" + values[j] + "'"; 
+					}
+					resultTemp += ") ) ";
+				}
+				else {
+					throw new Exception("parse where condition(NOT without IN or NULL) error.");
+				}
+				return resultTemp;
+			}
+		}
+		
+		List<Item> items = conditions.getCondition().getItems();
+		for( int i = 0; i < items.size(); i++ ) {
+			Item item = items.get(i);
+			if( "NOT".equals(rel) ) {
+				if(subConditions != null && subConditions.size() > 0) {
+					throw new Exception("parse where condition(NOT with items and subconditions) error.");
+				}
+				resultTemp = "(" + item.getEng() + " != '" + item.getVal() + "') ";
+			}
+			else if ( "BTW".equals(rel) && i == 0 ) {
+				if( items != null && items.size() == 2 ) {
+					String min = items.get(0).getVal();
+					String max = items.get(1).getVal();
+//					String min = val1.compareTo(val2) >= 0 ? val2 : val1;
+//					String max = val1.compareTo(val2) >= 0 ? val1 : val2;
+					if( items.get(0).getKey().contains("I010005")) {
+						try{
+							min = DateTimeUtil.GetTimeStr( Long.parseLong(min) );
+							max = DateTimeUtil.GetTimeStr( Long.parseLong(max) );
+						}
+						catch(Exception e) {
+							//val = val;
+						}
+					}
+					resultTemp = "(" + items.get(0).getEng() + " between '" + min + "' and '" + max + "') ";
+				}
+				else {
+					throw new Exception("parse where condition(BTW) error.");
+				}
+			}
+			else if ( "AND".equalsIgnoreCase(rel) 
+					|| "OR".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " = '" + item.getVal() + "') ";
+			}
+			else if ( "PBR".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " like '%" + item.getVal() +"') ";
+			}
+			else if ( "EBR".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " like '" + item.getVal() +"%') ";
+			}
+			else if ( "BBR".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " like '%" + item.getVal() +"%') ";
+			}
+			else if ( "GT".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " > '" + item.getVal() +"') ";
+			}
+			else if ( "LT".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " < '" + item.getVal() +"') ";
+			}
+			else if ( "GE".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " >= '" + item.getVal() +"') ";
+			}
+			else if ( "LE".equalsIgnoreCase(rel) ) {
+				resultTemp = "(" + item.getEng() + " <= '" + item.getVal() +"') ";
+			}
+			else if ( "IN".equalsIgnoreCase(rel) ) {
+				if( items != null && items.size() == 1 ) {
+					String values[] = item.getVal().split(",");
+					resultTemp = "(" + item.getEng() + " in ('" + values[0] + "'";
+					for( int j = 1; j < values.length; j++ ){
+						resultTemp += " , '" + values[j] + "'"; 
+					}
+					resultTemp += ") ) ";
+				}
+				else {
+					throw new Exception("parse where condition(IN) error.");
+				}
+			}
+			else if ( "NULL".equalsIgnoreCase(rel) ) {
+				if( items != null && items.size() == 1 ) {
+					resultTemp = "(" + items.get(0).getEng() + " is null) ";
+				}
+				else {
+					throw new Exception("parse where condition(NULL) error.");
+				}
+			}
+			parts.add(resultTemp);
+		}
+		
+		// build result from parts
 		String result = "";
-		List<Item> items = condition.getItems();
-		if ( "AND".equalsIgnoreCase(condition.getRel()) ) {
-			if(items != null && items.size()>0) {
-				result += items.get(0).getEng() + " = '" + items.get(0).getVal() + "'";
-				for( int i = 1; i < items.size(); i++ ) {
-					result += " and " + items.get(i).getEng() + " = '" + items.get(i).getVal() + "'";
+		if( parts.size() > 0 ) {
+			result = parts.get(0);
+			for(int i = 1; i < parts.size(); i++) {
+				if( "AND".equalsIgnoreCase(rel) ) {
+					result += " and " + parts.get(i);
 				}
-				result += " ";
-//				result = "(" + result + ") ";
-			}
-		}
-		else if ( "IN".equalsIgnoreCase(condition.getRel()) ) {
-			if( items != null && items.size() == 1 ) {
-				String values[] = items.get(0).getVal().split(",");
-				result = items.get(0).getEng() + " in ('" + values[0] + "'";
-				for( int i = 1; i < values.length; i++ ){
-					result += " , '" + values[i] + "'"; 
+				else if( "OR".equalsIgnoreCase(rel) ) {
+					result += " or " + parts.get(i);
 				}
-				result += ") ";
-			}
-			else {
-				throw new Exception("parse where condition(IN) error.");
-			}
-		}
-		else if ( "NOT IN".equalsIgnoreCase(condition.getRel()) ) {
-			if( items != null && items.size() == 1 ) {
-				String values[] = items.get(0).getVal().split(",");
-				result = items.get(0).getEng() + " not in ('" + values[0] + "'";
-				for( int i = 1; i < values.length; i++ ){
-					result += " , '" + values[i] + "'"; 
+				else {
+					throw new Exception("parse where condition(muti-parts without AND or OR) error.");
 				}
-				result += ") ";
-			}
-			else {
-				throw new Exception("parse where condition(NOT IN) error.");
-			}
-		}
-		else if ( "NULL".equalsIgnoreCase(condition.getRel()) ) {
-			if( items != null && items.size() == 1 ) {
-				result = items.get(0).getEng() + " is null ";
-			}
-			else {
-				throw new Exception("parse where condition(NULL) error.");
-			}
-		}
-		else if ( "NOT NULL".equalsIgnoreCase(condition.getRel()) ) {
-			if( items != null && items.size() == 1 ) {
-				result = items.get(0).getEng() + " is not null ";
-			}
-			else {
-				throw new Exception("parse where condition(NOT NULL) error.");
-			}
-		}
-		else if ( "NOT".equalsIgnoreCase(condition.getRel()) ) {
-			if( items != null && items.size() == 1 ) {
-				String val = items.get(0).getVal();
-				result = items.get(0).getEng() + " != '" + val + "' ";
-			}
-			else {
-				throw new Exception("parse where condition(NOT NULL) error.");
-			}
-		}
-		else if ( "GE".equalsIgnoreCase(condition.getRel()) ) {
-			if( items != null && items.size() == 1 ) {
-				String val = items.get(0).getVal();
-				if( items.get(0).getKey().contains("I010005")) {
-					try{
-						val = DateTimeUtil.GetTimeStr( Long.parseLong(val) );
-					}
-					catch(Exception e) {
-						//val = val;
-					}
-				}
-				result = items.get(0).getEng() + " >= '" + val + "'";
-			}
-			else {
-				throw new Exception("parse where condition(GE) error.");
-			}
-		}
-		else if ( "BTW".equalsIgnoreCase(condition.getRel()) ) {
-			if( items != null && items.size() == 2 ) {
-				String val1 = items.get(0).getVal();
-				String val2 = items.get(1).getVal();
-				String min = val1.compareTo(val2) >= 0 ? val2 : val1;
-				String max = val1.compareTo(val2) >= 0 ? val1 : val2;
-				if( items.get(0).getKey().contains("I010005")) {
-					try{
-						min = DateTimeUtil.GetTimeStr( Long.parseLong(min) );
-						max = DateTimeUtil.GetTimeStr( Long.parseLong(max) );
-					}
-					catch(Exception e) {
-						//val = val;
-					}
-				}
-				result = items.get(0).getEng() + " between '" + min + "' and '" + max + "' ";
-			}
-			else {
-				throw new Exception("parse where condition(BTW) error.");
 			}
 		}
 		return result;
 	}
+	
+//	private String parseCondition( Condition condition ) throws Exception
+//	{
+//		String result = "";
+//		List<Item> items = condition.getItems();
+//		if ( "AND".equalsIgnoreCase(condition.getRel()) ) {
+//			if(items != null && items.size()>0) {
+//				result += items.get(0).getEng() + " = '" + items.get(0).getVal() + "'";
+//				for( int i = 1; i < items.size(); i++ ) {
+//					result += " and " + items.get(i).getEng() + " = '" + items.get(i).getVal() + "'";
+//				}
+//				result += " ";
+////				result = "(" + result + ") ";
+//			}
+//		}
+//		else if ( "IN".equalsIgnoreCase(condition.getRel()) ) {
+//			if( items != null && items.size() == 1 ) {
+//				String values[] = items.get(0).getVal().split(",");
+//				result = items.get(0).getEng() + " in ('" + values[0] + "'";
+//				for( int i = 1; i < values.length; i++ ){
+//					result += " , '" + values[i] + "'"; 
+//				}
+//				result += ") ";
+//			}
+//			else {
+//				throw new Exception("parse where condition(IN) error.");
+//			}
+//		}
+//		else if ( "NOT IN".equalsIgnoreCase(condition.getRel()) ) {
+//			if( items != null && items.size() == 1 ) {
+//				String values[] = items.get(0).getVal().split(",");
+//				result = items.get(0).getEng() + " not in ('" + values[0] + "'";
+//				for( int i = 1; i < values.length; i++ ){
+//					result += " , '" + values[i] + "'"; 
+//				}
+//				result += ") ";
+//			}
+//			else {
+//				throw new Exception("parse where condition(NOT IN) error.");
+//			}
+//		}
+//		else if ( "NULL".equalsIgnoreCase(condition.getRel()) ) {
+//			if( items != null && items.size() == 1 ) {
+//				result = items.get(0).getEng() + " is null ";
+//			}
+//			else {
+//				throw new Exception("parse where condition(NULL) error.");
+//			}
+//		}
+//		else if ( "NOT NULL".equalsIgnoreCase(condition.getRel()) ) {
+//			if( items != null && items.size() == 1 ) {
+//				result = items.get(0).getEng() + " is not null ";
+//			}
+//			else {
+//				throw new Exception("parse where condition(NOT NULL) error.");
+//			}
+//		}
+//		else if ( "NOT".equalsIgnoreCase(condition.getRel()) ) {
+//			if( items != null && items.size() == 1 ) {
+//				String val = items.get(0).getVal();
+//				result = items.get(0).getEng() + " != '" + val + "' ";
+//			}
+//			else {
+//				throw new Exception("parse where condition(NOT NULL) error.");
+//			}
+//		}
+//		else if ( "GE".equalsIgnoreCase(condition.getRel()) ) {
+//			if( items != null && items.size() == 1 ) {
+//				String val = items.get(0).getVal();
+//				if( items.get(0).getKey().contains("I010005")) {
+//					try{
+//						val = DateTimeUtil.GetTimeStr( Long.parseLong(val) );
+//					}
+//					catch(Exception e) {
+//						//val = val;
+//					}
+//				}
+//				result = items.get(0).getEng() + " >= '" + val + "'";
+//			}
+//			else {
+//				throw new Exception("parse where condition(GE) error.");
+//			}
+//		}
+//		else if ( "BTW".equalsIgnoreCase(condition.getRel()) ) {
+//			if( items != null && items.size() == 2 ) {
+//				String val1 = items.get(0).getVal();
+//				String val2 = items.get(1).getVal();
+//				String min = val1.compareTo(val2) >= 0 ? val2 : val1;
+//				String max = val1.compareTo(val2) >= 0 ? val1 : val2;
+//				if( items.get(0).getKey().contains("I010005")) {
+//					try{
+//						min = DateTimeUtil.GetTimeStr( Long.parseLong(min) );
+//						max = DateTimeUtil.GetTimeStr( Long.parseLong(max) );
+//					}
+//					catch(Exception e) {
+//						//val = val;
+//					}
+//				}
+//				result = items.get(0).getEng() + " between '" + min + "' and '" + max + "' ";
+//			}
+//			else {
+//				throw new Exception("parse where condition(BTW) error.");
+//			}
+//		}
+//		return result;
+//	}
 	
 	private String addJoinConditionToSQL() throws Exception {
 		String join = "";
@@ -524,14 +659,15 @@ public class SyncComplexSearchService extends SyncService {
 					
 					// 1.2.5 : ( select distinct columns from table join clause [[where clause]]
 					if( common010121.getConditions() != null && common010121.getConditions().getCondition() != null ) {
-						Condition condition = common010121.getConditions().getCondition();
-						aliasSearch += " where (" + parseCondition( condition ) + ") ";
-						if( common010121.getConditions().getConditions() != null ) {
-							for( int i = 0; i < common010121.getConditions().getConditions().size(); i++ ) {
-								condition = common010121.getConditions().getConditions().get(i);
-								aliasSearch += " " + common010121.getConditions().getCondition().getRel() + " (" + parseCondition( condition ) + ") ";
-							}
-						}
+//						Condition condition = common010121.getConditions().getCondition();
+//						aliasSearch += " where (" + parseCondition( condition ) + ") ";
+//						if( common010121.getConditions().getConditions() != null ) {
+//							for( int i = 0; i < common010121.getConditions().getConditions().size(); i++ ) {
+//								condition = common010121.getConditions().getConditions().get(i);
+//								aliasSearch += " " + common010121.getConditions().getCondition().getRel() + " (" + parseCondition( condition ) + ") ";
+//							}
+//						}
+						aliasSearch += " where (" + parseConditionsObject( common010121.getConditions() ) + ") ";
 					}
 
 					// 1.2.6 : ( select distinct columns from table join clause where clause ) alias 
