@@ -154,7 +154,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		return;
 	}
 
-	public int QueryPrivilegesCountByOwnerId(int id, int ownertype) throws Exception {
+	public int QueryPrivilegesCountByOwnerId(String id, int ownertype) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs = 0;
@@ -162,7 +162,7 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
-			q.setInteger("owner_id", id);
+			q.setString("owner_id", id);
 			q.setInteger("owner_type", ownertype);
 			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();

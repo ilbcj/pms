@@ -17,7 +17,7 @@ public interface PrivilegeDAO {
 	public void UpdatePrivilegeByOwnerId(String ownerid, int ownertype,
 			List<Privilege> privileges) throws Exception;
 	public List<Privilege> QueryPrivilegesByOwnerId(String ownerid, int ownertype) throws Exception;
-	public int QueryPrivilegesCountByOwnerId(int id, int ownertypeuser) throws Exception;
+	public int QueryPrivilegesCountByOwnerId(String id, int ownertypeuser) throws Exception;
 	public List<ResRole> QueryPrivInfosByUserid(String userid) throws Exception;
 	public List<ResRole> QueryPrivInfosByUsersOrg(String userid) throws Exception;
 	public List<ResRole> QueryPrivInfosByUsersGroup(String groupid) throws Exception;
