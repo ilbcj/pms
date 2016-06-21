@@ -147,8 +147,10 @@ public class ResourceUploadService {
 	private final String SHEET_ROLE_RESOURCE = "关系对照";
 	private final String SHEET_ROLE_RESOURCE_COL_ROLE_TYPE = "角色类型";
 	private final String SHEET_ROLE_RESOURCE_COL_ROLE_CODE = "角色代码";
-	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016 = "数据来源";
-	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE = "数据来源编码";
+	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT = "数据项";
+	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT_VALUE = "数据项值";
+//	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016 = "数据来源";
+//	private final String SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE = "数据来源编码";
 	private final String SHEET_ROLE_RESOURCE_COL_DATASET = "协议编码";
 	private final String SHEET_ROLE_RESOURCE_COL_SECTION_CLASS = "字段分类编码";
 	
@@ -262,7 +264,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		feature = new ResFeature();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -356,7 +358,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		dss = new ResDataSetSensitive();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -420,7 +422,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		ds = new ResDataSet();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -490,7 +492,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		cc = new ResColumnClassify();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -554,7 +556,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		col = new ResColumn();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -625,7 +627,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		vs = new ResValueSensitive();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -676,7 +678,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		val = new ResValue();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -740,7 +742,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		rcc = new ResRelationColumnClassify();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -807,7 +809,7 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResRelationRow rr = null;
 		ResRowRelationDAO dao = new ResRowRelationDAOImpl();
-		dao.ResRowRelationImportClear();
+//		dao.ResRowRelationImportClear();
 		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
@@ -818,7 +820,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		rr = new ResRelationRow();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -868,7 +870,7 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResRelationColumn rc = null;
 		ResColumnRelationDAO dao = new ResColumnRelationDAOImpl();
-		dao.ResColumnRelationImportClear();
+		//dao.ResColumnRelationImportClear();
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
         	Row row = sheet.getRow(r);
@@ -878,7 +880,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		rc = new ResRelationColumn();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -928,7 +930,7 @@ public class ResourceUploadService {
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResRelationClassify rc = null;
 		ResClassifyRelationDAO dao = new ResClassifyRelationDAOImpl();
-		dao.ResClassifyRelationImportClear();
+		//dao.ResClassifyRelationImportClear();
 		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
@@ -939,7 +941,7 @@ public class ResourceUploadService {
         	if( r > 0 ) {
         		rc = new ResRelationClassify();
         	}
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -993,7 +995,7 @@ public class ResourceUploadService {
 		
 		String roleName = "";
 		String roleId = "";
-		String element = "B050016";
+		String element = "";
 		String elemnetValue = "";
 		String dataset = "";
 		String sectionClass = "";
@@ -1005,7 +1007,7 @@ public class ResourceUploadService {
         		continue;
         	}
         	
-        	int cellCount = row.getPhysicalNumberOfCells(); //获取总列数 
+        	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
             	Cell cell = row.getCell(c);
@@ -1029,10 +1031,14 @@ public class ResourceUploadService {
             			idx.put(SHEET_ROLE_RESOURCE_COL_ROLE_TYPE, c);
             		} else if ( SHEET_ROLE_RESOURCE_COL_ROLE_CODE.equals(cellValue) ) {
             			idx.put(SHEET_ROLE_RESOURCE_COL_ROLE_CODE, c);
-            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016, c);
-            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE.equals(cellValue) ) {
-            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE, c);
+            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT, c);
+            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT_VALUE.equals(cellValue) ) {
+            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT_VALUE, c);
+//            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016.equals(cellValue) ) {
+//            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016, c);
+//            		} else if ( SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE.equals(cellValue) ) {
+//            			idx.put(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE, c);
             		} else if ( SHEET_ROLE_RESOURCE_COL_DATASET.equals(cellValue) ) {
             			idx.put(SHEET_ROLE_RESOURCE_COL_DATASET, c);
             		} else if ( SHEET_ROLE_RESOURCE_COL_SECTION_CLASS.equals(cellValue) ) {
@@ -1050,11 +1056,11 @@ public class ResourceUploadService {
             			if( cellValue != null && cellValue.length() > 0 ) {
             				roleId = cellValue;
             			}
-            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016) ) {
+            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_ELEMENT) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
-            				//save element name, so nothing to do
+            				element = cellValue;
             			}
-            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_ELEMENT_B050016_VALUE) ) {
+            		} else if ( c== idx.get(SHEET_ROLE_RESOURCE_COL_ELEMENT_VALUE) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
             				elemnetValue = cellValue;
             				dataset0SectionClasses = null;
@@ -1113,7 +1119,7 @@ public class ResourceUploadService {
 	private void updateRoleAndResourceRelatioinship() throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
 		// clear old resource and role relationship
-		dao.ClearPublicRoleAndRelationship();
+		//dao.ClearPublicRoleAndRelationship();
 		
 		int start = 0;
 		int rows = 10000;
@@ -1141,6 +1147,10 @@ public class ResourceUploadService {
 	
 	private void updateRoleAndResourceRelationshipOfRelationColumn(
 			String roleId, String dataSet, String sectionClass, String element) throws Exception {
+		if( dataSet == null || dataSet.length() == 0 
+				|| sectionClass == null || sectionClass.length() == 0 ) {
+			return;
+		}
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResData> resources = dao.GetDataByRelationColumnClassify(dataSet, sectionClass);
 		List<ResDataTemplate> resTemps = dao.GetDataTemplateByRelationColumnClassify(dataSet, sectionClass);
@@ -1462,7 +1472,7 @@ public class ResourceUploadService {
 //        //遍历每一行  
 //        for (int r = 0; r < rowCount; r++) {  
 //            Row row = sheet.getRow(r);
-//            int cellCount = row.getPhysicalNumberOfCells(); //获取总列数  
+//            int cellCount = row.getLastCellNum(); //获取总列数  
 //            //遍历每一列  
 //            for (int c = 0; c < cellCount; c++) {  
 //                Cell cell = row.getCell(c);  

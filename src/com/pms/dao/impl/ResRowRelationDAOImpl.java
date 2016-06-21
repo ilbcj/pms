@@ -25,10 +25,12 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResRelationRow rs = null;
-		String sqlString = "select * from WA_ROW_RELATION where ID = :ID ";
+		String sqlString = "select * from WA_ROW_RELATION where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE = :ELEMENT_VALUE ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRow.class);
-			q.setInteger("ID", rr.getId());
+			q.setString("DATA_SET", rr.getDATA_SET());
+			q.setString("ELEMENT", rr.getELEMENT());
+			q.setString("ELEMENT_VALUE", rr.getELEMENT_VALUE());
 			rs = (ResRelationRow) q.uniqueResult();
 			
 			if(rs != null) {
