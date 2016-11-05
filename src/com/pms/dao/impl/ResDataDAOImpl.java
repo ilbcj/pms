@@ -1,10 +1,6 @@
 package com.pms.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
@@ -17,6 +13,7 @@ import com.pms.model.HibernateUtil;
 import com.pms.model.ResData;
 import com.pms.model.ResDataTemplate;
 import com.pms.util.ConfigHelper;
+import com.pms.util.DateTimeUtil;
 
 public class ResDataDAOImpl implements ResDataDAO {
 	
@@ -55,9 +52,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 //				}
 //			}
 //						
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-//					Locale.SIMPLIFIED_CHINESE);
-//			String timenow = sdf.format(new Date());
+//			String timenow = DateTimeUtil.GetCurrentTime();
 //			rd.setLATEST_MOD_TIME(timenow);
 //			
 //			rd = (ResData) session.merge(rd);
@@ -110,12 +105,13 @@ public class ResDataDAOImpl implements ResDataDAO {
 		rdt.setDATA_VERSION(1);
 		
 		List<ResDataTemplate> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and SECTION_CLASS = :SECTION_CLASS and ELEMENT_VALUE is null ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and SECTION_CLASS = :SECTION_CLASS and ELEMENT_VALUE is null and resource_type=:resource_type ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
 			q.setString("DATA_SET", rdt.getDATA_SET());
 			q.setString("ELEMENT", rdt.getELEMENT());
 			q.setString("SECTION_CLASS", rdt.getSECTION_CLASS());
+			q.setInteger("resource_type", rdt.getResource_type());
 			rs = q.list();
 			
 			if( rs != null && rs.size() > 1) {
@@ -127,9 +123,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 				exist.setDELETE_STATUS(ResDataTemplate.DELSTATUSNO);
 				session.merge(exist);
 			} else {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-						Locale.SIMPLIFIED_CHINESE);
-				String timenow = sdf.format(new Date());
+				String timenow = DateTimeUtil.GetCurrentTime();
 				rdt.setLATEST_MOD_TIME(timenow);
 				
 				rdt = (ResDataTemplate) session.merge(rdt);
@@ -173,12 +167,13 @@ public class ResDataDAOImpl implements ResDataDAO {
 		rdt.setDATA_VERSION(1);
 		
 		List<ResDataTemplate> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE =:ELEMENT_VALUE ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE =:ELEMENT_VALUE and resource_type=:resource_type ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
 			q.setString("DATA_SET", rdt.getDATA_SET());
 			q.setString("ELEMENT", rdt.getELEMENT());
 			q.setString("ELEMENT_VALUE", rdt.getELEMENT_VALUE());
+			q.setInteger("resource_type", rdt.getResource_type());
 			rs = q.list();
 			
 			if( rs != null && rs.size() > 1) {
@@ -190,9 +185,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 				exist.setDELETE_STATUS(ResDataTemplate.DELSTATUSNO);
 				session.merge(exist);
 			} else {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-						Locale.SIMPLIFIED_CHINESE);
-				String timenow = sdf.format(new Date());
+				String timenow = DateTimeUtil.GetCurrentTime();
 				rdt.setLATEST_MOD_TIME(timenow);
 				
 				rdt = (ResDataTemplate) session.merge(rdt);
@@ -236,11 +229,12 @@ public class ResDataDAOImpl implements ResDataDAO {
 		rdt.setDATA_VERSION(1);
 		
 		List<ResDataTemplate> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS ";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE_TEMPLATE where DATA_SET = :DATA_SET and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS and resource_type=:resource_type";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResDataTemplate.class);
 			q.setString("DATA_SET", rdt.getDATA_SET());
 			q.setString("SECTION_RELATIOIN_CLASS", rdt.getSECTION_RELATIOIN_CLASS());
+			q.setInteger("resource_type", rdt.getResource_type());
 			rs = q.list();
 			
 			if( rs != null && rs.size() > 1) {
@@ -252,9 +246,7 @@ public class ResDataDAOImpl implements ResDataDAO {
 				exist.setDELETE_STATUS(ResDataTemplate.DELSTATUSNO);
 				session.merge(exist);
 			} else {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-						Locale.SIMPLIFIED_CHINESE);
-				String timenow = sdf.format(new Date());
+				String timenow = DateTimeUtil.GetCurrentTime();
 				rdt.setLATEST_MOD_TIME(timenow);
 				
 				rdt = (ResDataTemplate) session.merge(rdt);

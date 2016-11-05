@@ -1,10 +1,6 @@
 package com.pms.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,6 +9,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.ResDatasetDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResDataSet;
+import com.pms.model.ResDataSetPrivate;
+import com.pms.util.DateTimeUtil;
 
 public class ResDatasetDAOImpl implements ResDatasetDAO {
 
@@ -38,9 +36,7 @@ public class ResDatasetDAOImpl implements ResDatasetDAO {
 				ds.setDATA_VERSION( 1 );
 			}
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			ds.setLATEST_MOD_TIME(timenow);
 			
 			ds = (ResDataSet) session.merge(ds);
@@ -69,6 +65,58 @@ public class ResDatasetDAOImpl implements ResDatasetDAO {
 		}
 		return ds;
 	}
+	
+	@Override
+	public ResDataSetPrivate ResDataSetPrivateSave(ResDataSetPrivate dsp)
+			throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		ResDataSetPrivate rs = null;
+		String sqlString = "select * from WA_DATASET_PRIVATE where DATA_SET = :DATA_SET ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSetPrivate.class);
+			q.setString("DATA_SET", dsp.getDATA_SET());
+			rs = (ResDataSetPrivate) q.uniqueResult();
+			
+			if(rs != null) {
+				dsp.setId(rs.getId());
+				dsp.setDATA_VERSION(rs.getDATA_VERSION() + 1);
+			} else {
+				dsp.setDATA_VERSION( 1 );
+			}
+			
+			String timenow = DateTimeUtil.GetCurrentTime();
+			dsp.setLATEST_MOD_TIME(timenow);
+			
+			dsp = (ResDataSetPrivate) session.merge(dsp);
+			tx.commit();
+		} catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名私有数据集。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return dsp;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -96,6 +144,32 @@ public class ResDatasetDAOImpl implements ResDatasetDAO {
 		return rs;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResDataSetPrivate> QueryAllDataSetPrivate() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		List<ResDataSetPrivate> rs = null;
+		String sqlString = "select * from WA_DATASET_PRIVATE ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResDataSetPrivate.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResDataSet> QueryRowDataSet() throws Exception {

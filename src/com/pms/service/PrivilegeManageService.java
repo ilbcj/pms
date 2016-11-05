@@ -9,12 +9,8 @@
 */
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import com.pms.dao.AppDAO;
 import com.pms.dao.AppRoleDAO;
 import com.pms.dao.AuditLogDAO;
@@ -46,6 +42,7 @@ import com.pms.model.ResRole;
 import com.pms.model.User;
 import com.pms.model.UserRole;
 import com.pms.model.UserRoleView;
+import com.pms.util.DateTimeUtil;
 
 
 
@@ -54,9 +51,7 @@ public class PrivilegeManageService {
 //	public AppRole SaveAppRole( AppRole ar ) throws Exception
 //	{
 //		AppRoleDAO dao = new AppRoleDAOImpl();
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-//				Locale.SIMPLIFIED_CHINESE);
-//		String timenow = sdf.format(new Date());
+//		String timenow = DateTimeUtil.GetCurrentTime();
 //		ar.setTstamp(timenow);
 //		ar = dao.AppRoleAdd(ar);
 //		return ar;
@@ -102,9 +97,7 @@ public class PrivilegeManageService {
 				priv.setOwner_type(ownertype);
 				//priv.setApp_id(roleIds.get(j).getAppid());
 				priv.setRole_id(roleIds.get(j));
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-						Locale.SIMPLIFIED_CHINESE);
-				String timenow = sdf.format(new Date());
+				String timenow = DateTimeUtil.GetCurrentTime();
 				priv.setTstamp(timenow);
 				dao.PrivilegeAdd(priv);
 				
@@ -121,9 +114,7 @@ public class PrivilegeManageService {
 		if( roleIds == null ) roleIds = new ArrayList<String>();
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		List<Privilege> privs = new ArrayList<Privilege>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		for(int i = 0; i<roleIds.size(); i++) {
 			Privilege priv = new Privilege();
 			priv.setOwner_id(ownerid);
@@ -148,9 +139,7 @@ public class PrivilegeManageService {
 	}
 	
 	private void saveUserRole() throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		PrivilegeDAO dao = new PrivilegeDAOImpl();
 		
 		UserRole userRole =  new UserRole();
@@ -200,9 +189,7 @@ public class PrivilegeManageService {
 	}
 	
 	private void AddPrivilegeAddOrUpdateLog(String ownerid, int ownertype, List<String> roleIds, String flag) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		AuditPrivLog auditPrivLog = new AuditPrivLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();

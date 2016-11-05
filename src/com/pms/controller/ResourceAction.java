@@ -761,4 +761,18 @@ public class ResourceAction extends ActionSupport {
 		}
 	}
 	
+	public String UpdateRegisterResources() 
+	{
+		ResourceManageService rms = new ResourceManageService();
+		try {
+			rms.UpdateRegisterResources();
+		} catch (Exception e) {
+			message = e.getMessage();
+			setResult(false);
+			return SUCCESS;
+		}
+		setResult(true);
+		return SUCCESS;
+	}
+	
 }

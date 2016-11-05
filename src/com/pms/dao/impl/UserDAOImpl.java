@@ -10,11 +10,7 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -25,6 +21,7 @@ import com.pms.model.HibernateUtil;
 import com.pms.model.Organization;
 import com.pms.model.User;
 import com.pms.model.UserImport;
+import com.pms.util.DateTimeUtil;
 
 public class UserDAOImpl implements UserDAO {
 
@@ -756,9 +753,7 @@ public class UserDAOImpl implements UserDAO {
 			user.setSEXCODE(ui.getSEXCODE());
 			user.setDATA_VERSION(user.getDATA_VERSION() + 1);
 			user.setDELETE_STATUS(User.DELSTATUSNO);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			user.setLATEST_MOD_TIME(timenow);
 			
 			session.merge(user);

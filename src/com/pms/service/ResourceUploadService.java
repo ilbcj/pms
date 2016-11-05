@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,8 +58,10 @@ import com.pms.model.AuditRoleLog;
 import com.pms.model.AuditRoleLogDescribe;
 import com.pms.model.ResColumn;
 import com.pms.model.ResColumnClassify;
+import com.pms.model.ResColumnPrivate;
 import com.pms.model.ResData;
 import com.pms.model.ResDataSet;
+import com.pms.model.ResDataSetPrivate;
 import com.pms.model.ResDataSetSensitive;
 import com.pms.model.ResDataTemplate;
 import com.pms.model.ResFeature;
@@ -69,11 +69,14 @@ import com.pms.model.ResRelationClassify;
 import com.pms.model.ResRelationColumn;
 import com.pms.model.ResRelationColumnClassify;
 import com.pms.model.ResRelationRow;
+import com.pms.model.ResRelationRowPrivate;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
 import com.pms.model.ResValue;
+import com.pms.model.ResValuePrivate;
 import com.pms.model.ResValueSensitive;
+import com.pms.util.DateTimeUtil;
 
 public class ResourceUploadService {
 
@@ -98,6 +101,7 @@ public class ResourceUploadService {
 	private final String SHEET_DATASET_COL_CLUE_SRC_SYS = "所属节点编码";
 	private final String SHEET_DATASET_COL_DATASET_NAME = "数据集名称";
 	private final String SHEET_DATASET_COL_DATASET_SENSITIVE_LEVEL = "数据集敏感度";
+	private final String SHEET_DATASET_COL_DATASET_ISPRIVATE = "是否私有";
 	
 	private final String SHEET_COLUMN_CLASSIFY_COL_SECTION_CLASS = "字段分类编码";
 	private final String SHEET_COLUMN_CLASSIFY_COL_CLUE_SRC_SYS = "所属节点编码";
@@ -109,6 +113,7 @@ public class ResourceUploadService {
 	private final String SHEET_COLUMN_COL_COLUMU_CN = "字段中文名称";
 	private final String SHEET_COLUMN_COL_COLUMN_NAME = "字段英文名称";
 	private final String SHEET_COLUMN_COL_RMK = "字段描述";
+	private final String SHEET_COLUMN_COL_ISPRIVATE = "是否私有";
 	
 	private final String SHEET_VALUE_SENSITIVE_COL_VALUE_SENSITIVE_ID = "敏感度编码";
 	private final String SHEET_VALUE_SENSITIVE_COL_CLUE_SRC_SYS = "所属节点编码";
@@ -119,6 +124,7 @@ public class ResourceUploadService {
 	private final String SHEET_VALUE_COL_VALUE_NAME = "备注";
 	private final String SHEET_VALUE_COL_VALUE_SENSITIVE_ID = "字段值敏感度编码";
 	private final String SHEET_VALUE_COL_ELEMENT = "字段值所属的字段编码";
+	private final String SHEET_VALUE_COL_ISPRIVATE = "是否私有";
 	
 	private final String SHEET_COLUMN_ClASSIFY_REALTION_COL_SECTION_RELATIOIN_CLASS = "字段分类关系代码";
 	private final String SHEET_COLUMN_ClASSIFY_REALTION_COL_CLUE_SRC_SYS = "所属节点编码";
@@ -130,6 +136,7 @@ public class ResourceUploadService {
 	private final String SHEET_ROW_RELATION_COL_ELEMENT = "字段编码";
 	private final String SHEET_ROW_RELATION_COL_CLUE_SRC_SYS = "所属节点编码";
 	private final String SHEET_ROW_RELATION_COL_ELEMENT_VALUE = "字段值";
+	private final String SHEET_ROW_RELATION_COL_ISPRIVATE = "是否私有";
 	
 	private final String SHEET_COLUMN_RELATION_COL_ID = "关系唯一标识";
 	private final String SHEET_COLUMN_RELATION_COL_DATA_SET = "数据集编码";
@@ -415,6 +422,7 @@ public class ResourceUploadService {
 		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
+        	boolean isLocal = false;
         	Row row = sheet.getRow(r);
         	if(row == null) {
         		continue;
@@ -437,7 +445,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_DATASET_COL_DATASET_NAME, c);
             		} else if ( SHEET_DATASET_COL_DATASET_SENSITIVE_LEVEL.equals(cellValue) ) {
             			idx.put(SHEET_DATASET_COL_DATASET_SENSITIVE_LEVEL, c);
-            		}
+            		} else if ( SHEET_DATASET_COL_DATASET_ISPRIVATE.equals(cellValue) ) {
+            			idx.put(SHEET_DATASET_COL_DATASET_ISPRIVATE, c);
+            		}  
             		
             	} else {
             		if(idx.size() == 0) {
@@ -451,15 +461,24 @@ public class ResourceUploadService {
             			ds.setDATASET_NAME(cellValue);
             		} else if ( c== idx.get(SHEET_DATASET_COL_DATASET_SENSITIVE_LEVEL) ) {
             			ds.setDATASET_SENSITIVE_LEVEL(cellValue);
+            		} else if ( c== idx.get(SHEET_DATASET_COL_DATASET_ISPRIVATE) ) {
+            			if( "1".equals(cellValue) ) {
+            				isLocal = true;
+            			}
             		}
-            		
             	}
             }
             
             if( r > 0 ) {
             	if( ds.isValid() ) {
-		            ds.setDELETE_STATUS(ResDataSet.DELSTATUSNO);
-		            dao.ResDataSetSave(ds);
+            		ds.setDELETE_STATUS(ResDataSet.DELSTATUSNO);
+		            if( isLocal ) {
+		            	ResDataSetPrivate dsp = new ResDataSetPrivate(ds);
+		            	dao.ResDataSetPrivateSave(dsp);
+		            }
+		            else {
+		            	dao.ResDataSetSave(ds);
+		            }
 		            
 		            attrDef = adao.GetAttrDefinitionByCode(AttrDefinition.ATTR_RESOURCEDATA_DATA_SET_CODE);
 					if(attrDef != null) {
@@ -549,6 +568,7 @@ public class ResourceUploadService {
 		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
+        	boolean isLocal = false;
         	Row row = sheet.getRow(r);
         	if(row == null) {
         		continue;
@@ -574,7 +594,9 @@ public class ResourceUploadService {
             			idx.put(SHEET_COLUMN_COL_COLUMN_NAME, c);
             		} else if ( SHEET_COLUMN_COL_RMK.equals(cellValue) ) {
             			idx.put(SHEET_COLUMN_COL_RMK, c);
-            		}            		
+            		} else if ( SHEET_COLUMN_COL_ISPRIVATE.equals(cellValue) ) {
+            			idx.put(SHEET_COLUMN_COL_ISPRIVATE, c);
+            		}
             	} else {
             		if(idx.size() == 0) {
             			throw new Exception("导入数据文件格式不正确!");
@@ -591,14 +613,24 @@ public class ResourceUploadService {
             			col.setCOLUMN_NAME(cellValue);
             		} else if ( c== idx.get(SHEET_COLUMN_COL_RMK) ) {
             			col.setRMK(cellValue);
-            		}             		
+            		} else if ( c== idx.get(SHEET_COLUMN_COL_ISPRIVATE) ) {
+            			if("1".equals(cellValue) ) {
+            				isLocal = true;
+            			}
+            		}
             	}
             }
             
             if( r > 0 ) {
             	if( col.isValid() ) {
 		            col.setDELETE_STATUS(ResColumn.DELSTATUSNO);
-		            dao.ResColumnSave(col);
+		            if( isLocal ) {
+		            	ResColumnPrivate rcp = new ResColumnPrivate(col);
+		            	dao.ResColumnPrivateSave(rcp);
+		            }
+		            else {
+		            	dao.ResColumnSave(col);
+		            }
 		            
 		            attrDef = adao.GetAttrDefinitionByCode(AttrDefinition.ATTR_RESOURCEDATA_ELEMENT_CODE);
 					if(attrDef != null) {
@@ -671,6 +703,7 @@ public class ResourceUploadService {
 		ResValueDAO dao = new ResValueDAOImpl();
 		//遍历每一行
         for (int r = 0; r < rowCount; r++) {
+        	boolean isLocal = false;
         	Row row = sheet.getRow(r);
         	if(row == null) {
         		continue;
@@ -695,6 +728,8 @@ public class ResourceUploadService {
             			idx.put(SHEET_VALUE_COL_VALUE_SENSITIVE_ID, c);
             		} else if ( SHEET_VALUE_COL_ELEMENT.equals(cellValue) ) {
             			idx.put(SHEET_VALUE_COL_ELEMENT, c);
+            		} else if ( SHEET_VALUE_COL_ISPRIVATE.equals(cellValue) ) {
+            			idx.put(SHEET_VALUE_COL_ISPRIVATE, c);
             		}
             	} else {
             		if(idx.size() == 0) {
@@ -704,20 +739,29 @@ public class ResourceUploadService {
             			val.setELEMENT_VALUE(cellValue);
             		} else if ( c == idx.get(SHEET_VALUE_COL_CLUE_SRC_SYS) ) {
             			val.setCLUE_SRC_SYS(cellValue);
-            		} else if ( c== idx.get(SHEET_VALUE_COL_VALUE_NAME) ) {
+            		} else if ( c == idx.get(SHEET_VALUE_COL_VALUE_NAME) ) {
             			val.setVALUE_NAME(cellValue);
-            		} else if ( c== idx.get(SHEET_VALUE_COL_VALUE_SENSITIVE_ID) ) {
+            		} else if ( c == idx.get(SHEET_VALUE_COL_VALUE_SENSITIVE_ID) ) {
             			val.setVALUE_SENSITIVE_ID(cellValue);
-            		} else if ( c== idx.get(SHEET_VALUE_COL_ELEMENT) ) {
+            		} else if ( c == idx.get(SHEET_VALUE_COL_ELEMENT) ) {
             			val.setELEMENT(cellValue);
-            		}           		
+            		} else if ( c == idx.get(SHEET_VALUE_COL_ISPRIVATE) ) {
+            			if( "1".equals(cellValue) ) {
+            				isLocal = true;
+            			}
+            		}
             	}
             }
             
             if( r > 0 ) {
             	if( val.isValid() ) {
 		            val.setDELETE_STATUS(ResValue.DELSTATUSNO);
-		            dao.ResValueSave(val);
+		            if(isLocal) {
+		            	ResValuePrivate rvp = new ResValuePrivate(val);
+		            	dao.ResValuePrivateSave(rvp);
+		            } else {
+		            	dao.ResValueSave(val);
+		            }
             	}
             }
         }
@@ -813,6 +857,7 @@ public class ResourceUploadService {
 		
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
+        	boolean isLocal = false;
         	Row row = sheet.getRow(r);
         	if(row == null) {
         		continue;
@@ -837,6 +882,8 @@ public class ResourceUploadService {
             			idx.put(SHEET_ROW_RELATION_COL_CLUE_SRC_SYS, c);
             		} else if ( SHEET_ROW_RELATION_COL_ELEMENT_VALUE.equals(cellValue) ) {
             			idx.put(SHEET_ROW_RELATION_COL_ELEMENT_VALUE, c);
+            		} else if ( SHEET_ROW_RELATION_COL_ISPRIVATE.equals(cellValue) ) {
+            			idx.put(SHEET_ROW_RELATION_COL_ISPRIVATE, c);
             		}
             	} else {
             		if(idx.size() == 0) {
@@ -846,20 +893,29 @@ public class ResourceUploadService {
             			//rr.setId(cellValue);
             		} else if ( c == idx.get(SHEET_ROW_RELATION_COL_DATA_SET) ) {
             			rr.setDATA_SET(cellValue);
-            		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_ELEMENT) ) {
+            		} else if ( c == idx.get(SHEET_ROW_RELATION_COL_ELEMENT) ) {
             			rr.setELEMENT(cellValue);
-            		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_CLUE_SRC_SYS) ) {
+            		} else if ( c == idx.get(SHEET_ROW_RELATION_COL_CLUE_SRC_SYS) ) {
             			rr.setCLUE_SRC_SYS(cellValue);
-            		} else if ( c== idx.get(SHEET_ROW_RELATION_COL_ELEMENT_VALUE) ) {
+            		} else if ( c == idx.get(SHEET_ROW_RELATION_COL_ELEMENT_VALUE) ) {
             			rr.setELEMENT_VALUE(cellValue);
-            		}        		
+            		} else if ( c == idx.get(SHEET_ROW_RELATION_COL_ISPRIVATE) ) {
+            			if( "1".equals(cellValue) ) {
+            				isLocal = true;
+            			}
+            		}
             	}
             }
             
             if( r > 0 ) {
             	if( rr.isValid() ) {
 		            rr.setDELETE_STATUS(ResRelationRow.DELSTATUSNO);
-		            dao.ResRelationRowSave(rr);
+		            if(isLocal) {
+		            	ResRelationRowPrivate rrrp = new ResRelationRowPrivate(rr);
+		            	dao.ResRelationRowPrivateSave(rrrp);
+		            } else {
+		            	dao.ResRelationRowSave(rr);
+		            }
             	}
             }
         }
@@ -1111,6 +1167,13 @@ public class ResourceUploadService {
 		            	}
 					}
             	}
+            	
+            	element = "";
+                elemnetValue = "";
+                dataset0SectionClasses = null;
+                dataset = "";
+                sectionClass = "";
+                
             }
         }
         return;
@@ -1225,9 +1288,7 @@ public class ResourceUploadService {
 		res.setRMK(res.getRMK());
 		res.setSECTION_CLASS(resTemp.getSECTION_CLASS());
 		res.setSECTION_RELATIOIN_CLASS(resTemp.getSECTION_RELATIOIN_CLASS());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		res.setLATEST_MOD_TIME(timenow);
 		res = dao.DataAdd(res);
 		return res;
@@ -1306,6 +1367,7 @@ public class ResourceUploadService {
             default:  
                 cellValue = "错误";  
         }
+        cellValue = cellValue.trim();
         return cellValue;
 	}
 	
@@ -1319,6 +1381,13 @@ public class ResourceUploadService {
 			rdsMap.put(rdss.get(i).getDATA_SET(), rdss.get(i));
 		}
 
+		List<ResDataSetPrivate> rdsps = rdsdao.QueryAllDataSetPrivate();
+
+		Map<String, ResDataSetPrivate> rdspMap = new HashMap<String, ResDataSetPrivate>();
+		for(int i = 0; i<rdsps.size(); i++) {
+			rdspMap.put(rdsps.get(i).getDATA_SET(), rdsps.get(i));
+		}
+		
 		//1. switch resourcetemplate status to delete
 		ResDataDAO rdd = new ResDataDAOImpl();
 		rdd.UpdateResDataTemplateStatus(ResDataTemplate.DELSTATUSYES);
@@ -1329,6 +1398,10 @@ public class ResourceUploadService {
 		List<ResRelationRow> rrrs = rrrdao.QueryAllResRelationRow();
 		for(int i = 0; i<rrrs.size(); i++) {
 			updateResourceOfRelationRow( rrrs.get(i), rdsMap );
+		}
+		List<ResRelationRowPrivate> rrrps = rrrdao.QueryAllResRelationRowPrivate();
+		for(int i = 0; i<rrrps.size(); i++) {
+			updateResourceOfRelationRowPrivate( rrrps.get(i), rdspMap);
 		}
 		
 		//2.2 updateColumnRelation
@@ -1450,7 +1523,30 @@ public class ResourceUploadService {
 		
 		rddao.ImportResDataOfRelationRow(rdt);
 	}
+	
+	private void updateResourceOfRelationRowPrivate( ResRelationRowPrivate rrrp, Map<String, ResDataSetPrivate> rdspMap ) throws Exception {
+		ResDataDAO rddao = new ResDataDAOImpl();
+		ResColumnDAO rcdao = new ResColumnDAOImpl();
+		ResColumnPrivate rcp = rcdao.QueryColumnPrivateByElement(rrrp.getDATA_SET(), rrrp.getELEMENT());
+		if( rcp == null ) {
+			logger.warn("[IRD]private column record not found when updata resource of private row relation by condition of dataset:'" + rrrp.getDATA_SET() + "', element:'" + rrrp.getELEMENT() + "' ");
+			return;
+		}
+		ResDataTemplate rdt = new ResDataTemplate();
+		rdt.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);
+		rdt.setDELETE_STATUS(ResData.DELSTATUSNO);
+		rdt.setResource_type(ResData.RESTYPELOCAL);
+		rdt.setRESOURCE_DESCRIBE("数据集-字段-字段值数据资源");
+		rdt.setDATASET_SENSITIVE_LEVEL( rdspMap.get(rrrp.getDATA_SET()).getDATASET_SENSITIVE_LEVEL() );
+		rdt.setDATA_SET(rrrp.getDATA_SET());
+		rdt.setELEMENT(rrrp.getELEMENT());
+		rdt.setELEMENT_VALUE(rrrp.getELEMENT_VALUE());
+		rdt.setOPERATE_SYMBOL(ResData.RES_OPERATE_SYMBOL_EQUAL);
+		rdt.setName("行控资源-" + rcp.getELEMENT() + "(" + rcp.getCOLUMN_CN() + ":" + rrrp.getELEMENT_VALUE() + ")");
 		
+		rddao.ImportResDataOfRelationRow(rdt);
+	}
+	
 	private void updateResourceOfRelationClassify( ResRelationClassify rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
 		ResDataTemplate rdt = new ResDataTemplate();
@@ -1513,9 +1609,7 @@ public class ResourceUploadService {
 //	}
 	
 	private void AddResImportLog(String importType) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditResLog auditResLog = new AuditResLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
@@ -1539,9 +1633,7 @@ public class ResourceUploadService {
 	}
 	
 	private void AddRoleImportLog(String importType) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditRoleLog auditRoleLog = new AuditRoleLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();

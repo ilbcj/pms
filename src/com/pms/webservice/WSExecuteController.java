@@ -31,7 +31,7 @@ public class WSExecuteController {
 
 			if( "MESSAGE".equals(root.getName()) ) {
 				
-				SyncService ss = SyncService.getInstance(root);
+				SyncService ss = SyncService.getInstance(root, localXml);
 				
 				resultXml = ss.GetResult();
 			}

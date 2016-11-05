@@ -10,11 +10,8 @@
 
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
@@ -33,6 +30,7 @@ import com.pms.model.AuditUserLogDescribe;
 import com.pms.model.Organization;
 import com.pms.model.Privilege;
 import com.pms.model.User;
+import com.pms.util.DateTimeUtil;
 import com.pms.util.MD5Security;
 
 
@@ -42,9 +40,7 @@ public class UserManageService {
 	public User SaveUser( User user ) throws Exception
 	{
 		UserDAO dao = new UserDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		user.setLATEST_MOD_TIME(timenow);
 		user.setDATA_VERSION(user.getDATA_VERSION()+1);
@@ -280,9 +276,7 @@ public class UserManageService {
 		UserDAO dao = new UserDAOImpl();
 		User node = dao.GetUserByCertificateCodeMd5(user.getCERTIFICATE_CODE_MD5());
 	
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		user.setId(node.getId());
 		user.setNAME(node.getNAME());
@@ -332,9 +326,7 @@ public class UserManageService {
 	}
 	
 	private void AddUserQueryLog(User criteria) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditUserLog auditUserLog = new AuditUserLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
@@ -392,9 +384,7 @@ public class UserManageService {
 	}
 	
 	private void AddUserAddOrUpdateLog(User user) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		AuditUserLog auditUserLog = new AuditUserLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
@@ -461,9 +451,7 @@ public class UserManageService {
 	}
 	
 	private void AddUserDelLog(User user) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditUserLog auditUserLog = new AuditUserLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();

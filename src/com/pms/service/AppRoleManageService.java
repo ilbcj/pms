@@ -1,13 +1,10 @@
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import com.pms.dao.AppRoleDAO;
 import com.pms.dao.impl.AppRoleDAOImpl;
 import com.pms.model.AppRole;
+import com.pms.util.DateTimeUtil;
 
 
 
@@ -16,9 +13,7 @@ public class AppRoleManageService {
 	public AppRole SaveAppRole( AppRole ar ) throws Exception
 	{
 		AppRoleDAO dao = new AppRoleDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		ar.setTstamp(timenow);
 		ar = dao.AppRoleAdd(ar);
 		return ar;

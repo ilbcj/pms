@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom2.Document;
@@ -11,10 +13,8 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import com.pms.webservice.dao.ExchangeDAO;
-import com.pms.webservice.dao.impl.ExchangeDAOImpl;
-import com.pms.webservice.model.Item;
 import com.pms.webservice.model.exchange.ExchangeCondition;
+import com.pms.webservice.service.dataexchange.DataexchangeService;
 
 public class SyncDataexchangeService extends SyncService {
 
@@ -23,12 +23,12 @@ public class SyncDataexchangeService extends SyncService {
 	@Override
 	public String GetResult() throws Exception {
 //		//1. check if sync request 
-		if( this.getEc() == null ) {
+		if( this.getEcs() == null ) {
 			return "数据交换请求参数不正确。";
 		}
 		
 		String result = null;
-		if( getEc().isAsync() ) {
+		if( getEcs().get(0).isAsync() ) {
 			DataExchangeThread det = new DataExchangeThread(this);
 			Thread t1 = new Thread(det);
 			t1.start();
@@ -42,57 +42,16 @@ public class SyncDataexchangeService extends SyncService {
 	}
 	
 	private void updateData(SyncDataexchangeService sds) throws Exception {
-		ExchangeCondition ec = sds.getEc();
-		if( ec == null || ec.getCommon010131() == null || ec.getCommon010131().getItems() == null || ec.getCommon010131().getItems().size() == 0 ) {
-			return;
-		}
+		//ExchangeCondition ec = sds.getEcs();
+		List<ExchangeCondition> ecs = sds.getEcs();
+		for( int x = 0; x < ecs.size(); x++ ) {
+			ExchangeCondition ec = ecs.get(x);
+			
+			DataexchangeService des = DataexchangeService.getInstance( ec );
+			des.ExecuteUpdate();
+			
+		}// end of loop
 		
-		if( ec.getCondition() == null || ec.getCondition().getItems() == null || ec.getCondition().getItems().size() == 0 ) {
-			//insert into `pms`.`systemdata` ('item', 'value', 'rmk') values ( 'item','value','rmk');
-			String sqlString = "insert into " + ec.getTable() + " ( ";
-			String values = " values ( ";
-			for(int i = 0; i < ec.getCommon010131().getItems().size(); i++) {
-				Item item = ec.getCommon010131().getItems().get(i);
-				sqlString += item.getEng() + ", ";
-				values += "'" + item.getVal() + "', ";
-			}
-			sqlString = sqlString.substring(0, sqlString.length()- 2) + " ) ";
-			values = values.substring(0, values.length()- 2) + " ) ";
-			
-			sqlString += values;
-			System.out.println(sqlString);
-			
-			ExchangeDAO dao = new ExchangeDAOImpl();
-			int rs = dao.SqlExchangeData(sqlString);
-			System.out.println(rs);
-		}
-		else {
-		
-			if("IN".equalsIgnoreCase(ec.getCondition().getRel())) {
-				throw new Exception("can not deal with \"IN\" condition in update data process's condition");
-			}
-			
-			String sqlString = "update " + ec.getTable() + " set ";
-			for(int i = 0; i < ec.getCommon010131().getItems().size(); i++) {
-				Item item = ec.getCommon010131().getItems().get(i);
-				sqlString += item.getEng() + "='" + item.getVal() + "', ";
-			}
-			
-			sqlString = sqlString.substring(0, sqlString.length() - 2);
-			
-			sqlString += " where " ;
-			for(int j = 0; j < ec.getCondition().getItems().size(); j++) {
-				Item item = ec.getCondition().getItems().get(j);
-				sqlString += item.getEng() + "='" + item.getVal() + "' " + ec.getCondition().getRel() + " ";
-			}
-			
-			sqlString = sqlString.substring(0, sqlString.length() - ec.getCondition().getRel().length() - 1);
-			System.out.println(sqlString);
-			
-			ExchangeDAO dao = new ExchangeDAOImpl();
-			int rs = dao.SqlExchangeData(sqlString);
-			System.out.println(rs);
-		}
 		return;
 	}
 	

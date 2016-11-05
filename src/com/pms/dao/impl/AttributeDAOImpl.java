@@ -1,12 +1,7 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -16,6 +11,7 @@ import com.pms.dao.AttributeDAO;
 import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.HibernateUtil;
+import com.pms.util.DateTimeUtil;
 
 public class AttributeDAOImpl implements AttributeDAO {
 
@@ -151,9 +147,7 @@ public class AttributeDAOImpl implements AttributeDAO {
 			q.setInteger("attrid", attrId);
 			q.executeUpdate();
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 
 			for(int i=0;i<dictionary.size(); i++) {
 				AttrDictionary attrDict = new AttrDictionary();
@@ -439,9 +433,8 @@ public class AttributeDAOImpl implements AttributeDAO {
 			} 
 			
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			
+			String timenow = DateTimeUtil.GetCurrentTime();
 			ad.setTstamp(timenow);
 			
 			ad = (AttrDictionary) session.merge(ad);

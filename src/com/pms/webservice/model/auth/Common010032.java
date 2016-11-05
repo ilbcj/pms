@@ -12,7 +12,14 @@ public class Common010032 {
 	private List<Condition> subConditions;
 	private List<Item> subItems;
 	private List<Item> items;
+	private List<Item> whiteListItems;
 	
+	public List<Item> getWhiteListItems() {
+		return whiteListItems;
+	}
+	public void setWhiteListItems(List<Item> whiteListItems) {
+		this.whiteListItems = whiteListItems;
+	}
 	public String getSyncKey() {
 		return syncKey;
 	}

@@ -8,7 +8,14 @@
 
 <session-factory>
 	<property name="myeclipse.connection.profile">mysql</property>
-	<property name="connection.url">jdbc:mysql://127.0.0.1:3306/pms160121?useUnicode=true&amp;characterEncoding=UTF-8</property>
+	<!-- 	<property name="connection.url"> -->
+	<!-- 		jdbc:mysql://127.0.0.1:3306/pms160121?useUnicode=true&amp;characterEncoding=UTF-8 -->
+	<!-- 	</property> -->
+	<property name="connection.url">
+		<!-- 		jdbc:mysql://15.6.40.65:3306/pms160926?useUnicode=true&amp;characterEncoding=UTF-8 -->
+		jdbc:mysql://127.0.0.1:3306/pms160928?useUnicode=true&amp;characterEncoding=UTF-8
+	</property>
+	<!-- 	<property name="connection.url">jdbc:mysql://15.1.252.115:3306/pms160121?useUnicode=true&amp;characterEncoding=UTF-8</property> -->
 	<property name="connection.username">root</property>
 	<property name="connection.password">passw0rd</property>
 	<!-- 	<property name="connection.password">dcmcs&amp;test</property> -->
@@ -40,8 +47,6 @@
 	<mapping resource="com/pms/model/AdminAccredit.hbm.xml" />
 	<mapping resource="com/pms/model/Organization.hbm.xml" />
 	<mapping resource="com/pms/model/User.hbm.xml" />
-	<mapping resource="com/pms/model/Application.hbm.xml" />
-	<mapping resource="com/pms/model/AppRole.hbm.xml" />
 	<mapping resource="com/pms/model/Privilege.hbm.xml" />
 	<mapping resource="com/pms/model/AttrDefinition.hbm.xml" />
 	<mapping resource="com/pms/model/AttrDictionary.hbm.xml" />
@@ -92,6 +97,12 @@
 	<mapping resource="com/pms/model/AuditPrivLogDescribe.hbm.xml" />
 	<mapping resource="com/pms/model/UserRoleView.hbm.xml" />
 	<mapping resource="com/pms/model/SyncList.hbm.xml" />
+	<mapping resource="com/pms/model/ResColumnPrivate.hbm.xml" />
+	<mapping resource="com/pms/model/ResDataSetPrivate.hbm.xml" />
+	<mapping resource="com/pms/model/ResValuePrivate.hbm.xml" />
+	<mapping resource="com/pms/model/ResRelationRowPrivate.hbm.xml" />
+	<mapping resource="com/pms/model/Task.hbm.xml" />
+	<mapping resource="com/pms/model/WhiteListColumn.hbm.xml" />
 
 </session-factory>
 

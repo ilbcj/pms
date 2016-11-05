@@ -1,10 +1,6 @@
 package com.pms.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,6 +9,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.ResValueDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResValue;
+import com.pms.model.ResValuePrivate;
+import com.pms.util.DateTimeUtil;
 
 public class ResValueDAOImpl implements ResValueDAO {
 
@@ -39,9 +37,7 @@ public class ResValueDAOImpl implements ResValueDAO {
 				val.setDATA_VERSION( 1 );
 			}
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			val.setLATEST_MOD_TIME(timenow);
 			
 			val = (ResValue) session.merge(val);
@@ -69,6 +65,58 @@ public class ResValueDAOImpl implements ResValueDAO {
 			HibernateUtil.closeSession();
 		}
 		return val;
+	}
+	
+	@Override
+	public ResValuePrivate ResValuePrivateSave(ResValuePrivate rvp) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		ResValuePrivate rs = null;
+		String sqlString = "select * from WA_VALUE_PRIVATE where ELEMENT_VALUE = :ELEMENT_VALUE and ELEMENT = :ELEMENT";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResValuePrivate.class);
+			q.setString("ELEMENT_VALUE", rvp.getELEMENT_VALUE());
+			q.setString("ELEMENT", rvp.getELEMENT());
+			rs = (ResValuePrivate) q.uniqueResult();
+			
+			if(rs != null) {
+				rvp.setId(rs.getId());
+				rvp.setDATA_VERSION(rs.getDATA_VERSION() + 1);
+			} else {
+				rvp.setDATA_VERSION( 1 );
+			}
+			
+			String timenow = DateTimeUtil.GetCurrentTime();
+			rvp.setLATEST_MOD_TIME(timenow);
+			
+			rvp = (ResValuePrivate) session.merge(rvp);
+			tx.commit();
+		} catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名字段值。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rvp;
 	}
 
 	@SuppressWarnings("unchecked")

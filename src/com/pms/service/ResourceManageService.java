@@ -9,12 +9,8 @@
 */
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
@@ -42,6 +38,7 @@ import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceTemplate;
+import com.pms.util.DateTimeUtil;
 
 public class ResourceManageService {
 
@@ -185,9 +182,7 @@ public class ResourceManageService {
 
 	public ResFeature SaveResourceFeature(ResFeature feature) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		feature.setLATEST_MOD_TIME(timenow);
 		
 		AddResAddOrUpdateLog(null, null, feature, null, null);
@@ -215,9 +210,8 @@ public class ResourceManageService {
 		ResourceDAO dao = new ResourceDAOImpl();
 		ResFeature nodes=dao.GetFeatureByResId(feature.getRESOURCE_ID());
 	
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		feature.setId(nodes.getId());
 		feature.setRESOUCE_NAME(nodes.getRESOUCE_NAME());
@@ -500,9 +494,7 @@ public class ResourceManageService {
 	
 	public ResData SaveResourceData(ResData data, ResDataOrg resDataOrg) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		data.setLATEST_MOD_TIME(timenow);
 		data.setDATA_VERSION(data.getDATA_VERSION()+1);
 		
@@ -564,9 +556,7 @@ public class ResourceManageService {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResData> nodes=dao.GetDataById(data.getRESOURCE_ID());
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		for(int i = 0; i< nodes.size(); i++) {
 			data.setId(nodes.get(i).getId());
@@ -690,9 +680,7 @@ public class ResourceManageService {
 	public ResRole SaveResourceRole(ResRole role, ResRoleOrg resRoleOrg, List<String> featureIds, List<String> dataIds, 
 			List<String> delDataIds, List<String> delFeatureIds) throws Exception {
 		ResourceDAO dao = new ResourceDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		role.setLATEST_MOD_TIME(timenow);
 		role.setDATA_VERSION(role.getDATA_VERSION()+1);
@@ -738,9 +726,7 @@ public class ResourceManageService {
 		ResourceDAO dao = new ResourceDAOImpl();
 		List<ResRole> roleNodes=dao.GetRoleById(role.getBUSINESS_ROLE());
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 
 		for(int i = 0; i< roleNodes.size(); i++) {
 			role.setId(roleNodes.get(i).getId());
@@ -941,9 +927,7 @@ public class ResourceManageService {
 	}
 	
 	private void AddResQueryLog(ResData resData, ResFeature resFeature, ResRole resRole) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditResLog auditResLog = new AuditResLog();
 		AuditRoleLog auditRoleLog = new AuditRoleLog();
@@ -1013,9 +997,7 @@ public class ResourceManageService {
 	}
 	
 	private void AddResAddOrUpdateLog(ResData resData, ResDataOrg resDataOrg, ResFeature resFeature, ResRole role, ResRoleOrg resRoleOrg) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		AuditResLog auditResLog = new AuditResLog();
 		AuditRoleLog auditRoleLog = new AuditRoleLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
@@ -1188,9 +1170,7 @@ public class ResourceManageService {
 	}
 	
 	private void AddResDelLog(ResData resData, ResDataOrg resDataOrg, ResFeature resFeature, ResRole role, ResRoleOrg resRoleOrg) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditResLog auditResLog = new AuditResLog();
 		AuditRoleLog auditRoleLog = new AuditRoleLog();
@@ -1337,6 +1317,11 @@ public class ResourceManageService {
 			auditRoleLogDescribe.setLATEST_MOD_TIME(timenow);
 			auditRoleLogDescribe = logDescdao.AuditRoleLogDescribeAdd(auditRoleLogDescribe);
 		}
+	}
+
+	public void UpdateRegisterResources() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

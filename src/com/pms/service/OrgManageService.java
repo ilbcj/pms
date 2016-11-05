@@ -9,12 +9,8 @@
 */
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
@@ -29,6 +25,7 @@ import com.pms.model.AttrDictionary;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditOrgLogDescribe;
 import com.pms.model.Organization;
+import com.pms.util.DateTimeUtil;
 
 public class OrgManageService {
 	public List<Organization> QueryAllBureauNode() throws Exception
@@ -45,9 +42,7 @@ public class OrgManageService {
 	public Organization SaveOrgNode( Organization org ) throws Exception
 	{
 		OrganizationDAO dao = new OrganizationDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		org.setLATEST_MOD_TIME(timenow);
 		org.setDATA_VERSION(org.getDATA_VERSION()+1);
 		
@@ -78,9 +73,7 @@ public class OrgManageService {
 		OrganizationDAO dao = new OrganizationDAOImpl();
 		List<Organization> nodes = dao.GetOrgById(target.getGA_DEPARTMENT());
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 
 		for(int i = 0; i< nodes.size(); i++) {
 			target.setUNIT(nodes.get(i).getUNIT());
@@ -249,9 +242,7 @@ public class OrgManageService {
 		
 		node.setUNIT(orgName);
 		//node.setUid(orgUid);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		node.setLATEST_MOD_TIME(timenow);
 		node.setDATA_VERSION(node.getDATA_VERSION()+1);
 		
@@ -282,9 +273,7 @@ public class OrgManageService {
 	}
 	
 	private void AddOrgQueryLog(Organization condition) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditOrgLog auditOrgLog = new AuditOrgLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
@@ -318,9 +307,7 @@ public class OrgManageService {
 	}
 	
 	private void AddOrgAddOrUpdateLog(Organization org) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		AuditOrgLog auditOrgLog = new AuditOrgLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();
@@ -363,9 +350,7 @@ public class OrgManageService {
 	}
 	
 	private void AddOrgDelLog(Organization org) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditOrgLog auditOrgLog = new AuditOrgLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();

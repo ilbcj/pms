@@ -13,10 +13,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -35,6 +33,7 @@ import com.pms.dao.impl.OrganizationDAOImpl;
 import com.pms.model.AuditOrgLog;
 import com.pms.model.AuditOrgLogDescribe;
 import com.pms.model.OrganizationImport;
+import com.pms.util.DateTimeUtil;
 
 public class OrgUploadService {
 	
@@ -172,9 +171,7 @@ public class OrgUploadService {
 	}
 	
 	private void AddOrgImportLog() throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditOrgLog auditOrgLog = new AuditOrgLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();

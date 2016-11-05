@@ -9,14 +9,21 @@
 */
 package com.pms.webservice.service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 //import org.w3c.dom.Element;
 //import org.w3c.dom.Node;
@@ -24,6 +31,13 @@ import org.jdom2.Element;
 
 //import com.pms.webservice.model.Common010121;
 //import com.pms.webservice.model.Common010123;
+import com.pms.dao.TaskDAO;
+import com.pms.dao.WhiteListColumnDAO;
+import com.pms.dao.impl.TaskDAOImpl;
+import com.pms.dao.impl.WhiteListColumnDAOImpl;
+import com.pms.model.Task;
+import com.pms.model.WhiteListColumn;
+import com.pms.util.ConfigHelper;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.DataCommonInfo;
@@ -44,16 +58,33 @@ import com.pms.webservice.model.search.NestConditions;
 
 public abstract class SyncService {
 	private static Log logger = LogFactory.getLog(SyncService.class);
+	private static String orignalRequest;
 	private DataCommonInfo dci;
 	private UserAuth ua;
 	private SearchCondition sc;
 	private ComplexSearchCondition csc;
 	private SubSearchCondition ssc;
 	private AuthCondition ac;
-	private ExchangeCondition ec;
+	private List<ExchangeCondition> ecs;
 	private AcquiredataCondition adc;
 	private FeedbackCondition fc;
 	
+	public String getOrignalRequest() {
+		return orignalRequest;
+	}
+
+	public void setOrignalRequest(String orignalRequest) {
+		SyncService.orignalRequest = orignalRequest;
+	}
+
+	public List<ExchangeCondition> getEcs() {
+		return ecs;
+	}
+
+	public void setEcs(List<ExchangeCondition> ecs) {
+		this.ecs = ecs;
+	}
+
 	public FeedbackCondition getFc() {
 		return fc;
 	}
@@ -68,14 +99,6 @@ public abstract class SyncService {
 
 	public void setAdc(AcquiredataCondition adc) {
 		this.adc = adc;
-	}
-
-	public ExchangeCondition getEc() {
-		return ec;
-	}
-
-	public void setEc(ExchangeCondition ec) {
-		this.ec = ec;
 	}
 
 	public AuthCondition getAc() {
@@ -126,7 +149,7 @@ public abstract class SyncService {
 		this.csc = csc;
 	}
 
-	public static SyncService getInstance(Element root) throws Exception {
+	public static SyncService getInstance(Element root, String orignalRequest) throws Exception {
 		SyncService result = null;
 		DataCommonInfo dci = null;
 		UserAuth ua = null;
@@ -134,9 +157,10 @@ public abstract class SyncService {
 		ComplexSearchCondition csc = null;
 		SubSearchCondition ssc = null;
 		AuthCondition ac = null;
-		ExchangeCondition ec = null;
+		List<ExchangeCondition> ecs = null;
 		AcquiredataCondition adc = null;
 		FeedbackCondition fc = null;
+		
 		
 		List<Element> datasetList = root.getChildren();//getElementsByTagName("DATASET");
 		for(int i=0;i<datasetList.size();i++) {
@@ -158,45 +182,158 @@ public abstract class SyncService {
 			}
 		}
 		
-		if( result != null ) {
-			for(int i=0;i<datasetList.size();i++){
-				Element element = datasetList.get(i); //得到"page"的第i+1组标签
-				if("DATASET".equals(element.getName())) {
-					String name = element.getAttributeValue("name");  //获得ID属性
-					if("WA_COMMON_010000".equalsIgnoreCase(name) ) {
-						dci = parseDataCommonInfo( element );
-						result.setDci(dci);
-					} else if ("WA_COMMON_010001".equalsIgnoreCase(name) ) {
-						ua = parseUserAuth( element );
-						result.setUa(ua);
-					} else if("WA_COMMON_010117".equalsIgnoreCase(name) ) {
-//						sc = parseSearchCondition( element );
-//						result.setSc(sc);
-						csc = parseComplexSearchCondition( element );
-						result.setCsc( csc );
-					} else if("WA_COMMON_010121".equalsIgnoreCase(name) ) {
-						ssc = parseSubSearchCondition( element );
-						result.setSsc(ssc);
-					} else if("WA_COMMON_010031".equalsIgnoreCase(name) ) {
-						ac = parseAuthCondition( element );
-						result.setAc(ac);
-					} else if("WA_COMMON_010130".equalsIgnoreCase(name) ) {
-						ec = parseExchangeCondition( element );
-						result.setEc(ec);
-					} else if ("WA_COMMON_010220".equalsIgnoreCase(name)) {
-						adc = parseAcquriedataCondition( element );
-						result.setAdc(adc);
-					} else if ("WA_COMMON_010046".equalsIgnoreCase(name)) {
-						fc = parseFeedbackCondition( element );
-						result.setFc(fc);
-					}	
+		result.setOrignalRequest(orignalRequest);
+		
+		try{
+		
+			if( result != null ) {
+				for(int i=0;i<datasetList.size();i++){
+					Element element = datasetList.get(i); //得到"page"的第i+1组标签
+					if("DATASET".equals(element.getName())) {
+						String name = element.getAttributeValue("name");  //获得ID属性
+						if("WA_COMMON_010000".equalsIgnoreCase(name) ) {
+							dci = parseDataCommonInfo( element );
+							result.setDci(dci);
+						} else if ("WA_COMMON_010001".equalsIgnoreCase(name) ) {
+							ua = parseUserAuth( element );
+							result.setUa(ua);
+						} else if("WA_COMMON_010117".equalsIgnoreCase(name) ) {
+	//						sc = parseSearchCondition( element );
+	//						result.setSc(sc);
+							csc = parseComplexSearchCondition( element );
+							result.setCsc( csc );
+						} else if("WA_COMMON_010121".equalsIgnoreCase(name) ) {
+							ssc = parseSubSearchCondition( element );
+							result.setSsc(ssc);
+						} else if("WA_COMMON_010031".equalsIgnoreCase(name) ) {
+							ac = parseAuthCondition( element );
+							result.setAc(ac);
+						} else if("WA_COMMON_010130".equalsIgnoreCase(name) ) {
+							ecs = parseExchangeCondition( element );
+							result.setEcs(ecs);
+						} else if ("WA_COMMON_010220".equalsIgnoreCase(name)) {
+							adc = parseAcquriedataCondition( element );
+							result.setAdc(adc);
+						} else if ("WA_COMMON_010046".equalsIgnoreCase(name)) {
+							fc = parseFeedbackCondition( element );
+							result.setFc(fc);
+						}	
+					}
 				}
 			}
+		} catch (Exception e) {
+			String message = e.getMessage();
+			if( dci != null ) {
+				message = generateXmlExceptionMessage(dci, message);
+			}
+			throw new Exception(message);
 		}
 		
 		return result;
 	}
 	
+	private static String generateXmlExceptionMessage(DataCommonInfo dci, String errInfo) throws IOException {
+		String result = null;
+		Document doc = null;
+		try{
+			Element message = null;// dataset = null, data = null, condition = null, item = null;
+			message = new Element("MESSAGE");
+			doc = new Document(message);
+			
+			// 1- WA_COMMON_010000
+			Element dataset010000 = null;
+			dataset010000 = new Element("DATASET");
+			message.addContent(dataset010000);
+			dataset010000.setAttribute("name", "WA_COMMON_010000");
+			dataset010000.setAttribute("rmk", "数据交互通用信息");
+			
+			Element data010000 = null;
+			data010000 = new Element("DATA");
+			dataset010000.addContent(data010000);
+			
+			Element item010000 = null;
+			item010000 = new Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "H010006");
+			itemSetAttribute(item010000, "val", dci.getFROM());
+			itemSetAttribute(item010000, "rmk", "发起节点的标识");
+			
+			item010000 = new Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "H010007");
+			itemSetAttribute(item010000, "val", dci.getTO());
+			itemSetAttribute(item010000, "rmk", "目的节点的标识");
+			
+			item010000 = new Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "I010014");
+			itemSetAttribute(item010000, "val", dci.getMESSAGE_SEQUENCE());
+			itemSetAttribute(item010000, "rmk", "消息流水号");
+			
+			item010000 = new Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "I010013");
+			itemSetAttribute(item010000, "val", "254151");
+			itemSetAttribute(item010000, "rmk", "消息类型（鉴权服务结果）");
+
+			item010000 = new Element("ITEM");
+			data010000.addContent(item010000);
+			itemSetAttribute(item010000, "key", "I010010");
+			itemSetAttribute(item010000, "val", dci.getBUSINESS_SERVER_TYPE());
+			itemSetAttribute(item010000, "rmk", "业务服务类型（鉴权服务）");
+			
+			// 1- WA_COMMON_010004
+			Element dataset010004 = null;
+			dataset010004 = new Element("DATASET");
+			message.addContent(dataset010004);
+			dataset010004.setAttribute("name", "WA_COMMON_010004");
+			dataset010004.setAttribute("rmk", "消息返回状态信息");
+
+			Element data010004 = null;
+			data010004 = new Element("DATA");
+			dataset010004.addContent(data010004);
+			
+			Element item010004 = null;
+			item010004 = new Element("ITEM");
+			data010004.addContent(item010004);
+			itemSetAttribute(item010004, "key", "I030003");
+			itemSetAttribute(item010004, "val", "1");
+			itemSetAttribute(item010004, "rmk", "消息状态");
+			
+			item010004 = new Element("ITEM");
+			data010004.addContent(item010004);
+			itemSetAttribute(item010004, "key", "I010015");
+			itemSetAttribute(item010004, "val", "" + new Date().getTime()/1000);
+			itemSetAttribute(item010004, "rmk", "消息返回时间");
+			
+			item010004 = new Element("ITEM");
+			data010004.addContent(item010004);
+			itemSetAttribute(item010004, "key", "I030010");
+			itemSetAttribute(item010004, "val", "9999");
+			itemSetAttribute(item010004, "rmk", "业务消息码");
+			
+			item010004 = new Element("ITEM");
+			data010004.addContent(item010004);
+			itemSetAttribute(item010004, "key", "I010009");
+			itemSetAttribute(item010004, "val", errInfo);
+			itemSetAttribute(item010004, "rmk", "备注");
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			XMLOutputter XMLOut = new XMLOutputter(Format.getPrettyFormat().setEncoding("utf-8"));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			PrintWriter writer = new PrintWriter(baos);
+			XMLOut.output(doc, writer);
+			writer.close();
+			result = baos.toString();
+			//System.out.println(result);
+		}
+		return result;
+	}
+
 	private static FeedbackCondition parseFeedbackCondition( Element root ) throws Exception {
 		FeedbackCondition result = new FeedbackCondition();
 		List<Feedback> fbs = new ArrayList<Feedback>();
@@ -275,54 +412,59 @@ public abstract class SyncService {
 		return result;
 	}
 	
-	private static ExchangeCondition parseExchangeCondition( Element root ) throws Exception {
-		ExchangeCondition result = null;
-		String name = root.getChildren().get(0).getName();
-		if( "DATA".equals(name) ) {
-			result = new ExchangeCondition();
-			List<Element> elementList = root.getChildren().get(0).getChildren();
-			for(int i=0; i<elementList.size(); i++) {
-				Element element = elementList.get(i);
-				if ( "CONDITION".equals(element.getName()) ) {
-					Condition condition = new Condition();
-					condition.setRel(element.getAttributeValue("rel"));
-					List<Item> items = new ArrayList<Item>();
-					List<Element> itemList = element.getChildren();
-					for(int j=0; j<itemList.size(); j++) {
-						Element current = itemList.get(j);
-						Item item = new Item();
-						item.setKey( current.getAttributeValue("key") );
-						item.setEng( convertKeyToEngNameWithAlias( current.getAttributeValue("key") ) );
-						item.setVal( current.getAttributeValue("val") );
-						if(item.getEng() == null || item.getEng().length() == 0) {
-							throw new Exception("unsupport item key:" + item.getKey());
+	private static List<ExchangeCondition> parseExchangeCondition( Element root ) throws Exception {
+		List<ExchangeCondition> ecs = new ArrayList<ExchangeCondition>();
+		for(int x = 0; x < root.getChildren().size(); x++) {
+			ExchangeCondition result = null;
+			String name = root.getChildren().get(x).getName();
+			if( "DATA".equals(name) ) {
+				result = new ExchangeCondition();
+				List<Element> elementList = root.getChildren().get(x).getChildren();
+				for(int i=0; i<elementList.size(); i++) {
+					Element element = elementList.get(i);
+					if ( "CONDITION".equals(element.getName()) ) {
+						Condition condition = new Condition();
+						condition.setRel(element.getAttributeValue("rel"));
+						List<Item> items = new ArrayList<Item>();
+						List<Element> itemList = element.getChildren();
+						for(int j=0; j<itemList.size(); j++) {
+							Element current = itemList.get(j);
+							Item item = new Item();
+							item.setKey( current.getAttributeValue("key") );
+							item.setEng( convertKeyToEngNameWithAlias( current.getAttributeValue("key") ) );
+							item.setVal( current.getAttributeValue("val") );
+							if(item.getEng() == null || item.getEng().length() == 0) {
+								throw new Exception("unsupport item key:" + item.getKey());
+							}
+							items.add(item);
 						}
-						items.add(item);
+						condition.setItems(items);
+						result.setCondition(condition);
+					} else if ( "DATASET".equals(element.getName()) ) {
+						if( "WA_COMMON_010131".equals( element.getAttributeValue("name")) ) {
+							
+							Common010131 common010131 = parse010131(element);
+							result.setCommon010131(common010131);
+						}
+					} else if("ITEM".equals(element.getName())) {
+					    if( "J010002".equals(element.getAttributeValue("key")) ) {
+					    	result.setTable( element.getAttributeValue("val") );
+					    } else if( "I010018".equals(element.getAttributeValue("key")) ) {
+							result.setAsync( "YES".equalsIgnoreCase(element.getAttributeValue("val") ) );
+						} else if( "H010005".equals(element.getAttributeValue("key")) ) {
+							result.setSyncKey( element.getAttributeValue("val") );
+						} else if( "I010017".equals(element.getAttributeValue("key")) ) {
+							result.setAllReturnCount( element.getAttributeValue("val") == null || element.getAttributeValue("val").trim().length() == 0 ? 0 :Integer.parseInt(element.getAttributeValue("val")) );
+						} else if( "I010019".equals(element.getAttributeValue("key")) ) {
+							result.setCurrentReturnCount( element.getAttributeValue("val") == null || element.getAttributeValue("val").trim().length() == 0 ? 0 :Integer.parseInt(element.getAttributeValue("val")) );
+						} 
 					}
-					condition.setItems(items);
-					result.setCondition(condition);
-				} else if ( "DATASET".equals(element.getName()) ) {
-					if( "WA_COMMON_010131".equals( element.getAttributeValue("name")) ) {
-						
-						Common010131 common010131 = parse010131(element);
-						result.setCommon010131(common010131);
-					}
-				} else if("ITEM".equals(element.getName())) {
-				    if( "J010002".equals(element.getAttributeValue("key")) ) {
-				    	result.setTable( element.getAttributeValue("val") );
-				    } else if( "I010018".equals(element.getAttributeValue("key")) ) {
-						result.setAsync( "YES".equalsIgnoreCase(element.getAttributeValue("val") ) );
-					} else if( "H010005".equals(element.getAttributeValue("key")) ) {
-						result.setSyncKey( element.getAttributeValue("val") );
-					} else if( "I010017".equals(element.getAttributeValue("key")) ) {
-						result.setAllReturnCount( element.getAttributeValue("val") == null || element.getAttributeValue("val").trim().length() == 0 ? 0 :Integer.parseInt(element.getAttributeValue("val")) );
-					} else if( "I010019".equals(element.getAttributeValue("key")) ) {
-						result.setCurrentReturnCount( element.getAttributeValue("val") == null || element.getAttributeValue("val").trim().length() == 0 ? 0 :Integer.parseInt(element.getAttributeValue("val")) );
-					} 
 				}
 			}
+			ecs.add(result);
 		}
-		return result;
+		
+		return ecs;
 	}
 	
 //	private static AuthCondition parseAuthCondition(Element root) throws Exception {
@@ -519,6 +661,7 @@ public abstract class SyncService {
 						else {
 							List<Element> xmlItems = xmlRetColumnsData.getChildren();
 							List<Item> items = new ArrayList<Item>();
+							List<Item> whiteListItems = new ArrayList<Item>();
 							for(int j = 0; j < xmlItems.size(); j++) {
 								Element xmlCurrentItem = xmlItems.get(j);
 								Item item = new Item();
@@ -526,11 +669,16 @@ public abstract class SyncService {
 								item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
 								item.setVal( xmlCurrentItem.getAttributeValue("val") );
 								if(item.getEng() == null || item.getEng().length() == 0) {
+									if( isInWhiteList(item.getKey()) ) {
+										item.setHasAccessAuth(true);
+										whiteListItems.add(item);
+									}
 									throw new Exception("unsupport search column key:" + item.getKey());
 								}
 								items.add(item);
 							}
 							common010032.setItems(items);
+							common010032.setWhiteListItems(whiteListItems);
 						}
 						
 						
@@ -550,7 +698,23 @@ public abstract class SyncService {
 		//return result;
 	}
 
-//<DATASET rmk="要更新的字段信息" name="WA_COMMON_010131">
+	private static boolean isInWhiteList(String key) {
+		boolean result = false;
+		WhiteListColumnDAO dao = new WhiteListColumnDAOImpl();
+		try{
+			WhiteListColumn column = dao.GetWhiteListColumnByKey(key);
+			if(column != null) {
+				result = true;
+			}
+		}
+		catch(Exception e) {
+			logger.info("[XP]Search whitelist column error[searching key is: " + key + "]");
+			result = false;
+		}
+		return result;
+	}
+
+	//<DATASET rmk="要更新的字段信息" name="WA_COMMON_010131">
 //    <DATA>
 //        <ITEM val="刘霞" key="B010001" chn=""/>
 //        <ITEM val="0" key="B010011" chn=""/>
@@ -1543,7 +1707,7 @@ public abstract class SyncService {
 		keyColumnMap.put("J030029", "RESOURCE_TYPE");
 		keyColumnMap.put("J030035", "FUN_RESOURCE_TYPE");
 		keyColumnMap.put("J030036", "RESOURCE_CLASS");
-		
+		keyColumnMap.put("J030037", "OWNERSHIP_TYPE");
 		
 		keyColumnMap.put("I010025", "BUSINESS_ROLE_TYPE");
 		keyColumnMap.put("I010026", "BUSINESS_ROLE");
@@ -1668,6 +1832,22 @@ public abstract class SyncService {
 			result = keyColumnMap.get(key);
 		}
 		
+		// add new record to handle for unknown Key
+		if(result == null) {
+			Task task = new Task();
+			task.setType(Task.TASKTYPE_COLUMNCODE);
+			task.setStatus(Task.TASKSTATUSINIT);
+			task.setDetail(SyncService.orignalRequest);
+			task.setMessage("请求中含有未知标识[" + key + "]");
+			task.setEid(key);
+			TaskDAO tdao = new TaskDAOImpl();
+			try{
+				tdao.TaskAdd(task);
+			}
+			catch(Exception e) {
+				logger.info("Save unknown column task info failed [" + e.getMessage() + "]");
+			}
+		}
 		return result;
 	}
 	
@@ -1697,7 +1877,7 @@ public abstract class SyncService {
 		return result;
 	}
 
-	private static DataCommonInfo parseDataCommonInfo(Element element) {
+	private static DataCommonInfo parseDataCommonInfo(Element element) throws Exception {
 		DataCommonInfo result = null;
 		String name = element.getChildren().get(0).getName();
 		if( "DATA".equals(name) ) {
@@ -1709,7 +1889,15 @@ public abstract class SyncService {
 					if( "H010006".equals(item.getAttributeValue("key")) ) {
 						result.setFROM( item.getAttributeValue("val") );
 					} else if ( "H010007".equals(item.getAttributeValue("key"))  ) {
-						result.setTO( item.getAttributeValue( "val") );
+						String dest = item.getAttributeValue( "val");
+						String region = ConfigHelper.getInstance().getRegion();
+						if(region.equalsIgnoreCase(dest)) {
+							result.setTO(dest);
+						}
+						else {
+							throw new Exception("H010007 and service region do not match. ");
+						}
+						
 					} else if ( "I010014".equals(item.getAttributeValue("key"))  ) {
 						result.setMESSAGE_SEQUENCE( item.getAttributeValue( "val") );
 					} else if ( "I010013".equals(item.getAttributeValue("key"))  ) {
@@ -1723,7 +1911,7 @@ public abstract class SyncService {
 		return result;
 	}
 	
-	protected void itemSetAttribute(Element item, String key, String value) {
+	protected static void itemSetAttribute(Element item, String key, String value) {
 		item.setAttribute(key, value == null ? "" : value);
 	}
 	

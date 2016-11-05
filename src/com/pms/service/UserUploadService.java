@@ -13,10 +13,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -42,6 +40,7 @@ import com.pms.model.AuditUserLogDescribe;
 import com.pms.model.Organization;
 import com.pms.model.User;
 import com.pms.model.UserImport;
+import com.pms.util.DateTimeUtil;
 import com.pms.util.MD5Security;
 
 public class UserUploadService {
@@ -259,9 +258,7 @@ public class UserUploadService {
 	}
 	
 	private void AddUserImportLog() throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditUserLog auditUserLog = new AuditUserLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();

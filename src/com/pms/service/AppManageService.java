@@ -1,14 +1,11 @@
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import com.pms.dao.AppDAO;
 import com.pms.dao.impl.AppDAOImpl;
 //import com.pms.dto.TreeNode;
 import com.pms.model.Application;
+import com.pms.util.DateTimeUtil;
 
 
 
@@ -17,9 +14,7 @@ public class AppManageService {
 	public Application SaveApp( Application app ) throws Exception
 	{
 		AppDAO dao = new AppDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		app.setTstamp(timenow);
 		app = dao.AppAdd(app);
 		return app;

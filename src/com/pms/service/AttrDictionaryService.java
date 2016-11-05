@@ -1,11 +1,7 @@
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
@@ -17,6 +13,7 @@ import com.pms.model.AttrDefinition;
 import com.pms.model.AttrDictionary;
 import com.pms.model.AuditSystemLog;
 import com.pms.model.AuditSystemLogDescribe;
+import com.pms.util.DateTimeUtil;
 
 public class AttrDictionaryService {
 	
@@ -134,9 +131,7 @@ public class AttrDictionaryService {
 	}
 	
 	private void AddSystemQueryLog(AttrDefinition criteria, String attrType) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditSystemLog auditSystemLog = new AuditSystemLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
@@ -170,9 +165,7 @@ public class AttrDictionaryService {
 	}
 	
 	private void AddSystemAddOrUpdateLog(AttrDictItem attrItems) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		AuditSystemLog auditSystemLog = new AuditSystemLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();

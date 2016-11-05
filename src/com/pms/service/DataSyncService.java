@@ -45,6 +45,7 @@ import com.pms.model.SyncList;
 import com.pms.model.SystemConfig;
 import com.pms.model.User;
 import com.pms.util.ConfigHelper;
+import com.pms.util.DateTimeUtil;
 import com.pms.util.MD5Security;
 import com.pms.util.ZipUtil;
 import com.pms.webservice.service.client.SendSyncMessage;
@@ -760,9 +761,7 @@ public class DataSyncService {
 		
 		// 2. add notice list
 		SyncList sl = null;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		for( SyncConfig sc : scs ) {
 			sl = new SyncList();
 			sl.setGA_DEPARTMENT(sc.getGA_DEPARTMENT());
@@ -832,9 +831,7 @@ public class DataSyncService {
 				logger.info(result);
 				if( SendSyncMessage.ParseResponse(result) ) {
 					sl.setStatus(SyncList.STATUS_NOTICED);
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-							Locale.SIMPLIFIED_CHINESE);
-					String timenow = sdf.format(new Date());
+					String timenow = DateTimeUtil.GetCurrentTime();
 					sl.setTstamp(timenow);
 					scdao.SyncListMod(sl);
 				}
@@ -883,9 +880,7 @@ public class DataSyncService {
 			item010000 = new org.jdom2.Element("ITEM");
 			data010000.addContent(item010000);
 			itemSetAttribute(item010000, "key", "I010014");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime("yyyyMMdd");
 			String longtime = ("" + System.currentTimeMillis()).substring(0,10);
 			String mesgSn = from + timenow + longtime;
 			itemSetAttribute(item010000, "val", mesgSn);
@@ -1003,9 +998,7 @@ public class DataSyncService {
 	    SystemConfig systemConfig=new SystemConfig();
 	    SystemConfigDAOImpl dao = new SystemConfigDAOImpl();
 	    
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+	    String timenow = DateTimeUtil.GetCurrentTime();
 		
 	    for (int i = 0; i < scList.size(); i++) {
 	    	systemConfig.setId( scList.get(i).getId() );
@@ -1066,9 +1059,7 @@ public class DataSyncService {
 	}
 	
 	private void AddSystemExportLog(String exportType) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		AuditSystemLog auditSystemLog = new AuditSystemLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
 		AuditLogService als = new AuditLogService();

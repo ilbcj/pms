@@ -1,10 +1,6 @@
 package com.pms.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,6 +9,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.ResRowRelationDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResRelationRow;
+import com.pms.model.ResRelationRowPrivate;
+import com.pms.util.DateTimeUtil;
 
 public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 
@@ -40,9 +38,7 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 				rr.setDATA_VERSION( 1 );
 			}
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			rr.setLATEST_MOD_TIME(timenow);
 			
 			rr = (ResRelationRow) session.merge(rr);
@@ -72,6 +68,59 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 		return rr;
 	}
 
+	@Override
+	public ResRelationRowPrivate ResRelationRowPrivateSave(ResRelationRowPrivate rrrp) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		ResRelationRowPrivate rs = null;
+		String sqlString = "select * from WA_ROW_RELATION_PRIVATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE = :ELEMENT_VALUE ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRowPrivate.class);
+			q.setString("DATA_SET", rrrp.getDATA_SET());
+			q.setString("ELEMENT", rrrp.getELEMENT());
+			q.setString("ELEMENT_VALUE", rrrp.getELEMENT_VALUE());
+			rs = (ResRelationRowPrivate) q.uniqueResult();
+			
+			if(rs != null) {
+				rrrp.setId(rs.getId());
+				rrrp.setDATA_VERSION(rs.getDATA_VERSION() + 1);
+			} else {
+				rrrp.setDATA_VERSION( 1 );
+			}
+			
+			String timenow = DateTimeUtil.GetCurrentTime();
+			rrrp.setLATEST_MOD_TIME(timenow);
+			
+			rrrp = (ResRelationRowPrivate) session.merge(rrrp);
+			tx.commit();
+		} catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名数据集-字段-字段值。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rrrp;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResRelationRow> QueryAllResRelationRow() throws Exception {
@@ -82,6 +131,31 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 		String sqlString = "select * from WA_ROW_RELATION ";
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRow.class);
+			rs = q.list();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ResRelationRowPrivate> QueryAllResRelationRowPrivate() throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		List<ResRelationRowPrivate> rs = null;
+		String sqlString = "select * from WA_ROW_RELATION_PRIVATE ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRowPrivate.class);
 			rs = q.list();
 			tx.commit();
 		} catch(Exception e) {

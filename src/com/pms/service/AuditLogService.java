@@ -1,10 +1,6 @@
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.pms.dao.AdminDAO;
 import com.pms.dao.AuditLogDAO;
@@ -37,6 +33,7 @@ import com.pms.model.AuditSystemLog;
 import com.pms.model.AuditSystemLogDescribe;
 import com.pms.model.AuditUserLog;
 import com.pms.model.AuditUserLogDescribe;
+import com.pms.util.DateTimeUtil;
 
 public class AuditLogService {
 	public int QueryUserLogItems(AuditUserLog criteria, int page, int rows, List<LogUserItem> items) throws Exception {
@@ -476,9 +473,7 @@ public class AuditLogService {
 	
 	private void AddQueryLog(AuditUserLog user, AuditOrgLog org, AuditGroupLog group, AuditRoleLog role, 
 			AuditSystemLog system, AuditResLog res, AuditPrivLog priv, AuditLog log ) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditLog auditLog = new AuditLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();

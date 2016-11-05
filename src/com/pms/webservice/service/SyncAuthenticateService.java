@@ -152,6 +152,11 @@ public class SyncAuthenticateService extends SyncService {
 						column.setHasAccessAuth(false);
 					}
 				}
+				// add unknown column which in the white list to return columns 
+				List<Item> whiteListColumns = this.getAc().getCommon010032().get(i).getWhiteListItems();
+				if( whiteListColumns != null && whiteListColumns.size() > 0 ) {
+					retColumns.addAll(whiteListColumns);
+				}
 			}
 		}
 		

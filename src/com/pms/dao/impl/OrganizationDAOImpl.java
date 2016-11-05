@@ -10,12 +10,8 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -25,6 +21,7 @@ import com.pms.dao.OrganizationDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.Organization;
 import com.pms.model.OrganizationImport;
+import com.pms.util.DateTimeUtil;
 
 public class OrganizationDAOImpl implements OrganizationDAO {
 
@@ -598,9 +595,7 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 			node.setGA_DEPARTMENT(oi.getGA_DEPARTMENT());
 			node.setDATA_VERSION(node.getDATA_VERSION() + 1);
 			node.setDELETE_STATUS(Organization.DELSTATUSNO);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			node.setLATEST_MOD_TIME(timenow);
 			
 			session.merge(node);

@@ -9,13 +9,8 @@
 */
 package com.pms.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
@@ -33,14 +28,13 @@ import com.pms.model.Group;
 import com.pms.model.Rule;
 import com.pms.model.RuleAttr;
 import com.pms.model.User;
+import com.pms.util.DateTimeUtil;
 
 public class GroupManageService {
 
 	public Group SaveGroupUser(Group group, List<String> userIds) throws Exception {
 		GroupDAO dao = new GroupDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPEUSER);
 		
@@ -113,9 +107,7 @@ public class GroupManageService {
 
 	public Group SaveGroupRule(Group group, List<String> ruleValue, List<Rule> rules) throws Exception {
 		GroupDAO dao = new GroupDAOImpl();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		group.setTstamp(timenow);
 		group.setType(Group.GROUPTYPERULE);
 		
@@ -200,9 +192,7 @@ public class GroupManageService {
 		return ;
 	}
 	private void AddGroupQueryLog(Group criteria, String groupType) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditGroupLog auditGroupLog = new AuditGroupLog();
 		AuditLogDAO logdao = new AuditLogDAOImpl();
@@ -236,9 +226,7 @@ public class GroupManageService {
 	}
 	
 	private void AddGroupAddOrUpdateLog(Group group, List<Rule> rules) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		AuditGroupLog auditGroupLog = new AuditGroupLog();
 		GroupDAO dao = new GroupDAOImpl();
 		AttributeDAO attrdao = new AttributeDAOImpl();
@@ -313,9 +301,7 @@ public class GroupManageService {
 	}
 	
 	private void AddGroupDelLog(Group group) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		AuditGroupLog auditGroupLog = new AuditGroupLog();
 		GroupDAO dao = new GroupDAOImpl();

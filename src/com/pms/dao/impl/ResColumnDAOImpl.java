@@ -1,10 +1,6 @@
 package com.pms.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,6 +9,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.ResColumnDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResColumn;
+import com.pms.model.ResColumnPrivate;
+import com.pms.util.DateTimeUtil;
 
 public class ResColumnDAOImpl implements ResColumnDAO {
 
@@ -40,9 +38,7 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 				c.setDATA_VERSION( 1 );
 			}
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			c.setLATEST_MOD_TIME(timenow);
 			
 			c = (ResColumn) session.merge(c);
@@ -71,7 +67,60 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		}
 		return c;
 	}
-
+	
+	@Override
+	public ResColumnPrivate ResColumnPrivateSave(ResColumnPrivate rcp) throws Exception {
+		//打开线程安全的session对象
+		Session session = HibernateUtil.currentSession();
+		//打开事务
+		Transaction tx = session.beginTransaction();
+		
+		ResColumnPrivate rs = null;
+		String sqlString = "select * from WA_COLUMN_PRIVATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and CLUE_SRC_SYS = :CLUE_SRC_SYS ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumnPrivate.class);
+			q.setString("DATA_SET", rcp.getDATA_SET());
+			q.setString("ELEMENT", rcp.getELEMENT());
+			q.setString("CLUE_SRC_SYS", rcp.getCLUE_SRC_SYS());
+			rs = (ResColumnPrivate) q.uniqueResult();
+			
+			if(rs != null) {
+				rcp.setId(rs.getId());
+				rcp.setDATA_VERSION(rs.getDATA_VERSION() + 1);
+			} else {
+				rcp.setDATA_VERSION( 1 );
+			}
+			
+			String timenow = DateTimeUtil.GetCurrentTime();
+			rcp.setLATEST_MOD_TIME(timenow);
+			
+			rcp = (ResColumnPrivate) session.merge(rcp);
+			tx.commit();
+		} catch(ConstraintViolationException cne){
+			tx.rollback();
+			System.out.println(cne.getSQLException().getMessage());
+			throw new Exception("存在重名私有字段。");
+		}
+		catch(org.hibernate.exception.SQLGrammarException e)
+		{
+			tx.rollback();
+			System.out.println(e.getSQLException().getMessage());
+			throw e.getSQLException();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rcp;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResColumn> QueryAllColumn() throws Exception {
@@ -124,6 +173,33 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		return rs;
 	}
 
+	@Override
+	public ResColumnPrivate QueryColumnPrivateByElement(String dataset, String element)
+			throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		ResColumnPrivate rs = null;
+		String sqlString = "select * from WA_COLUMN_PRIVATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResColumnPrivate.class);
+			q.setString("DATA_SET", dataset);
+			q.setString("ELEMENT", element);
+			rs = (ResColumnPrivate) q.uniqueResult();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResColumn> QueryRowColumn(String dataSet)

@@ -58,5 +58,9 @@
 				<param name="fileUpload.allowedExtensions">.xls</param>
 			</interceptor-ref>
  		</action>
+ 		
+ 		<action name="updateRegisterResources" class="com.pms.controller.ResourceAction" method="UpdateRegisterResources" >
+ 			<result name="success" type="json" />
+ 		</action>
 	</package>	
 </struts>    

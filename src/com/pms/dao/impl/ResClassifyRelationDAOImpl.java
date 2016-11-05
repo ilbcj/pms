@@ -1,10 +1,6 @@
 package com.pms.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,6 +9,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.pms.dao.ResClassifyRelationDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResRelationClassify;
+import com.pms.util.DateTimeUtil;
 
 public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
 
@@ -38,9 +35,7 @@ public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
 				rc.setDATA_VERSION( 1 );
 			}
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			rc.setLATEST_MOD_TIME(timenow);
 			
 			rc = (ResRelationClassify) session.merge(rc);

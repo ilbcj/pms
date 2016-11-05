@@ -11,6 +11,7 @@ import com.pms.dao.AdminDAO;
 import com.pms.dao.impl.AdminDAOImpl;
 import com.pms.model.Admin;
 import com.pms.model.AdminAccredit;
+import com.pms.util.DateTimeUtil;
 
 public class AuthService {
 
@@ -55,7 +56,7 @@ public class AuthService {
 				
 				Calendar frozen = sdf.getCalendar();
 				Calendar now=Calendar.getInstance();
-				//锁定时间�?分钟后解�?
+				//锁定时间，5分钟后解锁
 				now.add(Calendar.MINUTE, -5);
 				boolean flag = now.after(frozen);
 				if(!flag)
@@ -102,14 +103,12 @@ public class AuthService {
 			else
 			{
 				int count = admin.getErrorcount();
-				//尝试次数�?次后锁定
+				//尝试次数，5次后锁定
 				if(count >= 4)
 				{
 					admin.setErrorcount(0);
 					admin.setStatus(Admin.FROZEN);
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-							Locale.SIMPLIFIED_CHINESE);
-					String timenow = sdf.format(new Date());
+					String timenow = DateTimeUtil.GetCurrentTime();
 					admin.setFrozentime(timenow);
 					dao.AdminMod(admin);
 				}

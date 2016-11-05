@@ -1,13 +1,8 @@
 package com.pms.dao.impl;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
@@ -27,6 +22,7 @@ import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
 import com.pms.model.ResRoleResourceTemplate;
 import com.pms.util.ConfigHelper;
+import com.pms.util.DateTimeUtil;
 
 
 public class ResourceDAOImpl implements ResourceDAO {
@@ -48,9 +44,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setString("resource_id", feature.getRESOURCE_ID());
 			rs = (ResFeature) q.uniqueResult();
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			feature.setLATEST_MOD_TIME(timenow);
 			
 			if(rs != null) {
@@ -637,17 +631,13 @@ public class ResourceDAOImpl implements ResourceDAO {
 					q.setString( "ELEMENT_VALUE", data.getELEMENT_VALUE());
 				}
 			}
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			q2.setString("RESOURCE_ID", data.getRESOURCE_ID());
 			q2.setString("LATEST_MOD_TIME",timenow );
 			q.executeUpdate();
 			q2.executeUpdate();
 			
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-//					Locale.SIMPLIFIED_CHINESE);
-//			String timenow = sdf.format(new Date());
+//			String timenow = DateTimeUtil.GetCurrentTime();
 			
 //			ResRoleResource rr;
 //			if(featureIds != null) {
@@ -1452,9 +1442,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setString("business_role", role.getBUSINESS_ROLE());
 			rs = q.list();
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			role.setLATEST_MOD_TIME(timenow);
 			if( rs.size() == 0 ) {
 				role = (ResRole) session.merge(role);
@@ -1670,9 +1658,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 	public ResRoleResource ResRoleResourceAdd(ResRoleResource resRoleResource) throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-				Locale.SIMPLIFIED_CHINESE);
-		String timenow = sdf.format(new Date());
+		String timenow = DateTimeUtil.GetCurrentTime();
 		
 		List<ResRoleResource> rs = null;
 		String sqlString = "SELECT * FROM wa_authority_resource_role WHERE business_role=:business_role AND resource_id =:resource_id ";
@@ -1729,38 +1715,43 @@ public class ResourceDAOImpl implements ResourceDAO {
 	@Override
 	public void UpdateFeatureRoleResource(String roleId, List<String> featureIds, List<String> delFeatureIds)
 			throws Exception {
+		if(roleId == null || roleId.length() == 0) 
+			return;
+		List<ResRoleResource> rrsSearched = GetRoleResourcesByRoleid(roleId);
+//		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
+		//String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_ID in (:RESOURCE_ID) and RESOURCE_CLASS = :RESOURCE_CLASS ";
+		
+		
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-//		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS ";
-		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_ID in (:RESOURCE_ID) and RESOURCE_CLASS = :RESOURCE_CLASS ";
-		
 		try {
-			Query q = session.createSQLQuery(sqlString);
-			q.setString("BUSINESS_ROLE", roleId);
-			if(delFeatureIds != null) {
-				q.setParameterList("RESOURCE_ID", delFeatureIds);
-			}else{
-				List<String> list =new ArrayList<String>();
-				list.add("");
-				q.setParameterList("RESOURCE_ID", list);
-			}
-			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSFEATURE);
-			q.executeUpdate();
+			updateResourceRoleRecordDeleteStatus(session, rrsSearched, delFeatureIds);
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			
 			ResRoleResource rr;
 			if(featureIds != null) {
+				boolean isExist = false;
 				for(int i = 0; i<featureIds.size(); i++) {
-					rr = new ResRoleResource();
-					rr.setBUSINESS_ROLE(roleId);
-					rr.setRESOURCE_ID(featureIds.get(i));
-					rr.setLATEST_MOD_TIME(timenow);
-					rr.setDATA_VERSION(1);
-					rr.setRESOURCE_CLASS(ResRoleResource.RESCLASSFEATURE);
-					session.merge(rr);
+					for( int j = 0; j<rrsSearched.size(); j++) {
+						if(rrsSearched.get(j).getRESOURCE_ID().equals(featureIds.get(i))) {
+							isExist = true;
+							break;
+						}
+					}
+					if(isExist) {
+						isExist = false;
+						continue;
+					}
+					else {
+						rr = new ResRoleResource();
+						rr.setBUSINESS_ROLE(roleId);
+						rr.setRESOURCE_ID(featureIds.get(i));
+						rr.setLATEST_MOD_TIME(timenow);
+						rr.setDATA_VERSION(1);
+						rr.setRESOURCE_CLASS(ResRoleResource.RESCLASSFEATURE);
+						session.merge(rr);
+					}
 				}
 			}
 			tx.commit();
@@ -1775,40 +1766,79 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return;
 	}
 
+	private void updateResourceRoleRecordDeleteStatus(Session session, List<ResRoleResource> rrsSearched, List<String> delResIds) throws Exception {
+		if(delResIds == null || delResIds.size() == 0 || rrsSearched == null || rrsSearched.size() == 0) 
+			return;
+		
+		String timenow = DateTimeUtil.GetCurrentTime();
+		
+		ResRoleResource rr;
+		for(int i = 0; i<rrsSearched.size(); i++) {
+			rr = rrsSearched.get(i);
+			for(int j=0; j<delResIds.size(); j++) {
+				if(rr.getRESOURCE_ID().equals(delResIds.get(j))) {
+					rr.setDELETE_STATUS(ResRoleResource.DELSTATUSYES);
+					rr.setDATA_VERSION(rr.getDATA_VERSION() + 1);
+					rr.setLATEST_MOD_TIME(timenow);
+					session.merge(rr);
+				}
+			}
+		}
+		
+		return;
+	}
+
 	@Override
 	public void UpdateDataRoleResource(String roleId, List<String> dataIds, List<String> delDataIds)
 			throws Exception {
+		if(roleId == null || roleId.length() == 0) 
+			return;
+		List<ResRoleResource> rrsSearched = GetRoleResourcesByRoleid(roleId);
+		
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
-		String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_ID in (:RESOURCE_ID) and RESOURCE_CLASS = :RESOURCE_CLASS ";
+		//String sqlString = "delete from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_ID in (:RESOURCE_ID) and RESOURCE_CLASS = :RESOURCE_CLASS ";
 		
 		try {
-			Query q = session.createSQLQuery(sqlString);
-			q.setString("BUSINESS_ROLE", roleId);
-			if(delDataIds != null) {
-				q.setParameterList("RESOURCE_ID", delDataIds);
-			}else{
-				List<String> list =new ArrayList<String>();
-				list.add("");
-				q.setParameterList("RESOURCE_ID", list);
-			}
-			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
-			q.executeUpdate();
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+//			Query q = session.createSQLQuery(sqlString);
+//			q.setString("BUSINESS_ROLE", roleId);
+//			if(delDataIds != null) {
+//				q.setParameterList("RESOURCE_ID", delDataIds);
+//			}else{
+//				List<String> list =new ArrayList<String>();
+//				list.add("");
+//				q.setParameterList("RESOURCE_ID", list);
+//			}
+//			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
+//			q.executeUpdate();
+			updateResourceRoleRecordDeleteStatus(session, rrsSearched, delDataIds);
+			
+			String timenow = DateTimeUtil.GetCurrentTime();
 
 			ResRoleResource rr;
-			if( dataIds != null) {
+			if(dataIds != null) {
+				boolean isExist = false;
 				for(int i = 0; i<dataIds.size(); i++) {
-					rr = new ResRoleResource();
-					rr.setBUSINESS_ROLE(roleId);
-					rr.setRESOURCE_ID(dataIds.get(i));
-					rr.setLATEST_MOD_TIME(timenow);
-					rr.setDATA_VERSION(1);
-					rr.setRESOURCE_CLASS(ResRoleResource.RESCLASSDATA);
-					session.merge(rr);
+					for( int j = 0; j<rrsSearched.size(); j++) {
+						if(rrsSearched.get(j).getRESOURCE_ID().equals(dataIds.get(i))) {
+							isExist = true;
+							break;
+						}
+					}
+					if(isExist) {
+						isExist = false;
+						continue;
+					}
+					else {
+						rr = new ResRoleResource();
+						rr.setBUSINESS_ROLE(roleId);
+						rr.setRESOURCE_ID(dataIds.get(i));
+						rr.setLATEST_MOD_TIME(timenow);
+						rr.setDATA_VERSION(1);
+						rr.setRESOURCE_CLASS(ResRoleResource.RESCLASSDATA);
+						session.merge(rr);
+					}
 				}
 			}
 			tx.commit();
@@ -2303,9 +2333,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 //		System.out.println("tx:" + tx);
 		try
 		{
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 //			System.out.println("timenow:" + timenow);
 			rrri.setLATEST_MOD_TIME(timenow);
 //			System.out.println("before merge:" + rrri);
@@ -2441,9 +2469,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setString("LATEST_MOD_TIME", resRoleResourceTemplate.getLATEST_MOD_TIME());
 			q.executeUpdate();
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 			
 			ResRoleResourceTemplate rr;
 			if(featureIds != null) {
@@ -2485,9 +2511,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 			q.setString("LATEST_MOD_TIME", resRoleResourceTemplate.getLATEST_MOD_TIME());
 			q.executeUpdate();
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
-					Locale.SIMPLIFIED_CHINESE);
-			String timenow = sdf.format(new Date());
+			String timenow = DateTimeUtil.GetCurrentTime();
 
 			ResRoleResourceTemplate rr;
 			if( dataIds != null) {
