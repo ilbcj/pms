@@ -196,7 +196,7 @@ public class SyncComplexSearchService extends SyncService {
 				throw e;
 			}
 			
-			System.out.println(sqlStr);
+			logger.info(sqlStr);
 			
 			SearchDAO dao = new SearchDAOImpl();
 			int type = getSearchType(this.getCsc().getTableNameJ010002());
@@ -249,7 +249,7 @@ public class SyncComplexSearchService extends SyncService {
 			XMLOut.output(doc, writer);
 			writer.close();
 			result = baos.toString();
-			System.out.println(result);
+			logger.info(result);
 		}
 		return result;
 	}
@@ -363,7 +363,18 @@ public class SyncComplexSearchService extends SyncService {
 				resultTemp = "(" + item.getEng() + " < '" + item.getVal() +"') ";
 			}
 			else if ( "GE".equalsIgnoreCase(rel) ) {
-				resultTemp = "(" + item.getEng() + " >= '" + item.getVal() +"') ";
+				String val = item.getVal();
+				if( item.getKey().contains("I010005") ) {
+					try{
+						Long longTime = Long.parseLong(val) * 1000;
+						val = DateTimeUtil.GetTimeStr(longTime);
+					}
+					catch(Exception e) {
+						logger.debug("parse search condition LATEST_MOD_TIME error,[time:" + item.getVal() + "]");
+					}
+					
+				}
+				resultTemp = "(" + item.getEng() + " >= '" + val +"') ";
 			}
 			else if ( "LE".equalsIgnoreCase(rel) ) {
 				resultTemp = "(" + item.getEng() + " <= '" + item.getVal() +"') ";

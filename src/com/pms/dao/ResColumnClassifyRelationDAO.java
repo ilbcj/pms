@@ -10,7 +10,8 @@ public interface ResColumnClassifyRelationDAO {
 
 	public List<ResRelationColumnClassify> QueryAllResRelationColumnClassify() throws Exception;
 
-	List<ResRelationColumnClassify> QueryResRelationColumnClassify(
-			String dataSet) throws Exception;
+	public List<ResRelationColumnClassify> QueryResRelationColumnClassify(String dataSet) throws Exception;
+	
+	public ResRelationColumnClassify QueryResRelationColumnClassify(String src, String dest) throws Exception;
 	
 }

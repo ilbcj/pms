@@ -333,9 +333,9 @@
 						                </tr>
 						                <tr>	                  
 						                    <td class="detail_query_name text_right">数据集敏感度编码</td>
-						                    <td class="detail_query_value"><input id="resource_data_query_dataset_sensitive_level" class="easyui-textbox query_value_mid"></input></td>	
+						                    <td class="detail_query_value"><input id="resource_data_query_dataset_sensitive_level"  disabled="disabled"  class="easyui-textbox query_value_mid"></input></td>	
 						                	<td class="detail_query_name text_right">数据集编码</td>
-						                    <td class="detail_query_value"><input id="resource_data_query_data_set" disabled="disabled"  class="easyui-textbox query_value_mid"></input></td>
+						                    <td class="detail_query_value"><input id="resource_data_query_data_set" class="easyui-textbox query_value_mid"></input></td>
 						                </tr>
 						                <tr>
 						                    <td class="detail_query_name text_right">字段编码</td>
@@ -399,86 +399,89 @@
 	</div><!-- end of layout -->
 <script>
 	function queryResourceData(){
+
 		var resId = $("#resource_data_query_resource_id").textbox('getValue');
 
-		var resource_data_query_resource_status = $('#resource_data_query_resource_status').combobox('getValues');
-		var resStatus = "";
-	        for(var i = 0; i < resource_data_query_resource_status.length; i++){
-				resStatus += resource_data_query_resource_status[i].toString();
-				if( i < resource_data_query_resource_status.length - 1 ){
-					resStatus += ',';
-				}
-			}
-		
-		var resDescribe = $("#resource_data_query_resource_describe").textbox('getValue');
-		
-		var resRemark = $("#resource_data_query_resource_remark").textbox('getValue');
-		
-		var resource_data_query_resource_type = $('#resource_data_query_resource_type').combobox('getValues');
-		var resTtype = "";
-	        for(var i = 0; i < resource_data_query_resource_type.length; i++){
-				resTtype += resource_data_query_resource_type[i].toString();
-				if( i < resource_data_query_resource_type.length - 1 ){
-					resTtype += ',';
-				}
-			}
-			
-// 		var resource_data_query_clue_dst_sys = $('#resource_data_query_clue_dst_sys').textbox('getValue');
-// 		var clueDstSys=resource_data_query_clue_dst_sys;
-		
-		var resource_data_query_dataset_sensitive_level = $('#resource_data_query_dataset_sensitive_level').combobox('getValues');
-		var datasetSensitiveLevel = "";
-	        for(var i = 0; i < resource_data_query_dataset_sensitive_level.length; i++){
-				datasetSensitiveLevel += resource_data_query_dataset_sensitive_level[i].toString();
-				if( i < resource_data_query_dataset_sensitive_level.length - 1 ){
-					datasetSensitiveLevel += ',';
-				}
-			}
-		
-		var resource_data_query_data_set = $('#resource_data_query_data_set').combobox('getValues');
-		var dataSet = "";
-	        for(var i = 0; i < resource_data_query_data_set.length; i++){
-				dataSet += resource_data_query_data_set[i].toString();
-				if( i < resource_data_query_data_set.length - 1 ){
-					dataSet += ',';
-				}
-			}
-		
-		var resource_data_query_section_class = $('#resource_data_query_section_class').combobox('getValues');
-		var sectionClass = "";
-	        for(var i = 0; i < resource_data_query_section_class.length; i++){
-				sectionClass += resource_data_query_section_class[i].toString();
-				if( i < resource_data_query_section_class.length - 1 ){
-					sectionClass += ',';
-				}
-			}
-		
-		var resource_data_query_element = $('#resource_data_query_element').combobox('getValues');
-		var element = "";
-	        for(var i = 0; i < resource_data_query_element.length; i++){
-				element += resource_data_query_element[i].toString();
-				if( i < resource_data_query_element.length - 1 ){
-					element += ',';
-				}
-			}
-			
-		var resource_data_query_section_relatioin_class = $('#resource_data_query_section_relatioin_class').combobox('getValues');
-		var sectionRelatioinClass = "";
-	        for(var i = 0; i < resource_data_query_section_relatioin_class.length; i++){
-				sectionRelatioinClass += resource_data_query_section_relatioin_class[i].toString();
-				if( i < resource_data_query_section_relatioin_class.length - 1 ){
-					sectionRelatioinClass += ',';
-				}
-			}
+// 		var resource_data_query_resource_status = $('#resource_data_query_resource_status').combobox('getValues');
+ 		var resStatus = "";
+// 	        for(var i = 0; i < resource_data_query_resource_status.length; i++){
+// 				resStatus += resource_data_query_resource_status[i].toString();
+// 				if( i < resource_data_query_resource_status.length - 1 ){
+// 					resStatus += ',';
+// 				}
+// 			}
 
-		if (resStatus.substr(0,1)==',') resStatus=resStatus.substr(1);
-		if (resTtype.substr(0,1)==',') resTtype=resTtype.substr(1);
-		if (datasetSensitiveLevel.substr(0,1)==',') datasetSensitiveLevel=datasetSensitiveLevel.substr(1);
-		if (dataSet.substr(0,1)==',') dataSet=dataSet.substr(1);
-		if (sectionClass.substr(0,1)==',') sectionClass=sectionClass.substr(1);
-		if (element.substr(0,1)==',') element=element.substr(1);
-		if (sectionRelatioinClass.substr(0,1)==',') sectionRelatioinClass=sectionRelatioinClass.substr(1);
+		var resDescribe = $("#resource_data_query_resource_describe").textbox('getValue');
+
+		var resRemark = $("#resource_data_query_resource_remark").textbox('getValue');
+
+// 		var resource_data_query_resource_type = $('#resource_data_query_resource_type').combobox('getValues');
+ 		var resTtype = "";
+// 	        for(var i = 0; i < resource_data_query_resource_type.length; i++){
+// 				resTtype += resource_data_query_resource_type[i].toString();
+// 				if( i < resource_data_query_resource_type.length - 1 ){
+// 					resTtype += ',';
+// 				}
+// 			}
+
+//// 		var resource_data_query_clue_dst_sys = $('#resource_data_query_clue_dst_sys').textbox('getValue');
+//// 		var clueDstSys=resource_data_query_clue_dst_sys;
 		
+// 		var resource_data_query_dataset_sensitive_level = $('#resource_data_query_dataset_sensitive_level').combobox('getValues');
+ 		var datasetSensitiveLevel = "";
+// 	        for(var i = 0; i < resource_data_query_dataset_sensitive_level.length; i++){
+// 				datasetSensitiveLevel += resource_data_query_dataset_sensitive_level[i].toString();
+// 				if( i < resource_data_query_dataset_sensitive_level.length - 1 ){
+// 					datasetSensitiveLevel += ',';
+// 				}
+// 			}
+
+		var dataSet =  $("#resource_data_query_data_set").textbox('getValue');
+// 		var resource_data_query_data_set = $('#resource_data_query_data_set').combobox('getValues');
+// 		var dataSet = "";
+// 	        for(var i = 0; i < resource_data_query_data_set.length; i++){
+// 				dataSet += resource_data_query_data_set[i].toString();
+// 				if( i < resource_data_query_data_set.length - 1 ){
+// 					dataSet += ',';
+// 				}
+// 			}
+
+// 		var resource_data_query_section_class = $('#resource_data_query_section_class').combobox('getValues');
+ 		var sectionClass = "";
+// 	        for(var i = 0; i < resource_data_query_section_class.length; i++){
+// 				sectionClass += resource_data_query_section_class[i].toString();
+// 				if( i < resource_data_query_section_class.length - 1 ){
+// 					sectionClass += ',';
+// 				}
+// 			}
+
+		var element =   $("#resource_data_query_element").textbox('getValue');
+// 		var resource_data_query_element = $('#resource_data_query_element').combobox('getValues');
+// 		var element = "";
+// 	        for(var i = 0; i < resource_data_query_element.length; i++){
+// 				element += resource_data_query_element[i].toString();
+// 				if( i < resource_data_query_element.length - 1 ){
+// 					element += ',';
+// 				}
+// 			}
+
+// 		var resource_data_query_section_relatioin_class = $('#resource_data_query_section_relatioin_class').combobox('getValues');
+ 		var sectionRelatioinClass = "";
+// 	        for(var i = 0; i < resource_data_query_section_relatioin_class.length; i++){
+// 				sectionRelatioinClass += resource_data_query_section_relatioin_class[i].toString();
+// 				if( i < resource_data_query_section_relatioin_class.length - 1 ){
+// 					sectionRelatioinClass += ',';
+// 				}
+// 			}
+
+// 		if (resStatus.substr(0,1)==',') resStatus=resStatus.substr(1);
+// 		if (resTtype.substr(0,1)==',') resTtype=resTtype.substr(1);
+// 		if (datasetSensitiveLevel.substr(0,1)==',') datasetSensitiveLevel=datasetSensitiveLevel.substr(1);
+// 		if (dataSet.substr(0,1)==',') dataSet=dataSet.substr(1);
+// 		if (sectionClass.substr(0,1)==',') sectionClass=sectionClass.substr(1);
+// 		if (element.substr(0,1)==',') element=element.substr(1);
+// 		if (sectionRelatioinClass.substr(0,1)==',') sectionRelatioinClass=sectionRelatioinClass.substr(1);
+
 		$("#resource_role_query_resource_data_win_list_dg").datagrid('load',{
 			resCode: resId,
 			resource_status: resStatus,
@@ -1374,7 +1377,7 @@ $(document).ready(function () {
 					section_class+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
 				}
 				else if( "ELEMENT" == data.items[index].code ) {
-					element+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
+					element+= '{"id":"'+data.items[index].dictionary[i].code+'","text":"'+data.items[index].dictionary[i].value+'"},';
 				}
 				else if( "SECTION_RELATIOIN_CLASS" == data.items[index].code ) {
 					section_relatioin_class+= "{id:'"+data.items[index].dictionary[i].code+"',text:'"+data.items[index].dictionary[i].value+"'},";
@@ -1394,8 +1397,10 @@ $(document).ready(function () {
  		var data_setJSON = (new Function('return '+data_setData +';'))(); 
  		var section_classData='([' + section_class.substring(0,section_class.length-1) + '])';
  		var section_classJSON = (new Function('return '+section_classData +';'))();
- 		var elementData='([' + element.substring(0,element.length-1) + '])';
- 		var elementJSON = (new Function('return '+elementData +';'))();
+ 		var elementData='[' + element.substring(0,element.length-1) + ']';
+ 		//var elementJSON = (new Function('return '+elementData +';'))();
+ 		console.log(elementData);
+ 		var elementJSON = $.parseJSON(elementData);
  		var section_relatioin_classData='([' + section_relatioin_class.substring(0,section_relatioin_class.length-1) + '])';
  		var section_relatioin_classJSON = (new Function('return '+section_relatioin_classData +';'))(); 
  		

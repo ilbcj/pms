@@ -230,10 +230,10 @@ public class PrivilegeManageService {
 			UserDAO userDao = new UserDAOImpl();
 			User userNode = userDao.GetUserByCertificateCodeMd5(ownerid);
 			str += "用户授权;";
-			if(userNode.getNAME() != null && userNode.getNAME().length() > 0) {
+			if(userNode != null && userNode.getNAME() != null && userNode.getNAME().length() > 0) {
 				str += "姓名:" + userNode.getNAME()+";";
 			}
-			if(userNode.getUNIT() != null && userNode.getUNIT().length() > 0) {
+			if(userNode != null && userNode.getUNIT() != null && userNode.getUNIT().length() > 0) {
 				str += "组织机构:" + userNode.getUNIT()+";";
 			}		
 		}

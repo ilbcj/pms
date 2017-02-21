@@ -5,7 +5,7 @@ import java.util.List;
 import com.pms.model.ResColumn;
 import com.pms.model.ResColumnPrivate;
 
-public interface ResColumnDAO {
+public interface ResColumnResourceDAO {
 	
 	public ResColumn ResColumnSave(ResColumn col) throws Exception;
 	

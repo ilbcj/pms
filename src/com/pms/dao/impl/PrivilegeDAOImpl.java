@@ -3,6 +3,8 @@ package com.pms.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -16,7 +18,8 @@ import com.pms.model.UserRole;
 import com.pms.model.UserRoleView;
 
 public class PrivilegeDAOImpl implements PrivilegeDAO {
-
+	private Log logger = LogFactory.getLog(PrivilegeDAOImpl.class);
+	
 	@Override
 	public Privilege PrivilegeAdd(Privilege priv) throws Exception {
 		//打开线程安全的session对象
@@ -302,6 +305,33 @@ public class PrivilegeDAOImpl implements PrivilegeDAO {
 			q.setString("CERTIFICATE_CODE_MD5", uid);
 			q.setString("BUSINESS_ROLE", rid);
 			rs = (UserRole) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<UserRole> GetUserRoleByUserId(String uid) throws Exception {
+		if(uid == null || uid.length() == 0) {
+			logger.debug("userid can not be empty when search user's role.");
+			return null;
+		}
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<UserRole> rs = null;
+		String sqlString = "select * from WA_AUTHORITY_POLICE_ROLE where CERTIFICATE_CODE_MD5 = :CERTIFICATE_CODE_MD5";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(UserRole.class);
+			q.setString("CERTIFICATE_CODE_MD5", uid);
+			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
 			e.printStackTrace();

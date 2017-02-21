@@ -6,30 +6,30 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
-import com.pms.dao.ResRowRelationDAO;
+import com.pms.dao.ResRowResourceDAO;
 import com.pms.model.HibernateUtil;
-import com.pms.model.ResRelationRow;
-import com.pms.model.ResRelationRowPrivate;
+import com.pms.model.ResRowResource;
+import com.pms.model.ResRowResourcePrivate;
 import com.pms.util.DateTimeUtil;
 
-public class ResRowRelationDAOImpl implements ResRowRelationDAO {
+public class ResRowResourceDAOImpl implements ResRowResourceDAO {
 
 	@Override
-	public ResRelationRow ResRelationRowSave(ResRelationRow rr)
+	public ResRowResource ResRelationRowSave(ResRowResource rr)
 			throws Exception {
 		//打开线程安全的session对象
 		Session session = HibernateUtil.currentSession();
 		//打开事务
 		Transaction tx = session.beginTransaction();
 		
-		ResRelationRow rs = null;
-		String sqlString = "select * from WA_ROW_RELATION where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE = :ELEMENT_VALUE ";
+		ResRowResource rs = null;
+		String sqlString = "select * from WA_ROW_RESOURCE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE = :ELEMENT_VALUE ";
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRow.class);
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRowResource.class);
 			q.setString("DATA_SET", rr.getDATA_SET());
 			q.setString("ELEMENT", rr.getELEMENT());
 			q.setString("ELEMENT_VALUE", rr.getELEMENT_VALUE());
-			rs = (ResRelationRow) q.uniqueResult();
+			rs = (ResRowResource) q.uniqueResult();
 			
 			if(rs != null) {
 				rr.setId(rs.getId());
@@ -41,7 +41,7 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 			String timenow = DateTimeUtil.GetCurrentTime();
 			rr.setLATEST_MOD_TIME(timenow);
 			
-			rr = (ResRelationRow) session.merge(rr);
+			rr = (ResRowResource) session.merge(rr);
 			tx.commit();
 		} catch(ConstraintViolationException cne){
 			tx.rollback();
@@ -69,20 +69,20 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 	}
 
 	@Override
-	public ResRelationRowPrivate ResRelationRowPrivateSave(ResRelationRowPrivate rrrp) throws Exception {
+	public ResRowResourcePrivate ResRelationRowPrivateSave(ResRowResourcePrivate rrrp) throws Exception {
 		//打开线程安全的session对象
 		Session session = HibernateUtil.currentSession();
 		//打开事务
 		Transaction tx = session.beginTransaction();
 		
-		ResRelationRowPrivate rs = null;
-		String sqlString = "select * from WA_ROW_RELATION_PRIVATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE = :ELEMENT_VALUE ";
+		ResRowResourcePrivate rs = null;
+		String sqlString = "select * from WA_ROW_RESOURCE_PRIVATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT and ELEMENT_VALUE = :ELEMENT_VALUE ";
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRowPrivate.class);
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRowResourcePrivate.class);
 			q.setString("DATA_SET", rrrp.getDATA_SET());
 			q.setString("ELEMENT", rrrp.getELEMENT());
 			q.setString("ELEMENT_VALUE", rrrp.getELEMENT_VALUE());
-			rs = (ResRelationRowPrivate) q.uniqueResult();
+			rs = (ResRowResourcePrivate) q.uniqueResult();
 			
 			if(rs != null) {
 				rrrp.setId(rs.getId());
@@ -94,7 +94,7 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 			String timenow = DateTimeUtil.GetCurrentTime();
 			rrrp.setLATEST_MOD_TIME(timenow);
 			
-			rrrp = (ResRelationRowPrivate) session.merge(rrrp);
+			rrrp = (ResRowResourcePrivate) session.merge(rrrp);
 			tx.commit();
 		} catch(ConstraintViolationException cne){
 			tx.rollback();
@@ -123,14 +123,14 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRelationRow> QueryAllResRelationRow() throws Exception {
+	public List<ResRowResource> QueryAllResRelationRow() throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
-		List<ResRelationRow> rs = null;
+		List<ResRowResource> rs = null;
 		String sqlString = "select * from WA_ROW_RELATION ";
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRow.class);
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRowResource.class);
 			rs = q.list();
 			tx.commit();
 		} catch(Exception e) {
@@ -148,14 +148,14 @@ public class ResRowRelationDAOImpl implements ResRowRelationDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRelationRowPrivate> QueryAllResRelationRowPrivate() throws Exception {
+	public List<ResRowResourcePrivate> QueryAllResRelationRowPrivate() throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
-		List<ResRelationRowPrivate> rs = null;
+		List<ResRowResourcePrivate> rs = null;
 		String sqlString = "select * from WA_ROW_RELATION_PRIVATE ";
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationRowPrivate.class);
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRowResourcePrivate.class);
 			rs = q.list();
 			tx.commit();
 		} catch(Exception e) {

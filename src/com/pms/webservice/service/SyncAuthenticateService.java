@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,25 +17,28 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import com.google.common.collect.HashMultimap;
-import com.pms.dao.GroupDAO;
 import com.pms.dao.PrivilegeDAO;
+import com.pms.dao.ResClassifyResourceDAO;
+import com.pms.dao.ResColumnClassifyRelationDAO;
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.UserDAO;
-import com.pms.dao.impl.GroupDAOImpl;
 import com.pms.dao.impl.PrivilegeDAOImpl;
+import com.pms.dao.impl.ResClassifyResourceDAOImpl;
+import com.pms.dao.impl.ResColumnClassifyRelationDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
 import com.pms.dao.impl.UserDAOImpl;
-import com.pms.model.GroupUser;
-import com.pms.model.Privilege;
+import com.pms.model.ResClassifyResource;
 import com.pms.model.ResData;
+import com.pms.model.ResRelationColumnClassify;
+import com.pms.model.RowResourceColumn;
 import com.pms.model.User;
+import com.pms.model.UserRole;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.auth.Common010032;
 
 public class SyncAuthenticateService extends SyncService {
 
-	@SuppressWarnings("unused")
 	private Log logger = LogFactory.getLog(SyncAuthenticateService.class);
 	
 	@Override
@@ -43,18 +47,34 @@ public class SyncAuthenticateService extends SyncService {
 		UserDAO udao = new UserDAOImpl();
 		User user = udao.GetUserByCertificateCodeMd5(this.getUa().getCERTIFICATE_CODE_MD5());
 		if(user == null) {
-			throw new Exception("there is no record returned wher query user by certificate_code_md5(" + this.getUa().getCERTIFICATE_CODE_MD5() + ").");
+			throw new Exception("there is no record returned when query user by certificate_code_md5(" + this.getUa().getCERTIFICATE_CODE_MD5() + ").");
 		}
 		String level = user.getSENSITIVE_LEVEL() == null || user.getSENSITIVE_LEVEL().length() == 0 ? "0" : user.getSENSITIVE_LEVEL();
 		this.getAc().setSensitiveLevel(level);
 		
 		//1. get resource's by user id
 		List<ResData> resources = queryResourceByUser(user.getCERTIFICATE_CODE_MD5());
+//		List<ResData> noRightColumnsInClassifyRelation = queryNoRightColumnsInClassifyRelation(resources);
+//		List<ResData> returnColumnResources = new ArrayList<ResData>();
+//		returnColumnResources.addAll(resources);
+//		
+//		for(ResData resInNoRight : noRightColumnsInClassifyRelation) {
+//			for(int x = 0; x < returnColumnResources.size(); x++) {
+//				ResData resInRtn = returnColumnResources.get(x);
+//				if( resInNoRight.getDATA_SET().equals(resInRtn.getDATA_SET()) 
+//						&& (resInNoRight.getELEMENT().equals(resInRtn.getELEMENT()) && (resInRtn.getELEMENT_VALUE() == null || resInRtn.getELEMENT().length() == 0) ) ) {
+//					returnColumnResources.remove(x);
+//					x = 0;
+//				}
+//			}
+//		}
+//		
 		
-
 		//2. compare if seaching data in the query result of step 1.
 		String dataset = null;
+		Set<String> searchColumns = null;
 		for( int i = 0; i < this.getAc().getCommon010032().size(); i++ ) {
+			searchColumns = new HashSet<String>();
 			dataset = this.getAc().getCommon010032().get(i).getSourceName();
 			//compare subcondition
 			List<Condition> subConditions = this.getAc().getCommon010032().get(i).getSubConditions();
@@ -68,6 +88,7 @@ public class SyncAuthenticateService extends SyncService {
 							&& resource.getELEMENT_VALUE() != null && resource.getELEMENT_VALUE().length() > 0 
 							&& resource.getOPERATE_SYMBOL() != null && resource.getOPERATE_SYMBOL().length() > 0 ) {
 						privilegedResDatas.put(resource.getELEMENT(), resource);
+						searchColumns.add(resource.getELEMENT());
 					}
 				}
 				
@@ -109,6 +130,7 @@ public class SyncAuthenticateService extends SyncService {
 						} else {
 							item.setHasAccessAuth(false);
 						}
+						searchColumns.add(item.getKey());
 					}
 				}
 				
@@ -119,10 +141,12 @@ public class SyncAuthenticateService extends SyncService {
 					} else {
 						item.setHasAccessAuth(false);
 					}
+					searchColumns.add(item.getKey());
 				}
 			}
 			
 			//compare return column
+			
 			List<Item> retColumns = this.getAc().getCommon010032().get(i).getItems();
 			if( retColumns == null || retColumns.size() == 0 ) {
 				//return all privileged columns 
@@ -133,12 +157,17 @@ public class SyncAuthenticateService extends SyncService {
 					if( dataset.equalsIgnoreCase(resource.getDATA_SET()) && resource.getELEMENT() != null && resource.getELEMENT().length() > 0 
 							&& (resource.getELEMENT_VALUE() == null || resource.getELEMENT_VALUE().length() == 0) 
 							&& (resource.getOPERATE_SYMBOL() == null || resource.getOPERATE_SYMBOL().length() == 0) ) {
-						Item itme = new Item();
-			    		itme.setKey(resource.getELEMENT());
-			    		itme.setVal("");
-			    		itme.setEng(convertKeyToEngNameWithAlias(resource.getELEMENT()));
-			    		itme.setHasAccessAuth(true);
-			    		retColumns.add(itme);
+						Item item = new Item();
+						item.setKey(resource.getELEMENT());
+						item.setVal("");
+						item.setEng(convertKeyToEngNameWithAlias(resource.getELEMENT()));
+			    		if( hasClassifyRelationRight(dataset, item, searchColumns, resources) ) {
+			    			item.setHasAccessAuth(true);
+			    		}
+			    		else {
+			    			item.setHasAccessAuth(false);
+			    		}
+			    		retColumns.add(item);
 					}
 				}
 				this.getAc().getCommon010032().get(i).setItems(retColumns);
@@ -147,7 +176,13 @@ public class SyncAuthenticateService extends SyncService {
 				for(int j = 0; j < retColumns.size(); j++) {
 					Item column = retColumns.get(j);
 					if( checkResourceAccessRights(resources, dataset, column.getKey(), column.getVal()) ) {
-						column.setHasAccessAuth(true);
+						//column.setHasAccessAuth(true);
+						if( hasClassifyRelationRight(dataset, column, searchColumns, resources) ) {
+							column.setHasAccessAuth(true);
+			    		}
+			    		else {
+			    			column.setHasAccessAuth(false);
+			    		}
 					} else {
 						column.setHasAccessAuth(false);
 					}
@@ -166,47 +201,190 @@ public class SyncAuthenticateService extends SyncService {
 		return result;
 	}
 
-	private List<ResData> queryResourceByUser(String userId) throws Exception {
-		
-		// get user's role
-		PrivilegeDAO pdao = new PrivilegeDAOImpl();
-		List<Privilege> privileges = pdao.QueryPrivilegesByOwnerId(userId, Privilege.OWNERTYPEUSER);
-		
-		// get use's usergroup
-		GroupDAO gdao = new GroupDAOImpl();
-		List<GroupUser> ugs = gdao.GetGroupsByUserId(userId);
-		
-		// get usegroup's role
-		for(int i = 0; i < ugs.size(); i++) {
-			List<Privilege> privilegesOfUserGroup = pdao.QueryPrivilegesByOwnerId(ugs.get(i).getGroupid(), Privilege.OWNERTYPEUSERGROUP);
-			privileges.addAll(privilegesOfUserGroup);
+	private boolean hasClassifyRelationRight(String dataset, Item column, Set<String> searchColumns, List<ResData> resources) throws Exception {
+		// 1. check if return column is in a classify
+		ResClassifyResourceDAO crdao = new ResClassifyResourceDAOImpl();
+		ResClassifyResource classifyResRtn = crdao.QueryResClassifyResource(dataset, column.getKey());
+		if(classifyResRtn == null) {
+			return true;
 		}
 		
-		// TODO organization id's type has changed to string, so handle it later
-		// get user's org
-		
-		// get org's role
-		
-		// get resource of role
-		List<ResData> result = new ArrayList<ResData>();
-		ResourceDAO rdao = new ResourceDAOImpl();
-		for(int i = 0; i < privileges.size(); i++) {
-			List<ResData> dataResources = rdao.GetDatasByRole(getBusinessRoleByRoleId( privileges.get(i).getRole_id() ));
-//			boolean isExist = false;
-//			for(int j = 0; j < dataResources.size(); j++) {
-//				for(int k = 0; k < result.size(); k++) {
-//					if( dataResources.get(j).getId() == result.get(k).getId() ) {
-//						isExist = true;
-//						break;
+		for(String searchItem : searchColumns) {
+			// 2. check if search column is in a classify
+			ResClassifyResource classifyResSearch = crdao.QueryResClassifyResource(dataset, searchItem);
+			if(classifyResSearch == null) {
+				continue;
+			}
+			
+			// 3. check if classify of 'search-->return' is a classify relation
+			ResColumnClassifyRelationDAO ccrdao = new ResColumnClassifyRelationDAOImpl();
+			ResRelationColumnClassify ccr = ccrdao.QueryResRelationColumnClassify( classifyResSearch.getSECTION_CLASS(), classifyResRtn.getSECTION_CLASS() );
+			if( ccr == null ) {
+				continue;
+			}
+			
+			// 4. check if 'search-->return classify relation' is a classify relation resource
+			ResourceDAO rdao = new ResourceDAOImpl();
+			ResData crr = rdao.GetClassifyRelationResourceByRelationId( dataset, ccr.getSECTION_RELATIOIN_CLASS() );
+			if( crr == null ) {
+				continue;
+			}
+			
+			// 5. query return column's classify resource and check if user has its privilege
+			boolean hasRes = false;
+			ResData crRtnCol = rdao.GetClassifyResourceByClassifyAndElement(dataset,  classifyResRtn.getSECTION_CLASS(), column.getKey());
+			if( crRtnCol == null ) {
+				return false;
+			}
+			for( ResData res : resources ) {
+				if( res.getRESOURCE_ID().equals(crRtnCol.getRESOURCE_ID()) ) {
+					hasRes = true;
+					break;
+				}
+			}
+			if( !hasRes ) {
+				return false;
+			}
+			
+			// 6. query search column's classify resource and check if user has its privilege
+			hasRes = false;
+			ResData crSearchCol = rdao.GetClassifyResourceByClassifyAndElement(dataset, classifyResSearch.getSECTION_CLASS(), searchItem);
+			if( crSearchCol == null ) {
+				return false;
+			}
+			for( ResData res : resources ) {
+				if( res.getRESOURCE_ID().equals(crSearchCol.getRESOURCE_ID()) ) {
+					hasRes = true;
+					break;
+				}
+			}
+			if( !hasRes ) {
+				return false;
+			}
+			
+			// 7. check if user has the classifyrelationresource of step 4
+			hasRes = false;
+			for( ResData res : resources ) {
+				if( res.getRESOURCE_ID().equals(crr.getRESOURCE_ID()) ) {
+					hasRes = true;
+					break;
+				}
+			}
+			if( !hasRes ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+//	private List<ResData> queryNoRightColumnsInClassifyRelation(List<ResData> resources) throws Exception {
+//		// [-----------------all classify relation columns--------------------------------]
+//		// [------user's classify relation resource--------]
+//		//                 [-----------user's classify resource---------------------------]
+//		//                 [--------user's column----------]
+//		//                                                 [---user's no right column-----]
+//		
+//		// 1. get all classify relation columns
+////		ResClassifyResourceDAO rcrdao = new ResClassifyResourceDAOImpl();
+////		List<ResClassifyResource> crs = rcrdao.QueryAllResClassifyResource();
+//		
+//		// 2 get all classify relation resource by user
+//		List<ResData> classifyRelationResources = new ArrayList<ResData>();
+//		for(ResData res: resources) {
+//			if( (res.getELEMENT() == null || res.getELEMENT().length() == 0) && (res.getELEMENT_VALUE() == null || res.getELEMENT_VALUE().length() == 0 )
+//					&& (res.getSECTION_RELATIOIN_CLASS() != null && res.getSECTION_RELATIOIN_CLASS().length() > 0) ) {
+//				classifyRelationResources.add(res);
+//			}
+//		}
+//		
+//		// 3. get all classify resource by user
+//		List<ResData> userClassifyResources = new ArrayList<ResData>();
+//		for(ResData res: resources) {
+//			if( (res.getELEMENT() != null && res.getELEMENT().length() > 0) && (res.getELEMENT_VALUE() == null || res.getELEMENT_VALUE().length() == 0 )
+//					&& (res.getSECTION_CLASS() != null && res.getSECTION_CLASS().length() > 0)
+//					&& (res.getSECTION_RELATIOIN_CLASS() == null || res.getSECTION_RELATIOIN_CLASS().length() == 0) ) {
+//				userClassifyResources.add(res);
+//			}
+//		}
+//		
+//		// 4. get intersection of step 2 and step 3
+//		// 4.1 get all classify resource by user's classify relation resource
+//		List<ResData> classifyResourcesInCRR = new ArrayList<ResData>();
+//		ResColumnClassifyRelationDAO ccrdao = new ResColumnClassifyRelationDAOImpl();
+//		List<ResRelationColumnClassify> rccs = ccrdao.QueryAllResRelationColumnClassify();
+//		ResourceDAO rdao = new ResourceDAOImpl();
+//		List<ResData> crsTemp = null;
+//		for(ResData res: classifyRelationResources) {
+//			for(ResRelationColumnClassify rcc : rccs) {
+//				if( rcc.getSECTION_RELATIOIN_CLASS().equals(res.getSECTION_RELATIOIN_CLASS()) ) {
+////					crsTemp = rdao.GetDataByRelationColumnClassify(res.getDATA_SET(), rcc.getSRC_CLASS_CODE());
+////					for(ResData resInTemp : crsTemp) {
+////						boolean isExist = false;
+////						for(ResData resInCRR : classifyResourcesInCRR) {
+////							if( resInTemp.getRESOURCE_ID().equals(resInCRR.getRESOURCE_ID())) {
+////								isExist = true;
+////							}
+////						}
+////						if(!isExist) {
+////							classifyResourcesInCRR.add(resInTemp);
+////						}
+////					}
+//					crsTemp = rdao.GetDataByRelationColumnClassify(res.getDATA_SET(), rcc.getDST_CLASS_CODE());
+//					for(ResData resInTemp : crsTemp) {
+//						boolean isExist = false;
+//						for(ResData resInCRR : classifyResourcesInCRR) {
+//							if( resInTemp.getRESOURCE_ID().equals(resInCRR.getRESOURCE_ID())) {
+//								isExist = true;
+//							}
+//						}
+//						if(!isExist) {
+//							classifyResourcesInCRR.add(resInTemp);
+//						}
 //					}
-//				}
-//				if(isExist) {
-//					isExist = false;
-//				}
-//				else {
-//					result.add(dataResources.get(j));
+//					break;
 //				}
 //			}
+//		}
+//		
+//		// 4.2 get intersection of step 4.1 and step 3
+//		List<ResData> classifyResources = new ArrayList<ResData>();
+//		for(ResData res3 : userClassifyResources) {
+//			for(ResData res4_1 : classifyResourcesInCRR) {
+//				if(res3.getRESOURCE_ID().equals(res4_1.getRESOURCE_ID())) {
+//					classifyResources.add(res4_1);
+//				}
+//			}
+//		}
+//		
+//		// 5 get no rights column of classify relation
+//		List<ResData> noRightsColumns = new ArrayList<ResData>();
+//		for(ResData res3 : userClassifyResources) {
+//			boolean isExist = false;
+//			for(ResData res4 : classifyResources) {
+//				if( res3.getRESOURCE_ID().equals(res4.getRESOURCE_ID()) ) {
+//					isExist = true;
+//					break;
+//				}
+//			}
+//			if(!isExist) {
+//				noRightsColumns.add(res3);
+//			}
+//		}
+//		
+//		return noRightsColumns;
+//	}
+
+	private List<ResData> queryResourceByUser(String userId) throws Exception {
+		// 1. get user's role
+		PrivilegeDAO pdao = new PrivilegeDAOImpl();
+		List<UserRole> roles = pdao.GetUserRoleByUserId(userId);
+		
+		// 2. get resource of role
+		List<ResData> result = new ArrayList<ResData>();
+		ResourceDAO rdao = new ResourceDAOImpl();
+		for(int i = 0; i < roles.size(); i++) {
+			List<ResData> dataResources = rdao.GetDatasByRole(getBusinessRoleByRoleId( roles.get(i).getBUSINESS_ROLE() ));
+
 			for(int j = 0; j < result.size(); j ++) {
 				for(int k = 0; k < dataResources.size(); k ++) {
 					if(result.get(j).getId() == dataResources.get(k).getId()) {
@@ -217,8 +395,62 @@ public class SyncAuthenticateService extends SyncService {
 			}
 			result.addAll(dataResources);
 		}
+		
 		return result;
 	}
+
+//	private List<ResData> queryResourceByUser_1611bak(String userId) throws Exception {
+//		// get user's role
+//		PrivilegeDAO pdao = new PrivilegeDAOImpl();
+//		List<Privilege> privileges = pdao.QueryPrivilegesByOwnerId(userId, Privilege.OWNERTYPEUSER);
+//		
+//		// get use's usergroup
+//		GroupDAO gdao = new GroupDAOImpl();
+//		List<GroupUser> ugs = gdao.GetGroupsByUserId(userId);
+//		
+//		// get usegroup's role
+//		for(int i = 0; i < ugs.size(); i++) {
+//			List<Privilege> privilegesOfUserGroup = pdao.QueryPrivilegesByOwnerId(ugs.get(i).getGroupid(), Privilege.OWNERTYPEUSERGROUP);
+//			privileges.addAll(privilegesOfUserGroup);
+//		}
+//		
+//		// TODO organization id's type has changed to string, so handle it later
+//		// get user's org
+//		
+//		// get org's role
+//		
+//		// get resource of role
+//		List<ResData> result = new ArrayList<ResData>();
+//		ResourceDAO rdao = new ResourceDAOImpl();
+//		for(int i = 0; i < privileges.size(); i++) {
+//			List<ResData> dataResources = rdao.GetDatasByRole(getBusinessRoleByRoleId( privileges.get(i).getRole_id() ));
+////			boolean isExist = false;
+////			for(int j = 0; j < dataResources.size(); j++) {
+////				for(int k = 0; k < result.size(); k++) {
+////					if( dataResources.get(j).getId() == result.get(k).getId() ) {
+////						isExist = true;
+////						break;
+////					}
+////				}
+////				if(isExist) {
+////					isExist = false;
+////				}
+////				else {
+////					result.add(dataResources.get(j));
+////				}
+////			}
+//			for(int j = 0; j < result.size(); j ++) {
+//				for(int k = 0; k < dataResources.size(); k ++) {
+//					if(result.get(j).getId() == dataResources.get(k).getId()) {
+//						dataResources.remove(k);
+//						break;
+//					}
+//				}
+//			}
+//			result.addAll(dataResources);
+//		}
+//		return result;
+//	}
 	
 	private String getBusinessRoleByRoleId(String role_id) {
 		String businessRole = "" + role_id;
@@ -226,8 +458,14 @@ public class SyncAuthenticateService extends SyncService {
 	}
 
 	private boolean checkResourceAccessRights(List<ResData> resources,
-			String dataset, String column, String value) {
+			String dataset, String column, String value) throws Exception {
 		boolean result = false;
+		boolean isRowColumn = false;
+		ResourceDAO rdao = new ResourceDAOImpl();
+		RowResourceColumn col = rdao.GetRowResourceColumnsByElement(column);
+		if(col != null) {
+			isRowColumn = true;
+		}
 		for(int i = 0; i < resources.size(); i++) {
 			ResData res = resources.get(i);
 			
@@ -235,13 +473,16 @@ public class SyncAuthenticateService extends SyncService {
 				continue;
 			}
 			
-			if ( dataset.equals(res.getDATA_SET()) && column.equals(res.getELEMENT()) ) {		
-				if ( value != null && value.length() != 0 ) {
-					if ( value.equals(res.getELEMENT_VALUE()) ) {
-						result = true;
-						break;
-					} else {
-						continue;
+			if ( dataset.equals(res.getDATA_SET()) && column.equals(res.getELEMENT()) && (res.getSECTION_CLASS() == null || res.getSECTION_CLASS().length() == 0)) {
+				if(isRowColumn) {
+					//if is row resource column, then check value
+					if ( value != null && value.length() != 0 ) {
+						if ( value.equals(res.getELEMENT_VALUE()) ) {
+							result = true;
+							break;
+						} else {
+							continue;
+						}
 					}
 				}
 				result = true;
@@ -457,6 +698,7 @@ public class SyncAuthenticateService extends SyncService {
 				dataSuccessCondition.addContent(conditionParent);
 				conditionParent.setAttribute("rel", common010032.getParentCondition());
 				
+				// 8.1----- deal with subconditions(subconditions in parent condition)
 				List<Condition> subConditions = common010032.getSubConditions();
 				for( int j = 0; j < subConditions.size(); j++ ) {
 					Condition condition = subConditions.get(j);
@@ -520,7 +762,24 @@ public class SyncAuthenticateService extends SyncService {
 						conditionParent.addContent(subCondition);
 					}
 				}
-				// 8------- traverse return columns, find success record
+				
+				// 8.2----- deal with columns(items in parent condition)
+				List<Item> subItems = common010032.getSubItems();
+				for( int j = 0; j < subItems.size(); j++ ) {
+					Item item = subItems.get(j);
+					if(item.isHasAccessAuth()) {
+						hasAuthCondition = true;
+						Element itemInParentCondition = null;
+						itemInParentCondition = new Element("ITEM");
+						conditionParent.addContent(itemInParentCondition);
+						
+						itemSetAttribute(itemInParentCondition, "key", item.getKey());
+						itemSetAttribute(itemInParentCondition, "eng", item.getEng());
+						itemSetAttribute(itemInParentCondition, "val", item.getVal());
+					}
+				}
+				
+				// 9------- traverse return columns, find success record
 				Element dataSuccessColumn = null;
 				dataSuccessColumn = new Element("DATA");
 				
@@ -560,7 +819,7 @@ public class SyncAuthenticateService extends SyncService {
 					}
 				}
 				
-				if( subConditions.size() == 0 ) {
+				if( (subConditions == null || subConditions.size() == 0) && (subItems == null || subItems.size() == 0) ) {
 					if( hasAuthColumn ) {
 						datasetSuccess.addContent(dataSuccessCondition);
 						datasetSuccess.addContent(dataSuccessColumn);
@@ -585,14 +844,15 @@ public class SyncAuthenticateService extends SyncService {
 				
 				// 8------- traverse conditions, find fail record
 				Element dataFailCondition = null;
-				dataFailCondition = new Element("DATA");
 				
-				if( !hasAuthCondition ) {
-					conditionParent = new Element("CONDITION");
+				
+				conditionParent = new Element("CONDITION");
+//				if( !hasAuthCondition ) {
+					dataFailCondition = new Element("DATA");
 					dataFailCondition.addContent(conditionParent);
 					conditionParent.setAttribute("rel", common010032.getParentCondition());
-				}
-				
+//				}
+				// 8.1------ deal with subconditions(subconditions in parent condition)
 				subConditions = common010032.getSubConditions();
 				for( int j = 0; j < subConditions.size(); j++ ) {
 					Condition condition = subConditions.get(j);
@@ -663,7 +923,24 @@ public class SyncAuthenticateService extends SyncService {
 						}
 					}
 				}
-				// 8------- traverse return columns, find fail record
+				
+				// 8.2----- deal with columns(items in parent condition)
+				subItems = common010032.getSubItems();
+				for( int j = 0; j < subItems.size(); j++ ) {
+					Item item = subItems.get(j);
+					if(!item.isHasAccessAuth()) {
+						hasUnauthCondition = true;
+						Element itemInParentCondition = null;
+						itemInParentCondition = new Element("ITEM");
+						conditionParent.addContent(itemInParentCondition);
+						
+						itemSetAttribute(itemInParentCondition, "key", item.getKey());
+						itemSetAttribute(itemInParentCondition, "eng", item.getEng());
+						itemSetAttribute(itemInParentCondition, "val", item.getVal());
+					}
+				}
+				
+				// 9------- traverse return columns, find fail record
 				Element dataFailColumn = null;
 				dataFailColumn = new Element("DATA");
 				
@@ -731,7 +1008,7 @@ public class SyncAuthenticateService extends SyncService {
 			XMLOut.output(doc, writer);
 			writer.close();
 			result = baos.toString();
-			System.out.println(result);
+			logger.info(result);
 		}
 		return result;
 	}

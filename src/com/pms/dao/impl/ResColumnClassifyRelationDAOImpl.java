@@ -117,5 +117,31 @@ public class ResColumnClassifyRelationDAOImpl implements ResColumnClassifyRelati
 		}
 		return rs;
 	}
+	
+	@Override
+	public ResRelationColumnClassify QueryResRelationColumnClassify(String src, String dest) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		ResRelationColumnClassify rs = null;
+		String sqlString = " SELECT * FROM WA_COLUMN_CLASSIFY_REALTION WHERE SRC_CLASS_CODE = :SRC_CLASS_CODE and DST_CLASS_CODE = :DST_CLASS_CODE ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationColumnClassify.class);
+			q.setString("SRC_CLASS_CODE", src);
+			q.setString("DST_CLASS_CODE", dest);
+			rs = (ResRelationColumnClassify) q.uniqueResult();
+			tx.commit();
+		} catch(Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
 
 }

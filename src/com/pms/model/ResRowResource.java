@@ -1,6 +1,6 @@
 package com.pms.model;
 
-public class ResRelationRow {
+public class ResRowResource {
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
 	
@@ -9,6 +9,7 @@ public class ResRelationRow {
 	private String ELEMENT;
 	private String CLUE_SRC_SYS;
 	private String ELEMENT_VALUE;
+	private String rmk;
 	private int DELETE_STATUS;
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
@@ -61,7 +62,13 @@ public class ResRelationRow {
 	public void setLATEST_MOD_TIME(String lATEST_MOD_TIME) {
 		LATEST_MOD_TIME = lATEST_MOD_TIME;
 	}
-	
+	public String getRmk() {
+		return rmk;
+	}
+	public void setRmk(String rmk) {
+		this.rmk = rmk;
+	}
+
 	public boolean isValid() {
 		if( (DATA_SET == null || DATA_SET.isEmpty()) 
 				|| (ELEMENT == null || ELEMENT.isEmpty()) 

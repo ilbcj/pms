@@ -37,6 +37,7 @@ import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResourceTemplate;
 import com.pms.service.ResourceManageService;
 import com.pms.service.ResourceUploadService;
+import com.pms.service.ResourceUploadServiceV2;
 
 public class ResourceAction extends ActionSupport {
 
@@ -706,11 +707,11 @@ public class ResourceAction extends ActionSupport {
 //			out.flush();
 //			out.close();
 			
-			ResourceUploadService rus = new ResourceUploadService();
+			ResourceUploadServiceV2 rus = new ResourceUploadServiceV2();
 			if(fi.length()==0){
 				System.out.println("上传文件长度为0");
 			} else {
-				rus.UploadResourceData(fi);
+				rus.UploadResourceDataV2(fi);
 			}
 			setResult(true);
 			return null;

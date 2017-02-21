@@ -788,6 +788,8 @@ public class DataSyncService {
 			// 1. get notice list
 			SyncConfigDao scdao = new SyncConfigDaoImpl();
 			List<SyncList> sls = scdao.GetAllSyncList(SyncList.STATUS_GENERATED);
+			List<SyncList> sls2 = scdao.GetAllSyncList(SyncList.STATUS_REQUIRED);
+			sls.addAll(sls2);
 			if( sls == null || sls.size() == 0 ) {
 				warnMsg = "[DSN]当前不存在需要同步数据文件的结点.";
 				logger.warn(warnMsg);
@@ -819,6 +821,7 @@ public class DataSyncService {
 				// 3. notice other pms
 				String sid = "S" + sl.getGA_DEPARTMENT().substring(0, 6) + "00000000009";
 				String message = generateBroadcastRequestContent(sid, checksum, fileName);
+				message = message.replaceAll("\r\n","").replaceAll("> *<", "><");
 				String result = null;
 				try{
 					result = ssm.SendMessage(sid, message);

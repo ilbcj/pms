@@ -249,6 +249,7 @@ public class UserManageService {
 			pulItem.setPname(ulItems.get(i).getPname());
 			pulItem.setGname(ulItems.get(i).getGname());
 			pulItem.setStatus(ulItems.get(i).getStatus());
+			pulItem.setCertificate_code_md5(ulItems.get(i).getCertificate_code_md5());
 			
 			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getCertificate_code_md5(), Privilege.OWNERTYPEUSER);
 			pulItem.setPriv_status(count>0?PrivUserListItem.PRIVSTATUSYES:PrivUserListItem.PRIVSTATUSNO);

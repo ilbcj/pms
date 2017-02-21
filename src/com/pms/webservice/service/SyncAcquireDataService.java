@@ -2,10 +2,8 @@ package com.pms.webservice.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,8 +16,11 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.pms.dao.SyncConfigDao;
+import com.pms.dao.impl.SyncConfigDaoImpl;
+import com.pms.model.SyncList;
 import com.pms.util.ConfigHelper;
-import com.pms.util.FtpUtil;
+import com.pms.util.SFtpUtil;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.acquiredata.AcquiredataCondition;
 
@@ -34,6 +35,23 @@ public class SyncAcquireDataService extends SyncService {
 					 (getAdc().getAllDataItems() == null || getAdc().getAllDataItems().size() == 0) ) ) {
 			return "获取数据文件请求参数不正确。";
 		}
+		//update synclist item status
+		String ga_department = getDci().getFROM();
+		String filename = null;
+		SyncConfigDao scdao = new SyncConfigDaoImpl();
+		AcquiredataCondition acquiredFiles = getAdc();	
+		if( acquiredFiles.getAllDataItems() != null && acquiredFiles.getAllDataItems().size() > 0 ) {
+			for(Item allItem : acquiredFiles.getAllDataItems()) {
+				filename = allItem.getVal();
+				scdao.UpdateSyncListByUnitAndFilename(ga_department, filename, SyncList.STATUS_REQUIRED);
+			}
+		}
+		if( acquiredFiles.getAddDataItems() != null && acquiredFiles.getAddDataItems().size() > 0 ) {
+			for(Item addItem : acquiredFiles.getAddDataItems()) {
+				filename = addItem.getVal();
+				scdao.UpdateSyncListByUnitAndFilename(ga_department, filename, SyncList.STATUS_REQUIRED);
+			}
+		}
 		
 		AcquiredataCondition files = null;
 		files = sendFiles();
@@ -43,10 +61,9 @@ public class SyncAcquireDataService extends SyncService {
 		return result;
 	}
 	
-	
-	
 	private AcquiredataCondition sendFiles() throws FileNotFoundException {
-		AcquiredataCondition files = getAdc();
+		AcquiredataCondition files = getAdc();		
+		
 		AcquiredataCondition result = new AcquiredataCondition();
 		List<Item> allDataItems = new ArrayList<Item>();
 		List<Item> addDataItems = new ArrayList<Item>();
@@ -54,14 +71,14 @@ public class SyncAcquireDataService extends SyncService {
 		String localFile = "";//"e:\\5416-010000-User-All-1445941888-00233.zip";
 		String exportPath = ConfigHelper.getInstance().getSyncExportPath();
 		
-		String url = "15.6.22.2";
-		int port = 21;
+		String url = "15.6.42.223";
+		String port = "22";
 		String username = "jdzy";
-		String password = "123456";
-		String parentPath = "/home/tong/transfile/pms/send/";
+		String password = "jdzy";
+		String parentPath = "/home/filetransfer/pms/send/";
 		String path = "";
 		String filename = "";//"5416-010000-User-All-1445941888-00233.zip";
-		InputStream input = null;
+//		InputStream input = null;
 		
 //		// get all pms nodes -- this is error????
 //		List<String> pmsNodes = new ArrayList<String>();
@@ -73,19 +90,29 @@ public class SyncAcquireDataService extends SyncService {
 		String fromPms = getDci().getFROM();
 		logger.info("aquire data from " + fromPms);
 		pmsNodes.add(fromPms);
-		
+		SyncConfigDao scdao = new SyncConfigDaoImpl();
 		if( files.getAllDataItems() != null && files.getAllDataItems().size() > 0 ) {
 			for(Item allItem : files.getAllDataItems()) {
 				try{
 					localFile = exportPath + "/" + allItem.getVal();
 					filename = allItem.getVal();
-					input = new FileInputStream(new File(localFile));
-					
-					for(String pmsNode : pmsNodes) {
-						path = parentPath + pmsNode;
-						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+//					input = new FileInputStream(new File(localFile));
+					File f = new File(localFile);
+					if(f.exists()) {
+						for(String pmsNode : pmsNodes) {
+							path = parentPath + pmsNode;
+							String remoteFile = path + "/" + filename;
+							boolean isSendOut = SFtpUtil.uploadFile(url, port, username, password, localFile, remoteFile);
+							if(isSendOut) {
+								scdao.UpdateSyncListByUnitAndFilename(fromPms, filename, SyncList.STATUS_SENDOUT);
+							}
+						}
+						allDataItems.add(allItem);
 					}
-					allDataItems.add(allItem);
+					else {
+						String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:文件不存在.";
+						logger.warn(warnMsg);
+					}
 				}
 				catch(Exception e) {
 					String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:" + e.getMessage() + ".";
@@ -108,12 +135,23 @@ public class SyncAcquireDataService extends SyncService {
 				try{
 					localFile = exportPath + "/" + addItem.getVal();
 					filename = addItem.getVal();
-					input = new FileInputStream(new File(localFile));
-					for(String pmsNode : pmsNodes) {
-						path = parentPath + pmsNode;
-						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+//					input = new FileInputStream(new File(localFile));
+					File f = new File(localFile);
+					if(f.exists()) {
+						for(String pmsNode : pmsNodes) {
+							path = parentPath + pmsNode;
+							String remoteFile = path + "/" + filename;
+							boolean isSendOut = SFtpUtil.uploadFile(url, port, username, password, localFile, remoteFile);
+							if(isSendOut) {
+								scdao.UpdateSyncListByUnitAndFilename(fromPms, filename, SyncList.STATUS_SENDOUT);
+							}
+						}
+						addDataItems.add(addItem);
 					}
-					addDataItems.add(addItem);
+					else {
+						String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:文件不存在.";
+						logger.warn(warnMsg);
+					}
 				}
 				catch(Exception e) {
 					String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:" + e.getMessage() + ".";
@@ -125,6 +163,87 @@ public class SyncAcquireDataService extends SyncService {
 		
 		return result;
 	}
+	
+//	private AcquiredataCondition sendFiles_ftp() throws FileNotFoundException {
+//		AcquiredataCondition files = getAdc();
+//		AcquiredataCondition result = new AcquiredataCondition();
+//		List<Item> allDataItems = new ArrayList<Item>();
+//		List<Item> addDataItems = new ArrayList<Item>();
+//		
+//		String localFile = "";//"e:\\5416-010000-User-All-1445941888-00233.zip";
+//		String exportPath = ConfigHelper.getInstance().getSyncExportPath();
+//		
+//		String url = "15.6.22.2";
+//		int port = 21;
+//		String username = "jdzy";
+//		String password = "123456";
+//		String parentPath = "/home/tong/transfile/pms/send/";
+//		String path = "";
+//		String filename = "";//"5416-010000-User-All-1445941888-00233.zip";
+//		InputStream input = null;
+//		
+////		// get all pms nodes -- this is error????
+////		List<String> pmsNodes = new ArrayList<String>();
+////		//pmsNodes.add("110000");
+////		pmsNodes.add("330200");
+//		
+//		// change to get from pms node
+//		List<String> pmsNodes = new ArrayList<String>();
+//		String fromPms = getDci().getFROM();
+//		logger.info("aquire data from " + fromPms);
+//		pmsNodes.add(fromPms);
+//		
+//		if( files.getAllDataItems() != null && files.getAllDataItems().size() > 0 ) {
+//			for(Item allItem : files.getAllDataItems()) {
+//				try{
+//					localFile = exportPath + "/" + allItem.getVal();
+//					filename = allItem.getVal();
+//					input = new FileInputStream(new File(localFile));
+//					
+//					for(String pmsNode : pmsNodes) {
+//						path = parentPath + pmsNode;
+//						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+//					}
+//					allDataItems.add(allItem);
+//				}
+//				catch(Exception e) {
+//					String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:" + e.getMessage() + ".";
+//					logger.warn(warnMsg);
+////					filename = allItem.getVal();
+////					input = new FileInputStream(new File(filename));
+////					
+////					for(String pmsNode : pmsNodes) {
+////						path = parentPath + pmsNode;
+////						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+////					}
+////					allDataItems.add(allItem);
+//				}
+//			}
+//		}
+//		result.setAllDataItems(allDataItems);
+//		
+//		if( files.getAddDataItems() != null && files.getAddDataItems().size() > 0 ) {
+//			for(Item addItem : files.getAddDataItems()) {
+//				try{
+//					localFile = exportPath + "/" + addItem.getVal();
+//					filename = addItem.getVal();
+//					input = new FileInputStream(new File(localFile));
+//					for(String pmsNode : pmsNodes) {
+//						path = parentPath + pmsNode;
+//						FtpUtil.uploadFile(url, port, username, password, path, filename, input);
+//					}
+//					addDataItems.add(addItem);
+//				}
+//				catch(Exception e) {
+//					String warnMsg = "[DSA]加载文件失败，文件:" + localFile + ";错误信息:" + e.getMessage() + ".";
+//					logger.warn(warnMsg);
+//				}
+//			}
+//		}
+//		result.setAddDataItems(addDataItems);
+//		
+//		return result;
+//	}
 
 	private String generateAcquriedataResponseResult(AcquiredataCondition files) throws IOException {
 		String result = null;

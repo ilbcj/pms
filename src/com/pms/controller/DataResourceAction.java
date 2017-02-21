@@ -7,7 +7,7 @@ import com.pms.model.ResColumn;
 import com.pms.model.ResColumnClassify;
 import com.pms.model.ResDataSet;
 import com.pms.model.ResDataSetSensitive;
-import com.pms.model.ResRelationClassify;
+import com.pms.model.ResClassifyRelationResource;
 import com.pms.model.ResValue;
 import com.pms.service.DataResourceService;
 
@@ -26,7 +26,7 @@ public class DataResourceAction extends ActionSupport {
 	private List<ResColumn> resColumn;
 	private List<ResValue> resValue;
 	private List<ResColumnClassify> resColumnClassify;
-	private List<ResRelationClassify> resRelationClassify;
+	private List<ResClassifyRelationResource> resRelationClassify;
 	private String dataSet;
 	private String element;
 	private String sectionClass;
@@ -67,10 +67,10 @@ public class DataResourceAction extends ActionSupport {
 	public void setResColumnClassify(List<ResColumnClassify> resColumnClassify) {
 		this.resColumnClassify = resColumnClassify;
 	}
-	public List<ResRelationClassify> getResRelationClassify() {
+	public List<ResClassifyRelationResource> getResRelationClassify() {
 		return resRelationClassify;
 	}
-	public void setResRelationClassify(List<ResRelationClassify> resRelationClassify) {
+	public void setResRelationClassify(List<ResClassifyRelationResource> resRelationClassify) {
 		this.resRelationClassify = resRelationClassify;
 	}
 	public String getElement() {

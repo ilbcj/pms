@@ -11,6 +11,12 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import com.pms.dao.SyncConfigDao;
+import com.pms.dao.impl.SyncConfigDaoImpl;
+import com.pms.model.SyncList;
+import com.pms.webservice.model.acquiredata.Feedback;
+import com.pms.webservice.model.acquiredata.FeedbackCondition;
+
 public class SyncFeedbackService extends SyncService {
 
 	@SuppressWarnings("unused")
@@ -23,6 +29,19 @@ public class SyncFeedbackService extends SyncService {
 		}
 		
 		//record result
+		String ga_department = getDci().getFROM();
+		String filename = null;
+		SyncConfigDao scdao = new SyncConfigDaoImpl();
+		FeedbackCondition  feedbackFiles = getFc();	
+		if( feedbackFiles.getResults() != null && feedbackFiles.getResults().size() > 0 ) {
+			for(Feedback feedback : feedbackFiles.getResults()) {
+				filename = feedback.getFile().getVal();
+				if( "0".equals(feedback.getStatus().getVal()) ) {
+					scdao.UpdateSyncListByUnitAndFilename(ga_department, filename, SyncList.STATUS_FINISH);
+				}
+			}
+		}
+		
 		
 		String result = generateFeedbackResponseResult();
 		return result;

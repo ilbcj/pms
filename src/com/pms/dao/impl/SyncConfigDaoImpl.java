@@ -11,6 +11,7 @@ import com.pms.dao.SyncConfigDao;
 import com.pms.model.HibernateUtil;
 import com.pms.model.SyncConfig;
 import com.pms.model.SyncList;
+import com.pms.util.DateTimeUtil;
 
 public class SyncConfigDaoImpl implements SyncConfigDao{
 	@Override
@@ -228,5 +229,37 @@ public class SyncConfigDaoImpl implements SyncConfigDao{
 			HibernateUtil.closeSession();
 		}
 		return rs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void UpdateSyncListByUnitAndFilename(String ga_department, String filename, int status) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		List<SyncList> rs = null;
+		String sqlString = "select * from synclist where ga_department = :ga_department and filename = :filename ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(SyncList.class);
+			q.setString("ga_department", ga_department);
+			q.setString("filename", filename);
+			rs = q.list();
+			
+			if(rs != null) {
+				for(SyncList sl : rs) {
+					sl.setStatus(status);
+					sl.setTstamp(DateTimeUtil.GetCurrentTime());
+					session.merge(sl);
+				}
+			}
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return;
 	}
 }

@@ -5,16 +5,16 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="com.pms.model">
 	<!-- 每个class元素对应一个持久化对象 -->
-	<class name="ResRelationClassify" table="WA_CLASSIFY_RELATION">
+	<class name="ResClassifyResource" table="WA_CLASSIFY_RESOURCE">
 		<!-- id元素定义持久化类的标识属性 -->
 		<id name="id" type="java.lang.Integer">
 			<generator class="identity"/>
 		</id>
 		<!-- property元素定义常规属性 -->
 		<property name="DATA_SET" type="java.lang.String" length="64"/>
-		<property name="SECTION_RELATIOIN_CLASS" type="java.lang.String" length="64"/>
-		<property name="SECTION_RELATIOIN_CLASS_NAME" type="java.lang.String" length="256"/>
+		<property name="SECTION_CLASS" type="java.lang.String" length="64"/>
 		<property name="CLUE_SRC_SYS" type="java.lang.String" length="256"/>
+		<property name="ELEMENT" type="java.lang.String" length="64"/>
 		<property name="DELETE_STATUS" type="java.lang.Integer"/>
 		<property name="DATA_VERSION" type="java.lang.Integer"/>
 		<property name="LATEST_MOD_TIME" type="java.lang.String" length="64"/>

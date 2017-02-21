@@ -12,8 +12,8 @@
 	<!-- 		jdbc:mysql://127.0.0.1:3306/pms160121?useUnicode=true&amp;characterEncoding=UTF-8 -->
 	<!-- 	</property> -->
 	<property name="connection.url">
-		<!-- 		jdbc:mysql://15.6.40.65:3306/pms160926?useUnicode=true&amp;characterEncoding=UTF-8 -->
-		jdbc:mysql://127.0.0.1:3306/pms160928?useUnicode=true&amp;characterEncoding=UTF-8
+<!-- 		 		jdbc:mysql://15.6.40.65:3306/pms161121?useUnicode=true&amp;characterEncoding=UTF-8 -->
+ 		jdbc:mysql://127.0.0.1:3306/pms161213?useUnicode=true&amp;characterEncoding=UTF-8
 	</property>
 	<!-- 	<property name="connection.url">jdbc:mysql://15.1.252.115:3306/pms160121?useUnicode=true&amp;characterEncoding=UTF-8</property> -->
 	<property name="connection.username">root</property>
@@ -70,9 +70,9 @@
 	<mapping resource="com/pms/model/ResValueSensitive.hbm.xml" />
 	<mapping resource="com/pms/model/ResValue.hbm.xml" />
 	<mapping resource="com/pms/model/ResRelationColumnClassify.hbm.xml" />
-	<mapping resource="com/pms/model/ResRelationRow.hbm.xml" />
-	<mapping resource="com/pms/model/ResRelationColumn.hbm.xml" />
-	<mapping resource="com/pms/model/ResRelationClassify.hbm.xml" />
+	<mapping resource="com/pms/model/ResRowResource.hbm.xml" />
+	<mapping resource="com/pms/model/ResClassifyResource.hbm.xml" />
+	<mapping resource="com/pms/model/ResClassifyRelationResource.hbm.xml" />
 	<mapping resource="com/pms/model/SystemConfig.hbm.xml" />
 	<mapping resource="com/pms/model/ResRoleResourceImport.hbm.xml" />
 	<mapping resource="com/pms/model/SyncConfig.hbm.xml" />
@@ -100,9 +100,11 @@
 	<mapping resource="com/pms/model/ResColumnPrivate.hbm.xml" />
 	<mapping resource="com/pms/model/ResDataSetPrivate.hbm.xml" />
 	<mapping resource="com/pms/model/ResValuePrivate.hbm.xml" />
-	<mapping resource="com/pms/model/ResRelationRowPrivate.hbm.xml" />
+	<mapping resource="com/pms/model/ResRowResourcePrivate.hbm.xml" />
 	<mapping resource="com/pms/model/Task.hbm.xml" />
 	<mapping resource="com/pms/model/WhiteListColumn.hbm.xml" />
+	<mapping resource="com/pms/model/RowResourceColumn.hbm.xml" />
+	<mapping resource="com/pms/model/ImportLog.hbm.xml" />
 
 </session-factory>
 

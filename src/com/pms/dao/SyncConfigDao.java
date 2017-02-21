@@ -14,4 +14,5 @@ public interface SyncConfigDao {
 	public SyncList SyncListAdd(SyncList syncList) throws Exception;
 	public void SyncListMod(SyncList syncList) throws Exception;
 	public List<SyncList> GetAllSyncList(int status) throws Exception;
+	public void UpdateSyncListByUnitAndFilename(String ga_department, String filename, int status) throws Exception;
 }

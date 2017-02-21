@@ -11,6 +11,7 @@ import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
 import com.pms.model.ResRoleResourceTemplate;
+import com.pms.model.RowResourceColumn;
 
 public interface ResourceDAO {
 	ResRoleResource ResRoleResourceAdd(ResRoleResource resRoleResource) throws Exception;
@@ -58,6 +59,7 @@ public interface ResourceDAO {
 	List<ResRoleResource> GetAllResRoles() throws Exception;
 	List<ResRoleResource> GetResRolesByTime(String time) throws Exception;
 	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
+	ResRoleResource GetRoleResourceByRoleidAndResid(String roleid, String resid, int resType) throws Exception;
 	ResFeature GetFeatureByResId(String id) throws Exception;
 //	List<ResFeature> GetFeatureById(int id) throws Exception;
 	ResData GetDataByResId(String resId) throws Exception;
@@ -93,4 +95,8 @@ public interface ResourceDAO {
 	List<ResData> GetDataByRoleid(String id, int page, int rows) throws Exception;
 	int GetDataCountByRoleid(String id) throws Exception;
 	List<ResFeature> GetFeatureNodeById(String pid, ResFeature criteria) throws Exception;
+	
+	public RowResourceColumn GetRowResourceColumnsByElement(String element) throws Exception;
+	public ResData GetClassifyRelationResourceByRelationId(String dataset, String relation) throws Exception;
+	public ResData GetClassifyResourceByClassifyAndElement(String dataset, String classify, String element) throws Exception;
 }

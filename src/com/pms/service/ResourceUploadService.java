@@ -3,6 +3,7 @@ package com.pms.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,30 +24,30 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import com.pms.dao.AttributeDAO;
 import com.pms.dao.AuditLogDAO;
 import com.pms.dao.AuditLogDescribeDao;
-import com.pms.dao.ResClassifyRelationDAO;
+import com.pms.dao.ResClassifyRelationResourceDAO;
 import com.pms.dao.ResColumnClassifyDAO;
 import com.pms.dao.ResColumnClassifyRelationDAO;
-import com.pms.dao.ResColumnDAO;
-import com.pms.dao.ResColumnRelationDAO;
+import com.pms.dao.ResColumnResourceDAO;
+import com.pms.dao.ResClassifyResourceDAO;
 import com.pms.dao.ResDataDAO;
 import com.pms.dao.ResDatasetDAO;
 import com.pms.dao.ResDatasetSensitiveDAO;
-import com.pms.dao.ResRowRelationDAO;
+import com.pms.dao.ResRowResourceDAO;
 import com.pms.dao.ResValueDAO;
 import com.pms.dao.ResValueSensitiveDAO;
 import com.pms.dao.ResourceDAO;
 import com.pms.dao.impl.AttributeDAOImpl;
 import com.pms.dao.impl.AuditLogDAOImpl;
 import com.pms.dao.impl.AuditLogDescribeDAOImpl;
-import com.pms.dao.impl.ResClassifyRelationDAOImpl;
+import com.pms.dao.impl.ResClassifyRelationResourceDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyDAOImpl;
 import com.pms.dao.impl.ResColumnClassifyRelationDAOImpl;
-import com.pms.dao.impl.ResColumnDAOImpl;
-import com.pms.dao.impl.ResColumnRelationDAOImpl;
+import com.pms.dao.impl.ResColumnResourceDAOImpl;
+import com.pms.dao.impl.ResClassifyResourceDAOImpl;
 import com.pms.dao.impl.ResDataDAOImpl;
 import com.pms.dao.impl.ResDatasetDAOImpl;
 import com.pms.dao.impl.ResDatasetSensitiveDAOImpl;
-import com.pms.dao.impl.ResRowRelationDAOImpl;
+import com.pms.dao.impl.ResRowResourceDAOImpl;
 import com.pms.dao.impl.ResValueDAOImpl;
 import com.pms.dao.impl.ResValueSensitiveDAOImpl;
 import com.pms.dao.impl.ResourceDAOImpl;
@@ -65,11 +66,11 @@ import com.pms.model.ResDataSetPrivate;
 import com.pms.model.ResDataSetSensitive;
 import com.pms.model.ResDataTemplate;
 import com.pms.model.ResFeature;
-import com.pms.model.ResRelationClassify;
-import com.pms.model.ResRelationColumn;
+import com.pms.model.ResClassifyRelationResource;
+import com.pms.model.ResClassifyResource;
 import com.pms.model.ResRelationColumnClassify;
-import com.pms.model.ResRelationRow;
-import com.pms.model.ResRelationRowPrivate;
+import com.pms.model.ResRowResource;
+import com.pms.model.ResRowResourcePrivate;
 import com.pms.model.ResRole;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
@@ -324,7 +325,7 @@ public class ResourceUploadService {
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_ICON) ) {
             			feature.setRESOURCE_ICON_PATH(cellValue);
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_RESOURCE_STATUS) ) {
-            			feature.setRESOURCE_STATUS(Integer.parseInt(cellValue));
+            			feature.setRESOURCE_STATUS(Integer.parseInt(cellValue.equals("")?"0":cellValue));
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_ORDER) ) {
             			feature.setRESOURCE_ORDER(cellValue);
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_DESCRIBE) ) {
@@ -332,12 +333,15 @@ public class ResourceUploadService {
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_REMARK) ) {
             			feature.setRMK(cellValue);
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_RESOURCE_TYPE) ) {
-            			feature.setFUN_RESOURCE_TYPE(Integer.parseInt(cellValue));
+            			feature.setFUN_RESOURCE_TYPE(Integer.parseInt(cellValue.equals("")?"0":cellValue));
             		}
             	}
             }
             
             if( r > 0 ) {
+            	if( r == 286 ) {
+            		System.out.println();
+            	}
             	if(feature.isValid()) {
 		            feature.setDELETE_STATUS(ResDataSetSensitive.DELSTATUSNO);
 		            dao.FeatureAdd(feature);
@@ -561,7 +565,7 @@ public class ResourceUploadService {
 		int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数
 		Map<String, Integer> idx = new HashMap<String, Integer>();
 		ResColumn col = null;
-		ResColumnDAO dao = new ResColumnDAOImpl();
+		ResColumnResourceDAO dao = new ResColumnResourceDAOImpl();
 		
 		AttributeDAO adao = new AttributeDAOImpl();
 		AttrDefinition attrDef = null;
@@ -761,7 +765,7 @@ public class ResourceUploadService {
 		            	dao.ResValuePrivateSave(rvp);
 		            } else {
 		            	dao.ResValueSave(val);
-		            }
+		            }		            
             	}
             }
         }
@@ -851,8 +855,8 @@ public class ResourceUploadService {
 	private void updateRowRelation(Sheet sheet) throws Exception {
 		int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数
 		Map<String, Integer> idx = new HashMap<String, Integer>();
-		ResRelationRow rr = null;
-		ResRowRelationDAO dao = new ResRowRelationDAOImpl();
+		ResRowResource rr = null;
+		ResRowResourceDAO dao = new ResRowResourceDAOImpl();
 //		dao.ResRowRelationImportClear();
 		
 		//遍历每一行  
@@ -863,7 +867,7 @@ public class ResourceUploadService {
         		continue;
         	}
         	if( r > 0 ) {
-        		rr = new ResRelationRow();
+        		rr = new ResRowResource();
         	}
         	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
@@ -909,9 +913,9 @@ public class ResourceUploadService {
             
             if( r > 0 ) {
             	if( rr.isValid() ) {
-		            rr.setDELETE_STATUS(ResRelationRow.DELSTATUSNO);
+		            rr.setDELETE_STATUS(ResRowResource.DELSTATUSNO);
 		            if(isLocal) {
-		            	ResRelationRowPrivate rrrp = new ResRelationRowPrivate(rr);
+		            	ResRowResourcePrivate rrrp = new ResRowResourcePrivate(rr);
 		            	dao.ResRelationRowPrivateSave(rrrp);
 		            } else {
 		            	dao.ResRelationRowSave(rr);
@@ -924,8 +928,8 @@ public class ResourceUploadService {
 	private void updateColumnRelation(Sheet sheet) throws Exception {
 		int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数
 		Map<String, Integer> idx = new HashMap<String, Integer>();
-		ResRelationColumn rc = null;
-		ResColumnRelationDAO dao = new ResColumnRelationDAOImpl();
+		ResClassifyResource rc = null;
+		ResClassifyResourceDAO dao = new ResClassifyResourceDAOImpl();
 		//dao.ResColumnRelationImportClear();
 		//遍历每一行  
         for (int r = 0; r < rowCount; r++) {
@@ -934,7 +938,7 @@ public class ResourceUploadService {
         		continue;
         	}
         	if( r > 0 ) {
-        		rc = new ResRelationColumn();
+        		rc = new ResClassifyResource();
         	}
         	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
@@ -974,8 +978,8 @@ public class ResourceUploadService {
             
             if( r > 0 ) {
             	if( rc.isValid() ) {
-		            rc.setDELETE_STATUS(ResRelationColumn.DELSTATUSNO);
-		            dao.ResRelationColumnSave(rc);
+		            rc.setDELETE_STATUS(ResClassifyResource.DELSTATUSNO);
+		            dao.ResClassifyResourceSave(rc);
             	}
             }
         }
@@ -984,8 +988,8 @@ public class ResourceUploadService {
 	private void updateClassifyRelation(Sheet sheet) throws Exception {
 		int rowCount = sheet.getPhysicalNumberOfRows(); //获取总行数
 		Map<String, Integer> idx = new HashMap<String, Integer>();
-		ResRelationClassify rc = null;
-		ResClassifyRelationDAO dao = new ResClassifyRelationDAOImpl();
+		ResClassifyRelationResource rc = null;
+		ResClassifyRelationResourceDAO dao = new ResClassifyRelationResourceDAOImpl();
 		//dao.ResClassifyRelationImportClear();
 		
 		//遍历每一行  
@@ -995,7 +999,7 @@ public class ResourceUploadService {
         		continue;
         	}
         	if( r > 0 ) {
-        		rc = new ResRelationClassify();
+        		rc = new ResClassifyRelationResource();
         	}
         	int cellCount = row.getLastCellNum(); //获取总列数 
         	//遍历每一列  
@@ -1034,7 +1038,7 @@ public class ResourceUploadService {
             
             if( r > 0 ) {
             	if( rc.isValid() ) {
-		            rc.setDELETE_STATUS(ResRelationClassify.DELSTATUSNO);
+		            rc.setDELETE_STATUS(ResClassifyRelationResource.DELSTATUSNO);
 		            dao.ResRelationClassifySave(rc);
             	}
             }
@@ -1342,11 +1346,17 @@ public class ResourceUploadService {
                 cellValue = cell.getStringCellValue();  
                 break;  
             case Cell.CELL_TYPE_NUMERIC: //数字、日期  
-                if(DateUtil.isCellDateFormatted(cell)) {  
+                if(DateUtil.isCellDateFormatted(cell)) {
                     cellValue = sdf.format(cell.getDateCellValue()); //日期型  
                 }  
-                else {  
-                    cellValue = String.valueOf(cell.getNumericCellValue()); //数字  
+                else {
+                	if( cell.getNumericCellValue() > 9999999.9 ) {
+                		BigDecimal bd = new BigDecimal(cell.getNumericCellValue()); 
+                		cellValue = bd.toPlainString();
+                	}
+                	else {
+                		cellValue = String.valueOf(cell.getNumericCellValue()); //数字
+                	}
                     if(cellValue.contains(".")) {
                     	cellValue = cellValue.substring(0, cellValue.indexOf('.'));
                     }
@@ -1394,26 +1404,26 @@ public class ResourceUploadService {
 		
 		//2. update resourcetemplate record
 		//2.1 updateRowRelation
-		ResRowRelationDAO rrrdao = new ResRowRelationDAOImpl();
-		List<ResRelationRow> rrrs = rrrdao.QueryAllResRelationRow();
+		ResRowResourceDAO rrrdao = new ResRowResourceDAOImpl();
+		List<ResRowResource> rrrs = rrrdao.QueryAllResRelationRow();
 		for(int i = 0; i<rrrs.size(); i++) {
 			updateResourceOfRelationRow( rrrs.get(i), rdsMap );
 		}
-		List<ResRelationRowPrivate> rrrps = rrrdao.QueryAllResRelationRowPrivate();
+		List<ResRowResourcePrivate> rrrps = rrrdao.QueryAllResRelationRowPrivate();
 		for(int i = 0; i<rrrps.size(); i++) {
 			updateResourceOfRelationRowPrivate( rrrps.get(i), rdspMap);
 		}
 		
 		//2.2 updateColumnRelation
-		ResColumnRelationDAO rcrdao = new ResColumnRelationDAOImpl();
-		List<ResRelationColumn> rrcs = rcrdao.QueryAllResRelationColumn();
+		ResClassifyResourceDAO rcrdao = new ResClassifyResourceDAOImpl();
+		List<ResClassifyResource> rrcs = rcrdao.QueryAllResClassifyResource();
 		for(int i = 0; i<rrcs.size(); i++) {
 			updateResourceOfRelationColumn( rrcs.get(i), rdsMap );
 		}
 		
 		//2.3 updateClassifyRelation
-		ResClassifyRelationDAO rclassrdao = new ResClassifyRelationDAOImpl();
-		List<ResRelationClassify> rrclasss = rclassrdao.QueryAllResRelationClassify();
+		ResClassifyRelationResourceDAO rclassrdao = new ResClassifyRelationResourceDAOImpl();
+		List<ResClassifyRelationResource> rrclasss = rclassrdao.QueryAllResRelationClassify();
 		for(int i = 0; i<rrclasss.size(); i++) {
 			updateResourceOfRelationClassify( rrclasss.get(i), rdsMap );
 		}
@@ -1479,9 +1489,9 @@ public class ResourceUploadService {
 //		rddao.ResDataOfColumnSave(rd, rc.getCLUE_SRC_SYS());
 //	}
 	
-	private void updateResourceOfRelationColumn( ResRelationColumn rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
+	private void updateResourceOfRelationColumn( ResClassifyResource rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
-		ResColumnDAO rcdao = new ResColumnDAOImpl();
+		ResColumnResourceDAO rcdao = new ResColumnResourceDAOImpl();
 		ResColumn rc = rcdao.QueryColumnByElement(rrc.getDATA_SET(), rrc.getELEMENT());
 		if( rc == null ) {
 			logger.warn("[IRD]column record not found when updata resource of column relation by condition of dataset:'" + rrc.getDATA_SET() + "', element:'" + rrc.getELEMENT() + "' ");
@@ -1501,9 +1511,9 @@ public class ResourceUploadService {
 		rddao.ImportResDataOfRelationColumn(rdt);
 	}
 
-	private void updateResourceOfRelationRow( ResRelationRow rrr, Map<String, ResDataSet> rdsMap ) throws Exception {
+	private void updateResourceOfRelationRow( ResRowResource rrr, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
-		ResColumnDAO rcdao = new ResColumnDAOImpl();
+		ResColumnResourceDAO rcdao = new ResColumnResourceDAOImpl();
 		ResColumn rc = rcdao.QueryColumnByElement(rrr.getDATA_SET(), rrr.getELEMENT());
 		if( rc == null ) {
 			logger.warn("[IRD]column record not found when updata resource of row relation by condition of dataset:'" + rrr.getDATA_SET() + "', element:'" + rrr.getELEMENT() + "' ");
@@ -1524,9 +1534,9 @@ public class ResourceUploadService {
 		rddao.ImportResDataOfRelationRow(rdt);
 	}
 	
-	private void updateResourceOfRelationRowPrivate( ResRelationRowPrivate rrrp, Map<String, ResDataSetPrivate> rdspMap ) throws Exception {
+	private void updateResourceOfRelationRowPrivate( ResRowResourcePrivate rrrp, Map<String, ResDataSetPrivate> rdspMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
-		ResColumnDAO rcdao = new ResColumnDAOImpl();
+		ResColumnResourceDAO rcdao = new ResColumnResourceDAOImpl();
 		ResColumnPrivate rcp = rcdao.QueryColumnPrivateByElement(rrrp.getDATA_SET(), rrrp.getELEMENT());
 		if( rcp == null ) {
 			logger.warn("[IRD]private column record not found when updata resource of private row relation by condition of dataset:'" + rrrp.getDATA_SET() + "', element:'" + rrrp.getELEMENT() + "' ");
@@ -1547,7 +1557,7 @@ public class ResourceUploadService {
 		rddao.ImportResDataOfRelationRow(rdt);
 	}
 	
-	private void updateResourceOfRelationClassify( ResRelationClassify rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
+	private void updateResourceOfRelationClassify( ResClassifyRelationResource rrc, Map<String, ResDataSet> rdsMap ) throws Exception {
 		ResDataDAO rddao = new ResDataDAOImpl();
 		ResDataTemplate rdt = new ResDataTemplate();
 		rdt.setRESOURCE_STATUS(ResData.RESSTATUSENABLE);

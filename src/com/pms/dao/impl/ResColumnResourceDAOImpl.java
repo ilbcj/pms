@@ -6,13 +6,13 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
-import com.pms.dao.ResColumnDAO;
+import com.pms.dao.ResColumnResourceDAO;
 import com.pms.model.HibernateUtil;
 import com.pms.model.ResColumn;
 import com.pms.model.ResColumnPrivate;
 import com.pms.util.DateTimeUtil;
 
-public class ResColumnDAOImpl implements ResColumnDAO {
+public class ResColumnResourceDAOImpl implements ResColumnResourceDAO {
 
 	@Override
 	public ResColumn ResColumnSave(ResColumn c)
@@ -153,11 +153,21 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResColumn rs = null;
-		String sqlString = "select * from WA_COLUMN where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT ";
+		String sqlString = "select * from WA_COLUMN where 1 = 1 ";
+		if( dataset != null && dataset.length() > 0 ) {
+			sqlString += "and DATA_SET = :DATA_SET ";
+		}
+		if( element != null && element.length() > 0 ) {
+			sqlString += "and ELEMENT = :ELEMENT ";
+		}
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResColumn.class);
-			q.setString("DATA_SET", dataset);
-			q.setString("ELEMENT", element);
+			if( dataset != null && dataset.length() > 0 ) {
+				q.setString("DATA_SET", dataset);
+			}
+			if( element != null && element.length() > 0 ) {
+				q.setString("ELEMENT", element);
+			}
 			rs = (ResColumn) q.uniqueResult();
 			tx.commit();
 		} catch(Exception e) {
@@ -180,11 +190,21 @@ public class ResColumnDAOImpl implements ResColumnDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResColumnPrivate rs = null;
-		String sqlString = "select * from WA_COLUMN_PRIVATE where DATA_SET = :DATA_SET and ELEMENT = :ELEMENT ";
+		String sqlString = "select * from WA_COLUMN_PRIVATE where 1=1 ";
+		if( dataset != null && dataset.length() > 0 ) {
+			sqlString += "and DATA_SET = :DATA_SET ";
+		}
+		if( element != null && element.length() > 0 ) {
+			sqlString += "and ELEMENT = :ELEMENT ";
+		}
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResColumnPrivate.class);
-			q.setString("DATA_SET", dataset);
-			q.setString("ELEMENT", element);
+			if( dataset != null && dataset.length() > 0 ) {
+				q.setString("DATA_SET", dataset);
+			}
+			if( element != null && element.length() > 0 ) {
+				q.setString("ELEMENT", element);
+			}
 			rs = (ResColumnPrivate) q.uniqueResult();
 			tx.commit();
 		} catch(Exception e) {

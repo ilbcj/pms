@@ -9,9 +9,9 @@ public class Common010032 {
 	private String sourceName;
 	private String syncKey;
 	private String parentCondition;
-	private List<Condition> subConditions;
-	private List<Item> subItems;
-	private List<Item> items;
+	private List<Condition> subConditions;// subcondition in parent condition;
+	private List<Item> subItems;// items in parent condition;
+	private List<Item> items;// return column
 	private List<Item> whiteListItems;
 	
 	public List<Item> getWhiteListItems() {

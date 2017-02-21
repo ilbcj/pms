@@ -1,6 +1,6 @@
 package com.pms.model;
 
-public class ResRelationRowPrivate {
+public class ResRowResourcePrivate {
 	public final static int DELSTATUSNO = 0;
 	public final static int DELSTATUSYES = 1;
 	
@@ -13,9 +13,9 @@ public class ResRelationRowPrivate {
 	private int DATA_VERSION;
 	private String LATEST_MOD_TIME;
 	
-	public ResRelationRowPrivate() {
+	public ResRowResourcePrivate() {
 	}
-	public ResRelationRowPrivate(ResRelationRow rr) {
+	public ResRowResourcePrivate(ResRowResource rr) {
 		id = rr.getId();
 		DATA_SET = rr.getDATA_SET();
 		ELEMENT = rr.getELEMENT();

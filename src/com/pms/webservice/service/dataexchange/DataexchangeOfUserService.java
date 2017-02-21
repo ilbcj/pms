@@ -1,47 +1,28 @@
 package com.pms.webservice.service.dataexchange;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.pms.model.User;
 import com.pms.util.DateTimeUtil;
 import com.pms.webservice.dao.ExchangeDAO;
 import com.pms.webservice.dao.impl.ExchangeDAOImpl;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.exchange.ExchangeCondition;
 
-public class DataexchangeService {
-	private static Log logger = LogFactory.getLog(DataexchangeService.class);
-	
-	protected ExchangeCondition ec;
-	protected DataexchangeService(ExchangeCondition ec)
-	{
-		this.ec = ec;
-	}
-	
-	public static DataexchangeService getInstance(ExchangeCondition ec) {
-		DataexchangeService des = null;
-		if( ec != null && ec.getTable() != null && ec.getTable().length() > 0 ) {
-			String tablename = ec.getTable();
-			if(tablename.equalsIgnoreCase("wa_authority_police")) {
-				des = new DataexchangeOfUserService(ec);
-			}
-			else if(tablename.equalsIgnoreCase("WA_DATASET")) {
-				//des = new ANewClass();
-			}
-			else {
-				// default update operation;
-				des = new DataexchangeService(ec);
-			}
-		}
-		else {
-			des = new DataexchangeService(ec);
-		}
-		return des;
-	}
+public class DataexchangeOfUserService extends DataexchangeService {
 
+	private Log logger = LogFactory.getLog(DataexchangeOfUserService.class);
+	
+	protected DataexchangeOfUserService(ExchangeCondition ec) {
+		super(ec);
+	}
+	
 	public void ExecuteUpdate() throws Exception {
 		if( ec == null || ec.getCommon010131() == null || ec.getCommon010131().getItems() == null || ec.getCommon010131().getItems().size() == 0 ) {
-			logger.info("[DESIS]更新数据操作的条件不完整.");
+			logger.info("[DESIU]更新用户数据操作的条件不完整.");
 			return;
 		}
 		
@@ -70,40 +51,40 @@ public class DataexchangeService {
 			
 			String sqlString = "insert into " + tablename + " ";
 			sqlString += columns + values;
-			System.out.println(sqlString);
-			
-			ExchangeDAO dao = new ExchangeDAOImpl();
-			int rs = dao.SqlExchangeData(sqlString);
-			System.out.println(rs);
+			logger.info("[DESIU]remote pms node required insert user.[" + sqlString + "]");
 		}
-		else {
-		
+		else {			
 			if("IN".equalsIgnoreCase(ec.getCondition().getRel())) {
-				throw new Exception("can not deal with \"IN\" condition in update data process's condition");
+			throw new Exception("can not deal with \"IN\" condition in update data process's condition");
 			}
-			
-			String sqlString = "update " + ec.getTable() + " set ";
-			for(int i = 0; i < ec.getCommon010131().getItems().size(); i++) {
-				Item item = ec.getCommon010131().getItems().get(i);
-				sqlString += item.getEng() + "='" + item.getVal() + "', ";
-			}
-			
-			sqlString = sqlString.substring(0, sqlString.length() - 2);
-			
-			sqlString += " where " ;
+			String search = "select * from wa_authority_police where ";
 			for(int j = 0; j < ec.getCondition().getItems().size(); j++) {
 				Item item = ec.getCondition().getItems().get(j);
-				sqlString += item.getEng() + "='" + item.getVal() + "' " + ec.getCondition().getRel() + " ";
+				search += item.getEng() + "='" + item.getVal() + "' " + ec.getCondition().getRel() + " ";
 			}
-			
-			sqlString = sqlString.substring(0, sqlString.length() - ec.getCondition().getRel().length() - 1);
-			System.out.println(sqlString);
+			search = search.substring(0, search.length() - ec.getCondition().getRel().length() - 1);
 			
 			ExchangeDAO dao = new ExchangeDAOImpl();
-			int rs = dao.SqlExchangeData(sqlString);
-			System.out.println(rs);
+			List<User> users = dao.SearchUserData(search);
+			if(users == null){
+				logger.info("[DESIU]no user has been found when update user info.[sql:" + search + "]");
+			}
+			else {
+				for(User user : users) {
+					String update = "update wa_authority_police set ";
+					for(int i = 0; i < ec.getCommon010131().getItems().size(); i++) {
+						Item item = ec.getCommon010131().getItems().get(i);
+						update += item.getEng() + "='" + item.getVal() + "', ";
+					}
+					update += " data_version = " + (user.getDATA_VERSION() + 1) + ", " ;
+					update += " latest_mod_time = '" + DateTimeUtil.GetCurrentTime() + "'";
+					update += " where id = " + user.getId() + " ";
+					logger.info("[DESIU]update user info.[sql:" + update + "]");
+					int rs = dao.SqlExchangeData(update);
+					logger.info("[DESIU]update user info finish.[sql:" + update + "; count:" + rs + "]");
+				}
+			}
 		}
 	}
-	
-	
+
 }

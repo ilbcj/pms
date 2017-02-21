@@ -6,27 +6,28 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 
-import com.pms.dao.ResClassifyRelationDAO;
+import com.pms.dao.ResClassifyRelationResourceDAO;
 import com.pms.model.HibernateUtil;
-import com.pms.model.ResRelationClassify;
+import com.pms.model.ResClassifyRelationResource;
 import com.pms.util.DateTimeUtil;
 
-public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
+public class ResClassifyRelationResourceDAOImpl implements ResClassifyRelationResourceDAO {
 
 	@Override
-	public ResRelationClassify ResRelationClassifySave(ResRelationClassify rc)
+	public ResClassifyRelationResource ResRelationClassifySave(ResClassifyRelationResource rc)
 			throws Exception {
 		//打开线程安全的session对象
 		Session session = HibernateUtil.currentSession();
 		//打开事务
 		Transaction tx = session.beginTransaction();
 		
-		ResRelationClassify rs = null;
-		String sqlString = "select * from WA_CLASSIFY_RELATION where ID = :ID ";
+		ResClassifyRelationResource rs = null;
+		String sqlString = "select * from WA_CLASSIFY_RELATION_RESOURCE where DATA_SET = :DATA_SET and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS";
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationClassify.class);
-			q.setInteger("ID", rc.getId());
-			rs = (ResRelationClassify) q.uniqueResult();
+			Query q = session.createSQLQuery(sqlString).addEntity(ResClassifyRelationResource.class);
+			q.setString("DATA_SET", rc.getDATA_SET());
+			q.setString("SECTION_RELATIOIN_CLASS", rc.getSECTION_RELATIOIN_CLASS());
+			rs = (ResClassifyRelationResource) q.uniqueResult();
 			
 			if(rs != null) {
 				rc.setId(rs.getId());
@@ -38,7 +39,7 @@ public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
 			String timenow = DateTimeUtil.GetCurrentTime();
 			rc.setLATEST_MOD_TIME(timenow);
 			
-			rc = (ResRelationClassify) session.merge(rc);
+			rc = (ResClassifyRelationResource) session.merge(rc);
 			tx.commit();
 		} catch(ConstraintViolationException cne){
 			tx.rollback();
@@ -67,15 +68,15 @@ public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRelationClassify> QueryAllResRelationClassify()
+	public List<ResClassifyRelationResource> QueryAllResRelationClassify()
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
-		List<ResRelationClassify> rs = null;
-		String sqlString = "select * from WA_CLASSIFY_RELATION ";
+		List<ResClassifyRelationResource> rs = null;
+		String sqlString = "select * from wa_classify_relation_resource ";
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationClassify.class);
+			Query q = session.createSQLQuery(sqlString).addEntity(ResClassifyRelationResource.class);
 			rs = q.list();
 			tx.commit();
 		} catch(Exception e) {
@@ -93,15 +94,15 @@ public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ResRelationClassify> QueryResRelationClassify(String dataSet)
+	public List<ResClassifyRelationResource> QueryResRelationClassify(String dataSet)
 			throws Exception {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		
-		List<ResRelationClassify> rs = null;
-		String sqlString = "select * from WA_CLASSIFY_RELATION WHERE DATA_SET = :DATA_SET ";
+		List<ResClassifyRelationResource> rs = null;
+		String sqlString = "select * from wa_classify_relation_resource WHERE DATA_SET = :DATA_SET ";
 		try {
-			Query q = session.createSQLQuery(sqlString).addEntity(ResRelationClassify.class);
+			Query q = session.createSQLQuery(sqlString).addEntity(ResClassifyRelationResource.class);
 			q.setString("DATA_SET", dataSet);
 			rs = q.list();
 			tx.commit();
@@ -124,7 +125,7 @@ public class ResClassifyRelationDAOImpl implements ResClassifyRelationDAO {
 		Transaction tx = session.beginTransaction();
 		
 		int rs = 0;
-		String sqlString = "delete from WA_CLASSIFY_RELATION ";
+		String sqlString = "delete from wa_classify_relation_resource ";
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			rs = q.executeUpdate();

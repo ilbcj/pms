@@ -21,6 +21,7 @@ import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
 import com.pms.model.ResRoleResourceTemplate;
+import com.pms.model.RowResourceColumn;
 import com.pms.util.ConfigHelper;
 import com.pms.util.DateTimeUtil;
 
@@ -711,63 +712,65 @@ public class ResourceDAOImpl implements ResourceDAO {
 			if(criteria.getRMK() != null && criteria.getRMK().length() > 0) {
 				sqlString += " and RMK like :RMK ";
 			}
-			if(resource_status != null) {
-				for (int i = 0; i < resource_status.size(); i++) {
-					list =Arrays.asList(resource_status.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and RESOURCE_STATUS in (:RESOURCE_STATUS) ";
-				}
+		}
+		
+		if(resource_status != null) {
+			for (int i = 0; i < resource_status.size(); i++) {
+				list =Arrays.asList(resource_status.get(i).split(","));	
 			}
-			if(resource_type != null) {
-				for (int i = 0; i < resource_type.size(); i++) {
-					list =Arrays.asList(resource_type.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and resource_type in (:resource_type) ";
-				}
-			}
-			if(dataset_sensitive_level != null) {
-				for (int i = 0; i < dataset_sensitive_level.size(); i++) {
-					list =Arrays.asList(dataset_sensitive_level.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and DATASET_SENSITIVE_LEVEL in (:DATASET_SENSITIVE_LEVEL) ";
-				}
-			}
-			if(data_set != null) {
-				for (int i = 0; i < data_set.size(); i++) {
-					list =Arrays.asList(data_set.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and DATA_SET in (:DATA_SET) ";
-				}
-			}
-			if(section_class != null) {
-				for (int i = 0; i < section_class.size(); i++) {
-					list =Arrays.asList(section_class.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and SECTION_CLASS in (:SECTION_CLASS) ";
-				}
-			}
-			if(element != null) {
-				for (int i = 0; i < element.size(); i++) {
-					list =Arrays.asList(element.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and ELEMENT in (:ELEMENT) ";
-				}
-			}
-			if(section_relatioin_class != null) {
-				for (int i = 0; i < section_relatioin_class.size(); i++) {
-					list =Arrays.asList(section_relatioin_class.get(i).split(","));	
-				}
-				if(list.get(0) != "" && ! list.get(0).equals("")){
-					sqlString += " and SECTION_RELATIOIN_CLASS in (:SECTION_RELATIOIN_CLASS) ";
-				}
+			if(list.get(0) != "" && ! list.get(0).equals("")){
+				sqlString += " and RESOURCE_STATUS in (:RESOURCE_STATUS) ";
 			}
 		}
+		if(resource_type != null) {
+			for (int i = 0; i < resource_type.size(); i++) {
+				list =Arrays.asList(resource_type.get(i).split(","));	
+			}
+			if(list.get(0) != "" && ! list.get(0).equals("")){
+				sqlString += " and resource_type in (:resource_type) ";
+			}
+		}
+		if(dataset_sensitive_level != null) {
+			for (int i = 0; i < dataset_sensitive_level.size(); i++) {
+				list =Arrays.asList(dataset_sensitive_level.get(i).split(","));	
+			}
+			if(list.get(0) != "" && ! list.get(0).equals("")){
+				sqlString += " and DATASET_SENSITIVE_LEVEL in (:DATASET_SENSITIVE_LEVEL) ";
+			}
+		}
+		if(data_set != null) {
+			for (int i = 0; i < data_set.size(); i++) {
+				list =Arrays.asList(data_set.get(i).split(","));	
+			}
+			if(list.get(0) != "" && ! list.get(0).equals("")){
+				sqlString += " and DATA_SET in (:DATA_SET) ";
+			}
+		}
+		if(section_class != null) {
+			for (int i = 0; i < section_class.size(); i++) {
+				list =Arrays.asList(section_class.get(i).split(","));	
+			}
+			if(list.get(0) != "" && ! list.get(0).equals("")){
+				sqlString += " and SECTION_CLASS in (:SECTION_CLASS) ";
+			}
+		}
+		if(element != null) {
+			for (int i = 0; i < element.size(); i++) {
+				list =Arrays.asList(element.get(i).split(","));	
+			}
+			if(list.get(0) != "" && ! list.get(0).equals("")){
+				sqlString += " and ELEMENT in (:ELEMENT) ";
+			}
+		}
+		if(section_relatioin_class != null) {
+			for (int i = 0; i < section_relatioin_class.size(); i++) {
+				list =Arrays.asList(section_relatioin_class.get(i).split(","));	
+			}
+			if(list.get(0) != "" && ! list.get(0).equals("")){
+				sqlString += " and SECTION_RELATIOIN_CLASS in (:SECTION_RELATIOIN_CLASS) ";
+			}
+		}
+
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
@@ -785,66 +788,66 @@ public class ResourceDAOImpl implements ResourceDAO {
 				if(criteria.getRMK() != null && criteria.getRMK().length() > 0) {
 					q.setString( "RMK", "%" + criteria.getRMK() + "%" );
 				}
-				if(resource_status != null) {
-					for (int i = 0; i < resource_status.size(); i++) {
-						list =Arrays.asList(resource_status.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("RESOURCE_STATUS", list);
-					}
-				}	
-				if(resource_type != null) {
-					for (int i = 0; i < resource_type.size(); i++) {
-						list =Arrays.asList(resource_type.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("resource_type", list);
-					}
+			}
+			
+			if(resource_status != null) {
+				for (int i = 0; i < resource_status.size(); i++) {
+					list =Arrays.asList(resource_status.get(i).split(","));	
 				}
-				if(dataset_sensitive_level != null) {
-					for (int i = 0; i < dataset_sensitive_level.size(); i++) {
-						list =Arrays.asList(dataset_sensitive_level.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("DATASET_SENSITIVE_LEVEL", list);
-					}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					q.setParameterList("RESOURCE_STATUS", list);
 				}
-				if(data_set != null) {
-					for (int i = 0; i < data_set.size(); i++) {
-						list =Arrays.asList(data_set.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("DATA_SET", list);
-					}
+			}	
+			if(resource_type != null) {
+				for (int i = 0; i < resource_type.size(); i++) {
+					list =Arrays.asList(resource_type.get(i).split(","));	
 				}
-				if(section_class != null) {
-					for (int i = 0; i < section_class.size(); i++) {
-						list =Arrays.asList(section_class.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("SECTION_CLASS", list);
-					}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					q.setParameterList("resource_type", list);
 				}
-				if(element != null) {
-					for (int i = 0; i < element.size(); i++) {
-						list =Arrays.asList(element.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("ELEMENT", list);
-					}
+			}
+			if(dataset_sensitive_level != null) {
+				for (int i = 0; i < dataset_sensitive_level.size(); i++) {
+					list =Arrays.asList(dataset_sensitive_level.get(i).split(","));	
 				}
-				if(section_relatioin_class != null) {
-					for (int i = 0; i < section_relatioin_class.size(); i++) {
-						list =Arrays.asList(section_relatioin_class.get(i).split(","));	
-					}
-					if(list.get(0) != "" && ! list.get(0).equals("")){
-						q.setParameterList("SECTION_RELATIOIN_CLASS", list);
-					}
-					
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					q.setParameterList("DATASET_SENSITIVE_LEVEL", list);
+				}
+			}
+			if(data_set != null) {
+				for (int i = 0; i < data_set.size(); i++) {
+					list =Arrays.asList(data_set.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					q.setParameterList("DATA_SET", list);
+				}
+			}
+			if(section_class != null) {
+				for (int i = 0; i < section_class.size(); i++) {
+					list =Arrays.asList(section_class.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					q.setParameterList("SECTION_CLASS", list);
+				}
+			}
+			if(element != null) {
+				for (int i = 0; i < element.size(); i++) {
+					list =Arrays.asList(element.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					q.setParameterList("ELEMENT", list);
+				}
+			}
+			if(section_relatioin_class != null) {
+				for (int i = 0; i < section_relatioin_class.size(); i++) {
+					list =Arrays.asList(section_relatioin_class.get(i).split(","));	
+				}
+				if(list.get(0) != "" && ! list.get(0).equals("")){
+					q.setParameterList("SECTION_RELATIOIN_CLASS", list);
 				}
 				
-
 			}
+
 			if( page > 0 && rows > 0) {
 				q.setFirstResult((page-1) * rows);   
 				q.setMaxResults(rows);
@@ -1924,6 +1927,32 @@ public class ResourceDAOImpl implements ResourceDAO {
 		return rs;
 	}
 	
+	@Override
+	public ResRoleResource GetRoleResourceByRoleidAndResid(String roleid, String resid, int resType) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		ResRoleResource rs = null;
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_ID = :RESOURCE_ID and RESOURCE_CLASS = :RESOURCE_CLASS and DELETE_STATUS=:DELETE_STATUS";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
+			q.setString("BUSINESS_ROLE", roleid);
+			q.setString("RESOURCE_ID", resid);
+			q.setInteger("RESOURCE_CLASS", resType);
+			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
+			rs = (ResRoleResource)q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ResRoleResource> GetRoleResourcesByRoleid(String id)
@@ -1931,11 +1960,12 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResRoleResource> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE";
+		String sqlString = "select * from WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and DELETE_STATUS=:DELETE_STATUS";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResRoleResource.class);
 			q.setString("BUSINESS_ROLE", id);
+			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -2011,12 +2041,13 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID in (SELECT RESOURCE_ID FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS)";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID in (SELECT RESOURCE_ID FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS and DELETE_STATUS=:DELETE_STATUS)";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
 			q.setString("BUSINESS_ROLE", id);
 			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
+			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
 			if( page > 0 && rows > 0) {
 				q.setFirstResult((page-1) * rows);   
 				q.setMaxResults(rows);
@@ -2039,12 +2070,13 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		int rs;
-		String sqlString = "select count(*) FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS";
+		String sqlString = "select count(*) FROM WA_AUTHORITY_RESOURCE_ROLE where BUSINESS_ROLE = :BUSINESS_ROLE and RESOURCE_CLASS = :RESOURCE_CLASS and DELETE_STATUS=:DELETE_STATUS";
 		
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("BUSINESS_ROLE", id);
 			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
+			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
 			
 			rs = ((BigInteger)q.uniqueResult()).intValue();
 			tx.commit();
@@ -2231,12 +2263,14 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		List<ResData> rs = null;
-		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where RESOURCE_ID in (SELECT resource_id FROM wa_authority_resource_role where business_role = :business_role and RESOURCE_CLASS = :RESOURCE_CLASS);";
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where DELETE_STATUS=:RESOURCE_DELETE_STATUS and RESOURCE_ID in (SELECT resource_id FROM wa_authority_resource_role where business_role = :business_role and RESOURCE_CLASS = :RESOURCE_CLASS and DELETE_STATUS=:DELETE_STATUS)";
 
 		try {
 			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setInteger("RESOURCE_DELETE_STATUS", ResData.DELSTATUSNO);
 			q.setString("business_role", roleId);
 			q.setInteger("RESOURCE_CLASS", ResRoleResource.RESCLASSDATA);
+			q.setInteger("DELETE_STATUS", ResRoleResource.DELSTATUSNO);
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {
@@ -2732,5 +2766,83 @@ public class ResourceDAOImpl implements ResourceDAO {
 			HibernateUtil.closeSession();
 		}
 		return count;
+	}
+	
+	public RowResourceColumn GetRowResourceColumnsByElement(String element) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		
+		RowResourceColumn rs = null;
+		String sqlString = "select * from row_resource_column where element = :element ";
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(RowResourceColumn.class);
+			q.setString("element", element);
+			rs = (RowResourceColumn) q.uniqueResult();
+			
+			tx.commit();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		}
+		finally
+		{
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
+	@Override
+	public ResData GetClassifyRelationResourceByRelationId(String dataset, String relation) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		ResData rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where data_set =:data_set and SECTION_RELATIOIN_CLASS = :SECTION_RELATIOIN_CLASS";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("data_set", dataset);
+			q.setString("SECTION_RELATIOIN_CLASS", relation);
+			rs = (ResData) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return rs;
+	}
+	
+	@Override
+	public ResData GetClassifyResourceByClassifyAndElement(String dataset, String classify, String element) throws Exception {
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		ResData rs = null;
+		String sqlString = "select * from WA_AUTHORITY_DATA_RESOURCE where SECTION_RELATIOIN_CLASS is null and ELEMENT_VALUE is null and data_set =:DATA_SET and SECTION_CLASS = :SECTION_CLASS and element = :ELEMENT";
+
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResData.class);
+			q.setString("DATA_SET", dataset);
+			q.setString("SECTION_CLASS", classify);
+			q.setString("ELEMENT", element);
+			rs = (ResData) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+		return rs;
 	}
 }

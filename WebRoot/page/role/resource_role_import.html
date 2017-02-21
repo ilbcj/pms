@@ -29,7 +29,18 @@
 			    <div class="text_center" style="margin-top:15px;">
 			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importFileSave()">导入文件</a>
 				</div>
-				
+				<div class="text_center" style="margin-top:15px;">
+			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importUserSave()">导入用户</a>
+				</div>
+				<div class="text_center" style="margin-top:15px;">
+			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importPrivateRoleSave()">导入私有角色</a>
+				</div>
+				<div class="text_center" style="margin-top:15px;">
+			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importPrivateRoleUserRelationSave()">导入私有角色用户关系</a>
+				</div>
+				<div class="text_center" style="margin-top:15px;">
+			    	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="importPrivateRoleFuncRelationSave()">导入私有角色与功能资源关系</a>
+				</div>
 			</div>
 		</div><!-- end of content -->
 	
@@ -55,7 +66,82 @@
 			}
 		});
   	}
-  	  	
+  	
+  	function importUserSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../role/fileUploadUser.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传用户信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			}
+		});
+  	}
+  	
+  	function importPrivateRoleSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../role/fileUploadPrivateRole.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传角色信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			}
+		});
+  	}
+  	
+  	function importPrivateRoleUserRelationSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../role/fileUploadPrivateRoleUserRelation.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传角色用户关系信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			}
+		});
+  	}
+  	
+  	function importPrivateRoleFuncRelationSave(){
+  		$.messager.progress();	// 显示进度条
+		$("#import_file_form").form('submit', {
+			url:'../role/fileUploadPrivateRoleFuncRelation.action',
+			success: function(message){
+				var retObj = $.parseJSON(message);
+				
+				if(retObj.result == true){
+					$.messager.progress('close');	// 隐藏进度条
+			     	$.messager.alert("温馨提示","文件上传成功！");
+			     }else{
+			     	$.messager.progress('close');
+			     	errorTip("上传角色功能资源关系信息失败："+retObj.message);
+			     }
+			     $("#import_file_win").window('close');
+			}
+		});
+  	}
 	</script>
 	
   </body>

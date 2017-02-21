@@ -31,7 +31,7 @@ import com.pms.model.ResRole;
 import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResourceTemplate;
 import com.pms.service.ResourceManageService;
-import com.pms.service.ResourceUploadService;
+import com.pms.service.ResourceUploadServiceV2;
 
 public class RoleAction extends ActionSupport {
 
@@ -433,7 +433,7 @@ public class RoleAction extends ActionSupport {
 		setResult(false);
 		
 		try {
-			ResourceUploadService rus = new ResourceUploadService();
+			ResourceUploadServiceV2 rus = new ResourceUploadServiceV2();
 			if(fi.length()==0){
 				System.out.println("上传文件长度为0");
 			} else {
@@ -444,6 +444,138 @@ public class RoleAction extends ActionSupport {
 		} catch (Exception e) {
 			setResult(false);
 			this.setMessage("导入文件失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
+		}
+	}
+	
+	public String FileUploadUser() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
+		try {
+			ResourceUploadServiceV2 rus = new ResourceUploadServiceV2();
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+				rus.UploadWZUser(fi);
+			}
+			setResult(true);
+			return null;
+		} catch (Exception e) {
+			setResult(false);
+			this.setMessage("导入用户信息失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
+		}
+	}
+	
+	public String FileUploadPrivateRole() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
+		try {
+			ResourceUploadServiceV2 rus = new ResourceUploadServiceV2();
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+				rus.UploadWZRole(fi);
+			}
+			setResult(true);
+			return null;
+		} catch (Exception e) {
+			setResult(false);
+			this.setMessage("导入角色信息失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
+		}
+	}
+		
+	public String FileUploadPrivateRoleUserRelation() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
+		try {
+			ResourceUploadServiceV2 rus = new ResourceUploadServiceV2();
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+				rus.UploadWZRoleUserRelation(fi);
+			}
+			setResult(true);
+			return null;
+		} catch (Exception e) {
+			setResult(false);
+			this.setMessage("导入角色用户关系数据失败。" + e.getMessage());
+			msg.put("message", message);
+			return null;
+		} finally {
+			msg.put("result", result);
+			json = JSONObject.fromObject(msg).toString();
+			htmlout.print(json);
+			htmlout.flush();
+			htmlout.close();
+		}
+	}
+	
+	public String FileUploadPrivateRoleFuncRelation() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html; charset=utf-8");
+		response.setHeader("cache-control", "no-cache");
+		PrintWriter htmlout = response.getWriter();
+		String json = "";
+		HashMap<String, Object> msg = new HashMap<String, Object>();  
+		setResult(false);
+		
+		try {
+			ResourceUploadServiceV2 rus = new ResourceUploadServiceV2();
+			if(fi.length()==0){
+				System.out.println("上传文件长度为0");
+			} else {
+				rus.UploadWZRoleFuncRelation(fi);
+			}
+			setResult(true);
+			return null;
+		} catch (Exception e) {
+			setResult(false);
+			this.setMessage("导入角色功能资源关系数据失败。" + e.getMessage());
 			msg.put("message", message);
 			return null;
 		} finally {

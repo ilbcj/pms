@@ -27,4 +27,8 @@ public interface PrivilegeDAO {
 	UserRoleView GetUserRoleViewByUserIdRoleID(String uid, String rid) throws Exception;
 	List<UserRoleView> QueryUserRoleView() throws Exception;
 	List<UserRole> QueryUserRole() throws Exception;
+	
+	//
+	public List<UserRole> GetUserRoleByUserId(String uid) throws Exception;
+	
 }

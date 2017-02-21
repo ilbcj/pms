@@ -29,12 +29,14 @@ import org.jdom2.output.XMLOutputter;
 //import org.w3c.dom.Node;
 //import org.w3c.dom.NodeList;
 
-//import com.pms.webservice.model.Common010121;
-//import com.pms.webservice.model.Common010123;
+import com.pms.dao.ResColumnResourceDAO;
 import com.pms.dao.TaskDAO;
 import com.pms.dao.WhiteListColumnDAO;
+import com.pms.dao.impl.ResColumnResourceDAOImpl;
 import com.pms.dao.impl.TaskDAOImpl;
 import com.pms.dao.impl.WhiteListColumnDAOImpl;
+import com.pms.model.ResColumn;
+import com.pms.model.ResColumnPrivate;
 import com.pms.model.Task;
 import com.pms.model.WhiteListColumn;
 import com.pms.util.ConfigHelper;
@@ -614,7 +616,8 @@ public abstract class SyncService {
 									Element xmlCurrentCondition = xmlSubConditions.get(j);
 									if( "ITEM".equalsIgnoreCase(xmlCurrentCondition.getName()) ) {
 										subItem.setKey( xmlCurrentCondition.getAttributeValue("key") );
-										subItem.setEng( convertKeyToEngNameWithAlias( xmlCurrentCondition.getAttributeValue("key") ) );
+										//subItem.setEng( convertKeyToEngNameWithAlias( xmlCurrentCondition.getAttributeValue("key") ) );
+										subItem.setEng( getEngByKeyFromColumnDef(common010032.getSourceName(), xmlCurrentCondition.getAttributeValue("key")) );
 										subItem.setVal( xmlCurrentCondition.getAttributeValue("val") );
 										if(subItem.getEng() == null || subItem.getEng().length() == 0) {
 											throw new Exception("unsupport search column key:" + subItem.getKey());
@@ -631,7 +634,8 @@ public abstract class SyncService {
 											for(int x = 0; x < values.length; x++) {
 												Item item = new Item();
 												item.setKey( xmlCurrentItem.getAttributeValue("key") );
-												item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
+												//item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
+												item.setEng( getEngByKeyFromColumnDef(common010032.getSourceName(), xmlCurrentItem.getAttributeValue("key")) );
 												item.setVal( values[x] );
 												if(item.getEng() == null || item.getEng().length() == 0) {
 													throw new Exception("unsupport search column key:" + item.getKey());
@@ -666,14 +670,19 @@ public abstract class SyncService {
 								Element xmlCurrentItem = xmlItems.get(j);
 								Item item = new Item();
 								item.setKey( xmlCurrentItem.getAttributeValue("key") );
-								item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
+								//item.setEng( convertKeyToEngNameWithAlias( xmlCurrentItem.getAttributeValue("key") ) );
+								item.setEng( getEngByKeyFromColumnDef(common010032.getSourceName(), xmlCurrentItem.getAttributeValue("key")) );
 								item.setVal( xmlCurrentItem.getAttributeValue("val") );
 								if(item.getEng() == null || item.getEng().length() == 0) {
+									
 									if( isInWhiteList(item.getKey()) ) {
 										item.setHasAccessAuth(true);
 										whiteListItems.add(item);
+										continue;// column add to whitelist should not add to return column
 									}
-									throw new Exception("unsupport search column key:" + item.getKey());
+									else {
+										throw new Exception("unsupport search column key:" + item.getKey());
+									}
 								}
 								items.add(item);
 							}
@@ -698,14 +707,39 @@ public abstract class SyncService {
 		//return result;
 	}
 
+	private static String getEngByKeyFromColumnDef(String dataset, String key) throws Exception {
+		String engName = null;
+		ResColumnResourceDAO rcdao = new ResColumnResourceDAOImpl();
+		ResColumn column = rcdao.QueryColumnByElement(dataset, key);
+		if( column != null ) {
+			engName = column.getCOLUMN_NAME();
+			return engName;
+		}
+		else {
+			ResColumnPrivate columnPrivate = rcdao.QueryColumnPrivateByElement(dataset, key);
+			if( columnPrivate != null ) {
+				engName = columnPrivate.getCOLUMN_NAME();
+				return engName;
+			}
+		}
+		return null;
+	}
+
 	private static boolean isInWhiteList(String key) {
 		boolean result = false;
-		WhiteListColumnDAO dao = new WhiteListColumnDAOImpl();
+		WhiteListColumnDAO wlcdao = new WhiteListColumnDAOImpl();
+		
 		try{
-			WhiteListColumn column = dao.GetWhiteListColumnByKey(key);
-			if(column != null) {
-				result = true;
-			}
+//			List<Object> column = wlcdao.GetColumnByKey(key);
+//			if(column != null && column.size() > 0) {
+//				result = true;
+//			}
+//			else {
+				WhiteListColumn wlc = wlcdao.GetWhiteListColumnByKey(key);
+				if(wlc != null) {
+					result = true;
+				}
+//			}
 		}
 		catch(Exception e) {
 			logger.info("[XP]Search whitelist column error[searching key is: " + key + "]");
@@ -880,7 +914,12 @@ public abstract class SyncService {
 				if( "J010002".equals(item.getAttributeValue("key")) ) {
 					result.setTableNameJ010002( valTmp );
 				} else if ( "I010017".equals(item.getAttributeValue("key"))  ) {
-					result.setSearchResultMaxNumI010017( Integer.parseInt(valTmp) );
+					if(valTmp == null || valTmp.length() == 0) {
+						result.setSearchResultMaxNumI010017(0);
+					}
+					else {
+						result.setSearchResultMaxNumI010017( Integer.parseInt(valTmp) );
+					}
 				} else if ( "H010005".equals(item.getAttributeValue("key"))  ) {
 					result.setSearchIDH010005( valTmp );
 				} else if ( "I010019".equals(item.getAttributeValue("key"))  ) {
@@ -1714,11 +1753,15 @@ public abstract class SyncService {
 		keyColumnMap.put("I010054", "BUSINESS_ROLE_NAME");
 		keyColumnMap.put("I030003", "BUSINESS_STATUS");
 		
+		keyColumnMap.put("H010003", "ACTION");
 		keyColumnMap.put("H010005", "SEARCH_ID");
 		keyColumnMap.put("H010034", "SENSITIVE_LEVEL");
 		
+		keyColumnMap.put("B050004", "FROM_ID");
+		keyColumnMap.put("B050009", "TO_ID");
+		keyColumnMap.put("B050014", "LAST_TIME");
 		keyColumnMap.put("B050016", "SYSTEM_TYPE");
-		keyColumnMap.put("B030005", "CERTIFICATE_CODE");
+		
 		
 		
 		keyColumnMap.put("G010002", "URL");
@@ -1733,12 +1776,15 @@ public abstract class SyncService {
 		keyColumnMap.put("B030001", "COUNTRY_TYPE");
 		keyColumnMap.put("B030002", "AREA_CODE");
 		keyColumnMap.put("B030004", "CERTIFICATE_TYPE");
+		keyColumnMap.put("B030005", "CERTIFICATE_CODE");	
 		keyColumnMap.put("B030020", "LANGUAGES");
 		keyColumnMap.put("B030021", "CHINESE_LANGUAGES");
+		keyColumnMap.put("B030026", "TAKE_OFFICE");
 		keyColumnMap.put("B040002", "USERNAME");
 		keyColumnMap.put("B040003", "ACCOUNT_ID");
 		keyColumnMap.put("B040005", "PASSWORD");
 		keyColumnMap.put("B040014", "PASSWORD_HASH_STRING");
+		keyColumnMap.put("B040017", "GROUPNUM");
 		keyColumnMap.put("B040021", "AUTH_TYPE");
 		keyColumnMap.put("B040022", "AUTH_ACCOUNT");
 		
@@ -1813,10 +1859,24 @@ public abstract class SyncService {
 		keyColumnMap.put("H040002", "LOCAL_ACTION");
 		keyColumnMap.put("H070003", "TOOLTYPE");
 		
-		
+		//for search columns
 		keyColumnMap.put("I010005", "LATEST_MOD_TIME");
 		keyColumnMap.put("I010009", "CONTEXT");
 		keyColumnMap.put("I010031", "BUSINESS_TYPE");
+		keyColumnMap.put("CAPTURE_TIME", "CAPTURE_TIME");
+		keyColumnMap.put("ACTION", "ACTION");
+		keyColumnMap.put("DATA_SOURCE", "DATA_SOURCE");
+		keyColumnMap.put("SRC_IP", "SRC_IP");
+		keyColumnMap.put("SRC_IPV6", "SRC_IPV6");
+		keyColumnMap.put("DST_IP", "DST_IP");
+		keyColumnMap.put("DST_IPV6", "DST_IPV6");
+		keyColumnMap.put("APPSTORE_TYPE", "APPSTORE_TYPE");
+		keyColumnMap.put("APPID", "APPID");
+		//return columns put into white list
+//		keyColumnMap.put("COUNT", "COUNT");
+//		keyColumnMap.put("LOCATION", "LOCATION");
+//		keyColumnMap.put("APPTYPE", "APPTYPE");
+//		keyColumnMap.put("AUTHTYPE", "AUTHTYPE");
 		
 		String result = "";
 		if(key.contains(".")) {

@@ -58,5 +58,37 @@
 				<param name="fileUpload.allowedExtensions">.xls</param>
 			</interceptor-ref>
  		</action>
+ 		<action name="fileUploadUser" class="com.pms.controller.RoleAction" method="FileUploadUser" >
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action>
+ 		<action name="fileUploadPrivateRole" class="com.pms.controller.RoleAction" method="FileUploadPrivateRole" >
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action>
+ 		<action name="fileUploadPrivateRoleUserRelation" class="com.pms.controller.RoleAction" method="FileUploadPrivateRoleUserRelation" >
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action>
+ 		<action name="fileUploadPrivateRoleFuncRelation" class="com.pms.controller.RoleAction" method="FileUploadPrivateRoleFuncRelation" >
+ 			<interceptor-ref name="defaultStack">
+				<!-- 设置文件上传的大小 (默认值是2M  2097152 字节)-->
+				<param name="fileUpload.maximumSize">52428800</param>
+				<!-- 设置允许上传文件的类型 -->
+				<param name="fileUpload.allowedExtensions">.xls</param>
+			</interceptor-ref>
+ 		</action>
 	</package>	
 </struts>    

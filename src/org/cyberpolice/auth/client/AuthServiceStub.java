@@ -284,6 +284,8 @@ public class AuthServiceStub extends org.apache.axis2.client.Stub implements
 					"http://cyberpolice.org/auth/authService/executeRequest");
 			_operationClient.getOptions().setExceptionToBeThrownOnSOAPFault(
 					true);
+			// modify for julong_esb(soapAction to " ");
+			_operationClient.getOptions().setAction(" ");
 
 			addPropertyToOperationClient(
 					_operationClient,
