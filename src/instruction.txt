@@ -17,3 +17,6 @@ IWZRUR = 导入网综用户角色关系信息
 IWZRFR = 导入网综功能资源角色关系信息
 DESIS = dataexchange service import some data
 DESIU = dataexchange service import user
+DESIRO = dataexchange service import role
+DESIFE = dataexchange service import feature resource
+DESIRR = dataexchange service import resource and role relationship

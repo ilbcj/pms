@@ -36,13 +36,34 @@ public class ResourceDAOImpl implements ResourceDAO {
 		Transaction tx = session.beginTransaction();
 		
 		ResFeature rs = null;
-		String sqlString = "select * from wa_authority_func_resource where resource_id =:resource_id ";
+		ResFeature rsParent = null;
+		String sqlString = "select * from wa_authority_func_resource where business_function_id =:business_function_id and system_type = :system_type and app_id = :app_id ";
 
 		feature.setDATA_VERSION(1);
 		
 		try {
+			if( ResFeature.FUNRESPARENTIDOFROOT.equals(feature.getBUSINESS_FUNCTION_PARENT_ID()) ) {
+				String parentId = String.format("%03d%03d%010d", Integer.parseInt(feature.getSYSTEM_TYPE()), Integer.parseInt(feature.getAPP_ID()), 0);
+				feature.setPARENT_RESOURCE(parentId);
+			}
+			else {
+				Query qParent = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+				qParent.setString("business_function_id", feature.getBUSINESS_FUNCTION_PARENT_ID());
+				qParent.setString("system_type", feature.getSYSTEM_TYPE());
+				qParent.setString("app_id", feature.getAPP_ID());
+				rsParent = (ResFeature) qParent.uniqueResult();
+				if(rsParent == null) {
+					throw new Exception("parent node doesn't exist.[business_function_parent_id: " + feature.getBUSINESS_FUNCTION_PARENT_ID() + "]");
+				}
+				else {
+					feature.setPARENT_RESOURCE(rsParent.getRESOURCE_ID());
+				}
+			}
+			
 			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
-			q.setString("resource_id", feature.getRESOURCE_ID());
+			q.setString("business_function_id", feature.getBUSINESS_FUNCTION_ID());
+			q.setString("system_type", feature.getSYSTEM_TYPE());
+			q.setString("app_id", feature.getAPP_ID());
 			rs = (ResFeature) q.uniqueResult();
 			
 			String timenow = DateTimeUtil.GetCurrentTime();
@@ -50,13 +71,15 @@ public class ResourceDAOImpl implements ResourceDAO {
 			
 			if(rs != null) {
 				feature.setId(rs.getId());
+				feature.setRESOURCE_ID(rs.getRESOURCE_ID());
 				feature.setDATA_VERSION(feature.getDATA_VERSION() + 1);
 			}
 
 			feature = (ResFeature) session.merge(feature);
 			if(feature.getRESOURCE_ID() == null || feature.getRESOURCE_ID().isEmpty()) {
-				logger.warn("[IRF]no resource id of feature resource which inner id is:" + feature.getId());
-				feature.setRESOURCE_ID(new Integer(feature.getId()).toString());
+				//logger.warn("[IRF]no resource id of feature resource which inner id is:" + feature.getId());
+				String resId = String.format("%03d%03d%010d", Integer.parseInt(feature.getSYSTEM_TYPE()), Integer.parseInt(feature.getAPP_ID()), feature.getId());
+				feature.setRESOURCE_ID(resId);
 				feature = (ResFeature) session.merge(feature);
 			}
 			tx.commit();
@@ -76,7 +99,7 @@ public class ResourceDAOImpl implements ResourceDAO {
 		{
 			e.printStackTrace();
 			tx.rollback();
-			System.out.println(e.getMessage());
+			logger.info(e.getMessage());
 			throw e;
 		}
 		finally
@@ -2137,6 +2160,36 @@ public class ResourceDAOImpl implements ResourceDAO {
 		}
 		return rs;
 	}
+	
+	@Override
+	public ResFeature GetFeatureByBusinessFunId(String id, String systemType, String appId) throws Exception {
+		if( id == null || id.length() == 0 || systemType == null || systemType.length() == 0 || appId == null || appId.length() == 0 ) {
+			logger.warn("[IRF]parameter of searching resource is invalid.[funid: " + id + "; systemtype: " + systemType + "; appid: " + appId + "]");
+			return null;
+		}
+		Session session = HibernateUtil.currentSession();
+		Transaction tx = session.beginTransaction();
+		ResFeature rs = null;
+		String sqlString = "select * from WA_AUTHORITY_FUNC_RESOURCE where BUSINESS_FUNCTION_ID = :BUSINESS_FUNCTION_ID and SYSTEM_TYPE = :SYSTEM_TYPE and APP_ID = :APP_ID ";
+		
+		try {
+			Query q = session.createSQLQuery(sqlString).addEntity(ResFeature.class);
+			q.setString("BUSINESS_FUNCTION_ID", id);
+			q.setString("SYSTEM_TYPE", systemType);
+			q.setString("APP_ID", appId);
+			rs = (ResFeature) q.uniqueResult();
+			tx.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			tx.rollback();
+			System.out.println(e.getMessage());
+			throw e;
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		return rs;
+	}
+	
 	
 //	@SuppressWarnings("unchecked")
 //	@Override

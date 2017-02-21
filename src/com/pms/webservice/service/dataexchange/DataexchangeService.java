@@ -25,6 +25,15 @@ public class DataexchangeService {
 			if(tablename.equalsIgnoreCase("wa_authority_police")) {
 				des = new DataexchangeOfUserService(ec);
 			}
+			else if(tablename.equalsIgnoreCase("wa_authority_role")) {
+				des = new DataexchangeOfRoleService(ec);
+			}
+			else if(tablename.equalsIgnoreCase("wa_authority_func_resource")) {
+				des = new DataexchangeOfResFeatureService(ec);
+			}
+			else if(tablename.equalsIgnoreCase("wa_authority_resource_role")) {
+				des = new DataexchangeOfResAndRoleService(ec);
+			}
 			else if(tablename.equalsIgnoreCase("WA_DATASET")) {
 				//des = new ANewClass();
 			}

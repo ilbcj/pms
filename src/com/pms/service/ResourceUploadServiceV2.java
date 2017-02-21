@@ -203,7 +203,10 @@ public class ResourceUploadServiceV2 {
 	private final String SHEET_WZROLEUSER_COL_MD5 = "身份证MD5";
 	
 	private final String SHEET_WZROLEFUNC = "私有角色与功能资源关系";
-	private final String SHEET_WZROLEFUNC_COL_RESID = "资源ID";
+	private final String SHEET_WZROLEFUNC_COL_SYSTEMTYPE= "系统类型(J020012)";
+	private final String SHEET_WZROLEFUNC_COL_APPID= "所属业务系ID(J020013)";
+	//private final String SHEET_WZROLEFUNC_COL_RESID = "资源ID";
+	private final String SHEET_WZROLEFUNC_COL_FUNCID = "业务功能ID";
 	private final String SHEET_WZROLEFUNC_COL_ROLEID = "角色编码";
 	
 	public void UploadResourceDataV2(File inData) throws Exception {
@@ -2013,7 +2016,9 @@ public class ResourceUploadServiceV2 {
         		continue;
         	}
         	int cellCount = row.getLastCellNum(); //获取总列数 
-        	String resid = null;
+        	String systemType = null;
+        	String appId = null;
+        	String funcid = null;
         	String roleid = null;
         	//遍历每一列  
             for (int c = 0; c < cellCount; c++) {
@@ -2021,8 +2026,12 @@ public class ResourceUploadServiceV2 {
             	String cellValue = getCellValue(cell);
 
             	if(r == 0) {
-            		if ( SHEET_WZROLEFUNC_COL_RESID.equals(cellValue) ) {
-            			idx.put(SHEET_WZROLEFUNC_COL_RESID, c);
+            		if ( SHEET_WZROLEFUNC_COL_SYSTEMTYPE.equals(cellValue) ) {
+            			idx.put(SHEET_WZROLEFUNC_COL_SYSTEMTYPE, c);
+            		} else if ( SHEET_WZROLEFUNC_COL_APPID.equals(cellValue) ) {
+            			idx.put(SHEET_WZROLEFUNC_COL_APPID, c);
+            		} else if ( SHEET_WZROLEFUNC_COL_FUNCID.equals(cellValue) ) {
+            			idx.put(SHEET_WZROLEFUNC_COL_FUNCID, c);
             		} else if ( SHEET_WZROLEFUNC_COL_ROLEID.equals(cellValue) ) {
             			idx.put(SHEET_WZROLEFUNC_COL_ROLEID, c);
             		}	
@@ -2030,9 +2039,17 @@ public class ResourceUploadServiceV2 {
             		if(idx.size() == 0) {
             			throw new Exception("导入的网综角色功能资源关系数据文件格式不正确!");
             		}
-            		if( c == idx.get(SHEET_WZROLEFUNC_COL_RESID) ) {
+            		if( c == idx.get(SHEET_WZROLEFUNC_COL_SYSTEMTYPE) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
-            				resid = cellValue;
+            				systemType = cellValue;
+            			}
+            		} else if( c == idx.get(SHEET_WZROLEFUNC_COL_APPID) ) {
+            			if( cellValue != null && cellValue.length() > 0 ) {
+            				appId = cellValue;
+            			}
+            		} else if( c == idx.get(SHEET_WZROLEFUNC_COL_FUNCID) ) {
+            			if( cellValue != null && cellValue.length() > 0 ) {
+            				funcid = cellValue;
             			}
             		} else if ( c == idx.get(SHEET_WZROLEFUNC_COL_ROLEID) ) {
             			if( cellValue != null && cellValue.length() > 0 ) {
@@ -2043,29 +2060,30 @@ public class ResourceUploadServiceV2 {
             }
             
             if( r > 0 ) {
-            	if(resid == null || resid.length() == 0 || roleid == null || roleid.length() == 0) {
+            	if(funcid == null || funcid.length() == 0 || roleid == null || roleid.length() == 0) {
             		logger.info("[IWZRFR]WZRoleFuncRelation data format error.[row id: " + r + "]");
+            		continue;
             	}
             	try{
             		ResourceDAO resDao = new ResourceDAOImpl();
-            		ResFeature funcRes = resDao.GetFeatureByResId(resid);
+            		ResFeature funcRes = resDao.GetFeatureByBusinessFunId(funcid, systemType, appId);
         			if(funcRes == null) {
-        				logger.info("[IWZRFR]FeatureRes of WZRoleFuncRelation doesn't exist.[res_id: " + resid + "; business_role: " + roleid + "]");
+        				logger.info("[IWZRFR]FeatureRes of WZRoleFuncRelation doesn't exist.[systemtype: " + systemType + "; appid: " + appId + "; func_id: " + funcid + "; business_role: " + roleid + "]");
         				continue;
         			}
         			List<ResRole> pmsRole = resDao.GetRoleById(roleid);
         			if(pmsRole == null || pmsRole.size() == 0) {
-        				logger.info("[IWZRFR]Role of WZRoleFuncRelation doesn't exist.[res_id: " + resid + "; business_role: " + roleid + "]");
+        				logger.info("[IWZRFR]Role of WZRoleFuncRelation doesn't exist.[systemtype: " + systemType + "; appid: " + appId + "; func_id: " + funcid + "; business_role: " + roleid + "]");
         				continue;
         			}
-	            	ResRoleResource pmsRoleRes = resDao.GetRoleResourceByRoleidAndResid(roleid, resid, ResRoleResource.RESCLASSFEATURE);
+	            	ResRoleResource pmsRoleRes = resDao.GetRoleResourceByRoleidAndResid(roleid, funcRes.getRESOURCE_ID(), ResRoleResource.RESCLASSFEATURE);
 	            	if(pmsRoleRes != null) {
-	            		logger.info("[IWZRFR]WZRoleFuncRelation already exist.[res_id: " + resid + "; business_role: " + roleid + "]");
+	            		logger.info("[IWZRFR]WZRoleFuncRelation already exist.[res_id: " + funcRes.getRESOURCE_ID() + "; business_role: " + roleid + "]");
 	            	}
 	            	else {
 	            		ResRoleResource roleRes = new ResRoleResource();
 	            		roleRes.setBUSINESS_ROLE(roleid);
-	            		roleRes.setRESOURCE_ID(resid);
+	            		roleRes.setRESOURCE_ID(funcRes.getRESOURCE_ID());
 	            		roleRes.setRESOURCE_CLASS(ResRoleResource.RESCLASSFEATURE);
 	            		roleRes.setDATA_VERSION(1);
 	            		roleRes.setDELETE_STATUS(ResRoleResource.DELSTATUSNO);

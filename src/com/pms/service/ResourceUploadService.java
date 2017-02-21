@@ -164,10 +164,12 @@ public class ResourceUploadService {
 	
 	private final String SHEET_REATURE_RESOURCE = "功能资源";
 	private final String SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE = "系统类型(J020012)";
-	private final String SHEET_REATURE_RESOURCE_COL_RESOURCE_ID = "资源唯一标识(J030006)";
+	//private final String SHEET_REATURE_RESOURCE_COL_RESOURCE_ID = "资源唯一标识(J030006)";
+	private final String SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_ID = "业务系统功能标识(J030037)";
 	private final String SHEET_REATURE_RESOURCE_COL_APP_ID = "所属业务系ID(J020013)";
 	private final String SHEET_REATURE_RESOURCE_COL_NAME = "名称(J030007)";
-	private final String SHEET_REATURE_RESOURCE_COL_PARENT = "父资源唯一标识(J030008)";
+	//private final String SHEET_REATURE_RESOURCE_COL_PARENT = "父资源唯一标识(J030008)";
+	private final String SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_PARENT_ID = "业务系统功能父节点标识(J030038)";
 	private final String SHEET_REATURE_RESOURCE_COL_URL = "URL(G010002)";
 	private final String SHEET_REATURE_RESOURCE_COL_ICON = "图标路径(J030009)";
 	private final String SHEET_REATURE_RESOURCE_COL_RESOURCE_STATUS = "资源状态(J030010)";
@@ -281,14 +283,14 @@ public class ResourceUploadService {
             	if(r == 0) {
             		if ( SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE.equals(cellValue) ) {
             			idx.put(SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE, c);
-            		} else if ( SHEET_REATURE_RESOURCE_COL_RESOURCE_ID.equals(cellValue) ) {
-            			idx.put(SHEET_REATURE_RESOURCE_COL_RESOURCE_ID, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_ID.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_ID, c);
             		} else if ( SHEET_REATURE_RESOURCE_COL_APP_ID.equals(cellValue) ) {
             			idx.put(SHEET_REATURE_RESOURCE_COL_APP_ID, c);
             		} else if ( SHEET_REATURE_RESOURCE_COL_NAME.equals(cellValue) ) {
             			idx.put(SHEET_REATURE_RESOURCE_COL_NAME, c);
-            		} else if ( SHEET_REATURE_RESOURCE_COL_PARENT.equals(cellValue) ) {
-            			idx.put(SHEET_REATURE_RESOURCE_COL_PARENT, c);
+            		} else if ( SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_PARENT_ID.equals(cellValue) ) {
+            			idx.put(SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_PARENT_ID, c);
             		} else if ( SHEET_REATURE_RESOURCE_COL_URL.equals(cellValue) ) {
             			idx.put(SHEET_REATURE_RESOURCE_COL_URL, c);
             		} else if ( SHEET_REATURE_RESOURCE_COL_ICON.equals(cellValue) ) {
@@ -312,14 +314,14 @@ public class ResourceUploadService {
             		}
             		if( c == idx.get(SHEET_REATURE_RESOURCE_COL_SYSTEM_TYPE) ) {
             			feature.setSYSTEM_TYPE(cellValue);
-            		} else if ( c == idx.get(SHEET_REATURE_RESOURCE_COL_RESOURCE_ID) ) {
-            			feature.setRESOURCE_ID(cellValue);
+            		} else if ( c == idx.get(SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_ID) ) {
+            			feature.setBUSINESS_FUNCTION_ID(cellValue);
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_APP_ID) ) {
             			feature.setAPP_ID(cellValue);
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_NAME) ) {
             			feature.setRESOUCE_NAME(cellValue);
-            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_PARENT) ) {
-            			feature.setPARENT_RESOURCE(cellValue);
+            		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_BUSINESS_FUNCTION_PARENT_ID) ) {
+            			feature.setBUSINESS_FUNCTION_PARENT_ID(cellValue);
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_URL) ) {
             			feature.setURL(cellValue);
             		} else if ( c== idx.get(SHEET_REATURE_RESOURCE_COL_ICON) ) {
@@ -343,7 +345,7 @@ public class ResourceUploadService {
             		System.out.println();
             	}
             	if(feature.isValid()) {
-		            feature.setDELETE_STATUS(ResDataSetSensitive.DELSTATUSNO);
+            		feature.setDELETE_STATUS(ResDataSetSensitive.DELSTATUSNO);
 		            dao.FeatureAdd(feature);
             	}
             }

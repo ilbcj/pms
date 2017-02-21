@@ -9,6 +9,7 @@ public class ResFeature {
 	public final static int FUNRESTYPEBUSINESSMENU = 1;
 	public final static int FUNRESTYPEOPERATEMENU = 2;
 	public final static int FUNRESTYPEDEPEND = 3;
+	public final static String FUNRESPARENTIDOFROOT = "-1";
 //	private int id;
 //	private String name="";
 //	private String resource_id;
@@ -24,8 +25,10 @@ public class ResFeature {
 	private int id;
 	private String SYSTEM_TYPE;
 	private String RESOURCE_ID;
+	private String BUSINESS_FUNCTION_ID;
 	private String APP_ID;
 	private String RESOUCE_NAME;
+	private String BUSINESS_FUNCTION_PARENT_ID;
 	private String PARENT_RESOURCE;
 	private String URL;
 	private String RESOURCE_ICON_PATH;
@@ -38,6 +41,18 @@ public class ResFeature {
 	private int DELETE_STATUS;
 	private String LATEST_MOD_TIME;
 	
+	public String getBUSINESS_FUNCTION_ID() {
+		return BUSINESS_FUNCTION_ID;
+	}
+	public void setBUSINESS_FUNCTION_ID(String bUSINESS_FUNCTION_ID) {
+		BUSINESS_FUNCTION_ID = bUSINESS_FUNCTION_ID;
+	}
+	public String getBUSINESS_FUNCTION_PARENT_ID() {
+		return BUSINESS_FUNCTION_PARENT_ID;
+	}
+	public void setBUSINESS_FUNCTION_PARENT_ID(String bUSINESS_FUNCTION_PARENT_ID) {
+		BUSINESS_FUNCTION_PARENT_ID = bUSINESS_FUNCTION_PARENT_ID;
+	}
 	public int getFUN_RESOURCE_TYPE() {
 		return FUN_RESOURCE_TYPE;
 	}
@@ -137,10 +152,10 @@ public class ResFeature {
 	
 	public boolean isValid() {
 		if( (SYSTEM_TYPE == null || SYSTEM_TYPE.isEmpty()) 
-				|| (RESOURCE_ID == null || RESOURCE_ID.isEmpty()) 
+				|| (BUSINESS_FUNCTION_ID == null || BUSINESS_FUNCTION_ID.isEmpty()) 
 				|| (APP_ID == null || APP_ID.isEmpty())
 				|| (RESOUCE_NAME == null || RESOUCE_NAME.isEmpty())				
-				|| (PARENT_RESOURCE == null || PARENT_RESOURCE.isEmpty()) ) {
+				|| (BUSINESS_FUNCTION_PARENT_ID == null || BUSINESS_FUNCTION_PARENT_ID.isEmpty()) ) {
 			return false;
 		}
 		return true;

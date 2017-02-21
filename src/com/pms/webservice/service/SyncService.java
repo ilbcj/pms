@@ -1746,7 +1746,9 @@ public abstract class SyncService {
 		keyColumnMap.put("J030029", "RESOURCE_TYPE");
 		keyColumnMap.put("J030035", "FUN_RESOURCE_TYPE");
 		keyColumnMap.put("J030036", "RESOURCE_CLASS");
-		keyColumnMap.put("J030037", "OWNERSHIP_TYPE");
+		//keyColumnMap.put("J030037", "OWNERSHIP_TYPE");
+		keyColumnMap.put("J030037", "BUSINESS_FUNCTION_ID");
+		keyColumnMap.put("J030038", "BUSINESS_FUNCTION_PARENT_ID");
 		
 		keyColumnMap.put("I010025", "BUSINESS_ROLE_TYPE");
 		keyColumnMap.put("I010026", "BUSINESS_ROLE");

@@ -1147,6 +1147,14 @@ public class SyncComplexSearchService extends SyncService {
 				itemSetAttribute(item, "rmk", "资源唯一标识");
 			}
 			
+			if( isReturnColumn("J030037") ) {	
+				item = new Element("ITEM");
+				data.addContent(item);
+				itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030037");
+				itemSetAttribute(item, "val", resFeature.getBUSINESS_FUNCTION_ID());
+				itemSetAttribute(item, "rmk", "业务系统功能标识");
+			}
+			
 			if( isReturnColumn("J020013") ) {		
 				item = new Element("ITEM");
 				data.addContent(item);
@@ -1161,6 +1169,14 @@ public class SyncComplexSearchService extends SyncService {
 				itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030007");
 				itemSetAttribute(item, "val", resFeature.getRESOUCE_NAME());
 				itemSetAttribute(item, "rmk", "名称");
+			}
+			
+			if( isReturnColumn("J030038") ) {		
+				item = new Element("ITEM");
+				data.addContent(item);
+				itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030038");
+				itemSetAttribute(item, "val", resFeature.getBUSINESS_FUNCTION_PARENT_ID());
+				itemSetAttribute(item, "rmk", "业务系统功能父节点标识");
 			}
 			
 			if( isReturnColumn("J030008") ) {		

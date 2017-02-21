@@ -61,6 +61,7 @@ public interface ResourceDAO {
 	List<ResRoleResource> GetRoleResourcesByRoleid(String id) throws Exception;
 	ResRoleResource GetRoleResourceByRoleidAndResid(String roleid, String resid, int resType) throws Exception;
 	ResFeature GetFeatureByResId(String id) throws Exception;
+	ResFeature GetFeatureByBusinessFunId(String id, String systemType, String appId) throws Exception;
 //	List<ResFeature> GetFeatureById(int id) throws Exception;
 	ResData GetDataByResId(String resId) throws Exception;
 //	List<ResData> GetDataByResId(String resId) throws Exception;
