@@ -12,7 +12,7 @@ import com.pms.webservice.model.Condition;
 public class AuthCondition {
 	private String sensitiveLevel;
 	private Condition stc;
-	private List<Common010032> common010032;
+	private List<Common010032> common010032;//common010032 has removed ,but still use it to hold input param
 	
 	public String getSensitiveLevel() {
 		return sensitiveLevel;

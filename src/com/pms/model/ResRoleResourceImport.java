@@ -61,13 +61,14 @@ public class ResRoleResourceImport {
 	public boolean isValid() {
 		if( (roleId == null || roleId.isEmpty()) 
 				|| (element == null || element.isEmpty()) 
-				|| (elemnetValue == null || elemnetValue.isEmpty()) 
 				|| (dataSet == null || dataSet.isEmpty()) 
-				|| (sectionClass == null || sectionClass.isEmpty()) ) {
+				|| ( (sectionClass == null || sectionClass.isEmpty()) && (elemnetValue == null || elemnetValue.isEmpty()) ) ) {
 			return false;
 		}
 		try{
-			Integer.parseInt(sectionClass);
+			if(sectionClass != null && sectionClass.length() > 0) {
+				Integer.parseInt(sectionClass);
+			}
 		}
 		catch( NumberFormatException e) {
 			return false;

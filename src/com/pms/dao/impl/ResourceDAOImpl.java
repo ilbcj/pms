@@ -26,6 +26,7 @@ import com.pms.model.ResRoleOrg;
 import com.pms.model.ResRoleResource;
 import com.pms.model.ResRoleResourceImport;
 import com.pms.model.ResRoleResourceTemplate;
+import com.pms.util.ConfigHelper;
 
 
 public class ResourceDAOImpl implements ResourceDAO {
@@ -1405,8 +1406,10 @@ public class ResourceDAOImpl implements ResourceDAO {
 		try
 		{
 			role = (ResRole) session.merge(role);
-			role.setBUSINESS_ROLE(new Integer(role.getId()).toString());
-			role = (ResRole) session.merge(role);
+			if( role.getBUSINESS_ROLE() == null || role.getBUSINESS_ROLE().length() == 0 ) {
+				role.setBUSINESS_ROLE( String.format("%s%010d", ConfigHelper.getInstance().getRegion(), role.getId()) );
+				role = (ResRole)session.merge(role);
+			}
 			tx.commit();
 		}
 		catch(ConstraintViolationException cne){
@@ -1782,8 +1785,8 @@ public class ResourceDAOImpl implements ResourceDAO {
 		try {
 			Query q = session.createSQLQuery(sqlString);
 			q.setString("BUSINESS_ROLE", roleId);
-			if(dataIds != null) {
-				q.setParameterList("RESOURCE_ID", dataIds);
+			if(delDataIds != null) {
+				q.setParameterList("RESOURCE_ID", delDataIds);
 			}else{
 				List<String> list =new ArrayList<String>();
 				list.add("");

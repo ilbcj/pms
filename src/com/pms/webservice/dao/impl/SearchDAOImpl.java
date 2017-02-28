@@ -12,7 +12,9 @@ import com.pms.model.Organization;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
+import com.pms.model.ResRoleResource;
 import com.pms.model.User;
+import com.pms.model.UserRole;
 import com.pms.webservice.dao.SearchDAO;
 
 public class SearchDAOImpl implements SearchDAO {
@@ -42,8 +44,17 @@ public class SearchDAOImpl implements SearchDAO {
 			else if(type == TYPERESFUN) {
 				q = ((SQLQuery)q).addEntity(ResFeature.class);
 			}
-			q.setFirstResult(first);   
-			q.setMaxResults(count);   
+			else if(type == TYPEUSER_ROLE) {
+				q = ((SQLQuery)q).addEntity(UserRole.class);
+			}
+			else if(type == TYPEROLE_RESOURCE) {
+				q = ((SQLQuery)q).addEntity(ResRoleResource.class);
+			}
+			if(count != 0)
+			{
+				q.setFirstResult(first);
+				q.setMaxResults(count);
+			}
 			rs = q.list();
 			tx.commit();
 		} catch (Exception e) {

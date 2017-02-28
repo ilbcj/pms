@@ -42,7 +42,11 @@ public class SyncAuthenticateService extends SyncService {
 		//0. get user by user id
 		UserDAO udao = new UserDAOImpl();
 		User user = udao.GetUserByCertificateCodeMd5(this.getUa().getCERTIFICATE_CODE_MD5());
-		this.getAc().setSensitiveLevel(user.getSENSITIVE_LEVEL());
+		if(user == null) {
+			throw new Exception("there is no record returned wher query user by certificate_code_md5(" + this.getUa().getCERTIFICATE_CODE_MD5() + ").");
+		}
+		String level = user.getSENSITIVE_LEVEL() == null || user.getSENSITIVE_LEVEL().length() == 0 ? "0" : user.getSENSITIVE_LEVEL();
+		this.getAc().setSensitiveLevel(level);
 		
 		//1. get resource's by user id
 		List<ResData> resources = queryResourceByUser(user.getCERTIFICATE_CODE_MD5());
@@ -85,7 +89,7 @@ public class SyncAuthenticateService extends SyncService {
 			    		Item itme = new Item();
 			    		itme.setKey(value.getELEMENT());
 			    		itme.setVal(value.getELEMENT_VALUE());
-			    		itme.setEng(convertKeyToEngName(value.getELEMENT()));
+			    		itme.setEng(convertKeyToEngNameWithAlias(value.getELEMENT()));
 			    		itme.setHasAccessAuth(true);
 			    		items.add(itme);
 				    }
@@ -132,7 +136,7 @@ public class SyncAuthenticateService extends SyncService {
 						Item itme = new Item();
 			    		itme.setKey(resource.getELEMENT());
 			    		itme.setVal("");
-			    		itme.setEng(convertKeyToEngName(resource.getELEMENT()));
+			    		itme.setEng(convertKeyToEngNameWithAlias(resource.getELEMENT()));
 			    		itme.setHasAccessAuth(true);
 			    		retColumns.add(itme);
 					}
@@ -315,7 +319,7 @@ public class SyncAuthenticateService extends SyncService {
 			item010004 = new Element("ITEM");
 			data010004.addContent(item010004);
 			itemSetAttribute(item010004, "key", "I010015");
-			itemSetAttribute(item010004, "val", "" + new Date().getTime());
+			itemSetAttribute(item010004, "val", "" + new Date().getTime()/1000);
 			itemSetAttribute(item010004, "rmk", "消息返回时间");
 			
 			item010004 = new Element("ITEM");
@@ -359,30 +363,30 @@ public class SyncAuthenticateService extends SyncService {
 			Element data010034 = null;
 			data010034 = new Element("DATA");
 			dataset010034.addContent(data010034);
+//			
+//			// 2-- WA_COMMON_010034 --> data --> CONDITION(STC)
+//			Element condition010034 = null;
+//			condition010034 = new Element("CONDITION");
+//			data010034.addContent(condition010034);
+//			condition010034.setAttribute("rel", this.getAc().getStc().getRel());
 			
-			// 2-- WA_COMMON_010034 --> data --> CONDITION(STC)
-			Element condition010034 = null;
-			condition010034 = new Element("CONDITION");
-			data010034.addContent(condition010034);
-			condition010034.setAttribute("rel", this.getAc().getStc().getRel());
-			
-			Element itemSTC = null;
-			List<Item> items = this.getAc().getStc().getItems();
-			for( int i = 0; i < items.size(); i++ ) {
-				Item currentItem = items.get(i);
-				itemSTC = new Element("ITEM");
-				condition010034.addContent(itemSTC);
-				itemSetAttribute(itemSTC, "key", currentItem.getKey());
-				itemSetAttribute(itemSTC, "eng", currentItem.getEng());
-				itemSetAttribute(itemSTC, "val", currentItem.getVal());
-			}
+//			Element itemSTC = null;
+//			List<Item> items = this.getAc().getStc().getItems();
+//			for( int i = 0; i < items.size(); i++ ) {
+//				Item currentItem = items.get(i);
+//				itemSTC = new Element("ITEM");
+//				condition010034.addContent(itemSTC);
+//				itemSetAttribute(itemSTC, "key", currentItem.getKey());
+//				itemSetAttribute(itemSTC, "eng", currentItem.getEng());
+//				itemSetAttribute(itemSTC, "val", currentItem.getVal());
+//			}
 			
 			// 2-- WA_COMMON_010034 --> data --> WA_COMMON_010038
 			Element dataset010038 = null;
 			dataset010038 = new Element("DATASET");
 			data010034.addContent(dataset010038);
 			dataset010038.setAttribute("name", "WA_COMMON_010038");
-			dataset010038.setAttribute("rmk", "可访问的字段关系，数据级别");
+			dataset010038.setAttribute("rmk", "数据级别等用户属性和公共属性");
 			
 			Element data010038 = null;
 			data010038 = new Element("DATA");
@@ -393,7 +397,7 @@ public class SyncAuthenticateService extends SyncService {
 			data010038.addContent(item010038);
 			itemSetAttribute(item010038, "key", "H010034");
 			itemSetAttribute(item010038, "eng", "SENSITIVE_LEVEL");
-			itemSetAttribute(item010038, "chn", "最高敏感级别");
+			itemSetAttribute(item010038, "chn", "用户数据敏感级别");
 			itemSetAttribute(item010038, "val", this.getAc().getSensitiveLevel());			
 	
 			// 2-- WA_COMMON_010034 --> data --> WA_COMMON_010036
@@ -410,27 +414,36 @@ public class SyncAuthenticateService extends SyncService {
 				data010036 = new Element("DATA");
 				dataset010036.addContent(data010036);
 				
-				// 4---- WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result)
+				// 4---- WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> ITEM(search-id)
+				Element itemSearchID = null;
+				itemSearchID = new Element("ITEM");
+				data010036.addContent(itemSearchID);
+				itemSetAttribute(itemSearchID, "key", "H010005");
+				itemSetAttribute(itemSearchID, "eng", "SEARCH_ID");
+				itemSetAttribute(itemSearchID, "chn", "查询标识");
+				itemSetAttribute(itemSearchID, "val", common010032.getSyncKey());	
+				
+				// 5---- WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result)
 				Element datasetResult = null;
 				datasetResult = new Element("DATASET");
 				data010036.addContent(datasetResult);
 				datasetResult.setAttribute("name", common010032.getSourceName());
 				
-				// 5----- WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result)
+				// 6----- WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result)
 				Element dataResult = null;
 				dataResult = new Element("DATA");
 				datasetResult.addContent(dataResult);
 
 		//parse auth result
 				boolean hasAuthCondition = false, hasAuthColumn = false, hasUnauthCondition = false, hasUnauthColumn = false;
-				// 6------ WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result) --> dataset(success)
+				// 7------ WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result) --> dataset(success)
 				Element datasetSuccess = null;
 				datasetSuccess = new Element("DATASET");
 				dataResult.addContent(datasetSuccess);
 				datasetSuccess.setAttribute("name", "WA_COMMON_010035");
 				datasetSuccess.setAttribute("rmk", "鉴权成功部分");
 				
-				// 7------- traverse conditions, find success record
+				// 8------- traverse conditions, find success record
 				Element dataSuccessCondition = null;
 				dataSuccessCondition = new Element("DATA");
 				
@@ -502,7 +515,7 @@ public class SyncAuthenticateService extends SyncService {
 						conditionParent.addContent(subCondition);
 					}
 				}
-				// 7------- traverse return columns, find success record
+				// 8------- traverse return columns, find success record
 				Element dataSuccessColumn = null;
 				dataSuccessColumn = new Element("DATA");
 				
@@ -517,7 +530,7 @@ public class SyncAuthenticateService extends SyncService {
 							itemRetColumn = new Element("ITEM");
 							
 							itemSetAttribute(itemRetColumn, "key", resource.getELEMENT());
-							itemSetAttribute(itemRetColumn, "eng", convertKeyToEngName(resource.getELEMENT()));
+							itemSetAttribute(itemRetColumn, "eng", convertKeyToEngNameWithAlias(resource.getELEMENT()));
 							itemSetAttribute(itemRetColumn, "val", "");
 							hasAuthColumn = true;
 							dataSuccessColumn.addContent(itemRetColumn);
@@ -558,14 +571,14 @@ public class SyncAuthenticateService extends SyncService {
 					}
 				}
 				
-				// 6------ WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result) --> dataset(fail)
+				// 7------ WA_COMMON_010034 --> data --> WA_COMMON_010036 --> data(loop) --> dataset(result) --> data(result) --> dataset(fail)
 				Element datasetFail = null;
 				datasetFail = new Element("DATASET");
 				dataResult.addContent(datasetFail);
 				datasetFail.setAttribute("name", "WA_COMMON_010037");
 				datasetFail.setAttribute("rmk", "鉴权失败的部分");
 				
-				// 7------- traverse conditions, find fail record
+				// 8------- traverse conditions, find fail record
 				Element dataFailCondition = null;
 				dataFailCondition = new Element("DATA");
 				
@@ -645,7 +658,7 @@ public class SyncAuthenticateService extends SyncService {
 						}
 					}
 				}
-				// 7------- traverse return columns, find fail record
+				// 8------- traverse return columns, find fail record
 				Element dataFailColumn = null;
 				dataFailColumn = new Element("DATA");
 				
@@ -668,7 +681,7 @@ public class SyncAuthenticateService extends SyncService {
 						itemRetColumn = new Element("ITEM");
 						
 						itemSetAttribute(itemRetColumn, "key", resource.getELEMENT());
-						itemSetAttribute(itemRetColumn, "eng", convertKeyToEngName(resource.getELEMENT()));
+						itemSetAttribute(itemRetColumn, "eng", convertKeyToEngNameWithAlias(resource.getELEMENT()));
 						itemSetAttribute(itemRetColumn, "val", "");
 						hasUnauthColumn = true;
 						dataFailColumn.addContent(itemRetColumn);

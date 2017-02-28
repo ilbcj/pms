@@ -1,9 +1,12 @@
 package com.pms.webservice.model;
 
 public class Item {
+	public static final String SORTTYPEASC = "ASC";
+	public static final String SORTTYPEDESC = "DESC";
 	private String key;
 	private String eng;
 	private String val;
+	private String sort;
 	private boolean	hasAccessAuth;
 	
 	public boolean isHasAccessAuth() {
@@ -30,4 +33,11 @@ public class Item {
 	public void setVal(String val) {
 		this.val = val;
 	}
+	public String getSort() {
+		return sort;
+	}
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+	
 }

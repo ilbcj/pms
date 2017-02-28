@@ -220,7 +220,7 @@ public class UserManageService {
 			pulItem.setGname(ulItems.get(i).getGname());
 			pulItem.setStatus(ulItems.get(i).getStatus());
 			pulItem.setCertificate_code_md5(ulItems.get(i).getCertificate_code_md5());
-			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getId(), Privilege.OWNERTYPEUSER);
+			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getCertificate_code_md5(), Privilege.OWNERTYPEUSER);
 			pulItem.setPriv_status(count>0?PrivUserListItem.PRIVSTATUSYES:PrivUserListItem.PRIVSTATUSNO);
 			if(PrivUserListItem.PRIVSTATUSYES == privStatus) {
 				if( pulItem.getPriv_status() == PrivUserListItem.PRIVSTATUSNO ) {
@@ -254,7 +254,7 @@ public class UserManageService {
 			pulItem.setGname(ulItems.get(i).getGname());
 			pulItem.setStatus(ulItems.get(i).getStatus());
 			
-			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getId(), Privilege.OWNERTYPEUSER);
+			int count = pdao.QueryPrivilegesCountByOwnerId(ulItems.get(i).getCertificate_code_md5(), Privilege.OWNERTYPEUSER);
 			pulItem.setPriv_status(count>0?PrivUserListItem.PRIVSTATUSYES:PrivUserListItem.PRIVSTATUSNO);
 			items.add(pulItem);
 		}

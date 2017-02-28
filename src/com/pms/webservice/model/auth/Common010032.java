@@ -7,11 +7,18 @@ import com.pms.webservice.model.Item;
 
 public class Common010032 {
 	private String sourceName;
+	private String syncKey;
 	private String parentCondition;
 	private List<Condition> subConditions;
 	private List<Item> subItems;
 	private List<Item> items;
 	
+	public String getSyncKey() {
+		return syncKey;
+	}
+	public void setSyncKey(String syncKey) {
+		this.syncKey = syncKey;
+	}
 	public List<Item> getSubItems() {
 		return subItems;
 	}

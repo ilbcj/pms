@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
@@ -21,16 +23,20 @@ import com.pms.model.Organization;
 import com.pms.model.ResData;
 import com.pms.model.ResFeature;
 import com.pms.model.ResRole;
+import com.pms.model.ResRoleResource;
 import com.pms.model.User;
+import com.pms.model.UserRole;
 import com.pms.webservice.dao.SearchDAO;
 import com.pms.webservice.dao.impl.SearchDAOImpl;
+import com.pms.webservice.model.Common010121;
 import com.pms.webservice.model.Common010123;
 import com.pms.webservice.model.Condition;
 import com.pms.webservice.model.Item;
 import com.pms.webservice.model.SearchCondition;
 
 public class SyncSearchService extends SyncService {
-
+	private static Log logger = LogFactory.getLog(SyncSearchService.class);
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public String GetResult() throws IOException {
@@ -97,7 +103,7 @@ public class SyncSearchService extends SyncService {
 			item = new Element("ITEM");
 			data.addContent(item);
 			itemSetAttribute(item, "key", "I010015");
-			itemSetAttribute(item, "val", "" + new Date().getTime());
+			itemSetAttribute(item, "val", "" + new Date().getTime()/1000);
 			itemSetAttribute(item, "rmk", "消息返回时间");
 			
 			item = new Element("ITEM");
@@ -137,7 +143,7 @@ public class SyncSearchService extends SyncService {
 				throw new Exception("search condition data error");
 			}
 			
-			String sqlStr = "select ";
+			String sqlStr = "select distinct ";
 			if( this.getSc().getRETURNITEMS() == null || this.getSc().getRETURNITEMS().size() == 0 ) {
 				sqlStr += "* ";
 			}
@@ -188,7 +194,10 @@ public class SyncSearchService extends SyncService {
 			SearchDAO dao = new SearchDAOImpl();
 			int type = getSearchType(this.getSc().getTableName());
 //			int first = Integer.parseInt(this.getSc().getOnceNum());
-			int total = Integer.parseInt(this.getSc().getTotalNum());
+			//int total = Integer.parseInt(this.getSc().getTotalNum() == null ? "0" : this.getSc().getTotalNum());
+			int totalNum = Integer.parseInt(this.getSc().getTotalNum() == null ? "0" : this.getSc().getTotalNum());
+			int onceNum = Integer.parseInt(this.getSc().getOnceNum() == null ? "0" : this.getSc().getOnceNum());
+			int total = Math.min(totalNum, onceNum);
 			List datas = null;
 			if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_NO ) {
 				datas = dao.SqlQueryAllCols(sqlStr, type, 0, total);
@@ -196,7 +205,7 @@ public class SyncSearchService extends SyncService {
 			else if( this.getSc().getCONNECTTYPE() == SearchCondition.CONNECT_TYPE_010117 ) {
 				datas = queryOrgChildrenList(this.getSc().getSTARTITEMS().get(0).getVal());
 			}
-					
+
 			for( int i = 0; i<datas.size(); i++) {
 				data = new Element("DATA");
 				dataset.addContent(data);
@@ -238,6 +247,7 @@ public class SyncSearchService extends SyncService {
 		
 		if( this.getSc().getCommon010123() != null && this.getSc().getCommon010123().size() > 0 ) {
 			//1 join case
+			// 1.1 deal with join part
 			for(Common010123 common010123 : getSc().getCommon010123() ) {
 				if( Common010123.JOINTYPEINNER == common010123.getJoin() ) {
 					where += " inner join ";
@@ -260,7 +270,10 @@ public class SyncSearchService extends SyncService {
 				}
 				
 				if(common010123.getAlias() == null || common010123.getAlias().isEmpty()) {
-					throw new Exception("missing table alias parameter");
+					//throw new Exception("missing table alias parameter");
+					String loginfo = "[WSQ]missing table alias parameter in '" + getDci().getMESSAGE_SEQUENCE() + "' query message.";
+					logger.error(loginfo);
+					where += " on ";
 				}
 				else {
 					where += common010123.getAlias() + " on ";
@@ -269,11 +282,94 @@ public class SyncSearchService extends SyncService {
 				Condition joinConditions = common010123.getSearch();
 				if( joinConditions.getItems().size() > 0 ) {
 					Item item = joinConditions.getItems().get(0);
-					where += item.getEng() + "=" + item.getVal() + " ";
+					//where += item.getEng() + "=" + item.getVal() + " ";
+					String destColumn = item.getEng().contains(".") ? item.getEng().substring(item.getEng().indexOf(".") + 1) : item.getEng();
+					// if join table only contain one column, the request doesn't contain column name, we need add column name after table name.
+					if( item.getVal().contains(".") ) {
+						where += item.getEng() + "=" + item.getVal() + " ";
+					}
+					else {
+						
+						where += item.getEng() + "=" + item.getVal() + "." + destColumn + " ";
+					}
 					for( int i = 1; i < joinConditions.getItems().size(); i++ ) {
 						item = joinConditions.getItems().get(i);
-						where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + " ";
+						//where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + " ";
+						if( item.getVal().contains(".") ) { 
+							where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + " ";
+						}
+						else {
+							where += " " + joinConditions.getRel() + " " + item.getEng() + "=" + item.getVal() + "." + destColumn + " ";
+						}
 					}
+				}
+			}
+			
+			// 1.2 deal with alias part which in the join clause
+			if( this.getSc().getCommon010121() != null && this.getSc().getCommon010121().size() > 0 ) {
+				for(Common010121 common010121 : getSc().getCommon010121() ) {
+					// 1.2.1 : ( select distinct
+					String aliasSearch = " ( select distinct ";
+					List<Item> retCols = common010121.getRETURNITEMS();
+					if( retCols == null || retCols.size() == 0 ) {
+						aliasSearch += " * ";
+					}
+					else {
+						aliasSearch += " " + retCols.get(0).getEng();
+						for( int i = 1; i < retCols.size(); i++ ) {
+							aliasSearch += ", " + retCols.get(i).getEng();
+						}
+						aliasSearch += " ";
+					}
+					
+					// 1.2.2 : ( select distinct columns from
+					aliasSearch += " from ";
+					
+					// 1.2.3 : ( select distinct columns from table 
+					if( common010121.getTable() == null || common010121.getTable().length() == 0 ) {
+						logger.info("查询条件不正确，表名不存在");
+						throw new Exception("search condition data error");
+					}
+					else {
+						aliasSearch += common010121.getTable() + " ";
+					}
+					
+					// 1.2.4 : ( select distinct columns from table where case
+					if( common010121.getSearch() != null && common010121.getSearch().getItems() != null && common010121.getSearch().getItems().size() != 0 ) {
+						aliasSearch += " where ";
+						List<Item> items = common010121.getSearch().getItems();
+						if( items.size() == 1 && "IN".equalsIgnoreCase(common010121.getSearch().getRel()) ) {
+							aliasSearch += items.get(0).getEng() + " in ( " + items.get(0).getVal() + ") ";
+						}
+						else {
+							aliasSearch += items.get(0).getEng() + " = " + items.get(0).getVal();
+							for(int i = 1; i< items.size(); i++) {
+								aliasSearch += " " + common010121.getSearch().getRel() + " " + items.get(i).getEng() + " = " + items.get(i).getVal() + " ";
+							}
+						}
+					}
+
+					// 1.2.5 : ( select distinct columns from table where case ) alias 
+					aliasSearch += " ) " + common010121.getAlias() + " ";
+					
+					// 1.2.6 : put aliasSearch to join clause
+//					if( where.contains( "'" + common010121.getAlias() + "'" ) ) {
+//						where.replace("'" + common010121.getAlias() + "'", aliasSearch);
+//					}
+					if( where.contains( common010121.getAlias() ) ) {
+						where = where.replaceAll("(^.*?)" + common010121.getAlias() + "(.*$)", "$1" + aliasSearch + "$2");
+
+						where.replaceAll(common010121.getAlias(), aliasSearch);
+					}
+				}
+			}
+			
+			// 1.3 deal with where part
+			List<Item> whereItem = getSc().getCONDITIONITEMS();
+			if( whereItem != null && whereItem.size() > 0 ) {
+				where += " where " + whereItem.get(0).getEng() + " = " + whereItem.get(0).getVal() + " ";
+				for(int i = 1; i< whereItem.size(); i++) {
+					where += " " + getSc().getCONDITION() + " " + whereItem.get(i).getEng() + " = " + whereItem.get(i).getVal() + " ";
 				}
 			}
 		}
@@ -659,92 +755,164 @@ public class SyncSearchService extends SyncService {
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J020012");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J020012");
 			itemSetAttribute(item, "val", resFeature.getSYSTEM_TYPE());
 			itemSetAttribute(item, "rmk", "系统类型");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030006");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030006");
 			itemSetAttribute(item, "val", resFeature.getRESOURCE_ID());
 			itemSetAttribute(item, "rmk", "资源唯一标识");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J020013");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J020013");
 			itemSetAttribute(item, "val", resFeature.getAPP_ID());
 			itemSetAttribute(item, "rmk", "所属业务系统ID");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030007");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030007");
 			itemSetAttribute(item, "val", resFeature.getRESOUCE_NAME());
 			itemSetAttribute(item, "rmk", "名称");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030008");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030008");
 			itemSetAttribute(item, "val", resFeature.getPARENT_RESOURCE());
 			itemSetAttribute(item, "rmk", "父资源唯一标识");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.G010002");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.G010002");
 			itemSetAttribute(item, "val", resFeature.getURL());
 			itemSetAttribute(item, "rmk", "URL");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030009");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030009");
 			itemSetAttribute(item, "val", resFeature.getRESOURCE_ICON_PATH());
 			itemSetAttribute(item, "rmk", "图标路径");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030010");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030010");
 			itemSetAttribute(item, "val", "" + resFeature.getRESOURCE_STATUS());
 			itemSetAttribute(item, "rmk", "资源状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030011");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030011");
 			itemSetAttribute(item, "val", resFeature.getRESOURCE_ORDER());
 			itemSetAttribute(item, "rmk", "顺序");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030012");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030012");
 			itemSetAttribute(item, "val", resFeature.getRESOURCE_DESCRIBE());
 			itemSetAttribute(item, "rmk", "资源描述");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030013");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030013");
 			itemSetAttribute(item, "val", resFeature.getRMK());
 			itemSetAttribute(item, "rmk", "备注");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030035");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030035");
 			itemSetAttribute(item, "val", "" + resFeature.getFUN_RESOURCE_TYPE());
 			itemSetAttribute(item, "rmk", "功能资源分类");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.H010029");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.H010029");
 			itemSetAttribute(item, "val", ""+resFeature.getDELETE_STATUS());
 			itemSetAttribute(item, "rmk", "删除状态");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.J030017");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.J030017");
 			itemSetAttribute(item, "val", ""+resFeature.getDATA_VERSION());
 			itemSetAttribute(item, "rmk", "数据版本号");
 			
 			item = new Element("ITEM");
 			data.addContent(item);
-			itemSetAttribute(item, "key", "WA_AUTHORITY_FUN_RESOURCE.I010005");
+			itemSetAttribute(item, "key", "WA_AUTHORITY_FUNC_RESOURCE.I010005");
 			itemSetAttribute(item, "val", ""+ getLongTime(resFeature.getLATEST_MOD_TIME()) );
+			itemSetAttribute(item, "rmk", "最新修改时间");
+		}
+		else if( type == SearchDAO.TYPEUSER_ROLE ) {
+			UserRole userRole = (UserRole)model;
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.J030014");
+			itemSetAttribute(item, "val", userRole.getCERTIFICATE_CODE_MD5());
+			itemSetAttribute(item, "rmk", "身份证哈希值");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.I010026");
+			itemSetAttribute(item, "val", userRole.getBUSINESS_ROLE());
+			itemSetAttribute(item, "rmk", "角色编码");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.H010029");
+			itemSetAttribute(item, "val", ""+userRole.getDELETE_STATUS());
+			itemSetAttribute(item, "rmk", "删除状态");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.J030017");
+			itemSetAttribute(item, "val", ""+userRole.getDATA_VERSION());
+			itemSetAttribute(item, "rmk", "数据版本号");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_POLICE_ROLE.I010005");
+			itemSetAttribute(item, "val", ""+ getLongTime(userRole.getLATEST_MOD_TIME()) );
+			itemSetAttribute(item, "rmk", "最新修改时间");
+		}
+		else if( type == SearchDAO.TYPEROLE_RESOURCE ) {
+			ResRoleResource roleRes = (ResRoleResource)model;
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.J030006");
+			itemSetAttribute(item, "val", roleRes.getRESOURCE_ID());
+			itemSetAttribute(item, "rmk", "资源唯一标识");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.I010026");
+			itemSetAttribute(item, "val", roleRes.getBUSINESS_ROLE());
+			itemSetAttribute(item, "rmk", "角色编码");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.J030036");
+			itemSetAttribute(item, "val", ""+roleRes.getRESOURCE_CLASS());
+			itemSetAttribute(item, "rmk", "资源分类");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.H010029");
+			itemSetAttribute(item, "val", ""+roleRes.getDELETE_STATUS());
+			itemSetAttribute(item, "rmk", "删除状态");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.J030017");
+			itemSetAttribute(item, "val", ""+roleRes.getDATA_VERSION());
+			itemSetAttribute(item, "rmk", "数据版本号");
+			
+			item = new Element("ITEM");
+			data.addContent(item);
+			itemSetAttribute(item, "key", "WA_AUTHORITY_RESOURCE_ROLE.I010005");
+			itemSetAttribute(item, "val", ""+ getLongTime(roleRes.getLATEST_MOD_TIME()) );
 			itemSetAttribute(item, "rmk", "最新修改时间");
 		}
 	}
@@ -762,8 +930,8 @@ public class SyncSearchService extends SyncService {
             // information this date object will represent the 1st of
             // january 1970.
             Date date = sdf.parse(time);        
-            System.out.println("Date and Time: " + date);
-            longtime = date.getTime();
+            //System.out.println("Date and Time: " + date);
+            longtime = date.getTime() / 1000;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -786,6 +954,12 @@ public class SyncSearchService extends SyncService {
 		}
 		else if ("WA_AUTHORITY_FUNC_RESOURCE".equals(tableName) ) {
 			type = SearchDAO.TYPERESFUN;
+		}
+		else if ("WA_AUTHORITY_POLICE_ROLE".equals(tableName) ) {
+			type = SearchDAO.TYPEUSER_ROLE;
+		}
+		else if ("WA_AUTHORITY_RESOURCE_ROLE".equals(tableName) ) {
+			type = SearchDAO.TYPEROLE_RESOURCE;
 		}
 		return type;
 	}
